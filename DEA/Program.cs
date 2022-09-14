@@ -2,7 +2,10 @@
 using WriteLog;
 using FolderCleaner;
 using Microsoft.Extensions.Configuration;
+using FtpFunctions;
 
+// DEA old
+// ~~~~~~~
 // TODO 1: Brake the main graph functions into smaller set of chuncks.
 // TODO 2: Change the usage of DEA.conf to app.conf (But I don't think it's needed. Bcause I use app.conf to stroe some very important data set.).
 // TODO 3: Make the metadata file have the same name as the pdf or attachment file and Remove .pdf extention.
@@ -13,9 +16,26 @@ using Microsoft.Extensions.Configuration;
 // TODO 8: Create a way to move files to error folder and forward the mail if the file attachments are not accepted.
 // TODO 9: Make a internet connection checker.
 
+// DEA.Next
+// ~~~~~~~~
+// TODO 1: Create an XML config file (use app.config).
+// TODO 2: Create an XML reader toload the settings from the config file.
+// TODO 3: Make a FTP/SFTP/FTPS component.
+// TODO 4: Make it posible to download files from and FTP server.
+// TODO 5: Change the download from location according to what is set in the above config file.
+// TODO 6: Keep the files in a holding folder and then convert them into Base64 string.
+// TODO 7: Make DEA send the POST url to the TPM REST API.
+// TODO 8: Get the success signal and then delete the file. If not keep the file and send an error mail or message.
+
 // Aplication title just for fun.
 WriteLogClass.WriteToLog(3, "Starting DEA ....");
 
+WriteLogClass.WriteToLog(3, "Connecting to FTP Server ....");
+
+FtpFunctionsClass.ListDirectories();
+
+Thread.Sleep(100000);
+/*
 // Check for the attachment download folder and the log folder. Then creates the folders if they're missing.
 GraphHelper.CheckFolders("none");
 WriteLogClass.WriteToLog(3, "Checking main folders ....");
@@ -41,7 +61,7 @@ if (appConfig == null)
     // File should be with in the main working directory.
     var AppConfigJson = new ConfigurationBuilder()
         .SetBasePath(Directory.GetCurrentDirectory())
-        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+        .AddJsonFile(@".\Config\appsettings.json", optional: true, reloadOnChange: true)
         .Build();
 
     // Initilize the variables with values.
@@ -108,4 +128,4 @@ static IConfigurationRoot? LoadAppSettings()
      {
          return appConfigUs;
      }
-}
+}*/

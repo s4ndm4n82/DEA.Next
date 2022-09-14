@@ -16,7 +16,7 @@ namespace ReadSettings
             try
             {
                 var ConfigFolderPath = Directory.GetCurrentDirectory(); // Working Directory.
-                var ConfigFileName = "dea.conf"; // Config file name.
+                var ConfigFileName = @".\Config\dea.conf"; // Config file name.
                 var ConfigFileFullPath = Path.Combine(ConfigFolderPath, ConfigFileName); // Makes the config file path.
                 DeaConfigs = File.ReadAllLines(ConfigFileFullPath);
             }
