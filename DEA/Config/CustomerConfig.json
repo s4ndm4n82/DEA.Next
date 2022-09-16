@@ -1,0 +1,50 @@
+{
+  "CustomerDetails": [
+    {
+      "id": 1,
+      "MainCustomer": "Adiles",
+      "ClientName": "Adiles AS",
+      "FileDeliveryMethod": "Email",
+      "FtpDetails": {
+        "FtpType": "",
+        "FtpUser": "",
+        "FtpPassword": "",
+        "FtpMainFolder": "",
+        "FtpSubFolder": ""
+      },
+      "EmailDetails": {
+        "EmailAddress": "atc@efakturamottak.no",
+        "MainInbox": "Adiles",
+        "SubInbox1": "Adiles AS",
+        "SubInbox2": ""
+      },
+      "DocumentDetails": {
+        "DocumentType": "PDF",
+        "DocumentExtension": ".pdf"
+      }
+    },
+    {
+      "id": 2,
+      "MainCustomer": "Aksesspunkt",
+      "ClientName": "Duett",
+      "FileDeliveryMethod": "FTP",
+      "FtpDetails": {
+        "FtpType": "FTP",
+        "FtpUser": "testuser",
+        "FtpPassword": "jackkills",
+        "FtpMainFolder": "Aksesspunkt",
+        "FtpSubFolder": "Duett"
+      },
+      "EmailDetails": {
+        "EmailAddress": "",
+        "MainInbox": "",
+        "SubInbox1": "",
+        "SubInbox2": ""
+      },
+      "DocumentDetails": {
+        "DocumentType": "PDF",
+        "DocumentExtension": ".pdf"
+      }
+    }
+  ]
+}
