@@ -2,7 +2,8 @@
 using WriteLog;
 using FolderCleaner;
 using Microsoft.Extensions.Configuration;
-using UserConfigReader;
+using System.Threading.Tasks;
+using FtpFunctions;
 
 // DEA old
 // ~~~~~~~
@@ -32,7 +33,7 @@ WriteLogClass.WriteToLog(3, "Starting DEA ....");
 
 WriteLogClass.WriteToLog(3, "Connecting to FTP Server ....");
 
-UserConfigReaderClass.ReadAppDotConfig();
+await FtpFunctionsClass.GetFtpFiles();
 
 Thread.Sleep(100000);
 /*

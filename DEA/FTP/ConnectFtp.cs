@@ -6,13 +6,13 @@ namespace ConnectFtp
 {
     internal class ConnectFtpClass
     {
-        public static async Task<AsyncFtpClient> ConnectFtp()
+        public static async Task<AsyncFtpClient> ConnectFtp(string HostName, string HostIp, string UserName,string UserPassword)
         {
             var CloseToken = new CancellationToken();
-            var HostName = "localhost";
+            /*var HostName = "localhost";
             var HostIp = "127.0.0.1";
             var UserName = "testuser";
-            var UserPassword = "jackkills";
+            var UserPassword = "jackkills";*/
 
             var FtpConnect = new AsyncFtpClient();
                 FtpConnect.Host = HostName;

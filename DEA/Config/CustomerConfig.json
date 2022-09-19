@@ -7,6 +7,8 @@
       "FileDeliveryMethod": "Email",
       "FtpDetails": {
         "FtpType": "",
+        "FtpHostName": "",
+        "FtpHostIp": "",
         "FtpUser": "",
         "FtpPassword": "",
         "FtpMainFolder": "",
@@ -30,10 +32,37 @@
       "FileDeliveryMethod": "FTP",
       "FtpDetails": {
         "FtpType": "FTP",
+        "FtpHostName": "localhost",
+        "FtpHostIp": "127.0.0.1",
         "FtpUser": "testuser",
         "FtpPassword": "jackkills",
         "FtpMainFolder": "Aksesspunkt",
         "FtpSubFolder": "Duett"
+      },
+      "EmailDetails": {
+        "EmailAddress": "",
+        "MainInbox": "",
+        "SubInbox1": "",
+        "SubInbox2": ""
+      },
+      "DocumentDetails": {
+        "DocumentType": "PDF",
+        "DocumentExtension": ".pdf"
+      }
+    },
+    {
+      "id": 3,
+      "MainCustomer": "Aksesspunkt",
+      "ClientName": "JM Norge AS",
+      "FileDeliveryMethod": "FTP",
+      "FtpDetails": {
+        "FtpType": "FTPS",
+        "FtpHostName": "localhost",
+        "FtpHostIp": "127.0.0.1",
+        "FtpUser": "testuser",
+        "FtpPassword": "jackkills",
+        "FtpMainFolder": "Aksesspunkt",
+        "FtpSubFolder": "JM Norge AS"
       },
       "EmailDetails": {
         "EmailAddress": "",
