@@ -120,10 +120,12 @@ namespace DEA
             string? PathRootFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             string DownloadFolderName = "Download";
             string LogFolderName = "Logs";
+            string FtpFolderName = "TmpFtpDownload";
             string PathDownloadFolder = Path.Combine(PathRootFolder!, DownloadFolderName);
             string PathLogFolder = Path.Combine(PathRootFolder!, LogFolderName);
+            string PathFtpFolder = Path.Combine(PathRootFolder!, FtpFolderName);
 
-            // Check if download folder exists. If not creates the fodler.
+            // Check if download folder exists. If not creates the folder.
             if (!System.IO.Directory.Exists(PathDownloadFolder))
             {
                 try
@@ -136,11 +138,25 @@ namespace DEA
                 }
             }
 
+            // Check if logs folder exists. If not creates the folder.
             if (!System.IO.Directory.Exists(PathLogFolder))
             {
                 try
                 {
                     System.IO.Directory.CreateDirectory(PathLogFolder);                    
+                }
+                catch (Exception ex)
+                {
+                    WriteLogClass.WriteToLog(1, $"Exception at download folder creation: {ex.Message}");
+                }
+            }
+
+            // Check if FTP folder exists. If not creates the folder.
+            if (!System.IO.Directory.Exists(PathFtpFolder))
+            {
+                try
+                {
+                    System.IO.Directory.CreateDirectory(PathFtpFolder);
                 }
                 catch (Exception ex)
                 {
@@ -155,6 +171,10 @@ namespace DEA
             else if (FolderSwitch == "Log")
             {
                 FolderPath = PathLogFolder;
+            }
+            else if (FolderSwitch == "FTP")
+            {
+                FolderPath = PathFtpFolder;
             }
             else
             {
