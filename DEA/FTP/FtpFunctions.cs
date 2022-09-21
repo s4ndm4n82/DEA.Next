@@ -1,5 +1,4 @@
-﻿using System.IO;
-using DEA;
+﻿using DEA;
 using WriteLog;
 using ConnectFtp;
 using FluentFTP;
@@ -17,13 +16,16 @@ namespace FtpFunctions
 
             foreach(var FtpOnlyClient in FtpOnlyClients)
             {
-                InitiateDownload(FtpOnlyClient);                
+                if(!await InitiateFtpDownload(FtpOnlyClient))
+                {                    
+                    continue;                    
+                }
             }
 
             return true;
         }
 
-        public static async void InitiateDownload(UserConfigReaderClass.Customerdetail FtpClientDetails)
+        public static async Task<bool> InitiateFtpDownload(UserConfigReaderClass.Customerdetail FtpClientDetails)
         {
             var FtpHostName = FtpClientDetails.FtpDetails!.FtpHostName;
             var FtpHosIp = FtpClientDetails.FtpDetails.FtpHostIp;
@@ -36,47 +38,90 @@ namespace FtpFunctions
             var LocalFtpFolder = GraphHelper.CheckFolders("FTP");
             var FtpHoldFolder = Path.Combine(LocalFtpFolder, FtpMainFolder!, FtpSubFolder!);
 
-            var FtpSwitch = true;
-
-            if (!Directory.Exists(FtpHoldFolder))
+            using (var FtpConnect = await ConnectFtpClass.ConnectFtp(FtpHostName!, FtpHosIp!, FtpUser!, FtpPassword!))
             {
-                try
+                if (await FtpConnect.DirectoryExists(FtpPath))
                 {
-                    Directory.CreateDirectory(FtpHoldFolder);                    
-                }
-                catch (Exception ex)
-                {
-                    WriteLogClass.WriteToLog(2, $"Exception at Ftp hold folder creation: {ex.Message}");
-                    FtpSwitch = false;
-                }
-            }
+                    WriteLogClass.WriteToLog(3, $"Starting file download from {FtpPath} ....");
 
-            if (FtpSwitch)
-            {
-                using (var FtpConnect = await ConnectFtpClass.ConnectFtp(FtpHostName!, FtpHosIp!, FtpUser!, FtpPassword!))
-                {
-                    if (await FtpConnect.DirectoryExists(FtpPath))
+                    if (await DownloadFtpFiles(FtpConnect, FtpPath, FtpHoldFolder))
                     {
-                        /*foreach (FtpListItem item in await FtpConnect.GetListing($@"/{FtpMainFolder}/{FtpSubFolder}"))
-                        {
-                            WriteLogClass.WriteToLog(3, $"File {item.FullName}");
-                        }*/
-                        await DownloadFiles(FtpConnect, FtpPath, FtpHoldFolder);
+                        WriteLogClass.WriteToLog(3, "File download successful ....");
+                        return true;
                     }
+                    else
+                    {
+                        WriteLogClass.WriteToLog(3, "File download is not successful ....");
+                    }                    
                 }
+                return false;
             }
         }
 
-        public static async Task<bool> DownloadFiles(AsyncFtpClient _FtpConnect, string _FtpPath, string _FtpHoldFolder)
+        public static async Task<bool> DownloadFtpFiles(AsyncFtpClient _FtpConnect, string _FtpPath, string _FtpHoldFolder)
         {
             FtpListItem[] FtpFileItemList = await _FtpConnect.GetListing(_FtpPath);
 
-            foreach (var FtpFileItem in FtpFileItemList)
-            {
-                await _FtpConnect.DownloadFile(_FtpHoldFolder, FtpFileItem.FullName, FtpLocalExists.Resume, FtpVerify.Retry);
-            }
+            IEnumerable<string> FilesToDownload = FtpFileItemList.Select(f => f.FullName.ToString());
 
-            return true;
+            var Count = await _FtpConnect.DownloadFiles(_FtpHoldFolder, FilesToDownload, FtpLocalExists.Resume, FtpVerify.Retry);
+            
+            if (Count > 0)
+            {
+                WriteLogClass.WriteToLog(3, $"Downloaded {Count} file/s from {_FtpPath} to {_FtpHoldFolder} ....");
+
+                var _LocalFiles = Directory.GetFiles(_FtpHoldFolder, "*.*", SearchOption.AllDirectories);
+                var skip = false;
+
+                foreach (var _LocalFile in _LocalFiles)
+                {
+                    var _LocalFileName = Path.GetFileName(_LocalFile);
+                    foreach (var FileName in FilesToDownload)
+                    {
+                        var _FileName = Path.GetFileName(FileName);
+
+                        if (_LocalFileName == _FileName)
+                        {
+                            if (await DeleteFtpFiles(_FtpConnect, FileName))
+                            {
+                                WriteLogClass.WriteToLog(3, $"Deleted file {_FileName} from {_FtpPath} ....");
+                                skip = true;
+                                break;
+                            }                            
+                        }
+                    }
+
+                    if (skip)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }                
+                return true;
+            }
+            else
+            {
+                WriteLogClass.WriteToLog(3, "Folder empty ... skipping");
+                return false;
+            }            
+        }
+
+        public static async Task<bool> DeleteFtpFiles(AsyncFtpClient __FtpConnect, string FtpFileName)
+        {
+            try
+            {
+                await __FtpConnect.DeleteFile(FtpFileName);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(2, $"Exception at FTP file deletetion: {ex.Message}");
+                return false;
+            }           
+            
         }
     }
 }
