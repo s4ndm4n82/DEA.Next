@@ -3,10 +3,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using DEA;
 using ReadSettings;
-using WriteLog;
 using FolderCleaner;
 using GetRecipientEmail; // Might need it later.
 using CreateMetadataFile; // Might need to use this later so leaving it.
+using WriteLog;
 
 namespace DEA2Levels
 {
@@ -64,21 +64,9 @@ namespace DEA2Levels
                 catch (Exception ex)
                 {
                     Console.WriteLine("Excption Thrown: {0}", ex.Message);
-                }*/
+                }*/                
 
-                /*var FilePath = @"F:\Users\SiNUX\Development\Repo Clones\s4ndm4n82\DEA\DEA\bin\Debug\net6.0";
-
-                CreateMetaDataXml.GetToEmail4Xml(graphClient, "AQMkADMzADRjYmMyZi05MzdkLTQxZGItODdhZi0zYjZhOGJlOGM2YWUALgAAA_pAcT3ZzxpDsmoc2Z1vKDABAIqHRYfBJYdInlpefO57fJwAAAIBUwAAAA=="
-                                                , "AQMkADMzADRjYmMyZi05MzdkLTQxZGItODdhZi0zYjZhOGJlOGM2YWUALgAAA_pAcT3ZzxpDsmoc2Z1vKDABAIqHRYfBJYdInlpefO57fJwAAAIBVgAAAA=="
-                                                , null!
-                                                , "AAMkADMzNGNiYzJmLTkzN2QtNDFkYi04N2FmLTNiNmE4YmU4YzZhZQBGAAAAAADqQHE92c8aQ7JqHNmdbygwBwCKh0WHwSWHSJ5aXnzue3ycAAAAAAFWAACKh0WHwSWHSJ5aXnzue3ycAAA-BwV8AAA="
-                                                , "accounting@efakturamottak.no"
-                                                , FilePath);
-
-                WriteLogClass.WriteToLog(3, $"Creating XML funtion called stop the program from here ....");
-                Thread.Sleep(1000000);*/
-
-                WriteLogClass.WriteToLog(3, $"Processing Email {_Email} ....");
+                WriteLogClass.WriteToLog(3, $"Processing Email {_Email} ....", string.Empty);
 
                 //Top level of mail boxes like user inbox.
                 var FirstSubFolderIDs = await graphClient.Users[$"{_Email}"].MailFolders["Inbox"].ChildFolders                    
@@ -110,7 +98,7 @@ namespace DEA2Levels
 
                         foreach (var SecondSubFolderID in SecondSubFolderIDs)
                         {
-                            WriteLogClass.WriteToLog(3, $"Processing folder path {FirstSubFolderID.DisplayName} -> {SecondSubFolderID.DisplayName}");
+                            WriteLogClass.WriteToLog(3, $"Processing folder path {FirstSubFolderID.DisplayName} -> {SecondSubFolderID.DisplayName}", string.Empty);
                             // Third level of subfolders under the inbox.
                             var GetMessageAttachments = await graphClient.Users[$"{_Email}"].MailFolders["Inbox"]
                                 .ChildFolders[$"{FirstSubFolderID.Id}"]
@@ -175,7 +163,7 @@ namespace DEA2Levels
 
                                             if (AcceptedExtensionCollection.Any(y => y.Name.ToLower().Contains(AcceptedExtention)))
                                             {
-                                                WriteLogClass.WriteToLog(3, "Collection check succeeded ...");
+                                                WriteLogClass.WriteToLog(3, "Collection check succeeded ...", string.Empty);
 
                                                 // FolderNameRnd creates a 10 digit folder name. CheckFolder returns the download path.
                                                 // This has to be called here. Don't put it within the for loop or it will start calling this
@@ -185,7 +173,7 @@ namespace DEA2Levels
 
                                                 foreach (var Attachment in AcceptedExtensionCollection)
                                                 {
-                                                    WriteLogClass.WriteToLog(3, $"Starting attachment download from {Message.Subject} ....");
+                                                    WriteLogClass.WriteToLog(3, $"Starting attachment download from {Message.Subject} ....", string.Empty);
 
                                                     // Should mark and download the itemattacment which is the correct attachment.
                                                     var TrueAttachment = await graphClient.Users[$"{_Email}"].MailFolders["Inbox"]
@@ -229,18 +217,18 @@ namespace DEA2Levels
 
                                                     if (TruAttachmentBytes.Length < 7168 && AttExtention != ".pdf")
                                                     {
-                                                        WriteLogClass.WriteToLog(3, $"Attachment size {TruAttachmentBytes.Length} too small ... skipping to the next file ....");
+                                                        WriteLogClass.WriteToLog(3, $"Attachment size {TruAttachmentBytes.Length} too small ... skipping to the next file ....", string.Empty);
                                                         continue;
                                                     }
                                                     
                                                     if (TruAttachmentBytes.Length > 7168 || (TruAttachmentBytes.Length < 7168 && AttExtention == ".pdf"))
                                                     {
-                                                        WriteLogClass.WriteToLog(3, $"Starting attachment download from {Message.Subject} ....");
+                                                        WriteLogClass.WriteToLog(3, $"Starting attachment download from {Message.Subject} ....", string.Empty);
 
                                                         // Saves the file to the local hard disk.
                                                         GraphHelper.DownloadAttachedFiles(PathFullDownloadFolder, TrueAttachmentName, TruAttachmentBytes);
 
-                                                        WriteLogClass.WriteToLog(3, $"Downloaded attachments from {Message.Subject}   ....");
+                                                        WriteLogClass.WriteToLog(3, $"Downloaded attachments from {Message.Subject}   ....", string.Empty);
 
                                                         // Creating the metdata file.
                                                         //var FileFlag = CreateMetaDataXml.GetToEmail4Xml(graphClient, FirstSubFolderID.Id, SecondSubFolderID.Id, StaticThirdSubFolderID, Message.Id, _Email, PathFullDownloadFolder, TrueAttachmentName);
@@ -252,16 +240,16 @@ namespace DEA2Levels
 
                                                         if (DownloadFolderExistTest.Length != 0 && DownloadFileExistTest.Length != 0 && FileFlag)
                                                         {
-                                                            WriteLogClass.WriteToLog(3, "Moving downloaded files to local folder ....");
+                                                            WriteLogClass.WriteToLog(3, "Moving downloaded files to local folder ....", string.Empty);
                                                             // Moves the downloaded files to destination folder. This would create the folder path if it's missing.
                                                             if (GraphHelper.MoveFolder(PathFullDownloadFolder, DestinationFolderPath))
                                                             {
-                                                                WriteLogClass.WriteToLog(3, "File moved successfully ....");
+                                                                WriteLogClass.WriteToLog(3, "File moved successfully ....", string.Empty);
                                                                 MoveToExport = true;
                                                             }
                                                             else
                                                             {
-                                                                WriteLogClass.WriteToLog(3, "File was not moved successfully ....");
+                                                                WriteLogClass.WriteToLog(3, "File was not moved successfully ....", string.Empty);
                                                             }
                                                         }
                                                     }
@@ -301,18 +289,18 @@ namespace DEA2Levels
                                                         // Moves the mail to downloaded folder.
                                                         if (await GraphHelper.MoveEmails(FirstSubFolderID.Id, SecondSubFolderID.Id, StaticThirdSubFolderID, MessageID, MoveDestinationID, _Email))
                                                         {
-                                                            WriteLogClass.WriteToLog(3, $"Email {Message.Subject} moved to export folder ...");
+                                                            WriteLogClass.WriteToLog(3, $"Email {Message.Subject} moved to export folder ...", string.Empty);
                                                         }
                                                         else
                                                         {
-                                                            WriteLogClass.WriteToLog(3, $"Email {Message.Subject} is not moved to export folder ...");
+                                                            WriteLogClass.WriteToLog(3, $"Email {Message.Subject} is not moved to export folder ...", string.Empty);
                                                         }
                                                     }
                                                 }
                                             }
                                             catch (Exception ex)
                                             {
-                                                WriteLogClass.WriteToLog(1, $"Exception at attachment download area 2level: {ex.Message}");
+                                                WriteLogClass.WriteToLog(1, $"Exception at attachment download area 2level: {ex.Message}", string.Empty);
                                             }
                                         }                                        
                                     }
@@ -354,28 +342,28 @@ namespace DEA2Levels
                                                         // Item1 is the maile address.
                                                         if (ForwardDone.Item2)
                                                         {
-                                                            WriteLogClass.WriteToLog(3, $"Email forwarded to {ForwardDone.Item1}  ....");
+                                                            WriteLogClass.WriteToLog(3, $"Email forwarded to {ForwardDone.Item1}  ....", string.Empty);
                                                         }
                                                         else
                                                         {
-                                                            WriteLogClass.WriteToLog(3, $"Email not forwarded to {ForwardDone.Item1}  ....");
+                                                            WriteLogClass.WriteToLog(3, $"Email not forwarded to {ForwardDone.Item1}  ....", string.Empty);
                                                         }
 
                                                         // Moves the empty emails to error folder once forwarding is done.
                                                         if (await GraphHelper.MoveEmails(FirstSubFolderID.Id, SecondSubFolderID.Id, StaticThirdSubFolderID, MessageID2, ErrorFolderId, _Email))
                                                         {
-                                                            WriteLogClass.WriteToLog(3, $"Mail Moved to {ErrorFolder.DisplayName} Folder ....");
+                                                            WriteLogClass.WriteToLog(3, $"Mail Moved to {ErrorFolder.DisplayName} Folder ....", string.Empty);
                                                         }
                                                         else
                                                         {
-                                                            WriteLogClass.WriteToLog(3, $"Mail was Not Moved to {ErrorFolder.DisplayName} Folder ....");
+                                                            WriteLogClass.WriteToLog(3, $"Mail was Not Moved to {ErrorFolder.DisplayName} Folder ....", string.Empty);
                                                         }
                                                     }
                                                 }
                                             }
                                             catch (Exception ex)
                                             {
-                                                WriteLogClass.WriteToLog(1, $"Exception at error folder mover 2level: {ex.Message}");
+                                                WriteLogClass.WriteToLog(1, $"Exception at error folder mover 2level: {ex.Message}", string.Empty);
                                             }
                                         }
                                     }
@@ -387,7 +375,7 @@ namespace DEA2Levels
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(1, $"Exception at end of main foreach 2level: {ex.Message}");
+                WriteLogClass.WriteToLog(1, $"Exception at end of main foreach 2level: {ex.Message}", string.Empty);
             }
         }
     }

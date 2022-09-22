@@ -32,7 +32,7 @@ namespace DEA
             }
             catch (Exception ex)
             {                
-                WriteLogClass.WriteToLog(1, $"Exception at graph client initilizing: {ex.Message}");
+                WriteLogClass.WriteToLog(1, $"Exception at graph client initilizing: {ex.Message}", string.Empty);
                 return Task.FromResult(false);
             }
         }
@@ -56,13 +56,13 @@ namespace DEA
                 // The application doesn't have sufficient permissions.
                 // - Did you declare enough app permissions during app creation?
                 // - Did the tenant admin grant permissions to the application?
-                WriteLogClass.WriteToLog(1, $"Exception at token accuire: {ex.Message}");
+                WriteLogClass.WriteToLog(1, $"Exception at token accuire: {ex.Message}", string.Empty);
             }
             catch (MsalServiceException ex) when (ex.Message.Contains("AADSTS70011"))
             {
                 // Invalid scope. The scope has to be in the form "https://resourceurl/.default"
                 // Mitigation: Change the scope to be as expected.
-                WriteLogClass.WriteToLog(1, "Scopes provided are not supported");
+                WriteLogClass.WriteToLog(1, "Scopes provided are not supported", string.Empty);
             }
             
             return AuthToken!.AccessToken;
@@ -95,7 +95,7 @@ namespace DEA
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(1, $"Exception at email loading: {ex.Message}");
+                    WriteLogClass.WriteToLog(1, $"Exception at email loading: {ex.Message}", string.Empty);
                 }
             }
         }
@@ -134,7 +134,7 @@ namespace DEA
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(1, $"Exception at download folder creation: {ex.Message}");
+                    WriteLogClass.WriteToLog(1, $"Exception at download folder creation: {ex.Message}", string.Empty);
                 }
             }
 
@@ -147,7 +147,7 @@ namespace DEA
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(1, $"Exception at download folder creation: {ex.Message}");
+                    WriteLogClass.WriteToLog(1, $"Exception at download folder creation: {ex.Message}", string.Empty);
                 }
             }
 
@@ -160,7 +160,7 @@ namespace DEA
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(1, $"Exception at download folder creation: {ex.Message}");
+                    WriteLogClass.WriteToLog(1, $"Exception at download folder creation: {ex.Message}", string.Empty);
                 }
             }
 
@@ -195,7 +195,7 @@ namespace DEA
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(1, $"Exception at download folder creation: {ex.Message}");
+                    WriteLogClass.WriteToLog(1, $"Exception at download folder creation: {ex.Message}", string.Empty);
                 }
             }
 
@@ -208,7 +208,7 @@ namespace DEA
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(1, $"Exception at download path: {ex.Message}");
+                WriteLogClass.WriteToLog(1, $"Exception at download path: {ex.Message}", string.Empty);
                 return false;
             }
         }
@@ -225,7 +225,7 @@ namespace DEA
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(1, $"Error getting event: {ex.Message}");
+                WriteLogClass.WriteToLog(1, $"Error getting event: {ex.Message}", string.Empty);
                 return false;
             }
         }
@@ -393,7 +393,7 @@ namespace DEA
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(1, $"Exception at moving emails to folders: {ex.Message}");
+                WriteLogClass.WriteToLog(1, $"Exception at moving emails to folders: {ex.Message}", string.Empty);
                 return false;
             }
         }

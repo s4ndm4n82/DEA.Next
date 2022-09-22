@@ -9,10 +9,6 @@ namespace ConnectFtp
         public static async Task<AsyncFtpClient> ConnectFtp(string HostName, string HostIp, string UserName,string UserPassword)
         {
             var CloseToken = new CancellationToken();
-            /*var HostName = "localhost";
-            var HostIp = "127.0.0.1";
-            var UserName = "testuser";
-            var UserPassword = "jackkills";*/
 
             var FtpConnect = new AsyncFtpClient();
                 FtpConnect.Host = HostName;
@@ -20,11 +16,11 @@ namespace ConnectFtp
             try
             {
                 await FtpConnect.Connect(CloseToken);
-                WriteLogClass.WriteToLog(3, "FTP Connection successful ....");
+                WriteLogClass.WriteToLog(3, "FTP Connection successful ....", "FTP");
             }
             catch
             {
-                WriteLogClass.WriteToLog(3, $"Trying to connect using alt method ....");
+                WriteLogClass.WriteToLog(3, $"Trying to connect using alt method ....", "FTP");
                 await ConnectFtpAlt(HostIp, UserName, UserPassword);
             }
 
@@ -42,11 +38,11 @@ namespace ConnectFtp
             try
             {
                 await FtpConnect.Connect(CloseToken);
-                WriteLogClass.WriteToLog(3, "FTP Alt Connection successful ....");
+                WriteLogClass.WriteToLog(3, "FTP Alt Connection successful ....", "FTP");
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(2, $"Exception at FTP connection: {ex.Message}");
+                WriteLogClass.WriteToLog(2, $"Exception at FTP connection: {ex.Message}", "FTP");
             }
             
             return FtpConnect;

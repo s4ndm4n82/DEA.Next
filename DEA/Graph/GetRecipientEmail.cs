@@ -1,6 +1,6 @@
-﻿using Microsoft.Graph;
+﻿using WriteLog;
+using Microsoft.Graph;
 using System.Text.RegularExpressions;
-using WriteLog;
 
 namespace GetRecipientEmail
 {
@@ -67,7 +67,7 @@ namespace GetRecipientEmail
                         if (ExtractedEmail.Success)
                         {
                             rEmail = ExtractedEmail.Value.ToLower().Replace(" ","");
-                            WriteLogClass.WriteToLog(3, $"Recipient email {rEmail} extracted ...");
+                            WriteLogClass.WriteToLog(3, $"Recipient email {rEmail} extracted ...", string.Empty);
                             break;
                         }
                     }
@@ -75,7 +75,7 @@ namespace GetRecipientEmail
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(1, $"Exception at getting recipient email: {ex.Message}");
+                WriteLogClass.WriteToLog(1, $"Exception at getting recipient email: {ex.Message}", string.Empty);
             }
 
             return rEmail;

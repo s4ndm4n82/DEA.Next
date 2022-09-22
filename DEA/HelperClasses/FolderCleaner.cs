@@ -12,7 +12,7 @@ namespace FolderCleaner
             {
                 var CleaningFolderName = FolderPath.Split(Path.DirectorySeparatorChar).Last();
 
-                WriteLogClass.WriteToLog(3, $"Cleaning folder path {CleaningFolderName}");
+                WriteLogClass.WriteToLog(3, $"Cleaning folder path {CleaningFolderName}", string.Empty);
 
                 string[] FolderList = Directory.GetDirectories(FolderPath, "*.*", SearchOption.AllDirectories);
 
@@ -22,15 +22,15 @@ namespace FolderCleaner
             {
                 try
                 {
-                    WriteLogClass.WriteToLog(3, "Folder path does not exsits. Creating folder path ....");
+                    WriteLogClass.WriteToLog(3, "Folder path does not exsits. Creating folder path ....", string.Empty);
 
                     Directory.CreateDirectory(FolderPath);
 
-                    WriteLogClass.WriteToLog(3, $"Folder path created {FolderPath} ....");
+                    WriteLogClass.WriteToLog(3, $"Folder path created {FolderPath} ....", string.Empty);
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(2, $"Exception at folder creation in folder cleaner class: {ex.Message}");
+                    WriteLogClass.WriteToLog(2, $"Exception at folder creation in folder cleaner class: {ex.Message}", string.Empty);
                 }
                 
             }
@@ -53,12 +53,12 @@ namespace FolderCleaner
                             {
                                 Directory.Delete(_Folder, false);
 
-                                WriteLogClass.WriteToLog(3, $"Folder {RmvFolderName} .... deleted");
+                                WriteLogClass.WriteToLog(3, $"Folder {RmvFolderName} .... deleted", string.Empty);
                             }                            
                         }
                         catch (IOException ex)
                         {
-                            WriteLogClass.WriteToLog(2, $"Exception at folder delete: {ex.Message}");
+                            WriteLogClass.WriteToLog(2, $"Exception at folder delete: {ex.Message}", string.Empty);
                         }
 
                     }

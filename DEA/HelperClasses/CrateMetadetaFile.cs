@@ -1,8 +1,8 @@
 ﻿using Microsoft.Graph;
 using System.Xml;
 using System.Text;
-using WriteLog;
 using System.Text.RegularExpressions;
+using WriteLog;
 
 namespace CreateMetadataFile
 {
@@ -44,17 +44,17 @@ namespace CreateMetadataFile
 
                     if (System.IO.File.Exists(XmlSaveFile))
                     {
-                        WriteLogClass.WriteToLog(3, $"Metdata file created ....");
+                        WriteLogClass.WriteToLog(3, $"Metdata file created ....", string.Empty);
                         XmlSaveSwitch = true;
                     }
                     else
                     {
-                        WriteLogClass.WriteToLog(1, $"Unable to create metadata ....");
+                        WriteLogClass.WriteToLog(1, $"Unable to create metadata ....", string.Empty);
                     }
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(1, $"Exception at Xml metadata file creation: {ex.Message}");
+                    WriteLogClass.WriteToLog(1, $"Exception at Xml metadata file creation: {ex.Message}", string.Empty);
                 }
             }
 
@@ -110,7 +110,7 @@ namespace CreateMetadataFile
                         if (ExtractedEmail.Success)
                         {
                             var PassEmail = ExtractedEmail.Value.ToLower();
-                            WriteLogClass.WriteToLog(3, $"Recipient email {PassEmail} extracted ...");
+                            WriteLogClass.WriteToLog(3, $"Recipient email {PassEmail} extracted ...", string.Empty);
                             FileFlag = WriteMetadataXml(PassEmail, _FolderPath, FileName);
                         }
                     }                    
@@ -118,7 +118,7 @@ namespace CreateMetadataFile
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(1, $"Exception at GetToEmail4Xml {ex.Message}");                
+                WriteLogClass.WriteToLog(1, $"Exception at GetToEmail4Xml {ex.Message}", string.Empty);                
             }
 
             return FileFlag;

@@ -7,9 +7,15 @@ namespace WriteLog
 {
     internal class WriteLogClass
     {
-        public static void WriteToLog(int Level, string LogEntry)
-        {
-            var LogFileName = "DEA_Logfile_" + DateTime.Now.ToString("dd_MM_yyyy") + ".txt";
+        public static void WriteToLog(int Level, string LogEntry, string LogType)
+        {   
+            var LogFileName = "DEA_Email_Logfile_" + DateTime.Now.ToString("dd_MM_yyyy") + ".txt";
+
+            if (LogType.ToUpper() == "FTP")
+            {
+               LogFileName  = "DEA_Ftp_Logfile_" + DateTime.Now.ToString("dd_MM_yyyy") + ".txt";
+            }
+
             var LogFile = Path.Combine(GraphHelper.CheckFolders("Log"), LogFileName);
 
             var LogControlSwitch = new LoggingLevelSwitch();

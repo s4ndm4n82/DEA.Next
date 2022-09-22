@@ -3,9 +3,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using DEA;
 using ReadSettings;
-using WriteLog;
 using GetRecipientEmail;
 using FolderCleaner;
+using WriteLog;
 
 namespace DEAHelper1Leve
 {
@@ -44,7 +44,7 @@ namespace DEAHelper1Leve
 
             try
             {
-                WriteLogClass.WriteToLog(3, $"Processing Email {_Email} ....");
+                WriteLogClass.WriteToLog(3, $"Processing Email {_Email} ....", string.Empty);
 
                 //Top level of mail boxes like user inbox.
                 var FirstSubFolderIDs = await graphClient.Users[$"{_Email}"].MailFolders["Inbox"].ChildFolders
@@ -81,7 +81,7 @@ namespace DEAHelper1Leve
                         var MessageCount = GetMessageAttachments.Count();
                         if (MessageCount != 0)
                         {
-                            WriteLogClass.WriteToLog(3, $"Processing folder path {FirstSubFolderID.DisplayName}");
+                            WriteLogClass.WriteToLog(3, $"Processing folder path {FirstSubFolderID.DisplayName}", string.Empty);
 
                             // Looping through the messages.
                             foreach (var Message in GetMessageAttachments)
@@ -121,7 +121,7 @@ namespace DEAHelper1Leve
 
                                         if (AcceptedExtensionCollection.Any(y => y.Name.ToLower().Contains(AcceptedExtention)))
                                         {
-                                            WriteLogClass.WriteToLog(3, "Collection check succeeded ...");
+                                            WriteLogClass.WriteToLog(3, "Collection check succeeded ...", string.Empty);
 
                                             // FolderNameRnd creates a 10 digit folder name. CheckFolder returns the download path.
                                             // This has to be called here. Don't put it within the for loop or it will start calling this
@@ -172,21 +172,21 @@ namespace DEAHelper1Leve
 
                                                 if (TruAttachmentBytes.Length < 7168 && AttExtention != ".pdf")
                                                 {
-                                                    WriteLogClass.WriteToLog(3, $"Attachment size {TruAttachmentBytes.Length} too small ... skipping to the next file ....");
-                                                    WriteLogClass.WriteToLog(3, $"Attachment name {TrueAttachmentName}");
+                                                    WriteLogClass.WriteToLog(3, $"Attachment size {TruAttachmentBytes.Length} too small ... skipping to the next file ....", string.Empty);
+                                                    WriteLogClass.WriteToLog(3, $"Attachment name {TrueAttachmentName}", string.Empty);
                                                     continue;
                                                 }
 
                                                 // Saves the file to the local hard disk.
                                                 if (TruAttachmentBytes.Length > 7168 || (TruAttachmentBytes.Length < 7168 && AttExtention == ".pdf"))
                                                 {
-                                                    WriteLogClass.WriteToLog(3, $"Starting attachment download from {Message.Subject} ....");
+                                                    WriteLogClass.WriteToLog(3, $"Starting attachment download from {Message.Subject} ....", string.Empty);
 
                                                     // Saves the file to the local hard disk.
                                                     GraphHelper.DownloadAttachedFiles(PathFullDownloadFolder, TrueAttachmentName, TruAttachmentBytes);
 
-                                                    WriteLogClass.WriteToLog(3, $"Downloaded attachments from {Message.Subject}   ....");
-                                                    WriteLogClass.WriteToLog(3, $"Attachment name {TrueAttachmentName}");
+                                                    WriteLogClass.WriteToLog(3, $"Downloaded attachments from {Message.Subject}   ....", string.Empty);
+                                                    WriteLogClass.WriteToLog(3, $"Attachment name {TrueAttachmentName}", string.Empty);
                                                     // Creating the metdata file.
                                                     //var FileFlag = CreateMetaDataXml.GetToEmail4Xml(graphClient, FirstSubFolderID.Id, SecondSubFolderID.Id, StaticThirdSubFolderID, Message.Id, _Email, PathFullDownloadFolder, TrueAttachmentName);
                                                     var FileFlag = true;
@@ -197,16 +197,16 @@ namespace DEAHelper1Leve
 
                                                     if (DownloadFolderExistTest.Length != 0 && DownloadFileExistTest.Length != 0 && FileFlag)
                                                     {
-                                                        WriteLogClass.WriteToLog(3, "Moving downloaded files to local folder ....");
+                                                        WriteLogClass.WriteToLog(3, "Moving downloaded files to local folder ....", string.Empty);
                                                         // Moves the downloaded files to destination folder. This would create the folder path if it's missing.
                                                         if (GraphHelper.MoveFolder(PathFullDownloadFolder, DestinationFolderPath))
                                                         {
-                                                            WriteLogClass.WriteToLog(3, "File moved successfully ....");
+                                                            WriteLogClass.WriteToLog(3, "File moved successfully ....", string.Empty);
                                                             MoveToExport = true;
                                                         }
                                                         else
                                                         {
-                                                            WriteLogClass.WriteToLog(3, "File was not moved successfully ....");
+                                                            WriteLogClass.WriteToLog(3, "File was not moved successfully ....", string.Empty);
                                                         }
                                                     }
                                                 }
@@ -245,18 +245,18 @@ namespace DEAHelper1Leve
                                                     // Moves the mail to downloaded folder.
                                                     if (await GraphHelper.MoveEmails(FirstSubFolderID.Id, null!, StaticThirdSubFolderID, MessageID, MoveDestinationID, _Email))
                                                     {
-                                                        WriteLogClass.WriteToLog(3, $"Email {Message.Subject} moved to export folder ...");
+                                                        WriteLogClass.WriteToLog(3, $"Email {Message.Subject} moved to export folder ...", string.Empty);
                                                     }
                                                     else
                                                     {
-                                                        WriteLogClass.WriteToLog(3, $"Email {Message.Subject} is not moved to export folder ...");
+                                                        WriteLogClass.WriteToLog(3, $"Email {Message.Subject} is not moved to export folder ...", string.Empty);
                                                     }
                                                 }
                                             }
                                         }
                                         catch (Exception ex)
                                         {
-                                            WriteLogClass.WriteToLog(1, $"Exception at attachment download area 2level: {ex.Message}");
+                                            WriteLogClass.WriteToLog(1, $"Exception at attachment download area 2level: {ex.Message}", string.Empty);
                                         }
                                     }                                    
                                 }
@@ -295,21 +295,21 @@ namespace DEAHelper1Leve
                                                 // Item1 is the maile address.
                                                 if (ForwardDone.Item2)
                                                 {
-                                                    WriteLogClass.WriteToLog(3, $"Email forwarded to {ForwardDone.Item1}  ....");
+                                                    WriteLogClass.WriteToLog(3, $"Email forwarded to {ForwardDone.Item1}  ....", string.Empty);
                                                 }
                                                 else
                                                 {
-                                                    WriteLogClass.WriteToLog(3, $"Email not forwarded to {ForwardDone.Item1}  ....");
+                                                    WriteLogClass.WriteToLog(3, $"Email not forwarded to {ForwardDone.Item1}  ....", string.Empty);
                                                 }
 
                                                 // Moves the empty emails to error folder once forwarding is done.
                                                 if (await GraphHelper.MoveEmails(FirstSubFolderID.Id, null!, StaticThirdSubFolderID, MessageID2, ErrorFolderId, _Email))
                                                 {
-                                                    WriteLogClass.WriteToLog(3, $"Mail Moved to {ErrorFolder.DisplayName} Folder ....");
+                                                    WriteLogClass.WriteToLog(3, $"Mail Moved to {ErrorFolder.DisplayName} Folder ....", string.Empty);
                                                 }
                                                 else
                                                 {
-                                                    WriteLogClass.WriteToLog(3, $"Mail was Not Moved to {ErrorFolder.DisplayName} Folder ....");
+                                                    WriteLogClass.WriteToLog(3, $"Mail was Not Moved to {ErrorFolder.DisplayName} Folder ....", string.Empty);
                                                 }
                                             }
                                         }
@@ -322,7 +322,7 @@ namespace DEAHelper1Leve
             }    
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(1, $"Exception at end of main foreach 2level: {ex.Message}");
+                WriteLogClass.WriteToLog(1, $"Exception at end of main foreach 2level: {ex.Message}", string.Empty);
             }
         }
     }

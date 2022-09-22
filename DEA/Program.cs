@@ -4,6 +4,8 @@ using FolderCleaner;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 using FtpFunctions;
+using UserConfigReader;
+using FluentFTP;
 
 // DEA old
 // ~~~~~~~
@@ -29,11 +31,39 @@ using FtpFunctions;
 // TODO 8: Get the success signal and then delete the file. If not keep the file and send an error mail or message.
 
 // Aplication title just for fun.
-WriteLogClass.WriteToLog(3, "Starting DEA ....");
 
-WriteLogClass.WriteToLog(3, "Connecting to FTP Server ....");
+WriteLogClass.WriteToLog(3, "Connecting to FTP Server ....", "FTP");
 
-await FtpFunctionsClass.GetFtpFiles();
+var JsonData = await UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+
+//var FtpClients = JsonData.CustomerDetails!.Where(Delm => Delm.FileDeliveryMethod == "FTP");
+var FtpClients = JsonData.CustomerDetails!;
+/*foreach (var FtpClient in FtpClients)
+{
+    switch (FtpClient.)
+    if (FtpClient.FtpDetails!.FtpType == "FTP")
+    {
+        await FtpFunctionsClass.GetFtpFiles(FtpClient.id);
+    }
+}*/
+
+foreach (var client in FtpClients)
+{
+    switch (client.FileDeliveryMethod)
+    {
+        case "FTP":
+            await FtpFunctionsClass.GetFtpFiles(client.id);
+            break;
+
+        case "FTPS":
+            await FtpFunctionsClass.GetFtpFiles(client.id);
+            break;
+
+        default:
+            WriteLogClass.WriteToLog(3, "Email part should execute", string.Empty);
+            break;
+    }
+}
 
 Thread.Sleep(100000);
 /*
