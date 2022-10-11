@@ -10,9 +10,11 @@ namespace ConnectFtp
         {
             var CloseToken = new CancellationToken();
 
-            var FtpConnect = new AsyncFtpClient();
-                FtpConnect.Host = HostName;
-                FtpConnect.Credentials = new NetworkCredential(UserName, UserPassword);
+            var FtpConnect = new AsyncFtpClient
+            {
+                Host = HostName,
+                Credentials = new NetworkCredential(UserName, UserPassword)
+            };
             try
             {
                 await FtpConnect.Connect(CloseToken);

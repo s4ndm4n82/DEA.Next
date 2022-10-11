@@ -5,7 +5,8 @@ using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 using FtpFunctions;
 using UserConfigReader;
-using FluentFTP;
+using SftpFunctions;
+
 
 // DEA old
 // ~~~~~~~
@@ -36,34 +37,27 @@ WriteLogClass.WriteToLog(3, "Connecting to FTP Server ....", "FTP");
 
 var JsonData = await UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
 
-//var FtpClients = JsonData.CustomerDetails!.Where(Delm => Delm.FileDeliveryMethod == "FTP");
 var FtpClients = JsonData.CustomerDetails!;
-/*foreach (var FtpClient in FtpClients)
-{
-    switch (FtpClient.)
-    if (FtpClient.FtpDetails!.FtpType == "FTP")
-    {
-        await FtpFunctionsClass.GetFtpFiles(FtpClient.id);
-    }
-}*/
 
 foreach (var client in FtpClients)
 {
-    switch (client.FileDeliveryMethod)
+    if (client.FileDeliveryMethod!.ToUpper() == "FTP")
     {
-        case "FTP":
-            await FtpFunctionsClass.GetFtpFiles(client.id);
-            break;
-
-        case "FTPS":
-            await FtpFunctionsClass.GetFtpFiles(client.id);
-            break;
-
-        default:
-            WriteLogClass.WriteToLog(3, "Email part should execute", string.Empty);
-            break;
+        if (client.FtpDetails!.FtpType!.ToUpper() == "FTP" || client.FtpDetails!.FtpType!.ToUpper() == "FTPS")
+        {
+            //await FtpFunctionsClass.GetFtpFiles(client.id);        
+        }
+        else
+        {
+            await SftpFunctionsClass.GetSftpFiles(client.id);
+        }
+    }
+    else
+    {
+        WriteLogClass.WriteToLog(3, "Email download should run", "FTP");        
     }
 }
+
 
 Thread.Sleep(100000);
 /*

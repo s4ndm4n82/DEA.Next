@@ -9,14 +9,12 @@ namespace ConnectFtps
         public static async Task<AsyncFtpClient> ConnectFtps(string HostName, string HostIp, string UserName, string UserPassword)
         {
             var CancelToken = new CancellationToken();
-            /*var HostName = "localhost";
-            var HostIp = "127.0.0.1";
-            var UserName = "testuser";
-            var UserPassword = "jackkills";*/
 
-            var FtpsConnect = new AsyncFtpClient();
-            FtpsConnect.Host = HostName;
-            FtpsConnect.Credentials = new NetworkCredential(UserName, UserPassword);
+            var FtpsConnect = new AsyncFtpClient
+            {
+                Host = HostName,
+                Credentials = new NetworkCredential(UserName, UserPassword)
+            };
             FtpsConnect.Config.EncryptionMode = FtpEncryptionMode.Explicit;
             FtpsConnect.Config.ValidateAnyCertificate = true;
 
@@ -51,7 +49,7 @@ namespace ConnectFtps
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(2, $"Exception at FTP connection: {ex.Message}", "FTP");
+                WriteLogClass.WriteToLog(2, $"Exception at FTPS connection: {ex.Message}", "FTP");
             }
             return FtpsConnect;
         }

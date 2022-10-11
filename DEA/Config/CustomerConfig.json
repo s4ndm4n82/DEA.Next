@@ -74,6 +74,31 @@
         "DocumentType": "PDF",
         "DocumentExtension": ".pdf"
       }
+    },
+    {
+      "id": 4,
+      "MainCustomer": "Enkeltstående",
+      "ClientName": "Agder Betongsaging AS",
+      "FileDeliveryMethod": "FTP",
+      "FtpDetails": {
+        "FtpType": "SFTP",
+        "FtpHostName": "localhost",
+        "FtpHostIp": "127.0.0.1",
+        "FtpUser": "testuser",
+        "FtpPassword": "jackkills",
+        "FtpMainFolder": "Enkeltstående",
+        "FtpSubFolder": "Agder Betongsaging AS"
+      },
+      "EmailDetails": {
+        "EmailAddress": "",
+        "MainInbox": "",
+        "SubInbox1": "",
+        "SubInbox2": ""
+      },
+      "DocumentDetails": {
+        "DocumentType": "PDF",
+        "DocumentExtension": ".pdf"
+      }
     }
   ]
 }
