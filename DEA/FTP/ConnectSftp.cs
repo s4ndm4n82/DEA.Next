@@ -7,6 +7,7 @@ namespace ConnectSftp
     {
         public static SftpClient ConnectSftp(string HostName, string HostIp, string UserName, string UserPassword)
         {
+            // SFTP implimention will be holted until it's needed.
             ConnectionInfo ConnInfo = new ConnectionInfo(HostName, UserName, new PasswordAuthenticationMethod(UserName, UserPassword));
 
             SftpClient SftpConnect = new SftpClient(ConnInfo);

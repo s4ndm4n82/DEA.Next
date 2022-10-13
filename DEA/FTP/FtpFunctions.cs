@@ -13,46 +13,46 @@ namespace FtpFunctions
         {
             var JsonData = await UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
 
-            var FtpOnlyClient = JsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == Customerid);
+            var clientDetails = JsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == Customerid);
 
-            if (FtpOnlyClient != null)
+            if (clientDetails != null)
             {
-                await InitiateFtpDownload(FtpOnlyClient!);
+                await InitiateFtpDownload(clientDetails!);
             }
             return true;
         }
 
         public static async Task<bool> InitiateFtpDownload(UserConfigReaderClass.Customerdetail FtpClientDetails)
         {
-            var FtpType = FtpClientDetails.FtpDetails!.FtpType;
-            var FtpHostName = FtpClientDetails.FtpDetails!.FtpHostName;
-            var FtpHosIp = FtpClientDetails.FtpDetails.FtpHostIp;
-            var FtpUser = FtpClientDetails.FtpDetails.FtpUser;
-            var FtpPassword = FtpClientDetails.FtpDetails.FtpPassword;
-            var FtpMainFolder = FtpClientDetails.FtpDetails.FtpMainFolder;
-            var FtpSubFolder = FtpClientDetails.FtpDetails.FtpSubFolder!.Replace(" ", "");
-            var FtpPath = $@"/{FtpMainFolder}/{FtpSubFolder}";
+            var ftpType = FtpClientDetails.FtpDetails!.FtpType;
+            var ftpHostName = FtpClientDetails.FtpDetails!.FtpHostName;
+            var ftpHosIp = FtpClientDetails.FtpDetails.FtpHostIp;
+            var ftpUser = FtpClientDetails.FtpDetails.FtpUser;
+            var ftpPassword = FtpClientDetails.FtpDetails.FtpPassword;
+            var ftpMainFolder = FtpClientDetails.FtpDetails.FtpMainFolder;
+            var ftpSubFolder = FtpClientDetails.FtpDetails.FtpSubFolder!.Replace(" ", "");
+            var ftpPath = $@"/{ftpMainFolder}/{ftpSubFolder}";
 
             var LocalFtpFolder = GraphHelper.CheckFolders("FTP");
-            var FtpHoldFolder = Path.Combine(LocalFtpFolder, FtpMainFolder!, FtpSubFolder!);
-            AsyncFtpClient Ftp = null!;
+            var FtpHoldFolder = Path.Combine(LocalFtpFolder, ftpMainFolder!, ftpSubFolder!);
+            AsyncFtpClient ftp = null!;
 
-            if (FtpType == "FTP")
+            if (ftpType == "FTP")
             {
-                Ftp = await ConnectFtpClass.ConnectFtp(FtpHostName!, FtpHosIp!, FtpUser!, FtpPassword!);
+                ftp = await ConnectFtpClass.ConnectFtp(ftpHostName!, ftpHosIp!, ftpUser!, ftpPassword!);
             }
-            else if (FtpType == "FTPS")
+            else if (ftpType == "FTPS")
             {
-                Ftp = await ConnectFtpsClass.ConnectFtps(FtpHostName!, FtpHosIp!, FtpUser!, FtpPassword!);
+                ftp = await ConnectFtpsClass.ConnectFtps(ftpHostName!, ftpHosIp!, ftpUser!, ftpPassword!);
             }
 
-            using var FtpConnect = Ftp;
+            using var ftpConnect = ftp;
 
-            if (await FtpConnect.DirectoryExists(FtpPath))
+            if (await ftpConnect.DirectoryExists(ftpPath))
             {
-                WriteLogClass.WriteToLog(3, $"Starting file download from {FtpPath} ....", "FTP");
+                WriteLogClass.WriteToLog(3, $"Starting file download from {ftpPath} ....", "FTP");
 
-                if (await DownloadFtpFiles(FtpConnect, FtpPath, FtpHoldFolder))
+                if (await DownloadFtpFiles(ftpConnect, ftpPath, FtpHoldFolder))
                 {
                     WriteLogClass.WriteToLog(3, "File download successful ....", "FTP");
                     return true;
@@ -65,33 +65,33 @@ namespace FtpFunctions
             return false;
         }
 
-        public static async Task<bool> DownloadFtpFiles(AsyncFtpClient _FtpConnect, string _FtpPath, string _FtpHoldFolder)
+        public static async Task<bool> DownloadFtpFiles(AsyncFtpClient ftpConnect, string ftpPath, string ftpHoldFolder)
         {
-            FtpListItem[] FtpFileItemList = await _FtpConnect.GetListing(_FtpPath);
+            FtpListItem[] FtpFileItemList = await ftpConnect.GetListing(ftpPath);
 
             IEnumerable<string> FilesToDownload = FtpFileItemList.Select(f => f.FullName.ToString());
 
-            var Count = await _FtpConnect.DownloadFiles(_FtpHoldFolder, FilesToDownload, FtpLocalExists.Resume, FtpVerify.Retry);
+            var Count = await ftpConnect.DownloadFiles(ftpHoldFolder, FilesToDownload, FtpLocalExists.Resume, FtpVerify.Retry);
             
             if (Count > 0)
             {
-                WriteLogClass.WriteToLog(3, $"Downloaded {Count} file/s from {_FtpPath} to {_FtpHoldFolder} ....", "FTP");
+                WriteLogClass.WriteToLog(3, $"Downloaded {Count} file/s from {ftpPath} to {ftpHoldFolder} ....", "FTP");
 
-                var _LocalFiles = Directory.GetFiles(_FtpHoldFolder, "*.*", SearchOption.AllDirectories);
+                var localFiles = Directory.GetFiles(ftpHoldFolder, "*.*", SearchOption.AllDirectories);
                 var skip = false;
 
-                foreach (var _LocalFile in _LocalFiles)
+                foreach (var _LocalFile in localFiles)
                 {
-                    var _LocalFileName = Path.GetFileName(_LocalFile);
+                    var localFileName = Path.GetFileName(_LocalFile);
                     foreach (var FileName in FilesToDownload)
                     {
-                        var _FileName = Path.GetFileName(FileName);
+                        var fileName = Path.GetFileName(FileName);
 
-                        if (_LocalFileName == _FileName)
+                        if (localFileName == fileName)
                         {
-                            if (await DeleteFtpFiles(_FtpConnect, FileName))
+                            if (await DeleteFtpFiles(ftpConnect, FileName))
                             {
-                                WriteLogClass.WriteToLog(3, $"Deleted file {_FileName} from {_FtpPath} ....", "FTP");
+                                WriteLogClass.WriteToLog(3, $"Deleted file {fileName} from {ftpPath} ....", "FTP");
                                 skip = true;
                                 break;
                             }                            
@@ -116,11 +116,11 @@ namespace FtpFunctions
             }            
         }
 
-        public static async Task<bool> DeleteFtpFiles(AsyncFtpClient __FtpConnect, string FtpFileName)
+        public static async Task<bool> DeleteFtpFiles(AsyncFtpClient ftpConnect, string ftpFileName)
         {
             try
             {
-                await __FtpConnect.DeleteFile(FtpFileName);
+                await ftpConnect.DeleteFile(ftpFileName);
                 return true;
             }
             catch (Exception ex)

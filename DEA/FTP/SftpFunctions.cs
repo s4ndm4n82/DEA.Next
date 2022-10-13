@@ -7,6 +7,7 @@ namespace SftpFunctions
 {
     internal class SftpFunctionsClass
     {
+        // SFTP implimention will be holted until it's needed.
         public static async Task<bool> GetSftpFiles(int CustomerId)
         {
             var JsonData = await UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();

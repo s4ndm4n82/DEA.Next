@@ -5,7 +5,8 @@ using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 using FtpFunctions;
 using UserConfigReader;
-using SftpFunctions;
+using SftpFunctions; // keep it untill implimentation.
+using System.Drawing.Text;
 
 
 // DEA old
@@ -35,27 +36,26 @@ using SftpFunctions;
 
 WriteLogClass.WriteToLog(3, "Connecting to FTP Server ....", "FTP");
 
-var JsonData = await UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+var jsonData = await UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
 
-var FtpClients = JsonData.CustomerDetails!;
+var ftpClients = jsonData.CustomerDetails!.Where(ftpc => ftpc.FileDeliveryMethod!.ToUpper() == "FTP");
+var emailClients = jsonData.CustomerDetails!.Where(emailc => emailc.FileDeliveryMethod!.ToLower() == "email");
 
-foreach (var client in FtpClients)
+foreach (var ftpClient in ftpClients)
 {
-    if (client.FileDeliveryMethod!.ToUpper() == "FTP")
+    if (ftpClient.FtpDetails!.FtpType!.ToUpper() == "FTP" || ftpClient.FtpDetails!.FtpType!.ToUpper() == "FTPS")
     {
-        if (client.FtpDetails!.FtpType!.ToUpper() == "FTP" || client.FtpDetails!.FtpType!.ToUpper() == "FTPS")
-        {
-            //await FtpFunctionsClass.GetFtpFiles(client.id);        
-        }
-        else
-        {
-            await SftpFunctionsClass.GetSftpFiles(client.id);
-        }
+        await FtpFunctionsClass.GetFtpFiles(ftpClient.id);
     }
-    else
+    /*else // Awating to be implimented. Will be added when needed.
     {
-        WriteLogClass.WriteToLog(3, "Email download should run", "FTP");        
-    }
+        await SftpFunctionsClass.GetSftpFiles(client.id);
+    }*/
+}
+
+foreach (var emailClient in emailClients)
+{
+   await GraphHelper.InitializGetAttachment(emailClient.id);
 }
 
 
@@ -67,90 +67,4 @@ WriteLogClass.WriteToLog(3, "Checking main folders ....");
 
 // Clean the main download folder.
 FolderCleanerClass.GetFolders(GraphHelper.CheckFolders("Download"));
-
-// Getting the Graph and checking the settings for Graph.
-var appConfig = LoadAppSettings();
-
-// Declaring variable to be used with in the if below.
-var ClientId = string.Empty;
-var TenantId = string.Empty;
-var Instance = string.Empty;
-var GraphApiUrl = string.Empty;
-var ClientSecret = string.Empty;
-string[] Scopes = new string[] { };
-
-// If appConfig is equal to null look for settings with in the appsettings.json file.
-if (appConfig == null)
-{
-    // Read the appsettings json file and loads the text in to AppCofigJson variable.
-    // File should be with in the main working directory.
-    var AppConfigJson = new ConfigurationBuilder()
-        .SetBasePath(Directory.GetCurrentDirectory())
-        .AddJsonFile(@".\Config\appsettings.json", optional: true, reloadOnChange: true)
-        .Build();
-
-    // Initilize the variables with values.
-    ClientId = AppConfigJson.GetSection("GraphConfig").GetSection("ClientId").Value;
-    TenantId = AppConfigJson.GetSection("GraphConfig").GetSection("TenantId").Value;
-    Instance = AppConfigJson.GetSection("GraphConfig").GetSection("Instance").Value;
-    GraphApiUrl = AppConfigJson.GetSection("GraphConfig").GetSection("GraphApiUrl").Value;
-    ClientSecret = AppConfigJson.GetSection("GraphConfig").GetSection("ClientSecret").Value;
-    Scopes = new string[] { $"{AppConfigJson.GetSection("GraphConfig").GetSection("Scopes").Value}" };
-
-    // If Json file is also returns empty then below error would be shown.
-    if (string.IsNullOrEmpty(ClientId) ||
-        string.IsNullOrEmpty(TenantId) ||
-        string.IsNullOrEmpty(Instance) ||
-        string.IsNullOrEmpty(GraphApiUrl) ||
-        string.IsNullOrEmpty(ClientSecret))
-    {
-        WriteLogClass.WriteToLog(1, "Set the Graph API permissions. Using dotnet user-secrets set or appsettings.json.... User secrets is not correct.");
-    }
-}
-else
-{
-    // If appConfig is not equal to null then assings all the setting to variables from UserSecrets.
-    ClientId = appConfig["ClientId"];
-    TenantId = appConfig["TenantId"];
-    Instance = appConfig["Instance"];
-    GraphApiUrl = appConfig["GraphApiUrl"];
-    ClientSecret = appConfig["ClientSecret"];
-    Scopes = new string[] { $"{appConfig["Scopes"]}" };// Gets the application permissions which are set from the Azure AD.
-}
-
-// Calls InitializeGraphClient to get the token and connect to the graph API.
-if (!await GraphHelper.InitializeGraphClient(ClientId, Instance, TenantId, GraphApiUrl, ClientSecret, Scopes))
-{
-    WriteLogClass.WriteToLog(1, "Graph client initialization faild  .....");
-}
-else
-{
-    WriteLogClass.WriteToLog(3, "Graph client initialization successful ....");
-    Thread.Sleep(5000);
-    WriteLogClass.WriteToLog(3, "Starting attachment download process ....");
-    await GraphHelper.InitializGetAttachment();
-}
-
-WriteLogClass.WriteToLog(3, "Email processing ended ...\n");
-
-// Loads the settings from user sectrets file.
-static IConfigurationRoot? LoadAppSettings()
-{
-    var appConfigUs = new ConfigurationBuilder()
-         .AddUserSecrets<Program>()
-         .Build();
-
-     // Check for required settings in app secrets.
-     if (string.IsNullOrEmpty(appConfigUs["ClientId"]) ||
-         string.IsNullOrEmpty(appConfigUs["TenantId"]) ||
-         string.IsNullOrEmpty(appConfigUs["Instance"]) ||
-         string.IsNullOrEmpty(appConfigUs["GraphApiUrl"]) ||
-         string.IsNullOrEmpty(appConfigUs["ClientSecret"]))
-     {
-         return null;
-     }
-     else
-     {
-         return appConfigUs;
-     }
-}*/
+*/

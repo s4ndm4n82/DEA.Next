@@ -1,9 +1,4 @@
-﻿using System.Collections.Specialized;
-using System.Configuration;
-using System.IO;
-using System.Text.Json;
-using System.Threading.Tasks;
-using WriteLog;
+﻿using System.Text.Json;
 
 namespace UserConfigReader
 {
@@ -19,6 +14,11 @@ namespace UserConfigReader
         public class Customerdetail
         {
             public int id { get; set; }
+            public string? Token { get; set; }
+            public string? UserName { get; set; }
+            public object? TemplateKey { get; set; }
+            public string? Queue { get; set; }
+            public string? ProjetID { get; set; }
             public string? MainCustomer { get; set; }
             public string? ClientName { get; set; }
             public string? FileDeliveryMethod { get; set; }
@@ -51,7 +51,6 @@ namespace UserConfigReader
             public string? DocumentType { get; set; }
             public string? DocumentExtension { get; set; }
         }
-
 
         public static async Task<T> ReadAppDotConfig<T>()
         {
