@@ -41,7 +41,7 @@ var jsonData = await UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClas
 var ftpClients = jsonData.CustomerDetails!.Where(ftpc => ftpc.FileDeliveryMethod!.ToUpper() == "FTP");
 var emailClients = jsonData.CustomerDetails!.Where(emailc => emailc.FileDeliveryMethod!.ToLower() == "email");
 
-foreach (var ftpClient in ftpClients)
+/*foreach (var ftpClient in ftpClients)
 {
     if (ftpClient.FtpDetails!.FtpType!.ToUpper() == "FTP" || ftpClient.FtpDetails!.FtpType!.ToUpper() == "FTPS")
     {
@@ -50,8 +50,8 @@ foreach (var ftpClient in ftpClients)
     /*else // Awating to be implimented. Will be added when needed.
     {
         await SftpFunctionsClass.GetSftpFiles(client.id);
-    }*/
-}
+    }
+}*/
 
 foreach (var emailClient in emailClients)
 {

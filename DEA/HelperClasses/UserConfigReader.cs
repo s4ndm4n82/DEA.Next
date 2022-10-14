@@ -55,9 +55,9 @@ namespace UserConfigReader
         public static async Task<T> ReadAppDotConfig<T>()
         {
             using FileStream ReadFile = File.OpenRead(@".\Config\CustomerConfig.json");
-            T? JsonData = await JsonSerializer.DeserializeAsync<T>(ReadFile);
+            T? jsonData = await JsonSerializer.DeserializeAsync<T>(ReadFile);
 
-            return JsonData!;
+            return jsonData!;
         }
     }
 }

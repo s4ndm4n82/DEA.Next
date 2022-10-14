@@ -50,7 +50,7 @@ namespace DEA
                 try
                 {
                     // Calls the function to read ATC emails.
-                    await GraphHelper2Levels.GetEmailsAttacmentsAccount(graphClient!, clientDetails.EmailDetails.EmailAddress!);
+                    await GraphHelper2Levels.GetEmailsAttacmentsAccount(graphClient!, clientDetails.EmailDetails.EmailAddress!, clientDetails.EmailDetails.MainInbox!, clientDetails.EmailDetails.SubInbox1!, clientDetails.EmailDetails.SubInbox2!);
                 }
                 catch (Exception ex)
                 {
@@ -124,7 +124,7 @@ namespace DEA
             }
 
             // Calls InitializeGraphClient to get the token and connect to the graph API.
-            if (!await GraphHelper.InitializeGraphClient(ClientId, Instance, TenantId, GraphApiUrl, ClientSecret, Scopes))
+            if (!await InitializeGraphClient(ClientId, Instance, TenantId, GraphApiUrl, ClientSecret, Scopes))
             {
                 WriteLogClass.WriteToLog(1, "Graph client initialization faild  .....", string.Empty);
             }
@@ -133,10 +133,7 @@ namespace DEA
                 WriteLogClass.WriteToLog(3, "Graph client initialization successful ....", string.Empty);
                 Thread.Sleep(5000);
                 WriteLogClass.WriteToLog(3, "Starting attachment download process ....", string.Empty);
-                await GraphHelper.InitializGetAttachment();
             }
-
-            WriteLogClass.WriteToLog(3, "Email processing ended ...\n", string.Empty);
         }
         // Loads the settings from user sectrets file.
         static IConfigurationRoot? LoadAppSettings()
