@@ -50,7 +50,7 @@ namespace DEA
                 try
                 {
                     // Calls the function to read ATC emails.
-                    await GraphHelper2Levels.GetEmailsAttacmentsAccount(graphClient!, clientDetails.EmailDetails.EmailAddress!, clientDetails.EmailDetails.MainInbox!, clientDetails.EmailDetails.SubInbox1!, clientDetails.EmailDetails.SubInbox2!);
+                    await GraphHelper2Levels.GetEmailsAttacments2Levels(graphClient!, clientDetails.EmailDetails.EmailAddress!, clientDetails.EmailDetails.MainInbox!, clientDetails.EmailDetails.SubInbox1!, clientDetails.EmailDetails.SubInbox2!);
                 }
                 catch (Exception ex)
                 {
