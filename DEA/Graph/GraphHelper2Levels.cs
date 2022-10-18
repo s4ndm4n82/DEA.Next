@@ -22,7 +22,7 @@ namespace DEA2Levels
 
             var folderIds = await GetMailFolderIdsClass.GetChlidFolderIds<GetMailFolderIdsClass>(graphClient, clientEmail, mainMailFolder, subFolder1, subFolder2);
 
-            await GraphAttachmentFunctionsClass.GetMessagesWithAttachments<GraphAttachmentFunctionsClass>(graphClient, clientEmail, folderIds.clientMainFolderId!, folderIds.clientSubFolderId1!, folderIds.clientSubFolderId2!);
+            var messages = await GraphAttachmentFunctionsClass.GetMessagesWithAttachments(graphClient, clientEmail, folderIds.clientMainFolderId!, folderIds.clientSubFolderId1!, folderIds.clientSubFolderId2!);
         }
     }
 }
