@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using ReadSettings;
 using WriteLog;
+using DEA;
 
 namespace GraphAttachmentFunctions
 {
@@ -100,10 +101,28 @@ namespace GraphAttachmentFunctions
                     byte[] attachmentBytes = attachmentProperties.ContentBytes;
                     string attachmentExtension = Path.GetExtension(attachmentName);
 
-                    Regex matchChar = new Regex(@"[\\\/c:]");
+                    Regex matchChar = new (@"[\\\/c:]");
 
+                    if (matchChar.IsMatch(attachmentName.ToLower()))
+                    {
+                        attachmentName = Path.GetFileName(attachmentName);
+                    }
+
+                    Regex matchChar2 = new (@"[\w\d\s\.\-]+");
+
+                    if (!matchChar2.IsMatch(attachmentName))
+                    {
+                        attachmentName = Regex.Replace(attachmentName, @"[\w\d\s\.\-]+", " ");
+                    }
+
+                    GraphHelper.DownloadAttachedFiles(Path.Combine(GraphHelper.CheckFolders("Download"), GraphHelper.FolderNameRnd(10)), attachmentName, attachmentBytes );
                 }
             }
+            return false;
+        }
+
+        private static bool MoveEmail([NotNull] GraphServiceClient graphClient, string mainFolderId, string subFolderId1, string subFolder2, string messageId, string exportFolderId, string inEmail)
+        {
             return false;
         }
     }
