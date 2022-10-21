@@ -1,12 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using UserConfigReader;
+using WriteLog;
 
 namespace FileFunctions
 {
-    class FileFunctionsClass
+    internal class FileFunctionsClass
     {
+        public static async Task<bool> SendToWebService(string filePath, int customerId)
+        {
+            UserConfigReaderClass.CustomerDetailsObject jsonData = await UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+            UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId)!;
+
+            string[] downloadedFiles = Directory.GetFiles(filePath);
+
+
+
+            return true;
+        }
     }
 }

@@ -50,7 +50,7 @@ namespace DEA
                 try
                 {
                     // Calls the function to read ATC emails.
-                    await GraphHelper2Levels.GetEmailsAttacments2Levels(graphClient!, clientDetails.EmailDetails.EmailAddress!, clientDetails.EmailDetails.MainInbox!, clientDetails.EmailDetails.SubInbox1!, clientDetails.EmailDetails.SubInbox2!);
+                    await GraphHelper2Levels.GetEmailsAttacments2Levels(graphClient!, clientDetails.EmailDetails.EmailAddress!, clientDetails.EmailDetails.MainInbox!, clientDetails.EmailDetails.SubInbox1!, clientDetails.EmailDetails.SubInbox2!, customerId);
                 }
                 catch (Exception ex)
                 {
@@ -222,23 +222,31 @@ namespace DEA
             return NumString;
         }
 
-        // Check the exsistance of the download folders.
-        public static string CheckFolders(string FolderSwitch)
+        /// <summary>
+        /// Check if the folder paths and folders exsits. If not they are created this is initiated on program launch.
+        /// </summary>
+        /// <param name="folderSwitch"></param>
+        /// <returns>Folder paths have use the correct download folder name.</returns>
+        public static string CheckFolders(string folderSwitch)
         {
             // Get current execution path.
-            string FolderPath = string.Empty;
-            string? PathRootFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            string DownloadFolderName = "Download";
-            string LogFolderName = "Logs";
-            string PathDownloadFolder = Path.Combine(PathRootFolder!, DownloadFolderName);
-            string PathLogFolder = Path.Combine(PathRootFolder!, LogFolderName);
+            string folderPath = string.Empty;
+            string? pthRootFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            string downloadFolderName = "Download";
+            string attachmentFolderName = "Attachments";
+            string ftpFileFolderName = "FTPFiles";
+            string logFolderName = "Logs";
+            string pathDownloadFolder = Path.Combine(pthRootFolder!, downloadFolderName); // Main file download folder.
+            string pathLogFolder = Path.Combine(pthRootFolder!, logFolderName); // Log folder
+            string attachmentPath = Path.Combine(pathDownloadFolder!, attachmentFolderName); // Email attachment download folder.
+            string ftpPath = Path.Combine(pathDownloadFolder, ftpFileFolderName); // FTP file download folder.
 
             // Check if download folder exists. If not creates the fodler.
-            if (!System.IO.Directory.Exists(PathDownloadFolder))
+            if (!System.IO.Directory.Exists(pathDownloadFolder))
             {
                 try
                 {
-                    System.IO.Directory.CreateDirectory(PathDownloadFolder);
+                    System.IO.Directory.CreateDirectory(pathDownloadFolder);
                 }
                 catch (Exception ex)
                 {
@@ -246,11 +254,35 @@ namespace DEA
                 }
             }
 
-            if (!System.IO.Directory.Exists(PathLogFolder))
+            if (!System.IO.Directory.Exists(attachmentPath))
             {
                 try
                 {
-                    System.IO.Directory.CreateDirectory(PathLogFolder);
+                    System.IO.Directory.CreateDirectory(attachmentPath);
+                }
+                catch (Exception ex)
+                {
+                    WriteLogClass.WriteToLog(1, $"Exception at attachmnet folder creation: {ex.Message}", string.Empty);
+                }
+            }
+
+            if (System.IO.Directory.Exists(ftpPath))
+            {
+                try
+                {
+                    System.IO.Directory.CreateDirectory(ftpPath);
+                }
+                catch (Exception ex)
+                {
+                    WriteLogClass.WriteToLog(1, $"Exception at FTP folder creation: {ex.Message}", string.Empty);
+                }
+            }
+
+            if (!System.IO.Directory.Exists(pathLogFolder))
+            {
+                try
+                {
+                    System.IO.Directory.CreateDirectory(pathLogFolder);
                 }
                 catch (Exception ex)
                 {
@@ -258,20 +290,28 @@ namespace DEA
                 }
             }
 
-            if (FolderSwitch == "Download")
+            if (folderSwitch.ToLower() == "download")
             {
-                FolderPath = PathDownloadFolder;
+                folderPath = pathDownloadFolder;
             }
-            else if (FolderSwitch == "Log")
+            else if (folderSwitch.ToLower() == "log")
             {
-                FolderPath = PathLogFolder;
+                folderPath = pathLogFolder;
+            }
+            else if (folderSwitch.ToLower() == "email")
+            {
+                folderPath = attachmentPath;
+            }
+            else if (folderSwitch.ToLower() == "ftp")
+            {
+                folderPath = ftpPath;
             }
             else
             {
-                FolderPath = string.Empty;
+                folderPath = string.Empty;
             }
 
-            return FolderPath;
+            return folderPath;
         }
 
         // Downnloads the attachments to local harddrive.

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Graph;
 using System.Diagnostics.CodeAnalysis;
-using DEA;
 using WriteLog;
 
 namespace GetMailFolderIds
