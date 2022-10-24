@@ -55,7 +55,7 @@ var emailClients = jsonData.CustomerDetails!.Where(emailc => emailc.FileDelivery
 
 foreach (var emailClient in emailClients)
 {
-   await GraphHelper.InitializGetAttachment(emailClient.id);
+   await GraphHelper.InitializGetAttachment(emailClient.Id);
 }
 
 

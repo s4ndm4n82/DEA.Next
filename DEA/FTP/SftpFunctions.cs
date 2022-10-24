@@ -12,7 +12,7 @@ namespace SftpFunctions
         {
             var JsonData = await UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
 
-            var SftpOnlyClient = JsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == CustomerId);
+            var SftpOnlyClient = JsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == CustomerId);
 
             if (SftpOnlyClient != null)
             {

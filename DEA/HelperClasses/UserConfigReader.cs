@@ -13,10 +13,10 @@ namespace UserConfigReader
 
         public class Customerdetail
         {
-            public int id { get; set; }
+            public int Id { get; set; }
             public string? Token { get; set; }
             public string? UserName { get; set; }
-            public object? TemplateKey { get; set; }
+            public string? TemplateKey { get; set; }
             public string? Queue { get; set; }
             public string? ProjetID { get; set; }
             public string? MainCustomer { get; set; }

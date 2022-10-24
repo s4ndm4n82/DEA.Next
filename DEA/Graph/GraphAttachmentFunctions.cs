@@ -1,6 +1,7 @@
 ﻿using Microsoft.Graph;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
+using FileFunctions;
 using ReadSettings;
 using WriteLog;
 using DEA;
@@ -81,7 +82,8 @@ namespace GraphAttachmentFunctions
         {
             int loopCount = 0; // In order to check if the loop ran at least once.
             var configParam = new ReadSettingsClass();
-            Attachment attachmentData = null!;           
+            Attachment attachmentData = null!;
+            string downloadPath = string.Empty;
 
             if (inMessage.Attachments.Count > 0)
             {
@@ -120,6 +122,8 @@ namespace GraphAttachmentFunctions
                                                 .GetAsync();
                     }
 
+                    downloadPath = Path.Combine(GraphHelper.CheckFolders("email"), GraphHelper.FolderNameRnd(10));
+
                     FileAttachment attachmentProperties = (FileAttachment)attachmentData;
                     string attachmentName = attachmentProperties.Name;
                     byte[] attachmentBytes = attachmentProperties.ContentBytes;
@@ -139,7 +143,7 @@ namespace GraphAttachmentFunctions
                         attachmentName = Regex.Replace(attachmentName, @"[\w\d\s\.\-]+", " ");
                     }
 
-                    if (GraphHelper.DownloadAttachedFiles(Path.Combine(GraphHelper.CheckFolders("email"), GraphHelper.FolderNameRnd(10)), attachmentName, attachmentBytes))
+                    if (GraphHelper.DownloadAttachedFiles(downloadPath, attachmentName, attachmentBytes))
                     {
                         loopCount++;
 
@@ -159,7 +163,8 @@ namespace GraphAttachmentFunctions
 
             if (loopCount > 0)
             {
-                // Calla the base 64 converter and the file submitter to the web service.
+                // Call the base 64 converter and the file submitter to the web service.
+                await FileFunctionsClass.SendToWebService(downloadPath, customerId);
             }
 
             if (inMessage.Attachments.Count == 0 || loopCount == 0)

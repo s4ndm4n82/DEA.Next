@@ -30,7 +30,7 @@ namespace DEA
         public static async Task InitializGetAttachment(int customerId)
         {
             var jsonData = await UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
-            var clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId);
+            var clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == customerId);
 
             if(clientDetails != null)
             {

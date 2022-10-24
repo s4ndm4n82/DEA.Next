@@ -13,7 +13,7 @@ namespace FtpFunctions
         {
             var JsonData = await UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
 
-            var clientDetails = JsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == Customerid);
+            var clientDetails = JsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == Customerid);
 
             if (clientDetails != null)
             {
