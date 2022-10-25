@@ -10,9 +10,9 @@ namespace SftpFunctions
         // SFTP implimention will be holted until it's needed.
         public static async Task<bool> GetSftpFiles(int CustomerId)
         {
-            var JsonData = await UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+            var JsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
 
-            var SftpOnlyClient = JsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == CustomerId);
+            var SftpOnlyClient = JsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == CustomerId);
 
             if (SftpOnlyClient != null)
             {

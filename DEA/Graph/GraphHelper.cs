@@ -29,8 +29,8 @@ namespace DEA
         /// <returns></returns>
         public static async Task InitializGetAttachment(int customerId)
         {
-            var jsonData = await UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
-            var clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == customerId);
+            var jsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+            var clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId);
 
             if(clientDetails != null)
             {
@@ -131,8 +131,7 @@ namespace DEA
             else
             {
                 WriteLogClass.WriteToLog(3, "Graph client initialization successful ....", string.Empty);
-                Thread.Sleep(5000);
-                WriteLogClass.WriteToLog(3, "Starting attachment download process ....", string.Empty);
+                Thread.Sleep(2000);
             }
         }
         // Loads the settings from user sectrets file.

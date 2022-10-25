@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using Newtonsoft.Json;
+using WriteLog;
 
 namespace UserConfigReader
 {
@@ -13,7 +14,7 @@ namespace UserConfigReader
 
         public class Customerdetail
         {
-            public int Id { get; set; }
+            public int id { get; set; }
             public string? Token { get; set; }
             public string? UserName { get; set; }
             public string? TemplateKey { get; set; }
@@ -52,12 +53,22 @@ namespace UserConfigReader
             public string? DocumentExtension { get; set; }
         }
 
-        public static async Task<T> ReadAppDotConfig<T>()
+        public static T ReadAppDotConfig<T>()
         {
-            using FileStream ReadFile = File.OpenRead(@".\Config\CustomerConfig.json");
-            T? jsonData = await JsonSerializer.DeserializeAsync<T>(ReadFile);
+            T? jsonData = default;
+            try
+            {
+                using StreamReader fileData = new StreamReader(@".\Config\CustomerConfig.json");
+                string stringData = fileData.ReadToEnd();
+                jsonData = JsonConvert.DeserializeObject<T>(stringData);
 
-            return jsonData!;
+                return jsonData!;
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(3, $"Exception at Json reader: {ex.Message}", string.Empty);
+                return jsonData!;
+            }
         }
     }
 }

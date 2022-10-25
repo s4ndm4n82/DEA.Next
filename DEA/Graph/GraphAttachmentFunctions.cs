@@ -26,18 +26,27 @@ namespace GraphAttachmentFunctions
 
             if (!string.IsNullOrEmpty(mainFolderId) && string.IsNullOrEmpty(subFolderId1) && string.IsNullOrEmpty(subFolderId2))
             {
-                messages = await graphClient.Users[$"{inEmail}"].MailFolders["Inbox"]
+                try
+                {
+                    messages = await graphClient.Users[$"{inEmail}"].MailFolders["Inbox"]
                            .ChildFolders[$"{mainFolderId}"]
                            .Messages
                            .Request()
                            .Expand("attachments")
                            .Top(maxMails)
                            .GetAsync();
+                }
+                catch (Exception ex)
+                {
+                    WriteLogClass.WriteToLog(3, $"Excpetion at geting messages 1: {ex.Message}", string.Empty);
+                }
             }
 
             if (!string.IsNullOrEmpty(mainFolderId) && !string.IsNullOrEmpty(subFolderId1) && string.IsNullOrEmpty(subFolderId2))
             {
-                messages = await graphClient.Users[$"{inEmail}"].MailFolders["Inbox"]
+                try
+                {
+                    messages = await graphClient.Users[$"{inEmail}"].MailFolders["Inbox"]
                            .ChildFolders[$"{mainFolderId}"]
                            .ChildFolders[$"{subFolderId1}"]
                            .Messages
@@ -45,11 +54,18 @@ namespace GraphAttachmentFunctions
                            .Expand("attachments")
                            .Top(maxMails)
                            .GetAsync();
+                }
+                catch (Exception ex)
+                {
+                    WriteLogClass.WriteToLog(3, $"Excpetion at geting messages 2: {ex.Message}", string.Empty);
+                }
             }
 
             if (!string.IsNullOrEmpty(mainFolderId) && !string.IsNullOrEmpty(subFolderId1) && !string.IsNullOrEmpty(subFolderId2))
             {
-                messages = await graphClient.Users[$"{inEmail}"].MailFolders["Inbox"]
+                try
+                {
+                    messages = await graphClient.Users[$"{inEmail}"].MailFolders["Inbox"]
                            .ChildFolders[$"{mainFolderId}"]
                            .ChildFolders[$"{subFolderId1}"]
                            .ChildFolders[$"{subFolderId2}"]
@@ -58,11 +74,24 @@ namespace GraphAttachmentFunctions
                            .Expand("attachments")
                            .Top(maxMails)
                            .GetAsync();
+                }
+                catch (Exception ex)
+                {
+                    WriteLogClass.WriteToLog(3, $"Excpetion at geting messages 2: {ex.Message}", string.Empty);
+                }
             }
 
             foreach (var message in messages)
             {
-                await DownloadAttachments(graphClient, message, inEmail, mainFolderId, subFolderId1, subFolderId2, customerId);
+                if (message.Attachments.Count > 0)
+                {
+                    WriteLogClass.WriteToLog(3, $"Email: {message.Subject}", string.Empty);
+                    await DownloadAttachments(graphClient, message, inEmail, mainFolderId, subFolderId1, subFolderId2, customerId);
+                }
+                else
+                {
+                    continue;
+                }
             }
             return false;
         }
@@ -80,91 +109,116 @@ namespace GraphAttachmentFunctions
         /// <returns>A bool value (true or false)</returns>
         private static async Task<bool> DownloadAttachments([NotNull]GraphServiceClient graphClient , Message inMessage, string inEmail, string mainFolderId, string subFolderId1, string subFolderId2, int customerId)
         {
-            int loopCount = 0; // In order to check if the loop ran at least once.
+            int loopCount = 0; // In order to check if the loop ran at least once.            
+            bool loopFlag = false;
+
             var configParam = new ReadSettingsClass();
-            Attachment attachmentData = null!;
-            string downloadPath = string.Empty;
+            string[] acceptedExtentions = configParam.AllowedExtentions;
 
-            if (inMessage.Attachments.Count > 0)
+            string downloadPath = Path.Combine(GraphHelper.CheckFolders("email"), GraphHelper.FolderNameRnd(10)); ;
+            Attachment attachmentData = null!;            
+            IEnumerable<Attachment> acceptedAtachments = inMessage.Attachments.Where(x => acceptedExtentions.Contains(Path.GetExtension(x.Name.ToLower())) && x.Size > 10240 || (x.Name.ToLower().EndsWith(".pdf") && x.Size < 10240));
+            int lastItem = acceptedAtachments.Count();
+
+            foreach (Attachment attachment in acceptedAtachments)
             {
-                foreach(Attachment attachment in inMessage.Attachments.Where(att => configParam.AllowedExtentions.Contains(att.Name.ToLower()) && att.Size > 10240 || (att.Name.ToLower().EndsWith(".pdf") && att.Size < 10240)))
+                if (!string.IsNullOrEmpty(mainFolderId) && string.IsNullOrEmpty(subFolderId1) && string.IsNullOrEmpty(subFolderId2))
                 {
-                    if (!string.IsNullOrEmpty(mainFolderId) && string.IsNullOrEmpty(subFolderId1) && string.IsNullOrEmpty(subFolderId2))
+                    try
                     {
                         attachmentData = await graphClient.Users[$"{inEmail}"].MailFolders["Inbox"]
-                                                .ChildFolders[$"{mainFolderId}"]
-                                                .Messages[$"{inMessage.Id}"]
-                                                .Attachments[$"{attachment.Id}"]
-                                                .Request()
-                                                .GetAsync();
+                                            .ChildFolders[$"{mainFolderId}"]
+                                            .Messages[$"{inMessage.Id}"]
+                                            .Attachments[$"{attachment.Id}"]
+                                            .Request()
+                                            .GetAsync();
                     }
+                    catch (Exception ex)
+                    {
+                        WriteLogClass.WriteToLog(3, $"Excpetion at attachmentData 1: {ex.Message}", string.Empty);
+                    }
+                }
 
-                    if (!string.IsNullOrEmpty(mainFolderId) && !string.IsNullOrEmpty(subFolderId1) && string.IsNullOrEmpty(subFolderId2))
+                if (!string.IsNullOrEmpty(mainFolderId) && !string.IsNullOrEmpty(subFolderId1) && string.IsNullOrEmpty(subFolderId2))
+                {
+                    try
                     {
                         attachmentData = await graphClient.Users[$"{inEmail}"].MailFolders["Inbox"]
-                                                .ChildFolders[$"{mainFolderId}"]
-                                                .ChildFolders[$"{subFolderId1}"]
-                                                .Messages[$"{inMessage.Id}"]
-                                                .Attachments[$"{attachment.Id}"]
-                                                .Request()
-                                                .GetAsync();
+                                            .ChildFolders[$"{mainFolderId}"]
+                                            .ChildFolders[$"{subFolderId1}"]
+                                            .Messages[$"{inMessage.Id}"]
+                                            .Attachments[$"{attachment.Id}"]
+                                            .Request()
+                                            .GetAsync();
                     }
+                    catch (Exception ex)
+                    {
+                        WriteLogClass.WriteToLog(3, $"Excpetion at attachmentData 2: {ex.Message}", string.Empty);
+                    }
+                }
 
-                    if (!string.IsNullOrEmpty(mainFolderId) && string.IsNullOrEmpty(subFolderId1) && !string.IsNullOrEmpty(subFolderId2))
+                if (!string.IsNullOrEmpty(mainFolderId) && string.IsNullOrEmpty(subFolderId1) && !string.IsNullOrEmpty(subFolderId2))
+                {
+                    try
                     {
                         attachmentData = await graphClient.Users[$"{inEmail}"].MailFolders["Inbox"]
-                                                .ChildFolders[$"{mainFolderId}"]
-                                                .ChildFolders[$"{subFolderId1}"]
-                                                .ChildFolders[$"{subFolderId2}"]
-                                                .Messages[$"{inMessage.Id}"]
-                                                .Attachments[$"{attachment.Id}"]
-                                                .Request()
-                                                .GetAsync();
+                                            .ChildFolders[$"{mainFolderId}"]
+                                            .ChildFolders[$"{subFolderId1}"]
+                                            .ChildFolders[$"{subFolderId2}"]
+                                            .Messages[$"{inMessage.Id}"]
+                                            .Attachments[$"{attachment.Id}"]
+                                            .Request()
+                                            .GetAsync();
                     }
-
-                    downloadPath = Path.Combine(GraphHelper.CheckFolders("email"), GraphHelper.FolderNameRnd(10));
-
-                    FileAttachment attachmentProperties = (FileAttachment)attachmentData;
-                    string attachmentName = attachmentProperties.Name;
-                    byte[] attachmentBytes = attachmentProperties.ContentBytes;
-                    string attachmentExtension = Path.GetExtension(attachmentName);
-
-                    Regex matchChar = new (@"[\\\/c:]");
-
-                    if (matchChar.IsMatch(attachmentName.ToLower()))
+                    catch (Exception ex)
                     {
-                        attachmentName = Path.GetFileName(attachmentName);
+                        WriteLogClass.WriteToLog(3, $"Excpetion at attachmentData 3: {ex.Message}", string.Empty);
                     }
+                }
 
-                    Regex matchChar2 = new (@"[\w\d\s\.\-]+");
+                WriteLogClass.WriteToLog(3, $"Downloading attachment {attachment.Name}", string.Empty);
 
-                    if (!matchChar2.IsMatch(attachmentName))
-                    {
-                        attachmentName = Regex.Replace(attachmentName, @"[\w\d\s\.\-]+", " ");
-                    }
+                FileAttachment attachmentProperties = (FileAttachment)attachmentData;
+                string attachmentName = attachmentProperties.Name;
+                byte[] attachmentBytes = attachmentProperties.ContentBytes;
+                string attachmentExtension = Path.GetExtension(attachmentName);
 
-                    if (GraphHelper.DownloadAttachedFiles(downloadPath, attachmentName, attachmentBytes))
-                    {
-                        loopCount++;
+                Regex matchChar = new(@"[\\\/c:]");
 
-                        WriteLogClass.WriteToLog(3, $"File {attachmentName} downloaded ...", string.Empty);
+                if (matchChar.IsMatch(attachmentName.ToLower()))
+                {
+                    attachmentName = Path.GetFileName(attachmentName);
+                }
 
-                        if (await MoveEmail(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inMessage.Subject, inEmail))
-                        {
-                            return true;
-                        }
-                        else
-                        {
-                            return false;
-                        }
-                    }
+                Regex matchChar2 = new(@"[\w\d\s\.\-]+");
+
+                if (!matchChar2.IsMatch(attachmentName))
+                {
+                    attachmentName = Regex.Replace(attachmentName, @"[\w\d\s\.\-]+", " ");
+                }
+
+                if (GraphHelper.DownloadAttachedFiles(downloadPath, attachmentName, attachmentBytes))
+                {
+                    loopCount++;
+                    WriteLogClass.WriteToLog(3, $"File {attachmentName} downloaded ...", string.Empty);
+                }
+
+                if (lastItem == loopCount)
+                {
+                    loopFlag = true;
                 }
             }
 
-            if (loopCount > 0)
+            if (loopCount > 0 && loopFlag)
             {
+
                 // Call the base 64 converter and the file submitter to the web service.
                 await FileFunctionsClass.SendToWebService(downloadPath, customerId);
+            }
+
+            if (loopCount > 0 && loopFlag)
+            {
+                await MoveEmail(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inMessage.Subject, inEmail);
             }
 
             if (inMessage.Attachments.Count == 0 || loopCount == 0)

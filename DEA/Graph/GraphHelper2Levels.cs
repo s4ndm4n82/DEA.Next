@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using ReadSettings;
 using GetMailFolderIds;
 using GraphAttachmentFunctions;
+using WriteLog;
 
 namespace DEA2Levels
 {
@@ -26,16 +27,21 @@ namespace DEA2Levels
             string importFolderPath = Path.Combine(ConfigParam.ImportFolderLetter, ConfigParam.ImportFolderPath);
 
             // Get the folder ID's after searching the folder names.
-            var folderIds = await GetMailFolderIdsClass.GetChlidFolderIds<GetMailFolderIdsClass>(graphClient, clientEmail, mainMailFolder, subFolder1, subFolder2);
+            GetMailFolderIdsClass.clientFolderId folderIds = await GetMailFolderIdsClass.GetChlidFolderIds<GetMailFolderIdsClass>(graphClient, clientEmail, mainMailFolder, subFolder1, subFolder2);
 
-            // Initiate the email attachment download and send them to the web service. Should return a bool value.
-            var messages = await GraphAttachmentFunctionsClass.GetMessagesWithAttachments(graphClient
-                                                                                          , clientEmail
-                                                                                          , folderIds.clientMainFolderId!
-                                                                                          , folderIds.clientSubFolderId1!
-                                                                                          , folderIds.clientSubFolderId2!
-                                                                                          , maxAmountOfEmails
-                                                                                          , customerId);
+            if (folderIds != null)
+            {
+                WriteLogClass.WriteToLog(3, $"Starting attachment download process ....", string.Empty);
+
+                // Initiate the email attachment download and send them to the web service. Should return a bool value.
+                var messages = await GraphAttachmentFunctionsClass.GetMessagesWithAttachments(graphClient
+                                                                                              , clientEmail
+                                                                                              , folderIds.clientMainFolderId!
+                                                                                              , folderIds.clientSubFolderId1!
+                                                                                              , folderIds.clientSubFolderId2!
+                                                                                              , maxAmountOfEmails
+                                                                                              , customerId);
+            }
         }
     }
 }

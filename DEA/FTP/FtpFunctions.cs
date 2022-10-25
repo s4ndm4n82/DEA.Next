@@ -11,9 +11,9 @@ namespace FtpFunctions
     {
         public static async Task<bool> GetFtpFiles(int Customerid)
         {
-            var JsonData = await UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+            var JsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
 
-            var clientDetails = JsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == Customerid);
+            var clientDetails = JsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == Customerid);
 
             if (clientDetails != null)
             {

@@ -36,7 +36,7 @@ using System.Drawing.Text;
 
 WriteLogClass.WriteToLog(3, "Connecting to FTP Server ....", "FTP");
 
-var jsonData = await UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+var jsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
 
 var ftpClients = jsonData.CustomerDetails!.Where(ftpc => ftpc.FileDeliveryMethod!.ToUpper() == "FTP");
 var emailClients = jsonData.CustomerDetails!.Where(emailc => emailc.FileDeliveryMethod!.ToLower() == "email");
@@ -55,11 +55,9 @@ var emailClients = jsonData.CustomerDetails!.Where(emailc => emailc.FileDelivery
 
 foreach (var emailClient in emailClients)
 {
-   await GraphHelper.InitializGetAttachment(emailClient.Id);
+   await GraphHelper.InitializGetAttachment(emailClient.id);
 }
 
-
-Thread.Sleep(100000);
 /*
 // Check for the attachment download folder and the log folder. Then creates the folders if they're missing.
 GraphHelper.CheckFolders("none");
