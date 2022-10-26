@@ -109,7 +109,9 @@ namespace GraphAttachmentFunctions
         /// <returns>A bool value (true or false)</returns>
         private static async Task<bool> DownloadAttachments([NotNull]GraphServiceClient graphClient , Message inMessage, string inEmail, string mainFolderId, string subFolderId1, string subFolderId2, int customerId)
         {
-            int loopCount = 0; // In order to check if the loop ran at least once.            
+            int loopCount = 0; // In order to check if the loop ran at least once.
+
+            bool flagReturn = false;
             bool loopFlag = false;
 
             var configParam = new ReadSettingsClass();
@@ -211,14 +213,9 @@ namespace GraphAttachmentFunctions
 
             if (loopCount > 0 && loopFlag)
             {
-
                 // Call the base 64 converter and the file submitter to the web service.
-                await FileFunctionsClass.SendToWebService(downloadPath, customerId);
-            }
-
-            if (loopCount > 0 && loopFlag)
-            {
-                await MoveEmail(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inMessage.Subject, inEmail);
+                // And then moves to email to export folder. If both functions succed then the varible will be set to true.
+                flagReturn = await FileFunctionsClass.SendToWebService(downloadPath, customerId) && await MoveEmail(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inMessage.Subject, inEmail);
             }
 
             if (inMessage.Attachments.Count == 0 || loopCount == 0)

@@ -14,9 +14,16 @@ namespace FileFunctions
 
             string[] downloadedFiles = Directory.GetFiles(filePath);
 
-            MakeJsonRequest(clientDetails.Token!, clientDetails.UserName!, clientDetails.TemplateKey!, clientDetails.Queue!, clientDetails.ProjetID!, downloadedFiles);
+            var flag = MakeJsonRequest(clientDetails.Token!, clientDetails.UserName!, clientDetails.TemplateKey!, clientDetails.Queue!, clientDetails.ProjetID!, downloadedFiles);
 
-            return Task.FromResult(true);
+            if (flag)
+            {
+                return Task.FromResult(true);
+            }
+            else
+            {
+                return Task.FromResult(false);
+            }
         }
 
         private static bool MakeJsonRequest(string customerToken, string customerUserName, string customerTemplateKey, string customerQueue, string customerProjectId, string[] filesToSend)
@@ -44,7 +51,8 @@ namespace FileFunctions
             }
             catch (Exception ex)
             {
-
+                WriteLogClass.WriteToLog(3, $"Exception at Json serialization: {ex.Message}", string.Empty);
+                return false;
             }
         }
     }
