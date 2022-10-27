@@ -215,7 +215,7 @@ namespace GraphAttachmentFunctions
             {
                 // Call the base 64 converter and the file submitter to the web service.
                 // And then moves to email to export folder. If both functions succed then the varible will be set to true.
-                flagReturn = await FileFunctionsClass.SendToWebService(downloadPath, customerId) && await MoveEmail(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inMessage.Subject, inEmail);
+                flagReturn = await FileFunctionsClass.SendToWebService(downloadPath, customerId); //&& await MoveEmail(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inMessage.Subject, inEmail);
             }
 
             if (inMessage.Attachments.Count == 0 || loopCount == 0)

@@ -1,32 +1,35 @@
-﻿using Newtonsoft.Json;
+﻿using System.Net;
+using Newtonsoft.Json;
 using UserConfigReader;
+using RestSharp;
 using TpsJsonString;
 using WriteLog;
+using RestSharp.Authenticators;
 
 namespace FileFunctions
 {
     internal class FileFunctionsClass
     {
-        public static Task<bool> SendToWebService(string filePath, int customerId)
+        public static async Task<bool> SendToWebService(string filePath, int customerId)
         {   
             UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
             UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId)!;
 
             string[] downloadedFiles = Directory.GetFiles(filePath);
 
-            var flag = MakeJsonRequest(clientDetails.Token!, clientDetails.UserName!, clientDetails.TemplateKey!, clientDetails.Queue!, clientDetails.ProjetID!, downloadedFiles);
+            var flag = await MakeJsonRequest(clientDetails.Token!, clientDetails.UserName!, clientDetails.TemplateKey!, clientDetails.Queue!, clientDetails.ProjetID!, downloadedFiles);
 
             if (flag)
             {
-                return Task.FromResult(true);
+                return true;
             }
             else
             {
-                return Task.FromResult(false);
+                return false;
             }
         }
 
-        private static bool MakeJsonRequest(string customerToken, string customerUserName, string customerTemplateKey, string customerQueue, string customerProjectId, string[] filesToSend)
+        private static async Task<bool> MakeJsonRequest(string customerToken, string customerUserName, string customerTemplateKey, string customerQueue, string customerProjectId, string[] filesToSend)
         {
             var fileList = new List<TpsJasonStringClass.FileList>();
             foreach (var file in filesToSend)
@@ -44,9 +47,12 @@ namespace FileFunctions
                 Files = fileList
             };
 
+            var result = JsonConvert.SerializeObject(TpsJsonRequest);
+            
             try
             {
-                var result = JsonConvert.SerializeObject(TpsJsonRequest);
+                WriteLogClass.WriteToLog(3, $"Json result: {result}", string.Empty);
+                await SendFilesToRest(result);
                 return true;
             }
             catch (Exception ex)
@@ -54,6 +60,37 @@ namespace FileFunctions
                 WriteLogClass.WriteToLog(3, $"Exception at Json serialization: {ex.Message}", string.Empty);
                 return false;
             }
+            
+        }
+
+        private static async Task<bool> SendFilesToRest(string jsonResult)
+        {
+            try
+            {
+                var client = new RestClient("https://capture.exacta.no/");
+                //client.Authenticator = new HttpBasicAuthenticator("admin", "Winter2022");
+
+                var tpsRequest = new RestRequest("tps_processing/Import?");
+                tpsRequest.Method = Method.Post;
+                tpsRequest.RequestFormat = DataFormat.Json;
+                tpsRequest.AddBody(jsonResult);
+
+                var serverResponse = await client.ExecuteAsync(tpsRequest);
+                
+                WriteLogClass.WriteToLog(3, $"Server Response: {serverResponse.Content}", string.Empty);
+
+                if (serverResponse.StatusCode == HttpStatusCode.OK)
+                {
+                    WriteLogClass.WriteToLog(3, $"Server status code: {serverResponse.StatusCode}", string.Empty);
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(3, $"Exception at rest sharp request: {ex.Message}", string.Empty);
+            }
+
+            return false;
         }
     }
 }
