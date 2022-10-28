@@ -4,7 +4,8 @@ using UserConfigReader;
 using RestSharp;
 using TpsJsonString;
 using WriteLog;
-using RestSharp.Authenticators;
+using FolderCleaner;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FileFunctions
 {
@@ -51,9 +52,14 @@ namespace FileFunctions
             
             try
             {
-                WriteLogClass.WriteToLog(3, $"Json result: {result}", string.Empty);
-                await SendFilesToRest(result);
-                return true;
+                if (await SendFilesToRest(result, filesToSend[0]))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             catch (Exception ex)
             {
@@ -63,12 +69,11 @@ namespace FileFunctions
             
         }
 
-        private static async Task<bool> SendFilesToRest(string jsonResult)
+        private static async Task<bool> SendFilesToRest(string jsonResult, [NotNull]string fullFilePath)
         {
             try
             {
                 var client = new RestClient("https://capture.exacta.no/");
-                //client.Authenticator = new HttpBasicAuthenticator("admin", "Winter2022");
 
                 var tpsRequest = new RestRequest("tps_processing/Import?");
                 tpsRequest.Method = Method.Post;
@@ -76,13 +81,17 @@ namespace FileFunctions
                 tpsRequest.AddBody(jsonResult);
 
                 var serverResponse = await client.ExecuteAsync(tpsRequest);
-                
-                WriteLogClass.WriteToLog(3, $"Server Response: {serverResponse.Content}", string.Empty);
 
                 if (serverResponse.StatusCode == HttpStatusCode.OK)
                 {
                     WriteLogClass.WriteToLog(3, $"Server status code: {serverResponse.StatusCode}", string.Empty);
+                    FolderCleanerClass.GetFolders(fullFilePath);
                     return true;
+                }
+                else
+                {
+                    WriteLogClass.WriteToLog(3, $"Server status code: {serverResponse.StatusCode}", string.Empty);
+                    return false;
                 }
             }
             catch (Exception ex)

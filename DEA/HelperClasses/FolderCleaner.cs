@@ -1,60 +1,40 @@
-﻿using System.IO;
-using System.Text.RegularExpressions;
-using WriteLog;
+﻿using WriteLog;
 
 namespace FolderCleaner
 {
     internal class FolderCleanerClass
     {
-        public static void GetFolders(string FolderPath)
+        public static void GetFolders(string folderPath)
         {
-            if (Directory.Exists(FolderPath))
+            var filePath = Directory.GetParent(Path.GetDirectoryName(folderPath)!);
+
+            if (Directory.Exists(filePath!.FullName))
             {
-                var CleaningFolderName = FolderPath.Split(Path.DirectorySeparatorChar).Last();
+                WriteLogClass.WriteToLog(3, $"Cleaning download folder ....", string.Empty);
 
-                WriteLogClass.WriteToLog(3, $"Cleaning folder path {CleaningFolderName}", string.Empty);
+                string[] folderList = Directory.GetDirectories(filePath.FullName, "*.*", SearchOption.AllDirectories);
 
-                string[] FolderList = Directory.GetDirectories(FolderPath, "*.*", SearchOption.AllDirectories);
-
-                DeleteFolders(FolderList);
+                DeleteFolders(folderList);
             }
             else
             {
-                try
-                {
-                    WriteLogClass.WriteToLog(3, "Folder path does not exsits. Creating folder path ....", string.Empty);
-
-                    Directory.CreateDirectory(FolderPath);
-
-                    WriteLogClass.WriteToLog(3, $"Folder path created {FolderPath} ....", string.Empty);
-                }
-                catch (Exception ex)
-                {
-                    WriteLogClass.WriteToLog(2, $"Exception at folder creation in folder cleaner class: {ex.Message}", string.Empty);
-                }
-                
+                WriteLogClass.WriteToLog(3, "Folder path does not exsits ....", string.Empty);
             }
         }
 
-        private static void DeleteFolders(string[] _FolderList)
+        private static void DeleteFolders(string[] folderList)
         {
-            foreach (string _Folder in _FolderList)
+            foreach (string folder in folderList)
             {
-                if (Directory.Exists(_Folder))
+                if (Directory.Exists(folder))
                 {
-                    if (Directory.GetFiles(_Folder, "*.*", SearchOption.AllDirectories).Length == 0)
+                    if (Directory.GetFiles(folder, "*.*", SearchOption.AllDirectories).Length > 0)
                     {
                         try
                         {
-                            var RmvFolderName = _Folder.Split(Path.DirectorySeparatorChar).Last();
-                            Regex LastFolderNameMatch = new Regex(@"[0-9]{10}");
-
-                            if (LastFolderNameMatch.IsMatch(RmvFolderName))
-                            {
-                                Directory.Delete(_Folder, false);
-
-                                WriteLogClass.WriteToLog(3, $"Folder {RmvFolderName} .... deleted", string.Empty);
-                            }                            
+                            var RmvdFolderName = folder.Split(Path.DirectorySeparatorChar).Last();
+                            Directory.Delete(folder, true);
+                            WriteLogClass.WriteToLog(3, $"Folder {RmvdFolderName} .... deleted", string.Empty);
                         }
                         catch (IOException ex)
                         {

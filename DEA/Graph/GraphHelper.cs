@@ -374,7 +374,7 @@ namespace DEA
 
                     foreach (var SourceFile in SourceFiles) // Loop throug the files list.
                     {
-                        var SourceFileName = System.IO.Path.GetFileName(SourceFile); // Get the source file name.
+                        var SourceFileName = Path.GetFileName(SourceFile); // Get the source file name.
                         var SourcePath = Path.Combine(SourceFolder, SourceFileName); // Makes the full source path.
                         var DestinationPath = Path.Combine(FullDestinationPath, SourceFileName); // Makes the full destination path.
 
