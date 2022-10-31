@@ -75,7 +75,8 @@ namespace FileFunctions
             {
                 var client = new RestClient("https://capture.exacta.no/");
 
-                var tpsRequest = new RestRequest("tps_processing/Import?");
+                //var tpsRequest = new RestRequest("tps_processing/Import?");
+                var tpsRequest = new RestRequest("tps_test_Processing/Import"); // Test service. Uncomment the above one ans comment this one when putting to production.
                 tpsRequest.Method = Method.Post;
                 tpsRequest.RequestFormat = DataFormat.Json;
                 tpsRequest.AddBody(jsonResult);

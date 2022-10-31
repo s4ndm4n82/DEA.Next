@@ -410,7 +410,7 @@ namespace DEA
         {
             try
             {
-                if (!string.IsNullOrEmpty(FolderId2))
+                if (!string.IsNullOrWhiteSpace(FolderId2))
                 {
                     // Get ths the emails details like subject and from email.
                     var MsgDetails = await graphClient!.Users[$"{_Email}"].MailFolders["Inbox"]

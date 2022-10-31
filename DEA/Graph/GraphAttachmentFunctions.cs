@@ -218,9 +218,9 @@ namespace GraphAttachmentFunctions
                 flagReturn = await FileFunctionsClass.SendToWebService(downloadPath, customerId) && await MoveEmail(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inMessage.Subject, inEmail);
             }
 
-            if (inMessage.Attachments.Count == 0 || loopCount == 0)
+            if (!loopFlag && loopCount == 0)
             {
-                // Calla the rejection function to send the email to error and then forward to customer.
+                // Call the rejection function to send the email to error and then forward to customer.
             }
             return flagReturn;
         }

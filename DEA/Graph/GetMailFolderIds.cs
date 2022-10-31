@@ -78,5 +78,49 @@ namespace GetMailFolderIds
             return folderId;
             
         }
+
+        public static async Task<string> GetErrorFolderId([NotNull] GraphServiceClient graphClient, string clientEmail, string mainFolderId, string subFolderId1, string subFolderId2)
+        {
+            IMailFolderChildFoldersCollectionPage? errorFolderDetails = null;
+            string errorFolerId = string.Empty;
+
+            if (!string.IsNullOrWhiteSpace(mainFolderId) && string.IsNullOrWhiteSpace(subFolderId1) && string.IsNullOrWhiteSpace(subFolderId2))
+            {
+                errorFolderDetails = await graphClient.Users[$"{clientEmail}"].MailFolders["Inbox"]
+                                         .ChildFolders[$"{mainFolderId}"]
+                                         .ChildFolders
+                                         .Request()
+                                         .GetAsync();
+
+                errorFolerId = errorFolderDetails.FirstOrDefault(efd => efd.DisplayName.ToLower() == "error")!.Id;
+            }
+
+            if (!string.IsNullOrWhiteSpace(mainFolderId) && !string.IsNullOrWhiteSpace(subFolderId1) && string.IsNullOrWhiteSpace(subFolderId2))
+            {
+                errorFolderDetails = await graphClient.Users[$"{clientEmail}"].MailFolders["Inbox"]
+                                    .ChildFolders[$"{mainFolderId}"]
+                                    .ChildFolders[$"{subFolderId1}"]
+                                    .ChildFolders
+                                    .Request()
+                                    .GetAsync();
+
+                errorFolerId = errorFolderDetails.FirstOrDefault(efd => efd.DisplayName.ToLower() == "error")!.Id;
+            }
+
+            if (!string.IsNullOrWhiteSpace(mainFolderId) && !string.IsNullOrWhiteSpace(subFolderId1) && !string.IsNullOrWhiteSpace(subFolderId2))
+            {
+                errorFolderDetails = await graphClient.Users[$"{clientEmail}"].MailFolders["Inbox"]
+                                    .ChildFolders[$"{mainFolderId}"]
+                                    .ChildFolders[$"{subFolderId1}"]
+                                    .ChildFolders[$"{subFolderId2}"]
+                                    .ChildFolders
+                                    .Request()
+                                    .GetAsync();
+
+                errorFolerId = errorFolderDetails.FirstOrDefault(efd => efd.DisplayName.ToLower() == "error")!.Id;
+            }
+
+            return errorFolerId;
+        }
     }
 }
