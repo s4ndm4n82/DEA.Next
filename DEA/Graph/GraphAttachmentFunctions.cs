@@ -5,6 +5,7 @@ using FileFunctions;
 using ReadSettings;
 using WriteLog;
 using DEA;
+using GraphEmailFunctions;
 
 namespace GraphAttachmentFunctions
 {
@@ -221,6 +222,7 @@ namespace GraphAttachmentFunctions
             if (!loopFlag && loopCount == 0)
             {
                 // Call the rejection function to send the email to error and then forward to customer.
+                await GraphEmailFunctionsClass.EmailForwarder(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inEmail, 0);
             }
             return flagReturn;
         }

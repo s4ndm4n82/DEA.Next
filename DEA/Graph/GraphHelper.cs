@@ -353,58 +353,6 @@ namespace DEA
             }
         }
 
-        // Move the folder to main import folder on the local machine.
-        public static bool MoveFolder(string SourceFolderPath, string DestiFolderPath)
-        {
-            try
-            {
-                var SourceParent = System.IO.Directory.GetParent(SourceFolderPath);
-                var SourceFolders = System.IO.Directory.GetDirectories(SourceParent!.FullName, "*.*", SearchOption.AllDirectories);
-
-                foreach (var SourceFolder in SourceFolders)
-                {
-                    var SourceLastFolder = SourceFolder.Split(Path.DirectorySeparatorChar).Last(); // Get the last folder from the source path.
-                    var SourceFiles = System.IO.Directory.GetFiles(SourceFolder, "*.*", SearchOption.AllDirectories); // Get the source file list.
-                    var FullDestinationPath = Path.Combine(DestiFolderPath, SourceLastFolder); // Makes the destiantion path with the last folder name
-
-                    if (!System.IO.Directory.Exists(FullDestinationPath)) // Create the folder if not exists.
-                    {
-                        System.IO.Directory.CreateDirectory(FullDestinationPath);
-                    }
-
-                    foreach (var SourceFile in SourceFiles) // Loop throug the files list.
-                    {
-                        var SourceFileName = Path.GetFileName(SourceFile); // Get the source file name.
-                        var SourcePath = Path.Combine(SourceFolder, SourceFileName); // Makes the full source path.
-                        var DestinationPath = Path.Combine(FullDestinationPath, SourceFileName); // Makes the full destination path.
-
-                        if (!System.IO.Directory.Exists(DestinationPath))
-                        {
-                            System.IO.File.Move(SourcePath, DestinationPath); // Moves the files to the destination path.
-
-                            WriteLogClass.WriteToLog(3, $"Moving file {SourceFileName}", string.Empty);
-                        }
-                        else
-                        {
-                            WriteLogClass.WriteToLog(3, $"File already exists .... skipping to the next file.", string.Empty);
-                            continue;
-                        }
-                    }
-
-                    if (System.IO.Directory.Exists(SourceFolder)) // Delete the file from source if exists.
-                    {
-                        System.IO.Directory.Delete(SourceFolder, true);
-                    }
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
-                WriteLogClass.WriteToLog(1, $"Error getting event: {ex.Message}", string.Empty);
-                return false;
-            }
-        }
-
         // Forwards emails with out any attachment to the sender.
         public static async Task<(string?, bool)> ForwardEmtpyEmail(string FolderId1, string FolderId2, string ErrFolderId, string MsgId2, string _Email, int AttnStatus)
         {
