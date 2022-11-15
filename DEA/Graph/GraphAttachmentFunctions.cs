@@ -6,6 +6,8 @@ using ReadSettings;
 using WriteLog;
 using DEA;
 using GraphEmailFunctions;
+using GetMailFolderIds;
+using Renci.SshNet.Messages;
 
 namespace GraphAttachmentFunctions
 {
@@ -91,7 +93,19 @@ namespace GraphAttachmentFunctions
                 }
                 else
                 {
-                    continue;
+                    var forwardFalg = await GraphEmailFunctionsClass.EmailForwarder(graphClient, mainFolderId, subFolderId1, subFolderId2, message.Id, inEmail, 0);
+
+                    if (forwardFalg.Item1)
+                    {
+                        WriteLogClass.WriteToLog(3, $"Email forwarded to {forwardFalg.Item2}", string.Empty);
+
+                        var destinationId = await GetMailFolderIdsClass.GetErrorFolderId(graphClient, inEmail, mainFolderId, subFolderId1, subFolderId2);
+
+                        if (await GraphHelper.MoveEmails(mainFolderId, subFolderId1, subFolderId2, message.Id, destinationId, inEmail))
+                        {
+                            WriteLogClass.WriteToLog(3, $"No attachments. Mail moved to error folder ....", string.Empty);
+                        }
+                    }
                 }
             }
             return false;
@@ -108,7 +122,7 @@ namespace GraphAttachmentFunctions
         /// <param name="subFolderId1"></param>
         /// <param name="subFolderId2"></param>
         /// <returns>A bool value (true or false)</returns>
-        private static async Task<bool> DownloadAttachments([NotNull]GraphServiceClient graphClient , Message inMessage, string inEmail, string mainFolderId, string subFolderId1, string subFolderId2, int customerId)
+        private static async Task<bool> DownloadAttachments([NotNull]GraphServiceClient graphClient , Microsoft.Graph.Message inMessage, string inEmail, string mainFolderId, string subFolderId1, string subFolderId2, int customerId)
         {
             int loopCount = 0; // In order to check if the loop ran at least once.
 
@@ -220,9 +234,22 @@ namespace GraphAttachmentFunctions
             }
 
             if (!loopFlag && loopCount == 0)
-            {
-                // Call the rejection function to send the email to error and then forward to customer.
-                await GraphEmailFunctionsClass.EmailForwarder(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inEmail, 0);
+            {   
+                var forwardFalg = await GraphEmailFunctionsClass.EmailForwarder(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inEmail, 0);
+
+                if (forwardFalg.Item1)
+                {
+                    WriteLogClass.WriteToLog(3, $"Email forwarded to {forwardFalg.Item2}", string.Empty);
+
+                    var destinationId = await GetMailFolderIdsClass.GetErrorFolderId(graphClient, inEmail, mainFolderId, subFolderId1, subFolderId2);
+                    flagReturn = await GraphHelper.MoveEmails(mainFolderId, subFolderId1, subFolderId2, inMessage.Id, destinationId, inEmail);
+
+                    if (flagReturn)
+                    {
+                        WriteLogClass.WriteToLog(3, $"Mail moved to error folder ....", string.Empty);
+                        flagReturn = true;
+                    }
+                }
             }
             return flagReturn;
         }
