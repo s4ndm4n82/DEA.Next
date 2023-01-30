@@ -45,19 +45,19 @@ namespace DEA
                 
             }
 
-            if (!clientDetails!.EmailDetails!.SubInbox1.IsNullOrEmpty())
+            if (!clientDetails!.EmailDetails!.MainInbox.IsNullOrEmpty())
             {
                 try
                 {
                     // Calls the function to read ATC emails.
-                    await GraphHelper2Levels.GetEmailsAttacments2Levels(graphClient!, clientDetails.EmailDetails.EmailAddress!, clientDetails.EmailDetails.MainInbox!, clientDetails.EmailDetails.SubInbox1!, clientDetails.EmailDetails.SubInbox2!, customerId);
+                    await GraphHelperLevels.GetEmailsAttacments2Levels(graphClient!, clientDetails.EmailDetails.EmailAddress!, clientDetails.EmailDetails.MainInbox!, clientDetails.EmailDetails.SubInbox1!, clientDetails.EmailDetails.SubInbox2!, customerId);
                 }
                 catch (Exception ex)
                 {
                     WriteLogClass.WriteToLog(2, $"Exception at GraphHelper2Levels: {ex.Message}", string.Empty);
                 }
             }
-            else
+            /*else
             {
                 try
                 {
@@ -68,7 +68,7 @@ namespace DEA
                 {
                     WriteLogClass.WriteToLog(2, $"Exception at GraphHelper1Levels: {ex.Message}", string.Empty);
                 }
-            }
+            }*/
         }
 
         private static async void graphApiCall()

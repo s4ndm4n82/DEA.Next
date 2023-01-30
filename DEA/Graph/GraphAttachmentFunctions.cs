@@ -7,7 +7,6 @@ using WriteLog;
 using DEA;
 using GraphEmailFunctions;
 using GetMailFolderIds;
-using Renci.SshNet.Messages;
 
 namespace GraphAttachmentFunctions
 {
@@ -25,7 +24,8 @@ namespace GraphAttachmentFunctions
         /// <returns>A bool value (true or false)</returns>
         public static async Task<bool> GetMessagesWithAttachments([NotNull] GraphServiceClient graphClient, string inEmail, string mainFolderId, string subFolderId1, string subFolderId2, int maxMails, int customerId)
         {
-            IMailFolderMessagesCollectionPage messages = null!;
+            bool flag = false;
+            IMailFolderMessagesCollectionPage messages = null!;            
 
             if (!string.IsNullOrEmpty(mainFolderId) && string.IsNullOrEmpty(subFolderId1) && string.IsNullOrEmpty(subFolderId2))
             {
@@ -89,7 +89,7 @@ namespace GraphAttachmentFunctions
                 if (message.Attachments.Count > 0)
                 {
                     WriteLogClass.WriteToLog(3, $"Email: {message.Subject}", string.Empty);
-                    await DownloadAttachments(graphClient, message, inEmail, mainFolderId, subFolderId1, subFolderId2, customerId);
+                    flag = await DownloadAttachments(graphClient, message, inEmail, mainFolderId, subFolderId1, subFolderId2, customerId);
                 }
                 else
                 {
@@ -97,18 +97,19 @@ namespace GraphAttachmentFunctions
 
                     if (forwardFalg.Item1)
                     {
-                        WriteLogClass.WriteToLog(3, $"Email forwarded to {forwardFalg.Item2}", string.Empty);
+                        WriteLogClass.WriteToLog(3, $"Email forwarded to {forwardFalg.Item2} ....", string.Empty);
 
                         var destinationId = await GetMailFolderIdsClass.GetErrorFolderId(graphClient, inEmail, mainFolderId, subFolderId1, subFolderId2);
+                        flag = await GraphHelper.MoveEmails(mainFolderId, subFolderId1, subFolderId2, message.Id, destinationId, inEmail);
 
-                        if (await GraphHelper.MoveEmails(mainFolderId, subFolderId1, subFolderId2, message.Id, destinationId, inEmail))
+                        if (flag)
                         {
                             WriteLogClass.WriteToLog(3, $"No attachments. Mail moved to error folder ....", string.Empty);
                         }
                     }
                 }
             }
-            return false;
+            return flag;
         }
 
         /// <summary>
@@ -122,7 +123,7 @@ namespace GraphAttachmentFunctions
         /// <param name="subFolderId1"></param>
         /// <param name="subFolderId2"></param>
         /// <returns>A bool value (true or false)</returns>
-        private static async Task<bool> DownloadAttachments([NotNull]GraphServiceClient graphClient , Microsoft.Graph.Message inMessage, string inEmail, string mainFolderId, string subFolderId1, string subFolderId2, int customerId)
+        private static async Task<bool> DownloadAttachments([NotNull]GraphServiceClient graphClient , Message inMessage, string inEmail, string mainFolderId, string subFolderId1, string subFolderId2, int customerId)
         {
             int loopCount = 0; // In order to check if the loop ran at least once.
 
@@ -211,7 +212,7 @@ namespace GraphAttachmentFunctions
 
                 if (!matchChar2.IsMatch(attachmentName))
                 {
-                    attachmentName = Regex.Replace(attachmentName, @"[\w\d\s\.\-]+", " ");
+                    attachmentName = Regex.Replace(attachmentName, @"[\,\:\;\\\/]+", " ");
                 }
 
                 if (GraphHelper.DownloadAttachedFiles(downloadPath, attachmentName, attachmentBytes))

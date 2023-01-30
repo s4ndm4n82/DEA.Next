@@ -7,7 +7,7 @@ using WriteLog;
 
 namespace DEA2Levels
 {
-    internal class GraphHelper2Levels
+    internal class GraphHelperLevels
     {
         /// <summary>
         /// Mainly this will start the email download process and the process to submit files to the web service.
@@ -34,13 +34,21 @@ namespace DEA2Levels
                 WriteLogClass.WriteToLog(3, $"Starting attachment download process ....", string.Empty);
 
                 // Initiate the email attachment download and send them to the web service. Should return a bool value.
-                var messages = await GraphAttachmentFunctionsClass.GetMessagesWithAttachments(graphClient
+                var result = await GraphAttachmentFunctionsClass.GetMessagesWithAttachments(graphClient
                                                                                               , clientEmail
                                                                                               , folderIds.clientMainFolderId!
                                                                                               , folderIds.clientSubFolderId1!
                                                                                               , folderIds.clientSubFolderId2!
                                                                                               , maxAmountOfEmails
                                                                                               , customerId);
+                if (result)
+                {
+                    WriteLogClass.WriteToLog(3, $"Email attachment download completed successfully ....", string.Empty);
+                }
+                else
+                {
+                    WriteLogClass.WriteToLog(3, $"Email attachment download did not complete successfully ....", string.Empty);
+                }
             }
         }
     }

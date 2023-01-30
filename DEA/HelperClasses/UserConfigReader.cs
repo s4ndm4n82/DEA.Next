@@ -5,8 +5,6 @@ namespace UserConfigReader
 {
     internal class UserConfigReaderClass
     {
-
-
         public class CustomerDetailsObject
         {
             public Customerdetail[]? CustomerDetails { get; set; }
