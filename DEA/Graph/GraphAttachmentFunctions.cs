@@ -200,7 +200,7 @@ namespace GraphAttachmentFunctions
                 string attachmentName = attachmentProperties.Name;
                 byte[] attachmentBytes = attachmentProperties.ContentBytes;
                 string attachmentExtension = Path.GetExtension(attachmentName);
-
+                // Need to change
                 Regex matchChar = new(@"[\\\/c:]");
 
                 if (matchChar.IsMatch(attachmentName.ToLower()))
