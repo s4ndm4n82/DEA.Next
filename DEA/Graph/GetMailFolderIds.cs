@@ -6,6 +6,9 @@ namespace GetMailFolderIds
 {
     internal class GetMailFolderIdsClass
     {
+    /// <summary>
+    /// Get inbox folder ID's. 
+    /// </summary>
         private static IMailFolderChildFoldersCollectionPage? _inboxClientMainFolder;
         private static IMailFolderChildFoldersCollectionPage? _inboxSubFolder1;
         private static IMailFolderChildFoldersCollectionPage? _inboxSubFolder2;
@@ -16,6 +19,17 @@ namespace GetMailFolderIds
             public string? clientSubFolderId1 { get; set; }
             public string? clientSubFolderId2 { get; set; }
         }
+
+        /// <summary>
+        /// Get's the inbox id's form the sub inboxes on the email server. This will go deep as 3 levels auto matically.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="graphClient"></param>
+        /// <param name="clientEmail"></param>
+        /// <param name="clientMainFolderName"></param>
+        /// <param name="clientSubFolderName1"></param>
+        /// <param name="clientSubfolderName2"></param>
+        /// <returns></returns>
         public static async Task<clientFolderId> GetChlidFolderIds<T>([NotNull] GraphServiceClient graphClient, string clientEmail, string clientMainFolderName, string clientSubFolderName1, string clientSubfolderName2)
         {
             var folderId = new clientFolderId();
@@ -79,6 +93,15 @@ namespace GetMailFolderIds
             
         }
 
+        /// <summary>
+        /// Get's the ID of the error folder. Which used to move the emails which get marked as errored emails.
+        /// </summary>
+        /// <param name="graphClient"></param>
+        /// <param name="clientEmail"></param>
+        /// <param name="mainFolderId"></param>
+        /// <param name="subFolderId1"></param>
+        /// <param name="subFolderId2"></param>
+        /// <returns></returns>
         public static async Task<string> GetErrorFolderId([NotNull] GraphServiceClient graphClient, string clientEmail, string mainFolderId, string subFolderId1, string subFolderId2)
         {
             IMailFolderChildFoldersCollectionPage? errorFolderDetails = null;

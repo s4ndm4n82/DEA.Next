@@ -4,8 +4,22 @@ using WriteLog;
 
 namespace GraphEmailFunctions
 {
+    /// <summary>
+    /// Mainly contains all the function for email actions like sending emails and forwarding errored emails.
+    /// </summary>
     internal class GraphEmailFunctionsClass
     {
+        /// <summary>
+        /// Get's all needed details from the recived email. So, the process can forward the email to the appropriate sender.
+        /// </summary>
+        /// <param name="graphClient"></param>
+        /// <param name="mainFolderId"></param>
+        /// <param name="subFolderId1"></param>
+        /// <param name="subFolderId2"></param>
+        /// <param name="messageId"></param>
+        /// <param name="clientEmail"></param>
+        /// <param name="atnStatus"></param>
+        /// <returns></returns>
         public static async Task<(bool, string)> EmailForwarder([NotNull] GraphServiceClient graphClient, string mainFolderId, string subFolderId1, string subFolderId2, string messageId, string clientEmail, int atnStatus)
         {
             Message? messageDetails = null;
@@ -85,23 +99,38 @@ namespace GraphEmailFunctions
             return (returnResult, toEmail);
         }
 
+        /// <summary>
+        /// Forwards the email and flags the email to be moved to the error folder.
+        /// </summary>
+        /// <param name="graphClient"></param>
+        /// <param name="mainFolderId"></param>
+        /// <param name="subFolderId1"></param>
+        /// <param name="subFolderId2"></param>
+        /// <param name="fromName"></param>
+        /// <param name="fromEmail"></param>
+        /// <param name="clientEmail"></param>
+        /// <param name="inEmail"></param>
+        /// <param name="messageId"></param>
+        /// <param name="attnStatus"></param>
+        /// <returns></returns>
         private static async Task<bool> SendForwardEmail([NotNull] GraphServiceClient graphClient
                                                          , string mainFolderId, string subFolderId1
                                                          , string subFolderId2, string fromName
-                                                         , string fromEmail, string toEmail
+                                                         , string fromEmail, string clientEmail
                                                          , string inEmail, string messageId, int attnStatus)
         {
             bool forwardSwitch = false;
-            string mailBody = string.Empty;
-
+            string mailBody;
             if (attnStatus != 1)
             {
                 // Can be change with html.
-                mailBody = "Hi,<br /><b>Please do not reply to this email</b><br />. Below email doesn't contain any attachment.";
+                mailBody = $"Hi,<br /><b>Please do not reply to this email</b><br />. Below email you sent to {inEmail}, doesn't contain any attachment." +
+                           $"<br />Please send an email with your documents as attachements to {inEmail}.";
             }
             else
             {
-                mailBody= "Hi,<br /><b>Please do not reply to this email</b><br />Below email's attachment file type is not accepted. Please send attachments as .pdf or .jpg.";
+                mailBody= $"Hi,<br /><b>Please do not reply to this email</b><br />Below email, you sent to {inEmail}. The attachment file type is not accepted by the system." +
+                          $"Please send attachments as .pdf or .jpg to {inEmail}.";
             }
 
             var mailRecipients = new List<Recipient>()
@@ -120,7 +149,7 @@ namespace GraphEmailFunctions
             {
                 try
                 {
-                    await graphClient.Users[$"{toEmail}"].MailFolders["Inbox"]
+                    await graphClient.Users[$"{clientEmail}"].MailFolders["Inbox"]
                     .ChildFolders[$"{mainFolderId}"]
                     .Messages[$"{messageId}"]
                     .Forward(mailRecipients, null, mailBody)
@@ -140,7 +169,7 @@ namespace GraphEmailFunctions
             {
                 try
                 {
-                    await graphClient.Users[$"{toEmail}"].MailFolders["Inbox"]
+                    await graphClient.Users[$"{clientEmail}"].MailFolders["Inbox"]
                     .ChildFolders[$"{mainFolderId}"]
                     .ChildFolders[$"{subFolderId1}"]
                     .Messages[$"{messageId}"]
@@ -161,7 +190,7 @@ namespace GraphEmailFunctions
             {
                 try
                 {
-                    await graphClient.Users[$"{toEmail}"].MailFolders["Inbox"]
+                    await graphClient.Users[$"{clientEmail}"].MailFolders["Inbox"]
                     .ChildFolders[$"{mainFolderId}"]
                     .ChildFolders[$"{subFolderId1}"]
                     .ChildFolders[$"{subFolderId2}"]

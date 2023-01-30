@@ -71,6 +71,9 @@ namespace DEA
             }*/
         }
 
+        /// <summary>
+        /// As the function name suggest this is the main function that calles the GraphAPI and establish the connection.
+        /// </summary>
         private static async void graphApiCall()
         {
             // Getting the Graph and checking the settings for Graph.
@@ -156,8 +159,16 @@ namespace DEA
             }
         }
 
-        // Initilize the graph clinet and calls GetAuthTokenWithOutUser() to get the token.
-        // If Task<bool> keeps giving an error switch to bool. And change the return Task.FromResult(true) to return true;
+        /// <summary>
+        /// Initilize the graph clinet and calls GetAuthTokenWithOutUser() to get the token. If Task<bool> keeps giving an error switch to bool. And change the return Task.FromResult(true) to return true;
+        /// </summary>
+        /// <param name="clientId"></param>
+        /// <param name="instanceId"></param>
+        /// <param name="tenantId"></param>
+        /// <param name="graphUrl"></param>
+        /// <param name="clientSecret"></param>
+        /// <param name="scopes"></param>
+        /// <returns></returns>        
         public static Task<bool> InitializeGraphClient(string clientId, string instanceId, string tenantId, string graphUrl, string clientSecret, string[] scopes)
         {
             try
@@ -202,6 +213,8 @@ namespace DEA
             {
                 // Invalid scope. The scope has to be in the form "https://resourceurl/.default"
                 // Mitigation: Change the scope to be as expected.
+                // Need to be set on the online under Azure Active Directory -> App Registrations -> <App Name> -> API Permissions.
+                // The scopes/rules need to be "Application" type. "Delegated" type doesn't work for auto login.
                 WriteLogClass.WriteToLog(1, "Scopes provided are not supported", string.Empty);
             }
 
@@ -209,7 +222,11 @@ namespace DEA
 
         }
 
-        // Generate the random 10 digit number as the folder name.
+        /// <summary>
+        /// Generates a random 10 digit number for the sub download folder name.
+        /// </summary>
+        /// <param name="RndLength"></param>
+        /// <returns></returns>
         public static string FolderNameRnd(int RndLength)
         {
             Random RndNumber = new();
@@ -313,7 +330,13 @@ namespace DEA
             return folderPath;
         }
 
-        // Downnloads the attachments to local harddrive.
+        /// <summary>
+        /// Downnloads the attachment files to the local harddrive.
+        /// </summary>
+        /// <param name="DownloadFolderPath"></param>
+        /// <param name="DownloadFileName"></param>
+        /// <param name="DownloadFileData"></param>
+        /// <returns></returns>
         public static bool DownloadAttachedFiles(string DownloadFolderPath, string DownloadFileName, byte[] DownloadFileData)
         {
             if (!System.IO.Directory.Exists(DownloadFolderPath))
@@ -474,7 +497,16 @@ namespace DEA
             }
         }
 
-        //Moves the email to Downloded folder.
+        /// <summary>
+        /// Moves the email to Downloded folder.
+        /// </summary>
+        /// <param name="FirstFolderId"></param>
+        /// <param name="SecondFolderId"></param>
+        /// <param name="ThirdFolderId"></param>
+        /// <param name="MsgId"></param>
+        /// <param name="DestiId"></param>
+        /// <param name="_Email"></param>
+        /// <returns></returns>
         public static async Task<bool> MoveEmails(string FirstFolderId, string SecondFolderId, string ThirdFolderId, string MsgId, string DestiId, string _Email)
         {
             try
