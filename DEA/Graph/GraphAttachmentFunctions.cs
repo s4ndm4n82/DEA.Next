@@ -127,14 +127,16 @@ namespace GraphAttachmentFunctions
         {
             int loopCount = 0; // In order to check if the loop ran at least once.
 
-            bool flagReturn = false;
-            bool loopFlag = false;
+            bool flagReturn = false; // Flag to check if the transfer to TPS is successful.
+            bool loopFlag = false; // To execute the TPS file transfer function at the end of the file download loop.
 
             var configParam = new ReadSettingsClass();
             string[] acceptedExtentions = configParam.AllowedExtentions;
 
-            string downloadPath = Path.Combine(GraphHelper.CheckFolders("email"), GraphHelper.FolderNameRnd(10)); ;
-            Attachment attachmentData = null!;            
+            string downloadPath = Path.Combine(GraphHelper.CheckFolders("email"), GraphHelper.FolderNameRnd(10)); // Creates the file download path.
+
+            Attachment attachmentData = null!; // Variable to store attachment ID.
+
             IEnumerable<Attachment> acceptedAtachments = inMessage.Attachments.Where(x => acceptedExtentions.Contains(Path.GetExtension(x.Name.ToLower())) && x.Size > 10240 || (x.Name.ToLower().EndsWith(".pdf") && x.Size < 10240));
             int lastItem = acceptedAtachments.Count();
 
@@ -194,31 +196,28 @@ namespace GraphAttachmentFunctions
                     }
                 }
 
-                WriteLogClass.WriteToLog(3, $"Downloading attachment {attachment.Name}", string.Empty);
-
-                FileAttachment attachmentProperties = (FileAttachment)attachmentData;
-                string attachmentName = attachmentProperties.Name;
+                // Attachment properties.
+                FileAttachment attachmentProperties = (FileAttachment)attachmentData;                
                 byte[] attachmentBytes = attachmentProperties.ContentBytes;
-                string attachmentExtension = Path.GetExtension(attachmentName);
-                // Need to change
-                Regex matchChar = new(@"[\\\/c:]");
 
-                if (matchChar.IsMatch(attachmentName.ToLower()))
-                {
-                    attachmentName = Path.GetFileName(attachmentName);
-                }
+                // Getting the file name and extention seperatly.
+                string attachmentExtension = Path.GetExtension(attachmentProperties.Name).ToLower(); // Extension only from the file name. And converts it to lower case.
+                string attachmentFileName = Path.GetFileNameWithoutExtension(attachmentProperties.Name); // File name only in order to clean it.
 
-                Regex matchChar2 = new(@"[\w\d\s\.\-]+");
-                
-                if (!matchChar2.IsMatch(attachmentName))
-                {
-                    attachmentName = Regex.Replace(attachmentName, @"[\,\:\;\\\/]+", " ");
-                }
+                // String variables to use with the RegEx.
+                string regexPattern = "[\\~#%&*{}[]/:;,.<>?|\"-]"; // RegEx will search for all these characters.
+                string regexReplaceCharacter = "_"; // Above all the characters will be replaces by this sharacter.
 
-                if (GraphHelper.DownloadAttachedFiles(downloadPath, attachmentName, attachmentBytes))
+                // RegEx function.
+                Regex regexNameCleaner = new(regexPattern, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant| RegexOptions.Compiled);
+
+                // Rebuilding the clean full filename. The second regex replace gets reid of any aditional spaces if there's any.
+                string cleanFileName = Path.ChangeExtension(Regex.Replace(regexNameCleaner.Replace(attachmentFileName, regexReplaceCharacter), @"[\s]+", ""), attachmentExtension);
+
+                if (GraphHelper.DownloadAttachedFiles(downloadPath, cleanFileName, attachmentBytes))
                 {
                     loopCount++;
-                    WriteLogClass.WriteToLog(3, $"File {attachmentName} downloaded ...", string.Empty);
+                    WriteLogClass.WriteToLog(3, $"File {cleanFileName} downloaded ...", string.Empty);
                 }
 
                 if (lastItem == loopCount)
@@ -234,6 +233,7 @@ namespace GraphAttachmentFunctions
                 flagReturn = await FileFunctionsClass.SendToWebService(downloadPath, customerId) && await MoveMailsToExport(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inMessage.Subject, inEmail);
             }
 
+            // Forwards the email if there's no attachments and attachment download loop doesn't run.
             if (!loopFlag && loopCount == 0)
             {   
                 var forwardFalg = await GraphEmailFunctionsClass.EmailForwarder(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inEmail, 0);
