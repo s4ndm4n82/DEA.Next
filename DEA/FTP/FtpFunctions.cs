@@ -89,12 +89,12 @@ namespace FtpFunctions
 
                         if (localFileName == fileName)
                         {
-                            if (await DeleteFtpFiles(ftpConnect, FileName))
+                            /*if (await DeleteFtpFiles(ftpConnect, FileName))
                             {
                                 WriteLogClass.WriteToLog(3, $"Deleted file {fileName} from {ftpPath} ....", "FTP");
                                 skip = true;
                                 break;
-                            }                            
+                            }*/
                         }
                     }
 

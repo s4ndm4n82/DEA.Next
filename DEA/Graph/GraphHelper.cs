@@ -4,7 +4,6 @@ using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using WriteLog;
 using DEA2Levels;
-using DEAHelper1Leve;
 using ReadSettings;
 using UserConfigReader;
 using CreateMetadataFile; // Might need to use this later so leaving it.

@@ -41,22 +41,22 @@ var jsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.Cust
 var ftpClients = jsonData.CustomerDetails!.Where(ftpc => ftpc.FileDeliveryMethod!.ToUpper() == "FTP");
 var emailClients = jsonData.CustomerDetails!.Where(emailc => emailc.FileDeliveryMethod!.ToLower() == "email");
 
-/*foreach (var ftpClient in ftpClients)
+foreach (var ftpClient in ftpClients)
 {
     if (ftpClient.FtpDetails!.FtpType!.ToUpper() == "FTP" || ftpClient.FtpDetails!.FtpType!.ToUpper() == "FTPS")
     {
         await FtpFunctionsClass.GetFtpFiles(ftpClient.id);
     }
-    /*else // Awating to be implimented. Will be added when needed.
+    else // Awating to be implimented. Will be added when needed.
     {
-        await SftpFunctionsClass.GetSftpFiles(client.id);
+        await SftpFunctionsClass.GetSftpFiles(ftpClient.id);
     }
-}*/
+}
 
-foreach (var emailClient in emailClients)
+/*foreach (var emailClient in emailClients)
 {
    await GraphHelper.InitializGetAttachment(emailClient.id);
-}
+}*/
 
 /*
 // Check for the attachment download folder and the log folder. Then creates the folders if they're missing.

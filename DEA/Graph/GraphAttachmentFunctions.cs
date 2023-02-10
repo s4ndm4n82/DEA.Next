@@ -231,7 +231,7 @@ namespace GraphAttachmentFunctions
             {
                 // Call the base 64 converter and the file submitter to the web service.
                 // And then moves to email to export folder. If both functions succed then the varible will be set to true.
-                flagReturn = await FileFunctionsClass.SendToWebService(downloadPath, customerId) && await MoveEmail(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inMessage.Subject, inEmail);
+                flagReturn = await FileFunctionsClass.SendToWebService(downloadPath, customerId) && await MoveMailsToExport(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inMessage.Subject, inEmail);
             }
 
             if (!loopFlag && loopCount == 0)
@@ -267,7 +267,7 @@ namespace GraphAttachmentFunctions
         /// <param name="messageSubject"></param>
         /// <param name="inEmail"></param>
         /// <returns>A bool value (true or false)</returns>
-        private static async Task<bool> MoveEmail([NotNull] GraphServiceClient graphClient, string mainFolderId, string subFolderId1, string subFolderId2, string messageId, string messageSubject, string inEmail)
+        private static async Task<bool> MoveMailsToExport([NotNull] GraphServiceClient graphClient, string mainFolderId, string subFolderId1, string subFolderId2, string messageId, string messageSubject, string inEmail)
         {
             IMailFolderChildFoldersCollectionPage moveLocation;
             MailFolder exportFolder = null!;

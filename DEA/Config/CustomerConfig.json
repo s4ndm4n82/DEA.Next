@@ -71,7 +71,7 @@
       "ClientName": "JM Norge AS",
       "FileDeliveryMethod": "FTP",
       "FtpDetails": {
-        "FtpType": "FTPS",
+        "FtpType": "FTP",
         "FtpHostName": "localhost",
         "FtpHostIp": "127.0.0.1",
         "FtpUser": "testuser",
@@ -101,7 +101,7 @@
       "ClientName": "Agder Betongsaging AS",
       "FileDeliveryMethod": "FTP",
       "FtpDetails": {
-        "FtpType": "SFTP",
+        "FtpType": "FTP",
         "FtpHostName": "localhost",
         "FtpHostIp": "127.0.0.1",
         "FtpUser": "testuser",
