@@ -18,9 +18,7 @@ namespace FileFunctions
 
             string[] downloadedFiles = Directory.GetFiles(filePath);
 
-            var flag = await MakeJsonRequest(clientDetails.Token!, clientDetails.UserName!, clientDetails.TemplateKey!, clientDetails.Queue!, clientDetails.ProjetID!, downloadedFiles);
-
-            if (flag)
+            if (await MakeJsonRequest(clientDetails.Token!, clientDetails.UserName!, clientDetails.TemplateKey!, clientDetails.Queue!, clientDetails.ProjetID!, downloadedFiles))
             {
                 return true;
             }
@@ -34,7 +32,7 @@ namespace FileFunctions
         {
             var fileList = new List<TpsJasonStringClass.FileList>();
             foreach (var file in filesToSend)
-            {
+            {   
                 fileList.Add(new TpsJasonStringClass.FileList() { Name = Path.GetFileName(file), Data = Convert.ToBase64String(File.ReadAllBytes(file)) });
             }
 
@@ -82,7 +80,7 @@ namespace FileFunctions
                 tpsRequest.AddBody(jsonResult);
 
                 var serverResponse = await client.ExecuteAsync(tpsRequest);
-
+                WriteLogClass.WriteToLog(3, $"JSON Code: \n {jsonResult}", string.Empty);
                 if (serverResponse.StatusCode == HttpStatusCode.OK)
                 {
                     WriteLogClass.WriteToLog(3, $"Server status code: {serverResponse.StatusCode}", string.Empty);

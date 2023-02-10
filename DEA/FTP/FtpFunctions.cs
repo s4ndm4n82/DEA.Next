@@ -4,6 +4,7 @@ using ConnectFtp;
 using ConnectFtps;
 using FluentFTP;
 using UserConfigReader;
+using FileFunctions;
 
 namespace FtpFunctions
 {
@@ -24,6 +25,7 @@ namespace FtpFunctions
 
         public static async Task<bool> InitiateFtpDownload(UserConfigReaderClass.Customerdetail FtpClientDetails)
         {
+            int clientID = FtpClientDetails.id;
             var ftpType = FtpClientDetails.FtpDetails!.FtpType;
             var ftpHostName = FtpClientDetails.FtpDetails!.FtpHostName;
             var ftpHosIp = FtpClientDetails.FtpDetails.FtpHostIp;
@@ -52,7 +54,7 @@ namespace FtpFunctions
             {
                 WriteLogClass.WriteToLog(3, $"Starting file download from {ftpPath} ....", "FTP");
 
-                if (await DownloadFtpFiles(ftpConnect, ftpPath, FtpHoldFolder))
+                if (await DownloadFtpFiles(ftpConnect, ftpPath, FtpHoldFolder, clientID))
                 {
                     WriteLogClass.WriteToLog(3, "File download successful ....", "FTP");
                     return true;
@@ -65,17 +67,25 @@ namespace FtpFunctions
             return false;
         }
 
-        public static async Task<bool> DownloadFtpFiles(AsyncFtpClient ftpConnect, string ftpPath, string ftpHoldFolder)
+        public static async Task<bool> DownloadFtpFiles(AsyncFtpClient ftpConnect, string ftpPath, string ftpHoldFolder, int clientID)
         {
+            // To capture the success flag from upload function.
+            bool returnFlag = false;
+
+            // Initiate FTP connect and gets the file list from the FTP server.
             FtpListItem[] FtpFileItemList = await ftpConnect.GetListing(ftpPath);
 
+            // Puts the full filename into a string list.
             IEnumerable<string> FilesToDownload = FtpFileItemList.Select(f => f.FullName.ToString());
 
+            // Downloads files from the server and counts them.
             var Count = await ftpConnect.DownloadFiles(ftpHoldFolder, FilesToDownload, FtpLocalExists.Resume, FtpVerify.Retry);
             
             if (Count > 0)
             {
                 WriteLogClass.WriteToLog(3, $"Downloaded {Count} file/s from {ftpPath} to {ftpHoldFolder} ....", "FTP");
+                
+                returnFlag = await FileFunctionsClass.SendToWebService(ftpHoldFolder, clientID);
 
                 var localFiles = Directory.GetFiles(ftpHoldFolder, "*.*", SearchOption.AllDirectories);
                 var skip = false;
