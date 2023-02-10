@@ -71,6 +71,7 @@ namespace FileFunctions
         {
             try
             {
+                // Creating rest api request.
                 var client = new RestClient("https://capture.exacta.no/");
 
                 //var tpsRequest = new RestRequest("tps_processing/Import?");
@@ -79,11 +80,13 @@ namespace FileFunctions
                 tpsRequest.RequestFormat = DataFormat.Json;
                 tpsRequest.AddBody(jsonResult);
 
-                var serverResponse = await client.ExecuteAsync(tpsRequest);
-                WriteLogClass.WriteToLog(3, $"JSON Code: \n {jsonResult}", string.Empty);
+                var serverResponse = await client.ExecuteAsync(tpsRequest); // Executes the request and send to the server.
+
                 if (serverResponse.StatusCode == HttpStatusCode.OK)
                 {
                     WriteLogClass.WriteToLog(3, $"Server status code: {serverResponse.StatusCode}", string.Empty);
+
+                    // Deletes the file from local hold folder when sending is successful.
                     FolderCleanerClass.GetFolders(fullFilePath);
                     return true;
                 }
