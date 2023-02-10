@@ -54,7 +54,7 @@ namespace GetRecipientEmail
                             .GetAsync();
                 }
 
-                ToEmails = GetToEmail.Result.InternetMessageHeaders.Where(adrs => adrs.Value.Contains("@efakturamottak.no"));
+                ToEmails = GetToEmail.Result.InternetMessageHeaders.Where(adrs => adrs.Value.ToLower().Contains("@efakturamottak.no"));
 
                 foreach (var ToEmail in ToEmails)
                 {
