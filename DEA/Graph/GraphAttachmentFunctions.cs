@@ -209,7 +209,7 @@ namespace GraphAttachmentFunctions
                 }
 
                 Regex matchChar2 = new(@"[\w\d\s\.\-]+");
-                // Commet to check sync
+                
                 if (!matchChar2.IsMatch(attachmentName))
                 {
                     attachmentName = Regex.Replace(attachmentName, @"[\,\:\;\\\/]+", " ");
