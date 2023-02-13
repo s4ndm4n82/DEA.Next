@@ -12,12 +12,13 @@
       "FileDeliveryMethod": "FTP",
       "FtpDetails": {
         "FtpType": "FTP",
-        "FtpHostName": "localhost",
-        "FtpHostIp": "127.0.0.1",
-        "FtpUser": "testuser",
-        "FtpPassword": "jackkills",
-        "FtpMainFolder": "Aksesspunkt",
-        "FtpSubFolder": "Duett"
+        "FtpHostName": "ftp.digiacc.no",
+        "FtpHostIp": "",
+        "FtpUser": "ftp.digiacc.no|EHFPortalConvert",
+        "FtpPassword": "Nt*N-9&z!V9]mPve",
+        "FtpMainFolder": "Navitro_importvic",
+        "FtpSubFolder1": "932971917",
+        "FtpSubFolder2": ""
       },
       "EmailDetails": {
         "EmailAddress": "",

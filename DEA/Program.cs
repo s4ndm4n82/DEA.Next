@@ -25,12 +25,12 @@ using System.Drawing.Text;
 // ~~~~~~~~
 // TODO 1: Create an XML config file (use app.config).
 // TODO 2: Create an XML reader toload the settings from the config file.
-// TODO 3: Make a FTP/SFTP/FTPS component.
-// TODO 4: Make it posible to download files from and FTP server.
-// TODO 5: Change the download from location according to what is set in the above config file.
-// TODO 6: Keep the files in a holding folder and then convert them into Base64 string.
-// TODO 7: Make DEA send the POST url to the TPM REST API.
-// TODO 8: Get the success signal and then delete the file. If not keep the file and send an error mail or message.
+// TODO 3: Make a FTP/SFTP/FTPS component. <-- Done and working
+// TODO 4: Make it posible to download files from and FTP server. <-- Done and working
+// TODO 5: Change the download from location according to what is set in the above config file. <-- Done and working
+// TODO 6: Keep the files in a holding folder and then convert them into Base64 string. <-- Done and working
+// TODO 7: Make DEA send the POST url to the TPM REST API.<-- Done and working
+// TODO 8: Get the success signal and then delete the file. If not keep the file and send an error mail or message. <-- Done and working
 
 // Aplication title just for fun.
 

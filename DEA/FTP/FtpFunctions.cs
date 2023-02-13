@@ -26,17 +26,28 @@ namespace FtpFunctions
         public static async Task<bool> InitiateFtpDownload(UserConfigReaderClass.Customerdetail FtpClientDetails)
         {
             int clientID = FtpClientDetails.id;
-            var ftpType = FtpClientDetails.FtpDetails!.FtpType;
-            var ftpHostName = FtpClientDetails.FtpDetails!.FtpHostName;
-            var ftpHosIp = FtpClientDetails.FtpDetails.FtpHostIp;
-            var ftpUser = FtpClientDetails.FtpDetails.FtpUser;
-            var ftpPassword = FtpClientDetails.FtpDetails.FtpPassword;
-            var ftpMainFolder = FtpClientDetails.FtpDetails.FtpMainFolder;
-            var ftpSubFolder = FtpClientDetails.FtpDetails.FtpSubFolder!.Replace(" ", "");
-            var ftpPath = $@"/{ftpMainFolder}/{ftpSubFolder}";
+            string ftpType = FtpClientDetails.FtpDetails!.FtpType!;
+            string ftpHostName = FtpClientDetails.FtpDetails!.FtpHostName!;
+            string ftpHosIp = FtpClientDetails.FtpDetails.FtpHostIp!;
+            string ftpUser = FtpClientDetails.FtpDetails.FtpUser!;
+            string ftpPassword = FtpClientDetails.FtpDetails.FtpPassword!;
+            string ftpMainFolder = FtpClientDetails.FtpDetails.FtpMainFolder!;
+            string ftpSubFolder1 = FtpClientDetails.FtpDetails.FtpSubFolder1!.Replace(" ", "");
+            string ftpSubFolder2 = FtpClientDetails.FtpDetails.FtpSubFolder2!.Replace(" ", "");
+            string ftpPath;
 
-            var LocalFtpFolder = GraphHelper.CheckFolders("FTP");
-            var FtpHoldFolder = Path.Combine(LocalFtpFolder, ftpMainFolder!, ftpSubFolder!);
+            if (!string.IsNullOrEmpty(ftpSubFolder2))
+            {
+                ftpPath = $@"/{ftpMainFolder}/{ftpSubFolder1}/{ftpSubFolder2}";
+            }
+            else
+            {
+                ftpPath = $@"/{ftpMainFolder}/{ftpSubFolder1}";
+            }            
+
+            string LocalFtpFolder = GraphHelper.CheckFolders("FTP");
+            string FtpHoldFolder = Path.Combine(LocalFtpFolder, ftpMainFolder!, ftpSubFolder1!);
+            
             AsyncFtpClient ftp = null!;
 
             if (ftpType == "FTP")
@@ -48,7 +59,7 @@ namespace FtpFunctions
                 ftp = await ConnectFtpsClass.ConnectFtps(ftpHostName!, ftpHosIp!, ftpUser!, ftpPassword!);
             }
 
-            using var ftpConnect = ftp;
+            using AsyncFtpClient ftpConnect = ftp;
 
             if (await ftpConnect.DirectoryExists(ftpPath))
             {

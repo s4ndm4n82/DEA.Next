@@ -23,23 +23,34 @@ namespace SftpFunctions
 
         public static bool InitiateSftpDownload(UserConfigReaderClass.Customerdetail SftpClientDetails)
         {
-            var FtpType = SftpClientDetails.FtpDetails!.FtpType;
-            var FtpHostName = SftpClientDetails.FtpDetails!.FtpHostName;
-            var FtpHosIp = SftpClientDetails.FtpDetails.FtpHostIp;
-            var FtpUser = SftpClientDetails.FtpDetails.FtpUser;
-            var FtpPassword = SftpClientDetails.FtpDetails.FtpPassword;
-            var FtpMainFolder = SftpClientDetails.FtpDetails.FtpMainFolder;
-            var FtpSubFolder = SftpClientDetails.FtpDetails.FtpSubFolder!.Replace(" ", "");
-            var FtpPath = $@"/{FtpMainFolder}/{FtpSubFolder}";
+            int clientID = SftpClientDetails.id;
+            string ftpType = SftpClientDetails.FtpDetails!.FtpType!;
+            string ftpHostName = SftpClientDetails.FtpDetails!.FtpHostName!;
+            string ftpHosIp = SftpClientDetails.FtpDetails.FtpHostIp!;
+            string ftpUser = SftpClientDetails.FtpDetails.FtpUser!;
+            string ftpPassword = SftpClientDetails.FtpDetails.FtpPassword!;
+            string ftpMainFolder = SftpClientDetails.FtpDetails.FtpMainFolder!;
+            string ftpSubFolder1 = SftpClientDetails.FtpDetails.FtpSubFolder1!.Replace(" ", "");
+            string ftpSubFolder2 = SftpClientDetails.FtpDetails.FtpSubFolder2!.Replace(" ", "");
+            string ftpPath;
+
+            if (string.IsNullOrEmpty(ftpSubFolder2))
+            {
+                ftpPath = $@"/{ftpMainFolder}/{ftpSubFolder1}/{ftpSubFolder2}";
+            }
+            else
+            {
+                ftpPath = $@"/{ftpMainFolder}/{ftpSubFolder1}";
+            }
 
             var LocalFtpFolder = GraphHelper.CheckFolders("FTP");
-            var FtpHoldFolder = Path.Combine(LocalFtpFolder, FtpMainFolder!, FtpSubFolder!);
+            var FtpHoldFolder = Path.Combine(LocalFtpFolder, ftpMainFolder!, ftpSubFolder1!);
 
-            using var SftpConnect = ConnectSftpClass.ConnectSftp(FtpHostName!, FtpHosIp!, FtpUser!, FtpPassword!);
+            using var SftpConnect = ConnectSftpClass.ConnectSftp(ftpHostName!, ftpHosIp!, ftpUser!, ftpPassword!);
 
-            if (SftpConnect.Exists(FtpPath))
+            if (SftpConnect.Exists(ftpPath))
             {
-                WriteLogClass.WriteToLog(3, $"FTP Path {FtpPath}", "FTP");
+                WriteLogClass.WriteToLog(3, $"FTP Path {ftpPath}", "FTP");
             }
 
             return true;

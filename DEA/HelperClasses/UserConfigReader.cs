@@ -34,7 +34,8 @@ namespace UserConfigReader
             public string? FtpUser { get; set; }
             public string? FtpPassword { get; set; }
             public string? FtpMainFolder { get; set; }
-            public string? FtpSubFolder { get; set; }
+            public string? FtpSubFolder1 { get; set; }
+            public string? FtpSubFolder2 { get; set; }
         }
 
         public class Emaildetails
