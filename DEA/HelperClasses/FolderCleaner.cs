@@ -4,7 +4,7 @@ namespace FolderCleaner
 {
     internal class FolderCleanerClass
     {
-        public static void GetFolders(string folderPath)
+        public static bool GetFolders(string folderPath)
         {
             var filePath = Directory.GetParent(Path.GetDirectoryName(folderPath)!);
 
@@ -14,18 +14,26 @@ namespace FolderCleaner
 
                 string[] folderList = Directory.GetDirectories(filePath.FullName, "*.*", SearchOption.AllDirectories);
 
-                DeleteFolders(folderList);
+                if (DeleteFolders(folderList))
+                {
+                    return true;
+                }
             }
             else
             {
                 WriteLogClass.WriteToLog(3, "Folder path does not exsits ....", string.Empty);
             }
+            return false;
         }
 
-        private static void DeleteFolders(string[] folderList)
+        private static bool DeleteFolders(string[] folderList)
         {
+            int loopCount = 0;
+            
             foreach (string folder in folderList)
             {
+                loopCount++;
+
                 if (Directory.Exists(folder))
                 {
                     if (Directory.GetFiles(folder, "*.*", SearchOption.AllDirectories).Length > 0)
@@ -34,16 +42,22 @@ namespace FolderCleaner
                         {
                             var RmvdFolderName = folder.Split(Path.DirectorySeparatorChar).Last();
                             Directory.Delete(folder, true);
-                            WriteLogClass.WriteToLog(3, $"Folder {RmvdFolderName} .... deleted", string.Empty);
                         }
                         catch (IOException ex)
                         {
                             WriteLogClass.WriteToLog(2, $"Exception at folder delete: {ex.Message}", string.Empty);
                         }
-
                     }
                 }
             }
+
+            if (loopCount == folderList.Length)
+            {
+                WriteLogClass.WriteToLog(3, $"Removed {folderList.Length} folder from download folder ....", string.Empty);
+                return true;
+            }
+
+            return false;
         }
     }
 }

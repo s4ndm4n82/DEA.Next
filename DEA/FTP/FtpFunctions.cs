@@ -52,16 +52,15 @@ namespace FtpFunctions
 
             if (await ftpConnect.DirectoryExists(ftpPath))
             {
-                WriteLogClass.WriteToLog(3, $"Starting file download from {ftpPath} ....", "FTP");
+                WriteLogClass.WriteToLog(3, $"Starting file download from {ftpPath} ....", string.Empty);
 
                 if (await DownloadFtpFiles(ftpConnect, ftpPath, FtpHoldFolder, clientID))
                 {
-                    WriteLogClass.WriteToLog(3, "File download successful ....", "FTP");
-                    return true;
+                    return await FileFunctionsClass.SendToWebService(FtpHoldFolder, clientID);
                 }
                 else
                 {
-                    WriteLogClass.WriteToLog(3, "File download is not successful ....", "FTP");
+                    WriteLogClass.WriteToLog(3, "File download is not successful ....", string.Empty);
                 }
             }
             return false;
@@ -79,15 +78,16 @@ namespace FtpFunctions
             IEnumerable<string> FilesToDownload = FtpFileItemList.Select(f => f.FullName.ToString());
 
             // Downloads files from the server and counts them.
-            var Count = await ftpConnect.DownloadFiles(ftpHoldFolder, FilesToDownload, FtpLocalExists.Resume, FtpVerify.Retry);
+            List<FtpResult> downloadedFileList = await ftpConnect.DownloadFiles(ftpHoldFolder, FilesToDownload, FtpLocalExists.Resume, FtpVerify.Retry);
             
-            if (Count > 0)
+            if (downloadedFileList.Count > 0)
             {
-                WriteLogClass.WriteToLog(3, $"Downloaded {Count} file/s from {ftpPath} to {ftpHoldFolder} ....", "FTP");
-                
-                returnFlag = await FileFunctionsClass.SendToWebService(ftpHoldFolder, clientID);
+                string lastFolderName = Path.GetFileName(ftpHoldFolder); //Path.GetFullPath(ftpHoldFolder).Split(Path.DirectorySeparatorChar).Last();                
+                string parentName = Path.GetFileName(Directory.GetParent(ftpHoldFolder)!.FullName);
 
-                var localFiles = Directory.GetFiles(ftpHoldFolder, "*.*", SearchOption.AllDirectories);
+                WriteLogClass.WriteToLog(3, $"Downloaded {downloadedFileList.Count} file/s from {ftpPath} to \\{parentName}\\{lastFolderName} folder ....", string.Empty);
+                return returnFlag = true;
+                /*var localFiles = Directory.GetFiles(ftpHoldFolder, "*.*", SearchOption.AllDirectories);
                 var skip = false;
 
                 foreach (var _LocalFile in localFiles)
@@ -99,12 +99,12 @@ namespace FtpFunctions
 
                         if (localFileName == fileName)
                         {
-                            /*if (await DeleteFtpFiles(ftpConnect, FileName))
+                            if (await DeleteFtpFiles(ftpConnect, FileName))
                             {
-                                WriteLogClass.WriteToLog(3, $"Deleted file {fileName} from {ftpPath} ....", "FTP");
+                                WriteLogClass.WriteToLog(3, $"Deleted file {fileName} from {ftpPath} ....", string.Empty);
                                 skip = true;
                                 break;
-                            }*/
+                            }
                         }
                     }
 
@@ -116,14 +116,13 @@ namespace FtpFunctions
                     {
                         break;
                     }
-                }                
-                return true;
+                }*/
             }
             else
             {
-                WriteLogClass.WriteToLog(3, "Folder empty ... skipping", "FTP");
-                return false;
-            }            
+                WriteLogClass.WriteToLog(3, "Folder empty ... skipping", string.Empty);
+                return returnFlag;
+            }
         }
 
         public static async Task<bool> DeleteFtpFiles(AsyncFtpClient ftpConnect, string ftpFileName)
@@ -135,7 +134,7 @@ namespace FtpFunctions
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(2, $"Exception at FTP file deletetion: {ex.Message}", "FTP");
+                WriteLogClass.WriteToLog(2, $"Exception at FTP file deletetion: {ex.Message}", string.Empty);
                 return false;
             }           
             

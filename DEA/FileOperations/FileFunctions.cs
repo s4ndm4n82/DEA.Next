@@ -50,7 +50,7 @@ namespace FileFunctions
             
             try
             {
-                if (await SendFilesToRest(result, filesToSend[0]))
+                if (await SendFilesToRest(result, filesToSend[0], customerProjectId, customerQueue, filesToSend.Length))
                 {
                     return true;
                 }
@@ -67,7 +67,7 @@ namespace FileFunctions
             
         }
 
-        private static async Task<bool> SendFilesToRest(string jsonResult, [NotNull]string fullFilePath)
+        private static async Task<bool> SendFilesToRest(string jsonResult, [NotNull]string fullFilePath, string projectId, string queue, int fileCount)
         {
             try
             {
@@ -84,16 +84,17 @@ namespace FileFunctions
 
                 if (serverResponse.StatusCode == HttpStatusCode.OK)
                 {
-                    WriteLogClass.WriteToLog(3, $"Server status code: {serverResponse.StatusCode}", string.Empty);
+                    WriteLogClass.WriteToLog(3, $"Uploaded {fileCount} file to project {projectId} using queue {queue} ....", string.Empty);
 
                     // Deletes the file from local hold folder when sending is successful.
-                    FolderCleanerClass.GetFolders(fullFilePath);
-                    return true;
+                    if (FolderCleanerClass.GetFolders(fullFilePath))
+                    {
+                        return true;
+                    }                    
                 }
                 else
                 {
-                    WriteLogClass.WriteToLog(3, $"Server status code: {serverResponse.StatusCode}", string.Empty);
-                    return false;
+                    WriteLogClass.WriteToLog(3, $"Server status code: {serverResponse.StatusCode} \n Server Response Error: {serverResponse.Content}", string.Empty);
                 }
             }
             catch (Exception ex)

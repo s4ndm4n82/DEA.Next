@@ -34,8 +34,9 @@ using System.Drawing.Text;
 
 // Aplication title just for fun.
 
-WriteLogClass.WriteToLog(3, "Connecting to FTP Server ....", "FTP");
+WriteLogClass.WriteToLog(3, "Connecting to FTP Server ....", string.Empty);
 
+int loopCount = 0;
 var jsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
 
 var ftpClients = jsonData.CustomerDetails!.Where(ftpc => ftpc.FileDeliveryMethod!.ToUpper() == "FTP");
@@ -43,14 +44,24 @@ var emailClients = jsonData.CustomerDetails!.Where(emailc => emailc.FileDelivery
 
 foreach (var ftpClient in ftpClients)
 {
+    loopCount++;
     if (ftpClient.FtpDetails!.FtpType!.ToUpper() == "FTP" || ftpClient.FtpDetails!.FtpType!.ToUpper() == "FTPS")
     {
         await FtpFunctionsClass.GetFtpFiles(ftpClient.id);
     }
     else // Awating to be implimented. Will be added when needed.
     {
-        await SftpFunctionsClass.GetSftpFiles(ftpClient.id);
+        SftpFunctionsClass.GetSftpFiles(ftpClient.id);
     }
+}
+
+if (loopCount == ftpClients.Count())
+{
+    WriteLogClass.WriteToLog(3, "Process completed successfully ... ", string.Empty);
+}
+else
+{
+    WriteLogClass.WriteToLog(3, "Process exited with errors ... ", string.Empty);
 }
 
 /*foreach (var emailClient in emailClients)
