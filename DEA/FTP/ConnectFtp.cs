@@ -18,11 +18,11 @@ namespace ConnectFtp
             try
             {
                 await FtpConnect.Connect(CloseToken);
-                WriteLogClass.WriteToLog(3, "FTP Connection successful ....", "FTP");
+                WriteLogClass.WriteToLog(3, "FTP Connection successful ....", string.Empty);
             }
             catch
             {
-                WriteLogClass.WriteToLog(3, $"Trying to connect using alt method ....", "FTP");
+                WriteLogClass.WriteToLog(3, $"Trying to connect using alt method ....", string.Empty);
                 await ConnectFtpAlt(HostIp, UserName, UserPassword);
             }
 
@@ -40,11 +40,11 @@ namespace ConnectFtp
             try
             {
                 await FtpConnect.Connect(CloseToken);
-                WriteLogClass.WriteToLog(3, "FTP Alt Connection successful ....", "FTP");
+                WriteLogClass.WriteToLog(3, "FTP Alt Connection successful ....", string.Empty);
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(2, $"Exception at FTP connection: {ex.Message}", "FTP");
+                WriteLogClass.WriteToLog(2, $"Exception at FTP connection: {ex.Message}", string.Empty);
             }
             
             return FtpConnect;

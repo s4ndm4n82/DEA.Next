@@ -48,7 +48,8 @@
         "FtpUser": "",
         "FtpPassword": "",
         "FtpMainFolder": "",
-        "FtpSubFolder": ""
+        "FtpSubFolder1": "",
+        "FtpSubFolder2": ""
       },
       "EmailDetails": {
         "EmailAddress": "",

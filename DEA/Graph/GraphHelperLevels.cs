@@ -24,7 +24,6 @@ namespace DEA2Levels
             var ConfigParam = new ReadSettingsClass();
 
             int maxAmountOfEmails = ConfigParam.MaxLoadEmails;
-            string importFolderPath = Path.Combine(ConfigParam.ImportFolderLetter, ConfigParam.ImportFolderPath);
 
             // Get the folder ID's after searching the folder names.
             GetMailFolderIdsClass.clientFolderId folderIds = await GetMailFolderIdsClass.GetChlidFolderIds<GetMailFolderIdsClass>(graphClient, clientEmail, mainMailFolder, subFolder1, subFolder2);

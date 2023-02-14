@@ -83,10 +83,19 @@ namespace FtpFunctions
             bool returnFlag = false;
 
             // Initiate FTP connect and gets the file list from the FTP server.
-            FtpListItem[] FtpFileItemList = await ftpConnect.GetListing(ftpPath);
+            List<FtpListItem> ftpFilesOnly = new List<FtpListItem>();
 
+            foreach (var fileItem in await ftpConnect.GetListing(ftpPath))
+            {
+                // Only select files only. Sub directories are skipped.
+                if (fileItem.Type == FtpObjectType.File)
+                {
+                    ftpFilesOnly.Add(new FtpListItem() { FullName = fileItem.FullName });
+                }                
+            }
+            
             // Puts the full filename into a string list.
-            IEnumerable<string> FilesToDownload = FtpFileItemList.Select(f => f.FullName.ToString());
+            IEnumerable<string> FilesToDownload = ftpFilesOnly.Select(f => f.FullName.ToString());
 
             // Downloads files from the server and counts them.
             List<FtpResult> downloadedFileList = await ftpConnect.DownloadFiles(ftpHoldFolder, FilesToDownload, FtpLocalExists.Resume, FtpVerify.Retry);
