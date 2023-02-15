@@ -9,15 +9,17 @@
       "ProjetID": "0c298408-76b9-4f4c-9941-edb101126329",
       "MainCustomer": "Aksesspunkt",
       "ClientName": "Duett",
+      "ClientOrgNo": "932971917",
+      "ClientIdField": "Customer Organization No",
       "FileDeliveryMethod": "FTP",
       "FtpDetails": {
         "FtpType": "FTP",
-        "FtpHostName": "ftp.digiacc.no",
+        "FtpHostName": "localhost",
         "FtpHostIp": "",
-        "FtpUser": "ftp.digiacc.no|EHFPortalConvert",
-        "FtpPassword": "Nt*N-9&z!V9]mPve",
-        "FtpMainFolder": "Navitro_importvic",
-        "FtpSubFolder1": "932971917",
+        "FtpUser": "testuser",
+        "FtpPassword": "jackkills",
+        "FtpMainFolder": "Aksesspunkt",
+        "FtpSubFolder1": "Duett",
         "FtpSubFolder2": ""
       },
       "EmailDetails": {
@@ -40,6 +42,8 @@
       "ProjetID": "",
       "MainCustomer": "",
       "ClientName": "",
+      "ClientOrgNo": "",
+      "ClientIdField": "",
       "FileDeliveryMethod": "",
       "FtpDetails": {
         "FtpType": "",

@@ -10,7 +10,7 @@ namespace FolderCleaner
 
             if (Directory.Exists(filePath!.FullName))
             {
-                WriteLogClass.WriteToLog(3, $"Cleaning download folder ....", string.Empty);
+                WriteLogClass.WriteToLog(3, "Cleaning download folder ....", string.Empty);
 
                 string[] folderList = Directory.GetDirectories(filePath.FullName, "*.*", SearchOption.AllDirectories);
 
@@ -39,9 +39,11 @@ namespace FolderCleaner
                     if (Directory.GetFiles(folder, "*.*", SearchOption.AllDirectories).Length > 0)
                     {
                         try
-                        {
-                            var RmvdFolderName = folder.Split(Path.DirectorySeparatorChar).Last();
-                            Directory.Delete(folder, true);
+                        {   
+                            string folderPath = Directory.GetParent(folder)!.ToString();
+                            
+                            Directory.Delete(folderPath, true);
+                           
                         }
                         catch (IOException ex)
                         {

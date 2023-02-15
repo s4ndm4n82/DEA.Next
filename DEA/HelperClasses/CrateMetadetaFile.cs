@@ -10,7 +10,8 @@ namespace CreateMetadataFile
     {   
         public static bool WriteMetadataXml(string ToEmail, string SavePath, string SaveFileName)
         {
-            // TODO 1 : Create a funstion to get the to email address from emails and pass it to here.
+            // TODO 1 : Not needed anymore remove this.
+
             var XmlSaveFile = Path.Combine(SavePath, SaveFileName);
             var XmlSaveSwitch = false;
 

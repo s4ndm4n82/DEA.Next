@@ -12,13 +12,22 @@ namespace FileFunctions
     internal class FileFunctionsClass
     {
         public static async Task<bool> SendToWebService(string filePath, int customerId)
-        {   
+        {
+            WriteLogClass.WriteToLog(3, "Starting file upload process .... ", string.Empty);
+
             UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
             UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId)!;
 
             string[] downloadedFiles = Directory.GetFiles(filePath);
 
-            if (await MakeJsonRequest(clientDetails.Token!, clientDetails.UserName!, clientDetails.TemplateKey!, clientDetails.Queue!, clientDetails.ProjetID!, downloadedFiles))
+            if (await MakeJsonRequest(clientDetails.Token!,
+                                      clientDetails.UserName!,
+                                      clientDetails.TemplateKey!,
+                                      clientDetails.Queue!,
+                                      clientDetails.ProjetID!,
+                                      clientDetails.ClientOrgNo!,
+                                      clientDetails.ClientIdField!,
+                                      downloadedFiles))
             {
                 return true;
             }
@@ -28,13 +37,25 @@ namespace FileFunctions
             }
         }
 
-        private static async Task<bool> MakeJsonRequest(string customerToken, string customerUserName, string customerTemplateKey, string customerQueue, string customerProjectId, string[] filesToSend)
+        private static async Task<bool> MakeJsonRequest(string customerToken,
+                                                        string customerUserName,
+                                                        string customerTemplateKey,
+                                                        string customerQueue,
+                                                        string customerProjectId,
+                                                        string clientOrgNo,
+                                                        string clientIdField,
+                                                        string[] filesToSend)
         {
-            var fileList = new List<TpsJasonStringClass.FileList>();
+            // Creating the file list to be added to the Json request.
+            List<TpsJasonStringClass.FileList> fileList = new List<TpsJasonStringClass.FileList>();
             foreach (var file in filesToSend)
             {   
                 fileList.Add(new TpsJasonStringClass.FileList() { Name = Path.GetFileName(file), Data = Convert.ToBase64String(File.ReadAllBytes(file)) });
             }
+
+            // Creating the field list to be added to the Json request.
+            List<TpsJasonStringClass.FieldList> idField = new List<TpsJasonStringClass.FieldList>();
+            idField.Add(new TpsJasonStringClass.FieldList() { Name = clientIdField, Value = clientOrgNo});
 
             TpsJasonStringClass.TpsJsonObject TpsJsonRequest = new()
             {
@@ -43,11 +64,12 @@ namespace FileFunctions
                 TemplateKey = $"{customerTemplateKey}",
                 Queue = $"{customerQueue}",
                 ProjectID = $"{customerProjectId}",
+                Fields = idField,
                 Files = fileList
             };
 
             var result = JsonConvert.SerializeObject(TpsJsonRequest);
-            
+
             try
             {
                 if (await SendFilesToRest(result, filesToSend[0], customerProjectId, customerQueue, filesToSend.Length))
@@ -87,10 +109,7 @@ namespace FileFunctions
                     WriteLogClass.WriteToLog(3, $"Uploaded {fileCount} file to project {projectId} using queue {queue} ....", string.Empty);
 
                     // Deletes the file from local hold folder when sending is successful.
-                    if (FolderCleanerClass.GetFolders(fullFilePath))
-                    {
-                        return true;
-                    }                    
+                    return FolderCleanerClass.GetFolders(fullFilePath);
                 }
                 else
                 {

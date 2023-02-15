@@ -20,6 +20,8 @@ namespace UserConfigReader
             public string? ProjetID { get; set; }
             public string? MainCustomer { get; set; }
             public string? ClientName { get; set; }
+            public string? ClientOrgNo { get; set; }
+            public string? ClientIdField { get; set; }
             public string? FileDeliveryMethod { get; set; }
             public Ftpdetails? FtpDetails { get; set; }
             public Emaildetails? EmailDetails { get; set; }
