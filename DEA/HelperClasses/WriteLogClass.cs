@@ -9,16 +9,13 @@ namespace WriteLog
     {
         public static void WriteToLog(int Level, string LogEntry, string LogType)
         {   
-            var LogFileName = "DEA_Email_Logfile_" + DateTime.Now.ToString("dd_MM_yyyy") + ".txt";
+            string LogFileName = "DEA_Logfile_" + DateTime.Now.ToString("dd_MM_yyyy") + ".txt";
 
-            if (LogType.ToUpper() == "FTP")
-            {
-               LogFileName  = "DEA_Ftp_Logfile_" + DateTime.Now.ToString("dd_MM_yyyy") + ".txt";
-            }
+            string textLine = string.Concat( $"[{LogType}] .... ", LogEntry);
 
-            var LogFile = Path.Combine(GraphHelper.CheckFolders("Log"), LogFileName);
+            string LogFile = Path.Combine(GraphHelper.CheckFolders("Log"), LogFileName);
 
-            var LogControlSwitch = new LoggingLevelSwitch();
+            LoggingLevelSwitch LogControlSwitch = new();
 
             LogEventLevel LogLevel;
             
@@ -57,7 +54,7 @@ namespace WriteLog
                         .WriteTo.Console()                        
                         .CreateLogger();
 
-            WriteLog(Level, LogEntry);
+            WriteLog(Level, textLine);
             
             Log.CloseAndFlush();
         }

@@ -34,7 +34,7 @@ using System.Drawing.Text;
 
 // Aplication title just for fun.
 
-WriteLogClass.WriteToLog(3, "Connecting to FTP Server ....", string.Empty);
+WriteLogClass.WriteToLog(3, "Starting download process ....", string.Empty);
 
 int loopCount = 0;
 var jsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
@@ -57,11 +57,11 @@ foreach (var ftpClient in ftpClients)
 
 if (loopCount == ftpClients.Count())
 {
-    WriteLogClass.WriteToLog(3, "Process completed successfully ... ", string.Empty);
+    WriteLogClass.WriteToLog(3, "Process completed successfully ... ", "FTP");
 }
 else
 {
-    WriteLogClass.WriteToLog(3, "Process exited with errors ... ", string.Empty);
+    WriteLogClass.WriteToLog(3, "Process exited with errors ... ", "FTP");
 }
 
 /*foreach (var emailClient in emailClients)

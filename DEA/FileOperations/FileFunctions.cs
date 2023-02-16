@@ -12,7 +12,11 @@ namespace FileFunctions
 {
     internal class FileFunctionsClass
     {
-        public static async Task<bool> SendToWebService(AsyncFtpClient ftpConnect,string filePath, int customerId, IEnumerable<string> ftpFileList, string[] localFileList)
+        public static async Task<bool> SendToWebService(AsyncFtpClient ftpConnect,
+                                                        string filePath,
+                                                        int customerId,
+                                                        IEnumerable<string> ftpFileList,
+                                                        string[] localFileList)
         {
             WriteLogClass.WriteToLog(3, "Starting file upload process .... ", string.Empty);
 
