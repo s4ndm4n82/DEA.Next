@@ -6,12 +6,13 @@ using TpsJsonString;
 using WriteLog;
 using FolderCleaner;
 using System.Diagnostics.CodeAnalysis;
+using FluentFTP;
 
 namespace FileFunctions
 {
     internal class FileFunctionsClass
     {
-        public static async Task<bool> SendToWebService(string filePath, int customerId)
+        public static async Task<bool> SendToWebService(AsyncFtpClient ftpConnect,string filePath, int customerId, IEnumerable<string> ftpFileList, string[] localFileList)
         {
             WriteLogClass.WriteToLog(3, "Starting file upload process .... ", string.Empty);
 
@@ -20,14 +21,17 @@ namespace FileFunctions
 
             string[] downloadedFiles = Directory.GetFiles(filePath);
 
-            if (await MakeJsonRequest(clientDetails.Token!,
+            if (await MakeJsonRequest(ftpConnect,
+                                      clientDetails.Token!,
                                       clientDetails.UserName!,
                                       clientDetails.TemplateKey!,
                                       clientDetails.Queue!,
                                       clientDetails.ProjetID!,
                                       clientDetails.ClientOrgNo!,
                                       clientDetails.ClientIdField!,
-                                      downloadedFiles))
+                                      downloadedFiles,
+                                      ftpFileList,
+                                      localFileList))
             {
                 return true;
             }
@@ -37,14 +41,17 @@ namespace FileFunctions
             }
         }
 
-        private static async Task<bool> MakeJsonRequest(string customerToken,
+        private static async Task<bool> MakeJsonRequest(AsyncFtpClient ftpConnect,
+                                                        string customerToken,
                                                         string customerUserName,
                                                         string customerTemplateKey,
                                                         string customerQueue,
                                                         string customerProjectId,
                                                         string clientOrgNo,
                                                         string clientIdField,
-                                                        string[] filesToSend)
+                                                        string[] filesToSend,
+                                                        IEnumerable<string> ftpFileList,
+                                                        string[] localFileList)
         {
             // Creating the file list to be added to the Json request.
             List<TpsJasonStringClass.FileList> fileList = new List<TpsJasonStringClass.FileList>();
@@ -54,8 +61,10 @@ namespace FileFunctions
             }
 
             // Creating the field list to be added to the Json request.
-            List<TpsJasonStringClass.FieldList> idField = new List<TpsJasonStringClass.FieldList>();
-            idField.Add(new TpsJasonStringClass.FieldList() { Name = clientIdField, Value = clientOrgNo});
+            List<TpsJasonStringClass.FieldList> idField = new()
+            {
+                new TpsJasonStringClass.FieldList() { Name = clientIdField, Value = clientOrgNo }
+            };
 
             TpsJasonStringClass.TpsJsonObject TpsJsonRequest = new()
             {
@@ -72,7 +81,7 @@ namespace FileFunctions
 
             try
             {
-                if (await SendFilesToRest(result, filesToSend[0], customerProjectId, customerQueue, filesToSend.Length))
+                if (await SendFilesToRest(ftpConnect, result, filesToSend[0], customerProjectId, customerQueue, filesToSend.Length, ftpFileList, localFileList))
                 {
                     return true;
                 }
@@ -89,7 +98,14 @@ namespace FileFunctions
             
         }
 
-        private static async Task<bool> SendFilesToRest(string jsonResult, [NotNull]string fullFilePath, string projectId, string queue, int fileCount)
+        private static async Task<bool> SendFilesToRest(AsyncFtpClient ftpConnect,
+                                                        string jsonResult,
+                                                        [NotNull]string fullFilePath,
+                                                        string projectId,
+                                                        string queue,
+                                                        int fileCount,
+                                                        IEnumerable<string> ftpFileList,
+                                                        string[] localFileList)
         {
             try
             {
@@ -108,7 +124,12 @@ namespace FileFunctions
                 {
                     WriteLogClass.WriteToLog(3, $"Uploaded {fileCount} file to project {projectId} using queue {queue} ....", string.Empty);
 
-                    // Deletes the file from local hold folder when sending is successful.
+                    /* Uncomment this area when deploying to production
+                    if (await FolderCleanerClass.GetFtpPathAsync(ftpConnect, ftpFileList, localFileList))
+                    {
+                        // Deletes the file from local hold folder when sending is successful.
+                        return FolderCleanerClass.GetFolders(fullFilePath);
+                    }*/
                     return FolderCleanerClass.GetFolders(fullFilePath);
                 }
                 else

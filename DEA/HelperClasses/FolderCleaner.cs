@@ -1,4 +1,5 @@
-﻿using WriteLog;
+﻿using FluentFTP;
+using WriteLog;
 
 namespace FolderCleaner
 {
@@ -60,6 +61,49 @@ namespace FolderCleaner
             }
 
             return false;
+        }
+
+        public static async Task<bool> GetFtpPathAsync(AsyncFtpClient ftpConnect, IEnumerable<string> ftpFileList, string[] localFileList)
+        {
+            int loopCount = 0;
+            
+            foreach (string localFilePath in localFileList)
+            {
+                string localFileName = Path.GetFileNameWithoutExtension(localFilePath);
+
+                foreach (string ftpFilePath in ftpFileList)
+                {
+                    string ftpFileName = Path.GetFileNameWithoutExtension(ftpFilePath);
+
+                    if (localFileName.Equals(ftpFileName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        loopCount++;
+                        await DeleteFtpFiles(ftpConnect, string.Concat(ftpFilePath));
+                    }
+                }
+            }
+
+            if (loopCount == localFileList.Length)
+            {
+                WriteLogClass.WriteToLog(3, $"Deleted {localFileList.Length} from the FTP server ....", string.Empty);
+                return true;
+            }
+            return false;
+        }
+
+        public static async Task<bool> DeleteFtpFiles(AsyncFtpClient ftpConnect, string ftpFileName)
+        {
+            try
+            {
+                await ftpConnect.DeleteFile(ftpFileName);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(2, $"Exception at FTP file deletetion: {ex.Message}, file name {ftpFileName}.", string.Empty);
+                return false;
+            }
+
         }
     }
 }
