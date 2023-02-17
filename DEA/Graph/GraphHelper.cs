@@ -39,7 +39,7 @@ namespace DEA
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(2, $"Exception at graph API call: {ex.Message}", string.Empty);
+                    WriteLogClass.WriteToLog(2, $"Exception at graph API call: {ex.Message}", 6);
                 }
                 
             }
@@ -53,7 +53,7 @@ namespace DEA
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(2, $"Exception at GraphHelper2Levels: {ex.Message}", string.Empty);
+                    WriteLogClass.WriteToLog(2, $"Exception at GraphHelper2Levels: {ex.Message}", 6);
                 }
             }
             /*else
@@ -111,7 +111,7 @@ namespace DEA
                     string.IsNullOrEmpty(GraphApiUrl) ||
                     string.IsNullOrEmpty(ClientSecret))
                 {
-                    WriteLogClass.WriteToLog(1, "Set the Graph API permissions. Using dotnet user-secrets set or appsettings.json.... User secrets is not correct.", string.Empty);
+                    WriteLogClass.WriteToLog(1, "Set the Graph API permissions. Using dotnet user-secrets set or appsettings.json.... User secrets is not correct.", 1);
                 }
             }
             else
@@ -128,11 +128,11 @@ namespace DEA
             // Calls InitializeGraphClient to get the token and connect to the graph API.
             if (!await InitializeGraphClient(ClientId, Instance, TenantId, GraphApiUrl, ClientSecret, Scopes))
             {
-                WriteLogClass.WriteToLog(1, "Graph client initialization faild  .....", string.Empty);
+                WriteLogClass.WriteToLog(1, "Graph client initialization faild  .....", 6);
             }
             else
             {
-                WriteLogClass.WriteToLog(3, "Graph client initialization successful ....", string.Empty);
+                WriteLogClass.WriteToLog(3, "Graph client initialization successful ....", 6);
                 Thread.Sleep(2000);
             }
         }
@@ -182,7 +182,7 @@ namespace DEA
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(1, $"Exception at graph client initilizing: {ex.Message}", string.Empty);
+                WriteLogClass.WriteToLog(1, $"Exception at graph client initilizing: {ex.Message}", 6);
                 return Task.FromResult(false);
             }
         }
@@ -206,7 +206,7 @@ namespace DEA
                 // The application doesn't have sufficient permissions.
                 // - Did you declare enough app permissions during app creation?
                 // - Did the tenant admin grant permissions to the application?
-                WriteLogClass.WriteToLog(1, $"Exception at token accuire: {ex.Message}", string.Empty);
+                WriteLogClass.WriteToLog(1, $"Exception at token accuire: {ex.Message}", 6);
             }
             catch (MsalServiceException ex) when (ex.Message.Contains("AADSTS70011"))
             {
@@ -214,7 +214,7 @@ namespace DEA
                 // Mitigation: Change the scope to be as expected.
                 // Need to be set on the online under Azure Active Directory -> App Registrations -> <App Name> -> API Permissions.
                 // The scopes/rules need to be "Application" type. "Delegated" type doesn't work for auto login.
-                WriteLogClass.WriteToLog(1, "Scopes provided are not supported", string.Empty);
+                WriteLogClass.WriteToLog(1, "Scopes provided are not supported", 6);
             }
 
             return AuthToken!.AccessToken;
@@ -265,7 +265,7 @@ namespace DEA
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(1, $"Exception at download folder creation: {ex.Message}", string.Empty);
+                    WriteLogClass.WriteToLog(1, $"Exception at download folder creation: {ex.Message}", 1);
                 }
             }
 
@@ -277,7 +277,7 @@ namespace DEA
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(1, $"Exception at attachmnet folder creation: {ex.Message}", string.Empty);
+                    WriteLogClass.WriteToLog(1, $"Exception at attachmnet folder creation: {ex.Message}", 1);
                 }
             }
 
@@ -289,7 +289,7 @@ namespace DEA
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(1, $"Exception at FTP folder creation: {ex.Message}", string.Empty);
+                    WriteLogClass.WriteToLog(1, $"Exception at FTP folder creation: {ex.Message}", 1);
                 }
             }
 
@@ -301,7 +301,7 @@ namespace DEA
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(1, $"Exception at download folder creation: {ex.Message}", string.Empty);
+                    WriteLogClass.WriteToLog(1, $"Exception at download folder creation: {ex.Message}", 1);
                 }
             }
 
@@ -346,7 +346,7 @@ namespace DEA
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(1, $"Exception at download folder creation: {ex.Message}", string.Empty);
+                    WriteLogClass.WriteToLog(1, $"Exception at download folder creation: {ex.Message}", 1);
                 }
             }
 
@@ -370,129 +370,8 @@ namespace DEA
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(1, $"Exception at download path: {ex.Message}", string.Empty);
+                WriteLogClass.WriteToLog(1, $"Exception at download path: {ex.Message}", 1);
                 return false;
-            }
-        }
-
-        // Forwards emails with out any attachment to the sender.
-        public static async Task<(string?, bool)> ForwardEmtpyEmail(string FolderId1, string FolderId2, string ErrFolderId, string MsgId2, string _Email, int AttnStatus)
-        {
-            try
-            {
-                if (!string.IsNullOrWhiteSpace(FolderId2))
-                {
-                    // Get ths the emails details like subject and from email.
-                    var MsgDetails = await graphClient!.Users[$"{_Email}"].MailFolders["Inbox"]
-                            .ChildFolders[$"{FolderId1}"]
-                            .ChildFolders[$"{FolderId2}"]
-                            .ChildFolders[$"{ErrFolderId}"]
-                            .Messages[$"{MsgId2}"]
-                            .Request()
-                            .Select(em => new
-                            {
-                                em.Subject,
-                                em.From
-                            })
-                            .GetAsync();
-
-                    // Variables to be used with graph forward.
-                    var FromName = MsgDetails.From.EmailAddress.Name;
-                    var FromEmail = MsgDetails.From.EmailAddress.Address;
-                    var MailComment = string.Empty;
-
-                    if (AttnStatus != 1)
-                    {
-                        MailComment = "Hi,<br /><b>Please do not reply to this email</b><br />. Below email doesn't contain any attachment."; // Can be change with html.
-                    }
-                    else
-                    {
-                        MailComment = "Hi,<br /><b>Please do not reply to this email</b><br />Below email's attachment file type is not accepted. Please send attachments as .pdf or .jpg.";
-                    }
-
-                    // Recipient setup for the mail header.
-                    var toRecipients = new List<Recipient>()
-                    {
-                        new Recipient
-                        {
-                            EmailAddress = new EmailAddress
-                            {
-                                Name = FromName,
-                                Address = FromEmail
-                            }
-                        }
-                    };
-
-                    // Forwarding the non attachment email using .forward().
-                    await graphClient.Users[$"{_Email}"].MailFolders["Inbox"]
-                        .ChildFolders[$"{FolderId1}"]
-                        .ChildFolders[$"{FolderId2}"]
-                        .ChildFolders[$"{ErrFolderId}"]
-                        .Messages[$"{MsgId2}"]
-                        .Forward(toRecipients, null, MailComment)
-                        .Request()
-                        .PostAsync();
-
-                    return (FromEmail, true);
-                }
-                else
-                {
-                    // Get ths the emails details like subject and from email.
-                    var MsgDetails = await graphClient!.Users[$"{_Email}"].MailFolders["Inbox"]
-                            .ChildFolders[$"{FolderId1}"]
-                            .ChildFolders[$"{ErrFolderId}"]
-                            .Messages[$"{MsgId2}"]
-                            .Request()
-                            .Select(em => new
-                            {
-                                em.Subject,
-                                em.From
-                            })
-                            .GetAsync();
-
-                    // Variables to be used with graph forward.
-                    var FromName = MsgDetails.From.EmailAddress.Name;
-                    var FromEmail = MsgDetails.From.EmailAddress.Address;
-                    var MailComment = string.Empty;
-
-                    if (AttnStatus != 1)
-                    {
-                        MailComment = "Hi,<br /><b>Please do not reply to this email</b><br />. Below email doesn't contain any attachment."; // Can be change with html.
-                    }
-                    else
-                    {
-                        MailComment = "Hi,<br /><b>Please do not reply to this email</b><br />Below email's attachment file type is not accepted. Please send attachments as .pdf or .jpg.";
-                    }
-
-                    // Recipient setup for the mail header.
-                    var toRecipients = new List<Recipient>()
-                {
-                    new Recipient
-                    {
-                        EmailAddress = new EmailAddress
-                        {
-                            Name = FromName,
-                            Address = FromEmail
-                        }
-                    }
-                };
-
-                    // Forwarding the non attachment email using .forward().
-                    await graphClient.Users[$"{_Email}"].MailFolders["Inbox"]
-                        .ChildFolders[$"{FolderId1}"]
-                        .ChildFolders[$"{ErrFolderId}"]
-                        .Messages[$"{MsgId2}"]
-                        .Forward(toRecipients, null, MailComment)
-                        .Request()
-                        .PostAsync();
-
-                    return (FromEmail, true);
-                }
-
-            }
-            catch (Exception ex)
-            {
-                return (ex.Message, false);
             }
         }
 
@@ -547,7 +426,7 @@ namespace DEA
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(1, $"Exception at moving emails to folders: {ex.Message}", string.Empty);
+                WriteLogClass.WriteToLog(1, $"Exception at moving emails to folders: {ex.Message}", 2);
                 return false;
             }
         }

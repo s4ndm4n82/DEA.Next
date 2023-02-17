@@ -41,7 +41,7 @@ namespace GraphAttachmentFunctions
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(3, $"Excpetion at geting messages 1: {ex.Message}", string.Empty);
+                    WriteLogClass.WriteToLog(3, $"Excpetion at geting messages 1: {ex.Message}", 2);
                 }
             }
 
@@ -60,7 +60,7 @@ namespace GraphAttachmentFunctions
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(3, $"Excpetion at geting messages 2: {ex.Message}", string.Empty);
+                    WriteLogClass.WriteToLog(3, $"Excpetion at geting messages 2: {ex.Message}", 2);
                 }
             }
 
@@ -80,7 +80,7 @@ namespace GraphAttachmentFunctions
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(3, $"Excpetion at geting messages 2: {ex.Message}", string.Empty);
+                    WriteLogClass.WriteToLog(3, $"Excpetion at geting messages 2: {ex.Message}", 2);
                 }
             }
 
@@ -88,7 +88,7 @@ namespace GraphAttachmentFunctions
             {
                 if (message.Attachments.Count > 0)
                 {
-                    WriteLogClass.WriteToLog(3, $"Email: {message.Subject}", string.Empty);
+                    WriteLogClass.WriteToLog(3, $"Email: {message.Subject}", 2);
                     flag = await DownloadAttachments(graphClient, message, inEmail, mainFolderId, subFolderId1, subFolderId2, customerId);
                 }
                 else
@@ -97,14 +97,14 @@ namespace GraphAttachmentFunctions
 
                     if (forwardFalg.Item1)
                     {
-                        WriteLogClass.WriteToLog(3, $"Email forwarded to {forwardFalg.Item2} ....", string.Empty);
+                        WriteLogClass.WriteToLog(3, $"Email forwarded to {forwardFalg.Item2} ....", 2);
 
                         var destinationId = await GetMailFolderIdsClass.GetErrorFolderId(graphClient, inEmail, mainFolderId, subFolderId1, subFolderId2);
                         flag = await GraphHelper.MoveEmails(mainFolderId, subFolderId1, subFolderId2, message.Id, destinationId, inEmail);
 
                         if (flag)
                         {
-                            WriteLogClass.WriteToLog(3, $"No attachments. Mail moved to error folder ....", string.Empty);
+                            WriteLogClass.WriteToLog(3, $"No attachments. Mail moved to error folder ....", 2);
                         }
                     }
                 }
@@ -155,7 +155,7 @@ namespace GraphAttachmentFunctions
                     }
                     catch (Exception ex)
                     {
-                        WriteLogClass.WriteToLog(3, $"Excpetion at attachmentData 1: {ex.Message}", string.Empty);
+                        WriteLogClass.WriteToLog(3, $"Excpetion at attachmentData 1: {ex.Message}", 2);
                     }
                 }
 
@@ -173,7 +173,7 @@ namespace GraphAttachmentFunctions
                     }
                     catch (Exception ex)
                     {
-                        WriteLogClass.WriteToLog(3, $"Excpetion at attachmentData 2: {ex.Message}", string.Empty);
+                        WriteLogClass.WriteToLog(3, $"Excpetion at attachmentData 2: {ex.Message}", 2);
                     }
                 }
 
@@ -192,7 +192,7 @@ namespace GraphAttachmentFunctions
                     }
                     catch (Exception ex)
                     {
-                        WriteLogClass.WriteToLog(3, $"Excpetion at attachmentData 3: {ex.Message}", string.Empty);
+                        WriteLogClass.WriteToLog(3, $"Excpetion at attachmentData 3: {ex.Message}", 2);
                     }
                 }
 
@@ -217,7 +217,7 @@ namespace GraphAttachmentFunctions
                 if (GraphHelper.DownloadAttachedFiles(downloadPath, cleanFileName, attachmentBytes))
                 {
                     loopCount++;
-                    WriteLogClass.WriteToLog(3, $"File {cleanFileName} downloaded ...", string.Empty);
+                    WriteLogClass.WriteToLog(3, $"File {cleanFileName} downloaded ...", 2);
                 }
 
                 if (lastItem == loopCount)
@@ -240,14 +240,14 @@ namespace GraphAttachmentFunctions
 
                 if (forwardFalg.Item1)
                 {
-                    WriteLogClass.WriteToLog(3, $"Email forwarded to {forwardFalg.Item2}", string.Empty);
+                    WriteLogClass.WriteToLog(3, $"Email forwarded to {forwardFalg.Item2}", 2);
 
                     var destinationId = await GetMailFolderIdsClass.GetErrorFolderId(graphClient, inEmail, mainFolderId, subFolderId1, subFolderId2);
                     flagReturn = await GraphHelper.MoveEmails(mainFolderId, subFolderId1, subFolderId2, inMessage.Id, destinationId, inEmail);
 
                     if (flagReturn)
                     {
-                        WriteLogClass.WriteToLog(3, $"Mail moved to error folder ....", string.Empty);
+                        WriteLogClass.WriteToLog(3, $"Mail moved to error folder ....", 2);
                         flagReturn = true;
                     }
                 }
@@ -286,7 +286,7 @@ namespace GraphAttachmentFunctions
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(3, $"Exception at detination folder name 1st if: {ex.Message}", string.Empty);
+                    WriteLogClass.WriteToLog(3, $"Exception at detination folder name 1st if: {ex.Message}", 2);
                 }
             }
 
@@ -305,7 +305,7 @@ namespace GraphAttachmentFunctions
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(3, $"Exception at detination folder name 2nd if: {ex.Message}", string.Empty);
+                    WriteLogClass.WriteToLog(3, $"Exception at detination folder name 2nd if: {ex.Message}", 2);
                 }
             }
 
@@ -325,18 +325,18 @@ namespace GraphAttachmentFunctions
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(3, $"Exception at detination folder name 3rd if: {ex.Message}", string.Empty);
+                    WriteLogClass.WriteToLog(3, $"Exception at detination folder name 3rd if: {ex.Message}", 2);
                 }
             }
 
             if (await GraphHelper.MoveEmails(mainFolderId, subFolderId1, subFolderId2, messageId, exportFolder.Id, inEmail))
             {   
-                WriteLogClass.WriteToLog(3, $"Email {messageSubject} moved to export folder ...",string.Empty);
+                WriteLogClass.WriteToLog(3, $"Email {messageSubject} moved to export folder ...",2);
                 return true;
             }
             else
             {
-                WriteLogClass.WriteToLog(3, $"Email {messageSubject} not moved to export folder ...", string.Empty);
+                WriteLogClass.WriteToLog(3, $"Email {messageSubject} not moved to export folder ...", 2);
                 return false;
             }
         }

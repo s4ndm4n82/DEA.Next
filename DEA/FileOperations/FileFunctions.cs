@@ -18,7 +18,7 @@ namespace FileFunctions
                                                         IEnumerable<string> ftpFileList,
                                                         string[] localFileList)
         {
-            WriteLogClass.WriteToLog(3, "Starting file upload process .... ", string.Empty);
+            WriteLogClass.WriteToLog(3, "Starting file upload process .... ", 4);
 
             UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
             UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId)!;
@@ -96,7 +96,7 @@ namespace FileFunctions
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(3, $"Exception at Json serialization: {ex.Message}", string.Empty);
+                WriteLogClass.WriteToLog(3, $"Exception at Json serialization: {ex.Message}", 4);
                 return false;
             }
             
@@ -126,7 +126,7 @@ namespace FileFunctions
 
                 if (serverResponse.StatusCode == HttpStatusCode.OK)
                 {
-                    WriteLogClass.WriteToLog(3, $"Uploaded {fileCount} file to project {projectId} using queue {queue} ....", string.Empty);
+                    WriteLogClass.WriteToLog(3, $"Uploaded {fileCount} file to project {projectId} using queue {queue} ....", 4);
 
                     /* Uncomment this area when deploying to production
                     if (await FolderCleanerClass.GetFtpPathAsync(ftpConnect, ftpFileList, localFileList))
@@ -138,12 +138,12 @@ namespace FileFunctions
                 }
                 else
                 {
-                    WriteLogClass.WriteToLog(3, $"Server status code: {serverResponse.StatusCode} \n Server Response Error: {serverResponse.Content}", string.Empty);
+                    WriteLogClass.WriteToLog(3, $"Server status code: {serverResponse.StatusCode} \n Server Response Error: {serverResponse.Content}", 4);
                 }
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(3, $"Exception at rest sharp request: {ex.Message}", string.Empty);
+                WriteLogClass.WriteToLog(3, $"Exception at rest sharp request: {ex.Message}", 4);
             }
 
             return false;

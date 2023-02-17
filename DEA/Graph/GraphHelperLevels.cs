@@ -30,7 +30,7 @@ namespace DEA2Levels
 
             if (folderIds != null)
             {
-                WriteLogClass.WriteToLog(3, $"Starting attachment download process ....", string.Empty);
+                WriteLogClass.WriteToLog(3, $"Starting attachment download process ....", 2);
 
                 // Initiate the email attachment download and send them to the web service. Should return a bool value.
                 var result = await GraphAttachmentFunctionsClass.GetMessagesWithAttachments(graphClient
@@ -42,11 +42,11 @@ namespace DEA2Levels
                                                                                               , customerId);
                 if (result)
                 {
-                    WriteLogClass.WriteToLog(3, $"Email attachment download completed successfully ....", string.Empty);
+                    WriteLogClass.WriteToLog(3, $"Email attachment download completed successfully ....", 2);
                 }
                 else
                 {
-                    WriteLogClass.WriteToLog(3, $"Email attachment download did not complete successfully ....", string.Empty);
+                    WriteLogClass.WriteToLog(3, $"Email attachment download did not complete successfully ....", 2);
                 }
             }
         }

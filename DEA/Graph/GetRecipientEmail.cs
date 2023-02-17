@@ -67,7 +67,7 @@ namespace GetRecipientEmail
                         if (ExtractedEmail.Success)
                         {
                             rEmail = ExtractedEmail.Value.ToLower().Replace(" ","");
-                            WriteLogClass.WriteToLog(3, $"Recipient email {rEmail} extracted ...", string.Empty);
+                            WriteLogClass.WriteToLog(3, $"Recipient email {rEmail} extracted ...", 2);
                             break;
                         }
                     }
@@ -75,7 +75,7 @@ namespace GetRecipientEmail
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(1, $"Exception at getting recipient email: {ex.Message}", string.Empty);
+                WriteLogClass.WriteToLog(1, $"Exception at getting recipient email: {ex.Message}", 2);
             }
 
             return rEmail;

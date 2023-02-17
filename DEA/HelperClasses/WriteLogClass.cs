@@ -7,11 +7,40 @@ namespace WriteLog
 {
     internal class WriteLogClass
     {
-        public static void WriteToLog(int Level, string LogEntry, string LogType)
+        public static void WriteToLog(int Level, string LogEntry, int LogType)
         {   
             string LogFileName = "DEA_Logfile_" + DateTime.Now.ToString("dd_MM_yyyy") + ".txt";
 
-            string textLine = string.Concat( $"[{LogType}] .... ", LogEntry);
+            string entryType;
+
+            switch (LogType)
+            {
+                case 1 :
+                    entryType= "[ PROG ]";
+                    break;
+
+                case 2 :
+                    entryType = "[ EMIL ]";
+                    break;
+
+                case 3 :
+                    entryType = "[ FTP  ]";
+                    break;
+
+                case 4 :
+                    entryType = "[ REST ]";
+                    break;
+
+                case 5 :
+                    entryType = "[ GRAP ]";
+                    break;
+
+                default :
+                    entryType = "[ EROOR ]";
+                    break;
+            }
+
+            string textLine = string.Concat( $"{entryType}  ", LogEntry);
 
             string LogFile = Path.Combine(GraphHelper.CheckFolders("Log"), LogFileName);
 

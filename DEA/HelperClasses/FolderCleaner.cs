@@ -11,7 +11,7 @@ namespace FolderCleaner
 
             if (Directory.Exists(filePath!.FullName))
             {
-                WriteLogClass.WriteToLog(3, "Cleaning download folder ....", string.Empty);
+                WriteLogClass.WriteToLog(3, "Cleaning download folder ....", 1);
 
                 string[] folderList = Directory.GetDirectories(filePath.FullName, "*.*", SearchOption.AllDirectories);
 
@@ -22,7 +22,7 @@ namespace FolderCleaner
             }
             else
             {
-                WriteLogClass.WriteToLog(3, "Folder path does not exsits ....", string.Empty);
+                WriteLogClass.WriteToLog(3, "Folder path does not exsits ....", 1);
             }
             return false;
         }
@@ -48,7 +48,7 @@ namespace FolderCleaner
                         }
                         catch (IOException ex)
                         {
-                            WriteLogClass.WriteToLog(2, $"Exception at folder delete: {ex.Message}", string.Empty);
+                            WriteLogClass.WriteToLog(2, $"Exception at folder delete: {ex.Message}", 1);
                         }
                     }
                 }
@@ -56,7 +56,7 @@ namespace FolderCleaner
 
             if (loopCount == folderList.Length)
             {
-                WriteLogClass.WriteToLog(3, $"Removed {folderList.Length} folder from download folder ....", string.Empty);
+                WriteLogClass.WriteToLog(3, $"Removed {folderList.Length} folder from download folder ....", 1);
                 return true;
             }
 
@@ -85,7 +85,7 @@ namespace FolderCleaner
 
             if (loopCount == localFileList.Length)
             {
-                WriteLogClass.WriteToLog(3, $"Deleted {localFileList.Length} from the FTP server ....", string.Empty);
+                WriteLogClass.WriteToLog(3, $"Deleted {localFileList.Length} from the FTP server ....", 3);
                 return true;
             }
             return false;
@@ -100,7 +100,7 @@ namespace FolderCleaner
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(2, $"Exception at FTP file deletetion: {ex.Message}, file name {ftpFileName}.", string.Empty);
+                WriteLogClass.WriteToLog(2, $"Exception at FTP file deletetion: {ex.Message}, file name {ftpFileName}.", 3);
                 return false;
             }
 

@@ -73,15 +73,15 @@ namespace FtpFunctions
 
             if (await ftpConnect.DirectoryExists(ftpPath))
             {
-                WriteLogClass.WriteToLog(3, $"Starting file download from {ftpPath} ....", string.Empty);
+                WriteLogClass.WriteToLog(3, $"Starting file download from {ftpPath} ....", 3);
                 
                 if (await DownloadFtpFiles(ftpConnect, ftpPath, FtpHoldFolder, clientID))
                 {
-                    WriteLogClass.WriteToLog(3, $"Files from client {clientName} downloaded and uploaded to processing ....", string.Empty);
+                    WriteLogClass.WriteToLog(3, $"Files from client {clientName} downloaded and uploaded to processing ....", 3);
                 }
                 else
                 {
-                    WriteLogClass.WriteToLog(3, "File download is not successful ....", string.Empty);
+                    WriteLogClass.WriteToLog(3, "File download is not successful ....", 3);
                 }
             }
             return false;
@@ -119,7 +119,7 @@ namespace FtpFunctions
                 string lastFolderName = Path.GetFileName(ftpHoldFolder);
                 string parentName = Path.GetFileName(Directory.GetParent(ftpHoldFolder)!.FullName);
                 
-                WriteLogClass.WriteToLog(3, $"Downloaded {downloadedFileList.Count} file/s from {ftpPath} to \\{parentName}\\{lastFolderName} folder ....", string.Empty);
+                WriteLogClass.WriteToLog(3, $"Downloaded {downloadedFileList.Count} file/s from {ftpPath} to \\{parentName}\\{lastFolderName} folder ....", 3);
 
                 localFiles = Directory.GetFiles(ftpHoldFolder, "*.*", SearchOption.AllDirectories);
 
@@ -140,20 +140,20 @@ namespace FtpFunctions
 
                 if (fileNameFlag)
                 {
-                    WriteLogClass.WriteToLog(3, $"Ftp count: {filesToDownload.Count()}, Local count: {localFiles.Count()}", string.Empty);
+                    WriteLogClass.WriteToLog(3, $"Ftp count: {filesToDownload.Count()}, Local count: {localFiles.Count()}", 3);
 
                     return await FileFunctionsClass.SendToWebService(ftpConnect, ftpHoldFolder, clientID, filesToDownload, localFiles);
                 }
                 else
                 {
-                    WriteLogClass.WriteToLog(3, $"Ftp count: {filesToDownload.Count()}, Local count: {localFiles.Count()} files doesn't match", string.Empty);
+                    WriteLogClass.WriteToLog(3, $"Ftp count: {filesToDownload.Count()}, Local count: {localFiles.Count()} files doesn't match", 3);
                 }
                 
                 return false;
             }
             else
             {
-                WriteLogClass.WriteToLog(3, "Folder empty ... skipping", string.Empty);
+                WriteLogClass.WriteToLog(3, "Folder empty ... skipping", 3);
                 return false;
             }
         }        

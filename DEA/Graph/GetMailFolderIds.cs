@@ -47,7 +47,7 @@ namespace GetMailFolderIds
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(3, $"Exception at getting main folder id: {ex.Message}", string.Empty);
+                    WriteLogClass.WriteToLog(3, $"Exception at getting main folder id: {ex.Message}", 5);
                 }
 
             }
@@ -66,7 +66,7 @@ namespace GetMailFolderIds
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(3, $"Exception at getting sub folder1 id: {ex.Message}", string.Empty);
+                    WriteLogClass.WriteToLog(3, $"Exception at getting sub folder1 id: {ex.Message}", 5);
                 }
             }
 
@@ -85,7 +85,7 @@ namespace GetMailFolderIds
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(3, $"Exception at getting sub folder2 id: {ex.Message}", string.Empty);
+                    WriteLogClass.WriteToLog(3, $"Exception at getting sub folder2 id: {ex.Message}", 5);
                 }
             }
 
