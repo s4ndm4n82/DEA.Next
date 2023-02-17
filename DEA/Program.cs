@@ -36,26 +36,43 @@ using System.Drawing.Text;
 
 WriteLogClass.WriteToLog(3, "Starting download process ....", 1);
 
-int loopCount = 0;
-var jsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+int ftpLoopCount = 0;
+int emlLoopCount = 0;
+bool result = false;
 
-var ftpClients = jsonData.CustomerDetails!.Where(ftpc => ftpc.FileDeliveryMethod!.ToUpper() == "FTP");
-var emailClients = jsonData.CustomerDetails!.Where(emailc => emailc.FileDeliveryMethod!.ToLower() == "email");
+UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+IEnumerable<UserConfigReaderClass.Customerdetail> ftpClients = jsonData.CustomerDetails!.Where(ftpc => ftpc.FileDeliveryMethod!.ToUpper() == "FTP");
+IEnumerable<UserConfigReaderClass.Customerdetail> emailClients = jsonData.CustomerDetails!.Where(emailc => emailc.FileDeliveryMethod!.ToLower() == "email");
 
-foreach (var ftpClient in ftpClients)
+if (ftpClients.Any())
 {
-    loopCount++;
-    if (ftpClient.FtpDetails!.FtpType!.ToUpper() == "FTP" || ftpClient.FtpDetails!.FtpType!.ToUpper() == "FTPS")
+    foreach (var ftpClient in ftpClients)
     {
-        await FtpFunctionsClass.GetFtpFiles(ftpClient.id);
-    }
-    else // Awating to be implimented. Will be added when needed.
-    {
-        SftpFunctionsClass.GetSftpFiles(ftpClient.id);
+        ftpLoopCount++;
+
+        if (ftpClient.FtpDetails!.FtpType!.ToUpper() == "FTP" || ftpClient.FtpDetails!.FtpType!.ToUpper() == "FTPS")
+        {
+            result = await FtpFunctionsClass.GetFtpFiles(ftpClient.id);
+        }
+        /*else
+        {
+            // Awating to be implimented. Will be added when needed.
+            SftpFunctionsClass.GetSftpFiles(ftpClient.id);
+        }*/
     }
 }
 
-if (loopCount == ftpClients.Count())
+if (emailClients.Any())
+{
+    foreach (var emailClient in emailClients)
+    {
+        emlLoopCount++;
+
+        await GraphHelper.InitializGetAttachment(emailClient.id);
+    }
+}
+
+if (ftpLoopCount == ftpClients.Count() && result)
 {
     WriteLogClass.WriteToLog(3, "Process completed successfully ... ", 1);
 }
@@ -63,17 +80,3 @@ else
 {
     WriteLogClass.WriteToLog(3, "Process exited with errors ... ", 1);
 }
-
-/*foreach (var emailClient in emailClients)
-{
-   await GraphHelper.InitializGetAttachment(emailClient.id);
-}*/
-
-/*
-// Check for the attachment download folder and the log folder. Then creates the folders if they're missing.
-GraphHelper.CheckFolders("none");
-WriteLogClass.WriteToLog(3, "Checking main folders ....", string.Empty);
-
-// Clean the main download folder.
-FolderCleanerClass.GetFolders(GraphHelper.CheckFolders("Download"));
-*/

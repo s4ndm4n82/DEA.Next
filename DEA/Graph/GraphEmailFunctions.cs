@@ -44,7 +44,7 @@ namespace GraphEmailFunctions
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(3, $"Exception at email forwarder if1: {ex.Message}", 5);
+                    WriteLogClass.WriteToLog(3, $"Exception at email forwarder if1: {ex.Message}", 2);
                 }
             }
 
@@ -65,7 +65,7 @@ namespace GraphEmailFunctions
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(3, $"Exception at email forwarder if2: {ex.Message}", 5);
+                    WriteLogClass.WriteToLog(3, $"Exception at email forwarder if2: {ex.Message}", 2);
                 }
             }
 
@@ -87,7 +87,7 @@ namespace GraphEmailFunctions
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(3, $"Exception at email forwarder if3: {ex.Message}", 5);
+                    WriteLogClass.WriteToLog(3, $"Exception at email forwarder if3: {ex.Message}", 2);
                 }
             }
 
@@ -160,7 +160,7 @@ namespace GraphEmailFunctions
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(3, $"Exception at emaiL forward 1: {ex.Message}", 6);
+                    WriteLogClass.WriteToLog(3, $"Exception at emaiL forward 1: {ex.Message}", 2);
                     forwardSwitch = false;
                 }
             }
@@ -181,7 +181,7 @@ namespace GraphEmailFunctions
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(3, $"Exception at emai forward 2: {ex.Message}", 6);
+                    WriteLogClass.WriteToLog(3, $"Exception at emai forward 2: {ex.Message}", 2);
                     forwardSwitch = false;
                 }
             }
@@ -203,7 +203,7 @@ namespace GraphEmailFunctions
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(3, $"Exception at emai forward 3: {ex.Message}", 6);
+                    WriteLogClass.WriteToLog(3, $"Exception at emai forward 3: {ex.Message}", 2);
                     forwardSwitch = false;
                 }
             }

@@ -16,27 +16,27 @@ namespace WriteLog
             switch (LogType)
             {
                 case 1 :
-                    entryType= "[ PROG ]";
+                    entryType= "[ PRG ]";
                     break;
 
                 case 2 :
-                    entryType = "[ EMIL ]";
+                    entryType = "[ EML ]";
                     break;
 
                 case 3 :
-                    entryType = "[ FTP  ]";
+                    entryType = "[ FTP ]";
                     break;
 
                 case 4 :
-                    entryType = "[ REST ]";
+                    entryType = "[ RST ]";
                     break;
 
                 case 5 :
-                    entryType = "[ GRAP ]";
+                    entryType = "[ GRP ]";
                     break;
 
                 default :
-                    entryType = "[ EROOR ]";
+                    entryType = "[ ERR ]";
                     break;
             }
 

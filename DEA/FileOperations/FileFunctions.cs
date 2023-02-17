@@ -138,15 +138,15 @@ namespace FileFunctions
                 }
                 else
                 {
-                    WriteLogClass.WriteToLog(3, $"Server status code: {serverResponse.StatusCode} \n Server Response Error: {serverResponse.Content}", 4);
+                    WriteLogClass.WriteToLog(3, $"Server status code: {serverResponse.StatusCode}, Server Response Error: {serverResponse.Content}", 4);
+                    return false;
                 }
             }
             catch (Exception ex)
             {
                 WriteLogClass.WriteToLog(3, $"Exception at rest sharp request: {ex.Message}", 4);
-            }
-
-            return false;
+                return false;
+            }            
         }
     }
 }

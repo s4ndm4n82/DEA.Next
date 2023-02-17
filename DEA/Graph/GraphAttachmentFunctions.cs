@@ -1,6 +1,7 @@
 ﻿using Microsoft.Graph;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
+using EmailFileHelper;
 using FileFunctions;
 using ReadSettings;
 using WriteLog;
@@ -200,29 +201,15 @@ namespace GraphAttachmentFunctions
                 FileAttachment attachmentProperties = (FileAttachment)attachmentData;                
                 byte[] attachmentBytes = attachmentProperties.ContentBytes;
 
-                // Getting the file name and extention seperatly.
-                string attachmentExtension = Path.GetExtension(attachmentProperties.Name).ToLower(); // Extension only from the file name. And converts it to lower case.
-                string attachmentFileName = Path.GetFileNameWithoutExtension(attachmentProperties.Name); // File name only in order to clean it.
-
-                // String variables to use with the RegEx.
-                string regexPattern = "[\\~#%&*{}[]/:;,.<>?|\"-]"; // RegEx will search for all these characters.
-                string regexReplaceCharacter = "_"; // Above all the characters will be replaces by this sharacter.
-
-                // RegEx function.
-                Regex regexNameCleaner = new(regexPattern, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant| RegexOptions.Compiled);
-
-                // Rebuilding the clean full filename. The second regex replace gets reid of any aditional spaces if there's any.
-                string cleanFileName = Path.ChangeExtension(Regex.Replace(regexNameCleaner.Replace(attachmentFileName, regexReplaceCharacter), @"[\s]+", ""), attachmentExtension);
-
-                if (GraphHelper.DownloadAttachedFiles(downloadPath, cleanFileName, attachmentBytes))
+                if (EmailFileHelperClass.FileDownloader(downloadPath, EmailFileHelperClass.FileNameCleaner(attachmentProperties.Name), attachmentBytes))
                 {
                     loopCount++;
-                    WriteLogClass.WriteToLog(3, $"File {cleanFileName} downloaded ...", 2);
                 }
 
                 if (lastItem == loopCount)
                 {
                     loopFlag = true;
+                    WriteLogClass.WriteToLog(3, $"Downloaded {lastItem} attachments from ") // Get recipient email to display here.
                 }
             }
 
