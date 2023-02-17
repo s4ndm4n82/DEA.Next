@@ -1,6 +1,6 @@
 ﻿using Microsoft.Graph;
 using System.Diagnostics.CodeAnalysis;
-using System.Text.RegularExpressions;
+using GetRecipientEmail;
 using EmailFileHelper;
 using FileFunctions;
 using ReadSettings;
@@ -207,9 +207,11 @@ namespace GraphAttachmentFunctions
                 }
 
                 if (lastItem == loopCount)
-                {
+                {                    
                     loopFlag = true;
-                    WriteLogClass.WriteToLog(3, $"Downloaded {lastItem} attachments from ") // Get recipient email to display here.
+
+                    string recipientEmail = GetRecipientEmailClass.GetRecipientEmail(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inEmail);
+                    WriteLogClass.WriteToLog(3, $"Downloaded {lastItem} attachments from {inMessage.Subject} recived to the {recipientEmail} email address ....", 2); // Get recipient email to display here.
                 }
             }
 

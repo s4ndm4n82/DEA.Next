@@ -61,7 +61,7 @@ namespace GetRecipientEmail
                     if (!string.IsNullOrEmpty(ToEmail.Value))
                     {
                         string RegExString = @"[0-9a-z]+@efakturamottak\.no";
-                        Regex RecivedEmail = new Regex(RegExString, RegexOptions.IgnoreCase);
+                        Regex RecivedEmail = new(RegExString, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
                         var ExtractedEmail = RecivedEmail.Match(ToEmail.Value);
 
                         if (ExtractedEmail.Success)
