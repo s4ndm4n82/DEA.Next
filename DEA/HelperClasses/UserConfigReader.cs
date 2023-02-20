@@ -51,7 +51,7 @@ namespace UserConfigReader
         public class Documentdetails
         {
             public string? DocumentType { get; set; }
-            public string? DocumentExtension { get; set; }
+            public List<string>? DocumentExtensions { get; set; }
         }
 
         public static T ReadAppDotConfig<T>()

@@ -30,7 +30,9 @@
       },
       "DocumentDetails": {
         "DocumentType": "PDF",
-        "DocumentExtension": ".pdf"
+        "DocumentExtensions": [
+          ".pdf"
+        ]
       }
     },
     {
@@ -40,10 +42,10 @@
       "TemplateKey": "",
       "Queue": "6",
       "ProjetID": "0c298408-76b9-4f4c-9941-edb101126329",
-      "MainCustomer": "Aksesspunkt",
-      "ClientName": "Duett",
-      "ClientOrgNo": "932971917",
-      "ClientIdField": "Customer Organization No",
+      "MainCustomer": "DigiAcc",
+      "ClientName": "Direct",
+      "ClientOrgNo": "",
+      "ClientIdField": "InternalClientID",
       "FileDeliveryMethod": "email",
       "FtpDetails": {
         "FtpType": "",
@@ -57,13 +59,15 @@
       },
       "EmailDetails": {
         "EmailAddress": "sandaruwan@efakturamottak.no",
-        "MainInbox": "",
+        "MainInbox": "Level 1",
         "SubInbox1": "",
         "SubInbox2": ""
       },
       "DocumentDetails": {
-        "DocumentType": "",
-        "DocumentExtension": ""
+        "DocumentType": "PDF",
+        "DocumentExtensions": [
+          ".pdf"
+        ]
       }
     }
   ]

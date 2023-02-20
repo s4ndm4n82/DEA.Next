@@ -20,7 +20,7 @@ namespace EmailFileHelper
             string attachmentFileName = Path.GetFileNameWithoutExtension(attachedFileName); // File name only in order to clean it.
 
             // String variables to use with the RegEx.
-            string regexPattern = "[\\~#%&*{}[]/:;,.<>?|\"-]"; // RegEx will search for all these characters.
+            string regexPattern = "[\\~#%&*{}/:;,.<>?|\\[\\]\"-]"; // RegEx will search for all these characters.
             string regexReplaceCharacter = "_"; // Above all the characters will be replaces by this sharacter.
 
             // RegEx function.

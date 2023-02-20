@@ -8,6 +8,7 @@ using WriteLog;
 using DEA;
 using GraphEmailFunctions;
 using GetMailFolderIds;
+using UserConfigReader;
 
 namespace GraphAttachmentFunctions
 {
@@ -131,15 +132,26 @@ namespace GraphAttachmentFunctions
             bool flagReturn = false; // Flag to check if the transfer to TPS is successful.
             bool loopFlag = false; // To execute the TPS file transfer function at the end of the file download loop.
 
-            var configParam = new ReadSettingsClass();
-            string[] acceptedExtentions = configParam.AllowedExtentions;
+            UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+            UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId)!;
+
+            string mainClient = clientDetails.MainCustomer!;
+            string clientName = clientDetails.ClientName!;
+            string recipientEmail = string.Empty;
+
+            if (mainClient.ToLower() == "digiacc")
+            {
+                recipientEmail = GetRecipientEmailClass.GetRecipientEmail(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inEmail); // Get the Recipient email from the email.
+            }            
 
             string downloadPath = Path.Combine(GraphHelper.CheckFolders("email"), GraphHelper.FolderNameRnd(10)); // Creates the file download path.
 
             Attachment attachmentData = null!; // Variable to store attachment ID.
 
+            List<string> acceptedExtentions = clientDetails.DocumentDetails!.DocumentExtensions!;
             IEnumerable<Attachment> acceptedAtachments = inMessage.Attachments.Where(x => acceptedExtentions.Contains(Path.GetExtension(x.Name.ToLower())) && x.Size > 10240 || (x.Name.ToLower().EndsWith(".pdf") && x.Size < 10240));
             int lastItem = acceptedAtachments.Count();
+            
 
             foreach (Attachment attachment in acceptedAtachments)
             {
@@ -208,9 +220,7 @@ namespace GraphAttachmentFunctions
 
                 if (lastItem == loopCount)
                 {                    
-                    loopFlag = true;
-
-                    string recipientEmail = GetRecipientEmailClass.GetRecipientEmail(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inEmail);
+                    loopFlag = true;                    
                     WriteLogClass.WriteToLog(3, $"Downloaded {lastItem} attachments from {inMessage.Subject} recived to the {recipientEmail} email address ....", 2); // Get recipient email to display here.
                 }
             }
@@ -219,7 +229,10 @@ namespace GraphAttachmentFunctions
             {
                 // Call the base 64 converter and the file submitter to the web service.
                 // And then moves to email to export folder. If both functions succed then the varible will be set to true.
-                flagReturn = await FileFunctionsClass.SendToWebService(null!, downloadPath, customerId, null!, null!) && await MoveMailsToExport(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inMessage.Subject, inEmail);
+                if (await FileFunctionsClass.SendToWebService(null!, downloadPath, customerId, null!, null!, recipientEmail))
+                {
+                    flagReturn = await MoveMailsToExport(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inMessage.Subject, inEmail);
+                }
             }
 
             // Forwards the email if there's no attachments and attachment download loop doesn't run.

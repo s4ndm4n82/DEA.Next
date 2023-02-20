@@ -16,7 +16,8 @@ namespace FileFunctions
                                                         string filePath,
                                                         int customerId,
                                                         IEnumerable<string> ftpFileList,
-                                                        string[] localFileList)
+                                                        string[] localFileList,
+                                                        string recipientEmail)
         {
             WriteLogClass.WriteToLog(3, "Starting file upload process .... ", 4);
 
@@ -24,6 +25,12 @@ namespace FileFunctions
             UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId)!;
 
             string[] downloadedFiles = Directory.GetFiles(filePath);
+            string clientOrg = clientDetails.ClientOrgNo!;
+
+            if (!string.IsNullOrEmpty(recipientEmail))
+            {
+                clientOrg = recipientEmail.Split('@')[0];
+            }
 
             if (await MakeJsonRequest(ftpConnect,
                                       clientDetails.Token!,
@@ -31,7 +38,7 @@ namespace FileFunctions
                                       clientDetails.TemplateKey!,
                                       clientDetails.Queue!,
                                       clientDetails.ProjetID!,
-                                      clientDetails.ClientOrgNo!,
+                                      clientOrg,
                                       clientDetails.ClientIdField!,
                                       downloadedFiles,
                                       ftpFileList,
@@ -58,7 +65,7 @@ namespace FileFunctions
                                                         string[] localFileList)
         {
             // Creating the file list to be added to the Json request.
-            List<TpsJasonStringClass.FileList> fileList = new List<TpsJasonStringClass.FileList>();
+            List<TpsJasonStringClass.FileList> fileList = new();
             foreach (var file in filesToSend)
             {   
                 fileList.Add(new TpsJasonStringClass.FileList() { Name = Path.GetFileName(file), Data = Convert.ToBase64String(File.ReadAllBytes(file)) });
@@ -134,7 +141,12 @@ namespace FileFunctions
                         // Deletes the file from local hold folder when sending is successful.
                         return FolderCleanerClass.GetFolders(fullFilePath);
                     }*/
-                    return FolderCleanerClass.GetFolders(fullFilePath);
+
+                    if (ftpConnect == null)
+                    {
+                        return FolderCleanerClass.GetFolders(fullFilePath, "email");
+                    }
+                    return false;
                 }
                 else
                 {

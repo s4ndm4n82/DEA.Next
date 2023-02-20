@@ -5,9 +5,17 @@ namespace FolderCleaner
 {
     internal class FolderCleanerClass
     {
-        public static bool GetFolders(string folderPath)
+        public static bool GetFolders(string folderPath, string type)
         {
-            var filePath = Directory.GetParent(Path.GetDirectoryName(folderPath)!);
+            DirectoryInfo filePath = Directory.GetParent(Path.GetDirectoryName(folderPath)!)!;
+
+            if (type.ToLower() == "email")
+            {
+                filePath = Directory.GetParent(folderPath)!;
+            }
+
+            Console.WriteLine(filePath);
+            Thread.Sleep(1000000);
 
             if (Directory.Exists(filePath!.FullName))
             {
