@@ -3,12 +3,12 @@ using System.Diagnostics.CodeAnalysis;
 using GetRecipientEmail;
 using EmailFileHelper;
 using FileFunctions;
-using ReadSettings;
 using WriteLog;
 using DEA;
 using GraphEmailFunctions;
 using GetMailFolderIds;
 using UserConfigReader;
+using MetaFileReaderWriter;
 
 namespace GraphAttachmentFunctions
 {
@@ -221,12 +221,17 @@ namespace GraphAttachmentFunctions
                 if (lastItem == loopCount)
                 {                    
                     loopFlag = true;                    
-                    WriteLogClass.WriteToLog(3, $"Downloaded {lastItem} attachments from {inMessage.Subject} recived to the {recipientEmail} email address ....", 2); // Get recipient email to display here.
+                    WriteLogClass.WriteToLog(3, $"Downloaded {lastItem} attachments from {inMessage.Subject} ....", 2); // Get recipient email to display here.
                 }
             }
 
             if (loopCount > 0 && loopFlag)
             {
+                string[] localFiles = System.IO.Directory.GetFiles(downloadPath, "*.*", SearchOption.AllDirectories);
+
+                MetaFileReaderWriterClass.MetaWriter(downloadPath, customerId, null!, recipientEmail, "ok", null!, localFiles);
+                Thread.Sleep(1000000000);
+
                 // Call the base 64 converter and the file submitter to the web service.
                 // And then moves to email to export folder. If both functions succed then the varible will be set to true.
                 if (await FileFunctionsClass.SendToWebService(null!, downloadPath, customerId, null!, null!, recipientEmail))
@@ -237,7 +242,7 @@ namespace GraphAttachmentFunctions
 
             // Forwards the email if there's no attachments and attachment download loop doesn't run.
             if (!loopFlag && loopCount == 0)
-            {   
+            {
                 var forwardFalg = await GraphEmailFunctionsClass.EmailForwarder(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inEmail, 0);
 
                 if (forwardFalg.Item1)

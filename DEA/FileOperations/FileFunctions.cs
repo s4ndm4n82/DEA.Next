@@ -88,7 +88,7 @@ namespace FileFunctions
                 Files = fileList
             };
 
-            var result = JsonConvert.SerializeObject(TpsJsonRequest);
+            string result = JsonConvert.SerializeObject(TpsJsonRequest);
 
             try
             {

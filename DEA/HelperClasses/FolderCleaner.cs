@@ -9,14 +9,6 @@ namespace FolderCleaner
         {
             DirectoryInfo filePath = Directory.GetParent(Path.GetDirectoryName(folderPath)!)!;
 
-            if (type.ToLower() == "email")
-            {
-                filePath = Directory.GetParent(folderPath)!;
-            }
-
-            Console.WriteLine(filePath);
-            Thread.Sleep(1000000);
-
             if (Directory.Exists(filePath!.FullName))
             {
                 WriteLogClass.WriteToLog(3, "Cleaning download folder ....", 1);
@@ -50,7 +42,6 @@ namespace FolderCleaner
                         try
                         {   
                             string folderPath = Directory.GetParent(folder)!.ToString();
-                            
                             Directory.Delete(folderPath, true);
                            
                         }
