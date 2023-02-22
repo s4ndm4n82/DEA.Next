@@ -5,8 +5,7 @@ using ConnectFtps;
 using FluentFTP;
 using UserConfigReader;
 using FileFunctions;
-using System.Linq;
-
+using MetaFileReaderWriter;
 namespace FtpFunctions
 {
     internal class FtpFunctionsClass
@@ -58,7 +57,15 @@ namespace FtpFunctions
             }            
 
             string LocalFtpFolder = GraphHelper.CheckFolders("FTP");
-            string FtpHoldFolder = Path.Combine(LocalFtpFolder, ftpMainFolder!, ftpSubFolder1!);
+            string FtpHoldFolder;
+            if (!string.IsNullOrEmpty(ftpSubFolder2))
+            {
+                FtpHoldFolder = Path.Combine(LocalFtpFolder, ftpMainFolder!, ftpSubFolder1!, ftpSubFolder2, GraphHelper.FolderNameRnd(10));
+            }
+            else
+            {
+                FtpHoldFolder = Path.Combine(LocalFtpFolder, ftpMainFolder!, ftpSubFolder1!, GraphHelper.FolderNameRnd(10));
+            }
             
             AsyncFtpClient ftp = null!;
 
@@ -125,9 +132,9 @@ namespace FtpFunctions
 
             if (downloadedFileList.Count > 0)
             {
-                string lastFolderName = Path.GetFileName(ftpHoldFolder);
-                string parentName = Path.GetFileName(Directory.GetParent(ftpHoldFolder)!.FullName);
-                
+                string lastFolderName = Path.GetFileName(ftpHoldFolder);                
+                string parentName = Directory.GetParent(Path.GetFileName(ftpHoldFolder))!.FullName;
+
                 WriteLogClass.WriteToLog(3, $"Downloaded {downloadedFileList.Count} file/s from {ftpPath} to \\{parentName}\\{lastFolderName} folder ....", 3);
 
                 localFiles = Directory.GetFiles(ftpHoldFolder, "*.*", SearchOption.AllDirectories);
@@ -149,7 +156,9 @@ namespace FtpFunctions
 
                 if (fileNameFlag)
                 {
-                    WriteLogClass.WriteToLog(3, $"Ftp count: {filesToDownload.Count()}, Local count: {localFiles.Count()}", 3);
+                    WriteLogClass.WriteToLog(3, $"Ftp count: {filesToDownload.Count()}, Local count: {localFiles.Length}", 3);
+                    
+                    MetaFileReaderWriterClass.MetaWriter(ftpHoldFolder, clientID, ftpPath, null!, "ok", null!, localFiles);
 
                     return await FileFunctionsClass.SendToWebService(ftpConnect, ftpHoldFolder, clientID, filesToDownload, localFiles, null!);
                 }

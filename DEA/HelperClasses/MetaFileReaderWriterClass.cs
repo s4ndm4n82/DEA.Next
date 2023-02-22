@@ -27,14 +27,14 @@ namespace MetaFileReaderWriter
 
         }
 
-        public static T MetaReader<T>(string metaFilePath)
+        public static MetaFileReaderWriterObject MetaReader<T>(string metaFilePath)
         {
-            T? returnData = default;
+            MetaFileReaderWriterObject returnData = default!;
             try
             {
                 using StreamReader fileData = new(metaFilePath);
                 string dataString = fileData.ReadToEnd();
-                return returnData = JsonConvert.DeserializeObject<T>(dataString)!;
+                return returnData = JsonConvert.DeserializeObject<MetaFileReaderWriterObject>(dataString)!;
             }
             catch(Exception ex)
             {
@@ -54,8 +54,6 @@ namespace MetaFileReaderWriter
                     localFiles.Add(file);
                 }
 
-                MetaFileReaderWriterObject metaFiles = new MetaFileReaderWriterObject();
-
                 MetaFileReaderWriterObject metaData = new()
                 {
                     ProcessDetails = new List<ProcessDetail>
@@ -73,9 +71,7 @@ namespace MetaFileReaderWriter
                     }
                 };
 
-                string jsonString = JsonConvert.SerializeObject(metaData);
-
-                Console.WriteLine(jsonString);
+                string jsonString = JsonConvert.SerializeObject(metaData, Formatting.Indented);
 
                 string latFolderName = metaFilePath.Split(Path.DirectorySeparatorChar).Last();
                 string fileExtention = ".json";
@@ -93,6 +89,34 @@ namespace MetaFileReaderWriter
             catch (Exception ex)
             {
                 WriteLogClass.WriteToLog(3, $"Exception at meta file writer: {ex.Message}", 1);
+                return false;
+            }
+        }
+
+        public static bool UpdateMetaFile(string metaPath, string updateVlaue)
+        {
+            try
+            {
+                string filePath = Directory.GetParent(metaPath)!.FullName;
+                string fileLocation = Directory.GetFiles(filePath, "Meta_*.json", SearchOption.TopDirectoryOnly).FirstOrDefault()!;
+                string fileContent = File.ReadAllText(fileLocation);
+
+                MetaFileReaderWriterObject metaData = new();
+                JsonConvert.PopulateObject(fileContent, metaData);
+
+                metaData.ProcessDetails![0].UploadStatus = updateVlaue;
+
+                string updatedJsonString = JsonConvert.SerializeObject(metaData, Formatting.Indented);
+
+                if (!string.IsNullOrEmpty(updatedJsonString))
+                {
+                    File.WriteAllText(fileLocation, updatedJsonString);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(4, $"Exception at Json updator: {ex.Message}", 1);
                 return false;
             }
         }

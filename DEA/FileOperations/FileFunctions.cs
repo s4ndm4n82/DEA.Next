@@ -7,6 +7,7 @@ using WriteLog;
 using FolderCleaner;
 using System.Diagnostics.CodeAnalysis;
 using FluentFTP;
+using MetaFileReaderWriter;
 
 namespace FileFunctions
 {
@@ -24,7 +25,10 @@ namespace FileFunctions
             UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
             UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId)!;
 
-            string[] downloadedFiles = Directory.GetFiles(filePath);
+            List<string> acceptedExtentions = clientDetails.DocumentDetails!.DocumentExtensions!;
+
+            string[] downloadedFiles = Directory.GetFiles(filePath, "*.*", SearchOption.TopDirectoryOnly).Where(f => acceptedExtentions.IndexOf(Path.GetExtension(f)) >= 0).ToArray();
+
             string clientOrg = clientDetails.ClientOrgNo!;
 
             if (!string.IsNullOrEmpty(recipientEmail))
@@ -40,6 +44,7 @@ namespace FileFunctions
                                       clientDetails.ProjetID!,
                                       clientOrg,
                                       clientDetails.ClientIdField!,
+                                      acceptedExtentions,
                                       downloadedFiles,
                                       ftpFileList,
                                       localFileList))
@@ -60,6 +65,7 @@ namespace FileFunctions
                                                         string customerProjectId,
                                                         string clientOrgNo,
                                                         string clientIdField,
+                                                        List<string> extensions,
                                                         string[] filesToSend,
                                                         IEnumerable<string> ftpFileList,
                                                         string[] localFileList)
@@ -88,11 +94,11 @@ namespace FileFunctions
                 Files = fileList
             };
 
-            string result = JsonConvert.SerializeObject(TpsJsonRequest);
+            string result = JsonConvert.SerializeObject(TpsJsonRequest, Formatting.Indented);
 
             try
             {
-                if (await SendFilesToRest(ftpConnect, result, filesToSend[0], customerProjectId, customerQueue, filesToSend.Length, ftpFileList, localFileList))
+                if (await SendFilesToRest(ftpConnect, result, filesToSend[0], customerProjectId, customerQueue, fileList.Count, ftpFileList, localFileList))
                 {
                     return true;
                 }
@@ -124,9 +130,11 @@ namespace FileFunctions
                 var client = new RestClient("https://capture.exacta.no/");
 
                 //var tpsRequest = new RestRequest("tps_processing/Import?");
-                var tpsRequest = new RestRequest("tps_test_processing/Import?"); // Test service. Uncomment the above one and comment this one when putting to production.
-                tpsRequest.Method = Method.Post;
-                tpsRequest.RequestFormat = DataFormat.Json;
+                var tpsRequest = new RestRequest("tps_test_processing/Import?") // Test service. Uncomment the above one and comment this one when putting to production.
+                {
+                    Method = Method.Post,
+                    RequestFormat = DataFormat.Json
+                };
                 tpsRequest.AddBody(jsonResult);
 
                 var serverResponse = await client.ExecuteAsync(tpsRequest); // Executes the request and send to the server.
@@ -134,18 +142,26 @@ namespace FileFunctions
                 if (serverResponse.StatusCode == HttpStatusCode.OK)
                 {
                     WriteLogClass.WriteToLog(3, $"Uploaded {fileCount} file to project {projectId} using queue {queue} ....", 4);
-
-                    /* Uncomment this area when deploying to production
-                    if (await FolderCleanerClass.GetFtpPathAsync(ftpConnect, ftpFileList, localFileList))
+                    
+                    /*if (ftpConnect == null)
                     {
-                        // Deletes the file from local hold folder when sending is successful.
-                        return FolderCleanerClass.GetFolders(fullFilePath);
-                    }*/
-
-                    if (ftpConnect == null)
-                    {
-                        return FolderCleanerClass.GetFolders(fullFilePath, "email");
+                        if (MetaFileReaderWriterClass.UpdateMetaFile(fullFilePath, "ok"))
+                        {
+                            return FolderCleanerClass.GetFolders(fullFilePath, "email");
+                        }
                     }
+                    else
+                    {*/
+                        // Uncomment this area when deploying to production
+                        if (await FolderCleanerClass.GetFtpPathAsync(ftpConnect, ftpFileList, localFileList))
+                        {
+                            if (MetaFileReaderWriterClass.UpdateMetaFile(fullFilePath, "ok"))
+                            {
+                                // Deletes the file from local hold folder when sending is successful.
+                                return FolderCleanerClass.GetFolders(fullFilePath, string.Empty);
+                            }                            
+                        }
+                    //}
                     return false;
                 }
                 else

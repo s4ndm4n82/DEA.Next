@@ -44,7 +44,7 @@ UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.Rea
 IEnumerable<UserConfigReaderClass.Customerdetail> ftpClients = jsonData.CustomerDetails!.Where(ftpc => ftpc.FileDeliveryMethod!.ToUpper() == "FTP");
 IEnumerable<UserConfigReaderClass.Customerdetail> emailClients = jsonData.CustomerDetails!.Where(emailc => emailc.FileDeliveryMethod!.ToUpper() == "EMAIL");
 
-/*if (ftpClients.Any())
+if (ftpClients.Any())
 {
     foreach (var ftpClient in ftpClients)
     {
@@ -58,11 +58,11 @@ IEnumerable<UserConfigReaderClass.Customerdetail> emailClients = jsonData.Custom
         {
             // Awating to be implimented. Will be added when needed.
             SftpFunctionsClass.GetSftpFiles(ftpClient.id);
-        }
+        }*/
     }
-}*/
+}
 
-if (emailClients.Any())
+/*if (emailClients.Any())
 {
     foreach (var emailClient in emailClients)
     {
@@ -70,7 +70,7 @@ if (emailClients.Any())
 
         await GraphHelper.InitializGetAttachment(emailClient.id);
     }
-}
+}*/
 /*
 if (ftpLoopCount == ftpClients.Count() && result)
 {

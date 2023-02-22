@@ -1,5 +1,6 @@
 ﻿using FluentFTP;
 using WriteLog;
+using MetaFileReaderWriter;
 
 namespace FolderCleaner
 {
@@ -7,6 +8,9 @@ namespace FolderCleaner
     {
         public static bool GetFolders(string folderPath, string type)
         {
+            ReadMetaFile(folderPath);
+            Thread.Sleep(1000000000);
+
             DirectoryInfo filePath = Directory.GetParent(Path.GetDirectoryName(folderPath)!)!;
 
             if (Directory.Exists(filePath!.FullName))
@@ -103,6 +107,18 @@ namespace FolderCleaner
                 return false;
             }
 
+        }
+
+        private static bool ReadMetaFile(string pathHoldFolder)
+        {
+            string filePath = Directory.GetParent(pathHoldFolder)!.FullName!;
+            string fileLocation = Directory.GetFiles(filePath, "Meta_*.json", SearchOption.TopDirectoryOnly).FirstOrDefault()!;
+            
+            var jsonData = MetaFileReaderWriterClass.MetaReader<MetaFileReaderWriterClass.MetaFileReaderWriterObject>(fileLocation);
+
+            Console.WriteLine($"Json Data:{jsonData.ProcessDetails.FirstOrDefault().DownloadStatus}"); // working more testing needed.
+
+            return false;
         }
     }
 }
