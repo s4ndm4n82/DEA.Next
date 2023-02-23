@@ -8,7 +8,6 @@ using DEA;
 using GraphEmailFunctions;
 using GetMailFolderIds;
 using UserConfigReader;
-using MetaFileReaderWriter;
 
 namespace GraphAttachmentFunctions
 {
@@ -226,12 +225,7 @@ namespace GraphAttachmentFunctions
             }
 
             if (loopCount > 0 && loopFlag)
-            {
-                // Get the file list after downloading them to be included in the meta file.
-                string[] localFiles = System.IO.Directory.GetFiles(downloadPath, "*.*", SearchOption.AllDirectories);
-                // Creates the meta file.
-                MetaFileReaderWriterClass.MetaWriter(downloadPath, customerId, null!, recipientEmail, "ok", null!, localFiles);
-
+            {   
                 // Call the base 64 converter and the file submitter to the web service.
                 // And then moves to email to export folder. If both functions succed then the varible will be set to true.
                 if (await FileFunctionsClass.SendToWebService(null!, downloadPath, customerId, null!, null!, recipientEmail))

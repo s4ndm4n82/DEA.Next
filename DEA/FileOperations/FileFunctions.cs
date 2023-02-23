@@ -7,7 +7,6 @@ using WriteLog;
 using FolderCleaner;
 using System.Diagnostics.CodeAnalysis;
 using FluentFTP;
-using MetaFileReaderWriter;
 
 namespace FileFunctions
 {
@@ -143,25 +142,20 @@ namespace FileFunctions
                 {
                     WriteLogClass.WriteToLog(3, $"Uploaded {fileCount} file to project {projectId} using queue {queue} ....", 4);
                     
-                    /*if (ftpConnect == null)
+                    if (ftpConnect == null)
                     {
-                        if (MetaFileReaderWriterClass.UpdateMetaFile(fullFilePath, "ok"))
-                        {
-                            return FolderCleanerClass.GetFolders(fullFilePath, "email");
-                        }
+                        return FolderCleanerClass.GetFolders(fullFilePath, "email");
                     }
                     else
-                    {*/
+                    {
                         // Uncomment this area when deploying to production
                         if (await FolderCleanerClass.GetFtpPathAsync(ftpConnect, ftpFileList, localFileList))
                         {
-                            if (MetaFileReaderWriterClass.UpdateMetaFile(fullFilePath, "ok"))
-                            {
-                                // Deletes the file from local hold folder when sending is successful.
-                                return FolderCleanerClass.GetFolders(fullFilePath, string.Empty);
-                            }                            
+                            // Deletes the file from local hold folder when sending is successful.
+                            return FolderCleanerClass.GetFolders(fullFilePath, string.Empty);
+                           
                         }
-                    //}
+                    }
                     return false;
                 }
                 else

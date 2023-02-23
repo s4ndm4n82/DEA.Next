@@ -5,7 +5,6 @@ using ConnectFtps;
 using FluentFTP;
 using UserConfigReader;
 using FileFunctions;
-using MetaFileReaderWriter;
 namespace FtpFunctions
 {
     internal class FtpFunctionsClass
@@ -157,8 +156,6 @@ namespace FtpFunctions
                 if (fileNameFlag)
                 {
                     WriteLogClass.WriteToLog(3, $"Ftp count: {filesToDownload.Count()}, Local count: {localFiles.Length}", 3);
-                    
-                    MetaFileReaderWriterClass.MetaWriter(ftpHoldFolder, clientID, ftpPath, null!, "ok", null!, localFiles);
 
                     return await FileFunctionsClass.SendToWebService(ftpConnect, ftpHoldFolder, clientID, filesToDownload, localFiles, null!);
                 }

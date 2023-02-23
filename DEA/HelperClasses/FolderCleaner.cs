@@ -1,6 +1,5 @@
 ﻿using FluentFTP;
 using WriteLog;
-using MetaFileReaderWriter;
 
 namespace FolderCleaner
 {
@@ -8,10 +7,17 @@ namespace FolderCleaner
     {
         public static bool GetFolders(string folderPath, string type)
         {
-            ReadMetaFile(folderPath);
-            Thread.Sleep(1000000000);
+            DirectoryInfo filePath;
 
-            DirectoryInfo filePath = Directory.GetParent(Path.GetDirectoryName(folderPath)!)!;
+            if (type.ToLower() == "email")
+            {
+                filePath = Directory.GetParent(Path.GetDirectoryName(folderPath)!)!;
+            }
+            else
+            {
+                filePath = Directory.GetParent(Directory.GetParent(Path.GetDirectoryName(folderPath)!)!.FullName)!;
+            }
+
 
             if (Directory.Exists(filePath!.FullName))
             {
@@ -27,6 +33,7 @@ namespace FolderCleaner
             else
             {
                 WriteLogClass.WriteToLog(3, "Folder path does not exsits ....", 1);
+                return false;
             }
             return false;
         }
@@ -88,7 +95,7 @@ namespace FolderCleaner
 
             if (loopCount == localFileList.Length)
             {
-                WriteLogClass.WriteToLog(3, $"Deleted {localFileList.Length} from the FTP server ....", 3);
+                WriteLogClass.WriteToLog(3, $"Deleted {ftpFileList.Count()} from the FTP server ....", 3);
                 return true;
             }
             return false;
@@ -108,17 +115,6 @@ namespace FolderCleaner
             }
 
         }
-
-        private static bool ReadMetaFile(string pathHoldFolder)
-        {
-            string filePath = Directory.GetParent(pathHoldFolder)!.FullName!;
-            string fileLocation = Directory.GetFiles(filePath, "Meta_*.json", SearchOption.TopDirectoryOnly).FirstOrDefault()!;
-            
-            var jsonData = MetaFileReaderWriterClass.MetaReader<MetaFileReaderWriterClass.MetaFileReaderWriterObject>(fileLocation);
-
-            Console.WriteLine($"Json Data:{jsonData.ProcessDetails.FirstOrDefault().DownloadStatus}"); // working more testing needed.
-
-            return false;
-        }
+        
     }
 }
