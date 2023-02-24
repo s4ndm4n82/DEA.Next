@@ -5,6 +5,8 @@ using ConnectFtps;
 using FluentFTP;
 using UserConfigReader;
 using FileFunctions;
+using FolderFunctions;
+
 namespace FtpFunctions
 {
     internal class FtpFunctionsClass
@@ -55,7 +57,7 @@ namespace FtpFunctions
                 ftpPath = $@"/{ftpMainFolder}/{ftpSubFolder1}";
             }            
 
-            string LocalFtpFolder = GraphHelper.CheckFolders("FTP");
+            string LocalFtpFolder = FolderFunctionsClass.CheckFolders("ftp");
             string FtpHoldFolder;
             if (!string.IsNullOrEmpty(ftpSubFolder2))
             {

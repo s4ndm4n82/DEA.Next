@@ -1,99 +1,64 @@
-﻿using WriteLog;
+﻿using System.Reflection;
+using System.IO;
+using WriteLog;
 
-namespace FolderFunctionsClasses
+namespace FolderFunctions
 {
-    internal class FolderFunctions
+    internal class FolderFunctionsClass
     {
         /// <summary>
-        /// Check if the folder paths and folders exsits. If not they are created this is initiated on program launch.
+        /// Checks and creates the main folders that used by the app. And also returns the path for those folders when needed.
         /// </summary>
         /// <param name="folderSwitch"></param>
-        /// <returns>Folder paths have use the correct download folder name.</returns>
+        /// <returns></returns>
         public static string CheckFolders(string folderSwitch)
         {
-            string? pthRootFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            string downloadFolderName = "Download";
-            string attachmentFolderName = "Attachments";
-            string ftpFileFolderName = "FTPFiles";
-            string logFolderName = "Logs";
-            string pathDownloadFolder = Path.Combine(pthRootFolder!, downloadFolderName); // Main file download folder.
-            string pathLogFolder = Path.Combine(pthRootFolder!, logFolderName); // Log folder
-            string attachmentPath = Path.Combine(pathDownloadFolder!, attachmentFolderName); // Email attachment download folder.
-            string ftpPath = Path.Combine(pathDownloadFolder, ftpFileFolderName); // FTP file download folder.
-
-            // Check if download folder exists. If not creates the fodler.
-            if (!System.IO.Directory.Exists(pathDownloadFolder))
-            {
-                try
-                {
-                    System.IO.Directory.CreateDirectory(pathDownloadFolder);
-                }
-                catch (Exception ex)
-                {
-                    WriteLogClass.WriteToLog(1, $"Exception at download folder creation: {ex.Message}", 1);
-                }
-            }
-
-            if (!System.IO.Directory.Exists(attachmentPath))
-            {
-                try
-                {
-                    System.IO.Directory.CreateDirectory(attachmentPath);
-                }
-                catch (Exception ex)
-                {
-                    WriteLogClass.WriteToLog(1, $"Exception at attachmnet folder creation: {ex.Message}", 1);
-                }
-            }
-
-            if (System.IO.Directory.Exists(ftpPath))
-            {
-                try
-                {
-                    System.IO.Directory.CreateDirectory(ftpPath);
-                }
-                catch (Exception ex)
-                {
-                    WriteLogClass.WriteToLog(1, $"Exception at FTP folder creation: {ex.Message}", 1);
-                }
-            }
-
-            if (!System.IO.Directory.Exists(pathLogFolder))
-            {
-                try
-                {
-                    System.IO.Directory.CreateDirectory(pathLogFolder);
-                }
-                catch (Exception ex)
-                {
-                    WriteLogClass.WriteToLog(1, $"Exception at download folder creation: {ex.Message}", 1);
-                }
-            }
-
-            // Get current execution path.
+            string? pathRootFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string[] folderNames = { "Download", "Attachments", "FTPFiles", "Logs", "Error" };
             string folderPath;
-            if (folderSwitch.ToLower() == "download")
+            string returnFolderPath = string.Empty;
+
+            foreach (string folderName in folderNames)
             {
-                folderPath = pathDownloadFolder;
-            }
-            else if (folderSwitch.ToLower() == "log")
-            {
-                folderPath = pathLogFolder;
-            }
-            else if (folderSwitch.ToLower() == "email")
-            {
-                folderPath = attachmentPath;
-            }
-            else if (folderSwitch.ToLower() == "ftp")
-            {
-                folderPath = ftpPath;
-            }
-            else
-            {
-                folderPath = string.Empty;
+                if (folderName != "Attachments" && folderName != "FTPFiles")
+                {
+                    folderPath = Path.Combine(pathRootFolder!, folderName);
+                }
+                else
+                {
+                    folderPath = Path.Combine(pathRootFolder!, folderNames[0], folderName);
+                }
+
+                if (!Directory.Exists(folderPath))
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(folderPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        WriteLogClass.WriteToLog(1, $"Exception at main folder checker: {ex.Message}", 1);
+                    }
+                }
             }
 
-            return folderPath;
+            if (!string.IsNullOrEmpty(folderSwitch))
+            {
+                string folderName = folderNames.FirstOrDefault(fn => fn.ToLower().Contains(folderSwitch))!;
+
+                if (folderName != "Attachments" && folderName != "FTPFiles")
+                {
+                    returnFolderPath = Path.Combine(pathRootFolder!, folderName);
+                }
+                else
+                {
+                    returnFolderPath = Path.Combine(pathRootFolder!, folderNames[0], folderName);
+                }
+
+                return returnFolderPath;
+            }
+
+            return returnFolderPath;
         }
     }
 }

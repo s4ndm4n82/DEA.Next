@@ -2,6 +2,7 @@
 using DEA;
 using WriteLog;
 using UserConfigReader;
+using FolderFunctions;
 
 namespace SftpFunctions
 {
@@ -43,7 +44,7 @@ namespace SftpFunctions
                 ftpPath = $@"/{ftpMainFolder}/{ftpSubFolder1}";
             }
 
-            var LocalFtpFolder = GraphHelper.CheckFolders("FTP");
+            var LocalFtpFolder = FolderFunctionsClass.CheckFolders("ftp");
             var FtpHoldFolder = Path.Combine(LocalFtpFolder, ftpMainFolder!, ftpSubFolder1!);
 
             using var SftpConnect = ConnectSftpClass.ConnectSftp(ftpHostName!, ftpHosIp!, ftpUser!, ftpPassword!);

@@ -2,6 +2,7 @@
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
+using FolderFunctions;
 
 namespace WriteLog
 {
@@ -42,7 +43,7 @@ namespace WriteLog
 
             string textLine = string.Concat( $"{entryType}  ", LogEntry);
 
-            string LogFile = Path.Combine(GraphHelper.CheckFolders("Log"), LogFileName);
+            string LogFile = Path.Combine(FolderFunctionsClass.CheckFolders("logs"), LogFileName);
 
             LoggingLevelSwitch LogControlSwitch = new();
 

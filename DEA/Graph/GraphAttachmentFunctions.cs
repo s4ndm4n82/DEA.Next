@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using GetRecipientEmail;
 using EmailFileHelper;
 using FileFunctions;
+using FolderFunctions;
 using WriteLog;
 using DEA;
 using GraphEmailFunctions;
@@ -143,7 +144,7 @@ namespace GraphAttachmentFunctions
                 recipientEmail = GetRecipientEmailClass.GetRecipientEmail(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inEmail); // Get the Recipient email from the email.
             }            
 
-            string downloadPath = Path.Combine(GraphHelper.CheckFolders("email"), GraphHelper.FolderNameRnd(10)); // Creates the file download path.
+            string downloadPath = Path.Combine(FolderFunctionsClass.CheckFolders("attachments"), GraphHelper.FolderNameRnd(10)); // Creates the file download path.
 
             Attachment attachmentData = null!; // Variable to store attachment ID.
 
