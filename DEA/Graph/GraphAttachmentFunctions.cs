@@ -5,6 +5,7 @@ using EmailFileHelper;
 using FileFunctions;
 using FolderFunctions;
 using WriteLog;
+using WriteNamesToLog;
 using DEA;
 using GraphEmailFunctions;
 using GetMailFolderIds;
@@ -221,7 +222,8 @@ namespace GraphAttachmentFunctions
                 if (lastItem == loopCount)
                 {                    
                     loopFlag = true;                    
-                    WriteLogClass.WriteToLog(3, $"Downloaded {lastItem} attachments from {inMessage.Subject} ....", 2); // Get recipient email to display here.
+                    WriteLogClass.WriteToLog(3, $"Downloaded {lastItem} attachments from {inMessage.Subject} ....", 2);
+                    WriteLogClass.WriteToLog(3, $"Downloaded file names: {WriteNamesToLogClass.GetFileNames(downloadPath)}", 2);
                 }
             }
 

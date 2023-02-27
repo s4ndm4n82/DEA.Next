@@ -40,7 +40,8 @@ namespace HandleErrorFiles
 
                     if (File.Exists(dstFile))
                     {
-                        Console.WriteLine("File is there ....");
+                        Console.WriteLine("File already exists ....");
+                        continue;
                     }
                     else
                     {

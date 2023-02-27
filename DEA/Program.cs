@@ -8,6 +8,9 @@ using UserConfigReader;
 using SftpFunctions; // keep it untill implimentation.
 using System.Drawing.Text;
 using FolderFunctions;
+using Microsoft.Graph;
+using Renci.SshNet.Sftp;
+using System.Diagnostics;
 
 
 // DEA old
@@ -36,13 +39,8 @@ using FolderFunctions;
 // Aplication title just for fun.
 
 WriteLogClass.WriteToLog(3, "Starting download process ....", 1);
-
 FolderFunctionsClass.CheckFolders(null!);
-
-HandleErrorFiles.HandleErrorFilesClass.MoveFilesToErrorFolder("G:\\Users\\S4NDM4N\\Development\\Repos\\s4ndm4n82\\DEA.Next\\DEA\\bin\\Debug\\net6.0\\Download\\FTPFiles\\98766543210", 2);
-
 Thread.Sleep(1000000000);
-
 int ftpLoopCount = 0;
 int emlLoopCount = 0;
 bool result = false;

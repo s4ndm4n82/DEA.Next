@@ -11,13 +11,13 @@ namespace WriteLog
         public static void WriteToLog(int Level, string LogEntry, int LogType)
         {   
             string LogFileName = "DEA_Logfile_" + DateTime.Now.ToString("dd_MM_yyyy") + ".txt";
-
+            string LogFile = Path.Combine(FolderFunctionsClass.CheckFolders("logs"), LogFileName);
             string entryType;
 
             switch (LogType)
             {
                 case 1 :
-                    entryType= "[ PRG ]";
+                    entryType = "[ PRG ]";
                     break;
 
                 case 2 :
@@ -40,10 +40,6 @@ namespace WriteLog
                     entryType = "[ ERR ]";
                     break;
             }
-
-            string textLine = string.Concat( $"{entryType}  ", LogEntry);
-
-            string LogFile = Path.Combine(FolderFunctionsClass.CheckFolders("logs"), LogFileName);
 
             LoggingLevelSwitch LogControlSwitch = new();
 
@@ -75,6 +71,8 @@ namespace WriteLog
                     LogLevel = LogEventLevel.Fatal;
                     break;
             }
+
+            string textLine = string.Concat($"{entryType}  ", LogEntry);
 
             LogControlSwitch.MinimumLevel = LogLevel;
 
