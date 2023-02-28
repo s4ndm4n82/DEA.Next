@@ -145,10 +145,8 @@ namespace GraphAttachmentFunctions
                 recipientEmail = GetRecipientEmailClass.GetRecipientEmail(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inEmail); // Get the Recipient email from the email.
             }            
 
-            string downloadPath = Path.Combine(FolderFunctionsClass.CheckFolders("attachments"), GraphHelper.FolderNameRnd(10)); // Creates the file download path.
-
+            string downloadPath = Path.Combine(FolderFunctionsClass.CheckFolders("attachments"), recipientEmail.Split("@")[0], GraphHelper.FolderNameRnd(10)); // Creates the file download path.
             Attachment attachmentData = null!; // Variable to store attachment ID.
-
             List<string> acceptedExtentions = clientDetails.DocumentDetails!.DocumentExtensions!;
             IEnumerable<Attachment> acceptedAtachments = inMessage.Attachments.Where(x => acceptedExtentions.Contains(Path.GetExtension(x.Name.ToLower())) && x.Size > 10240 || (x.Name.ToLower().EndsWith(".pdf") && x.Size < 10240));
             int lastItem = acceptedAtachments.Count();

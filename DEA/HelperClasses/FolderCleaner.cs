@@ -18,6 +18,7 @@ namespace FolderCleaner
                 filePath = Directory.GetParent(Directory.GetParent(Path.GetDirectoryName(folderPath)!)!.FullName)!;
             }
 
+            Console.WriteLine($"File path before loop: {filePath}");
 
             if (Directory.Exists(filePath!.FullName))
             {
@@ -54,7 +55,8 @@ namespace FolderCleaner
                         {   
                             string folderPath = Directory.GetParent(folder)!.ToString();
                             Directory.Delete(folderPath, true);
-                           
+                            Console.WriteLine($"Folder path in loop: {folderPath}");
+
                         }
                         catch (IOException ex)
                         {

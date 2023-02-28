@@ -1,4 +1,7 @@
-﻿namespace WriteNamesToLog
+﻿using Microsoft.Graph;
+using System.Text.RegularExpressions;
+
+namespace WriteNamesToLog
 {
     internal class WriteNamesToLogClass
     {
@@ -10,7 +13,7 @@
         public static string GetFileNames(string folderPath)
         {
             string returnFileNames;
-            DirectoryInfo dir = new(folderPath);
+            DirectoryInfo dir = new(Path.GetDirectoryName(folderPath)!);
             IEnumerable<string> fileNames = dir.GetFiles("*.*", SearchOption.TopDirectoryOnly).Select(fn => fn.Name);
 
             return returnFileNames = string.Join(", ", fileNames);

@@ -40,7 +40,12 @@ using System.Diagnostics;
 
 WriteLogClass.WriteToLog(3, "Starting download process ....", 1);
 FolderFunctionsClass.CheckFolders(null!);
-Thread.Sleep(1000000000);
+
+//FolderCleanerClass.GetFolders(@"G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\bin\Debug\net6.0\Download\Attachments\email\Contining folder\918147616_0016107559_CamScanner_02132023_11.34.pdf", "emial");
+FolderCleanerClass.GetFolders(@"G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\bin\Debug\net6.0\Download\FTPFiles\Aksesspunkt\Duett\0123456789\918147616_0016107559_CamScanner_02132023_11.34.pdf", string.Empty);
+
+Thread.Sleep(100000000);
+
 int ftpLoopCount = 0;
 int emlLoopCount = 0;
 bool result = false;

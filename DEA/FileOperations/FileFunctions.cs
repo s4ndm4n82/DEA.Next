@@ -1,11 +1,13 @@
 ﻿using System.Net;
+using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
 using UserConfigReader;
 using RestSharp;
 using TpsJsonString;
 using WriteLog;
+using WriteNamesToLog;
 using FolderCleaner;
-using System.Diagnostics.CodeAnalysis;
+using HandleErrorFiles;
 using FluentFTP;
 
 namespace FileFunctions
@@ -36,6 +38,7 @@ namespace FileFunctions
             }
 
             if (await MakeJsonRequest(ftpConnect,
+                                      customerId,
                                       clientDetails.Token!,
                                       clientDetails.UserName!,
                                       clientDetails.TemplateKey!,
@@ -43,7 +46,6 @@ namespace FileFunctions
                                       clientDetails.ProjetID!,
                                       clientOrg,
                                       clientDetails.ClientIdField!,
-                                      acceptedExtentions,
                                       downloadedFiles,
                                       ftpFileList,
                                       localFileList))
@@ -57,6 +59,7 @@ namespace FileFunctions
         }
 
         private static async Task<bool> MakeJsonRequest(AsyncFtpClient ftpConnect,
+                                                        int customerId,
                                                         string customerToken,
                                                         string customerUserName,
                                                         string customerTemplateKey,
@@ -64,7 +67,6 @@ namespace FileFunctions
                                                         string customerProjectId,
                                                         string clientOrgNo,
                                                         string clientIdField,
-                                                        List<string> extensions,
                                                         string[] filesToSend,
                                                         IEnumerable<string> ftpFileList,
                                                         string[] localFileList)
@@ -97,7 +99,7 @@ namespace FileFunctions
 
             try
             {
-                if (await SendFilesToRest(ftpConnect, result, filesToSend[0], customerProjectId, customerQueue, fileList.Count, ftpFileList, localFileList))
+                if (await SendFilesToRest(ftpConnect, result, filesToSend[0], customerId, customerProjectId, customerQueue, fileList.Count, ftpFileList, localFileList))
                 {
                     return true;
                 }
@@ -117,6 +119,7 @@ namespace FileFunctions
         private static async Task<bool> SendFilesToRest(AsyncFtpClient ftpConnect,
                                                         string jsonResult,
                                                         [NotNull]string fullFilePath,
+                                                        int customerId,
                                                         string projectId,
                                                         string queue,
                                                         int fileCount,
@@ -141,19 +144,19 @@ namespace FileFunctions
                 if (serverResponse.StatusCode == HttpStatusCode.OK)
                 {
                     WriteLogClass.WriteToLog(3, $"Uploaded {fileCount} file to project {projectId} using queue {queue} ....", 4);
-                    
+                    WriteLogClass.WriteToLog(3, $"Uploaded filenames: {WriteNamesToLogClass.GetFileNames(fullFilePath)}", 4);
+
+                    // This will run if it's not FTP.
                     if (ftpConnect == null)
                     {
                         return FolderCleanerClass.GetFolders(fullFilePath, "email");
                     }
                     else
                     {
-                        // Uncomment this area when deploying to production
                         if (await FolderCleanerClass.GetFtpPathAsync(ftpConnect, ftpFileList, localFileList))
                         {
                             // Deletes the file from local hold folder when sending is successful.
-                            return FolderCleanerClass.GetFolders(fullFilePath, string.Empty);
-                           
+                            return FolderCleanerClass.GetFolders(fullFilePath, string.Empty);                           
                         }
                     }
                     return false;
@@ -161,6 +164,7 @@ namespace FileFunctions
                 else
                 {
                     WriteLogClass.WriteToLog(3, $"Server status code: {serverResponse.StatusCode}, Server Response Error: {serverResponse.Content}", 4);
+                    HandleErrorFilesClass.MoveFilesToErrorFolder(fullFilePath, customerId);
                     return false;
                 }
             }
