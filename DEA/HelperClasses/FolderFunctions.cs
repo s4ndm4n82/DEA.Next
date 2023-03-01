@@ -37,7 +37,7 @@ namespace FolderFunctions
                     }
                     catch (Exception ex)
                     {
-                        WriteLogClass.WriteToLog(1, $"Exception at main folder checker: {ex.Message}", 1);
+                        WriteLogClass.WriteToLog(0, $"Exception at main folder checker: {ex.Message}", 0);
                     }
                 }
             }

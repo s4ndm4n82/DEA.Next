@@ -1,4 +1,6 @@
-﻿namespace ReadSettings
+﻿using WriteLog;
+
+namespace ReadSettings
 {
     public class ReadSettingsClass
     {
@@ -16,7 +18,7 @@
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Exception at reading the conf file: {0}", ex.Message);
+                WriteLogClass.WriteToLog(0, $"Exception at reading the conf file: {ex.Message}", 0);
             }
 
             return DeaConfigs;
@@ -34,7 +36,7 @@
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Exception at caonf value return: {0}", ex.Message);
+                WriteLogClass.WriteToLog(0, $"Exception at caonf value return: {ex.Message}", 0);
             }
 
             return ConfigValue;

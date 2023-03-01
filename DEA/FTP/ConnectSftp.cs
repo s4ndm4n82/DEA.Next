@@ -15,11 +15,11 @@ namespace ConnectSftp
             try
             {
                 SftpConnect.Connect();
-                WriteLogClass.WriteToLog(3, "SFTP Connection successful ....", 3);
+                WriteLogClass.WriteToLog(1, "SFTP Connection successful ....", 3);
             }
             catch
             {
-                WriteLogClass.WriteToLog(2, "Trying to connect using alt method ....", 3);
+                WriteLogClass.WriteToLog(1, "Trying to connect using alt method ....", 3);
                 SftpConnect = ConnectSftpAlt(HostIp, UserName, UserPassword);
             }
 
@@ -35,11 +35,11 @@ namespace ConnectSftp
             try
             {
                 SftpConnectAlt.Connect();
-                WriteLogClass.WriteToLog(3, "SFTP Alt Connection successful....", 3);
+                WriteLogClass.WriteToLog(1, "SFTP Alt Connection successful....", 3);
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(2, $"Exception at SFTP connection: {ex.Message}", 3);
+                WriteLogClass.WriteToLog(0, $"Exception at SFTP connection: {ex.Message}", 0);
             }
 
             return SftpConnectAlt;

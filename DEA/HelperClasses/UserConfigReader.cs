@@ -67,7 +67,7 @@ namespace UserConfigReader
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(3, $"Exception at Json reader: {ex.Message}", 4);
+                WriteLogClass.WriteToLog(0, $"Exception at Json reader: {ex.Message}", 0);
                 return jsonData!;
             }
         }

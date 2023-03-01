@@ -21,7 +21,7 @@ namespace FileFunctions
                                                         string[] localFileList,
                                                         string recipientEmail)
         {
-            WriteLogClass.WriteToLog(3, "Starting file upload process .... ", 4);
+            WriteLogClass.WriteToLog(1, "Starting file upload process .... ", 4);
 
             UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
             UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId)!;
@@ -32,10 +32,7 @@ namespace FileFunctions
 
             string clientOrg = clientDetails.ClientOrgNo!;
 
-            if (!string.IsNullOrEmpty(recipientEmail))
-            {
-                clientOrg = recipientEmail.Split('@')[0];
-            }
+            clientOrg = !string.IsNullOrEmpty(recipientEmail) ? recipientEmail : null!;
 
             if (await MakeJsonRequest(ftpConnect,
                                       customerId,
@@ -110,7 +107,7 @@ namespace FileFunctions
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(3, $"Exception at Json serialization: {ex.Message}", 4);
+                WriteLogClass.WriteToLog(0, $"Exception at Json serialization: {ex.Message}", 0);
                 return false;
             }
             
@@ -143,8 +140,8 @@ namespace FileFunctions
 
                 if (serverResponse.StatusCode == HttpStatusCode.OK)
                 {
-                    WriteLogClass.WriteToLog(3, $"Uploaded {fileCount} file to project {projectId} using queue {queue} ....", 4);
-                    WriteLogClass.WriteToLog(3, $"Uploaded filenames: {WriteNamesToLogClass.GetFileNames(fullFilePath)}", 4);
+                    WriteLogClass.WriteToLog(1, $"Uploaded {fileCount} file to project {projectId} using queue {queue} ....", 4);
+                    WriteLogClass.WriteToLog(1, $"Uploaded filenames: {WriteNamesToLogClass.GetFileNames(fullFilePath)}", 4);
 
                     // This will run if it's not FTP.
                     if (ftpConnect == null)
@@ -163,14 +160,14 @@ namespace FileFunctions
                 }
                 else
                 {
-                    WriteLogClass.WriteToLog(3, $"Server status code: {serverResponse.StatusCode}, Server Response Error: {serverResponse.Content}", 4);
+                    WriteLogClass.WriteToLog(0, $"Server status code: {serverResponse.StatusCode}, Server Response Error: {serverResponse.Content}", 0);
                     HandleErrorFilesClass.MoveFilesToErrorFolder(fullFilePath, customerId);
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(3, $"Exception at rest sharp request: {ex.Message}", 4);
+                WriteLogClass.WriteToLog(0, $"Exception at rest sharp request: {ex.Message}", 0);
                 return false;
             }            
         }

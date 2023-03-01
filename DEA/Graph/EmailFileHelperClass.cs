@@ -39,7 +39,7 @@ namespace EmailFileHelper
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(1, $"Exception at download folder creation: {ex.Message}", 2);
+                    WriteLogClass.WriteToLog(0, $"Exception at download folder creation: {ex.Message}", 0);
                 }
             }
 
@@ -53,7 +53,7 @@ namespace EmailFileHelper
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(1, $"Exception at download path: {ex.Message}", 2);
+                WriteLogClass.WriteToLog(0, $"Exception at download path: {ex.Message}", 0);
                 return false;
             }
         }

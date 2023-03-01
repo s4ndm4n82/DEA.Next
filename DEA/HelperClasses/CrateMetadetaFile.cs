@@ -45,7 +45,7 @@ namespace CreateMetadataFile
 
                     if (System.IO.File.Exists(XmlSaveFile))
                     {
-                        WriteLogClass.WriteToLog(3, $"Metdata file created ....", 1);
+                        WriteLogClass.WriteToLog(1, $"Metdata file created ....", 1);
                         XmlSaveSwitch = true;
                     }
                     else
@@ -111,7 +111,7 @@ namespace CreateMetadataFile
                         if (ExtractedEmail.Success)
                         {
                             var PassEmail = ExtractedEmail.Value.ToLower();
-                            WriteLogClass.WriteToLog(3, $"Recipient email {PassEmail} extracted ...", 2);
+                            WriteLogClass.WriteToLog(1, $"Recipient email {PassEmail} extracted ...", 1);
                             FileFlag = WriteMetadataXml(PassEmail, _FolderPath, FileName);
                         }
                     }                    
@@ -119,7 +119,7 @@ namespace CreateMetadataFile
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(1, $"Exception at GetToEmail4Xml {ex.Message}", 2);                
+                WriteLogClass.WriteToLog(0, $"Exception at GetToEmail4Xml {ex.Message}", 0);                
             }
 
             return FileFlag;

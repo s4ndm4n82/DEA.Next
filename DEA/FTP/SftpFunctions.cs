@@ -51,7 +51,7 @@ namespace SftpFunctions
 
             if (SftpConnect.Exists(ftpPath))
             {
-                WriteLogClass.WriteToLog(3, $"FTP Path {ftpPath}", 3);
+                WriteLogClass.WriteToLog(1, $"FTP Path {ftpPath}", 3);
             }
 
             return true;

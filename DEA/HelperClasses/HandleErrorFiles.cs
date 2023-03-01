@@ -22,7 +22,7 @@ namespace HandleErrorFiles
             {
                 if (DeleteSrcFolder(sourceFolderPath))
                 {
-                    WriteLogClass.WriteToLog(3, $"Moved {sourceFileNameList.Count()} to {destinationFolderPath} ....", 1);
+                    WriteLogClass.WriteToLog(1, $"Moved {sourceFileNameList.Count()} to {destinationFolderPath} ....", 1);
                     return true;
                 }
             }
@@ -40,7 +40,7 @@ namespace HandleErrorFiles
 
                     if (File.Exists(dstFile))
                     {
-                        Console.WriteLine("File already exists ....");
+                        WriteLogClass.WriteToLog(1, "File already exists ....", 1);
                         continue;
                     }
                     else
@@ -52,7 +52,7 @@ namespace HandleErrorFiles
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(1, $"Exception at file mover: {ex.Message}", 1);
+                WriteLogClass.WriteToLog(0, $"Exception at file mover: {ex.Message}", 0);
                 return false;
             }
         }
@@ -71,7 +71,7 @@ namespace HandleErrorFiles
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(1, $"Exception at folder delete: {ex.Message}", 1);
+                WriteLogClass.WriteToLog(0, $"Exception at folder delete: {ex.Message}", 0);
                 return false;
             }
         }

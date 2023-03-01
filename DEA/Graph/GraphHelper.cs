@@ -39,7 +39,7 @@ namespace DEA
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(2, $"Exception at graph API call: {ex.Message}", 5);
+                    WriteLogClass.WriteToLog(0, $"Exception at graph API call: {ex.Message}", 0);
                 }
                 
             }
@@ -53,7 +53,7 @@ namespace DEA
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(2, $"Exception at GraphHelper2Levels: {ex.Message}", 5);
+                    WriteLogClass.WriteToLog(0, $"Exception at GraphHelper2Levels: {ex.Message}", 0);
                 }
             }
             /*else
@@ -128,11 +128,11 @@ namespace DEA
             // Calls InitializeGraphClient to get the token and connect to the graph API.
             if (!await InitializeGraphClient(ClientId!, Instance!, TenantId!, GraphApiUrl!, ClientSecret!, Scopes))
             {
-                WriteLogClass.WriteToLog(1, "Graph client initialization faild  .....", 5);
+                WriteLogClass.WriteToLog(1, "Graph client initialization faild  .....", 1);
             }
             else
             {
-                WriteLogClass.WriteToLog(3, "Graph client initialization successful ....", 5);
+                WriteLogClass.WriteToLog(1, "Graph client initialization successful ....", 1);
                 Thread.Sleep(2000);
             }
         }
@@ -182,7 +182,7 @@ namespace DEA
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(1, $"Exception at graph client initilizing: {ex.Message}", 5);
+                WriteLogClass.WriteToLog(0, $"Exception at graph client initilizing: {ex.Message}", 0);
                 return Task.FromResult(false);
             }
         }
@@ -206,7 +206,7 @@ namespace DEA
                 // The application doesn't have sufficient permissions.
                 // - Did you declare enough app permissions during app creation?
                 // - Did the tenant admin grant permissions to the application?
-                WriteLogClass.WriteToLog(1, $"Exception at token accuire: {ex.Message}", 5);
+                WriteLogClass.WriteToLog(0, $"Exception at token accuire: {ex.Message}", 0);
             }
             catch (MsalServiceException ex) when (ex.Message.Contains("AADSTS70011"))
             {
@@ -214,7 +214,7 @@ namespace DEA
                 // Mitigation: Change the scope to be as expected.
                 // Need to be set on the online under Azure Active Directory -> App Registrations -> <App Name> -> API Permissions.
                 // The scopes/rules need to be "Application" type. "Delegated" type doesn't work for auto login.
-                WriteLogClass.WriteToLog(1, "Scopes provided are not supported", 5);
+                WriteLogClass.WriteToLog(0, "Scopes provided are not supported", 0);
             }
 
             return AuthToken!.AccessToken;
@@ -228,13 +228,13 @@ namespace DEA
         /// <returns></returns>
         public static string FolderNameRnd(int RndLength)
         {
-            Random RndNumber = new();
-            string NumString = string.Empty;
+            Random rndNumber = new();
+            string numString = string.Empty;
             for (int i = 0; i < RndLength; i++)
             {
-                NumString = String.Concat(NumString, RndNumber.Next(10).ToString());
+                numString = String.Concat(numString, rndNumber.Next(10).ToString());
             }
-            return NumString;
+            return numString;
         }
 
         /// <summary>
@@ -288,7 +288,7 @@ namespace DEA
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(1, $"Exception at moving emails to folders: {ex.Message}", 2);
+                WriteLogClass.WriteToLog(0, $"Exception at moving emails to folders: {ex.Message}", 0);
                 return false;
             }
         }

@@ -8,7 +8,7 @@ namespace GetRecipientEmail
     {
         public static string GetRecipientEmail(GraphServiceClient graphClient, string SubFolderId1, string SubFolderId2, string SubFolderId3, string MessageID, string _Email)
         {
-            var rEmail = string.Empty;
+            string rEmail = string.Empty;
             IEnumerable<InternetMessageHeader> ToEmails;
             Task<Message> GetToEmail;
 
@@ -62,12 +62,12 @@ namespace GetRecipientEmail
                     {
                         string RegExString = @"[0-9a-z]+@efakturamottak\.no";
                         Regex RecivedEmail = new(RegExString, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
-                        var ExtractedEmail = RecivedEmail.Match(ToEmail.Value);
+                        var ExtractedEmail = RecivedEmail.Match(ToEmail.Value.ToLower());
 
                         if (ExtractedEmail.Success)
                         {
                             rEmail = ExtractedEmail.Value.ToLower().Replace(" ","");
-                            WriteLogClass.WriteToLog(3, $"Recipient email {rEmail} extracted ...", 2);
+                            WriteLogClass.WriteToLog(1, $"Recipient email {rEmail} extracted ...", 2);
                             break;
                         }
                     }
@@ -75,7 +75,7 @@ namespace GetRecipientEmail
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(1, $"Exception at getting recipient email: {ex.Message}", 2);
+                WriteLogClass.WriteToLog(0, $"Exception at getting recipient email: {ex.Message}", 0);
             }
 
             return rEmail;

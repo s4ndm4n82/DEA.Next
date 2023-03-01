@@ -38,7 +38,7 @@ using System.Diagnostics;
 
 // Aplication title just for fun.
 
-WriteLogClass.WriteToLog(3, "Starting download process ....", 1);
+WriteLogClass.WriteToLog(1, "Starting download process ....", 0);
 FolderFunctionsClass.CheckFolders(null!);
 
 //FolderCleanerClass.GetFolders(@"G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\bin\Debug\net6.0\Download\Attachments\email\Contining folder\918147616_0016107559_CamScanner_02132023_11.34.pdf", "emial");

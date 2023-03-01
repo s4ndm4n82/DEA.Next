@@ -47,7 +47,7 @@ namespace GetMailFolderIds
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(3, $"Exception at getting main folder id: {ex.Message}", 5);
+                    WriteLogClass.WriteToLog(0, $"Exception at getting main folder id: {ex.Message}", 0);
                 }
 
             }
@@ -66,7 +66,7 @@ namespace GetMailFolderIds
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(3, $"Exception at getting sub folder1 id: {ex.Message}", 5);
+                    WriteLogClass.WriteToLog(0, $"Exception at getting sub folder1 id: {ex.Message}", 0);
                 }
             }
 
@@ -85,12 +85,11 @@ namespace GetMailFolderIds
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(3, $"Exception at getting sub folder2 id: {ex.Message}", 5);
+                    WriteLogClass.WriteToLog(0, $"Exception at getting sub folder2 id: {ex.Message}", 0);
                 }
             }
 
-            return folderId;
-            
+            return folderId;            
         }
 
         /// <summary>
@@ -109,30 +108,46 @@ namespace GetMailFolderIds
 
             if (!string.IsNullOrWhiteSpace(mainFolderId) && string.IsNullOrWhiteSpace(subFolderId1) && string.IsNullOrWhiteSpace(subFolderId2))
             {
-                errorFolderDetails = await graphClient.Users[$"{clientEmail}"].MailFolders["Inbox"]
+                try
+                {
+                    errorFolderDetails = await graphClient.Users[$"{clientEmail}"].MailFolders["Inbox"]
                                          .ChildFolders[$"{mainFolderId}"]
                                          .ChildFolders
                                          .Request()
                                          .GetAsync();
 
-                errorFolerId = errorFolderDetails.FirstOrDefault(efd => efd.DisplayName.ToLower() == "error")!.Id;
+                    errorFolerId = errorFolderDetails.FirstOrDefault(efd => efd.DisplayName.ToLower() == "error")!.Id;
+                }
+                catch (Exception ex)
+                {
+                    WriteLogClass.WriteToLog(0, $"Exception at get error folder id if condition 1: {ex.Message}", 0);
+                }
             }
 
             if (!string.IsNullOrWhiteSpace(mainFolderId) && !string.IsNullOrWhiteSpace(subFolderId1) && string.IsNullOrWhiteSpace(subFolderId2))
             {
-                errorFolderDetails = await graphClient.Users[$"{clientEmail}"].MailFolders["Inbox"]
+                try
+                {
+                    errorFolderDetails = await graphClient.Users[$"{clientEmail}"].MailFolders["Inbox"]
                                     .ChildFolders[$"{mainFolderId}"]
                                     .ChildFolders[$"{subFolderId1}"]
                                     .ChildFolders
                                     .Request()
                                     .GetAsync();
 
-                errorFolerId = errorFolderDetails.FirstOrDefault(efd => efd.DisplayName.ToLower() == "error")!.Id;
+                    errorFolerId = errorFolderDetails.FirstOrDefault(efd => efd.DisplayName.ToLower() == "error")!.Id;
+                }
+                catch (Exception ex)
+                {
+                    WriteLogClass.WriteToLog(0, $"Exception at get error folder id if condition 2: {ex.Message}", 0);
+                }
             }
 
             if (!string.IsNullOrWhiteSpace(mainFolderId) && !string.IsNullOrWhiteSpace(subFolderId1) && !string.IsNullOrWhiteSpace(subFolderId2))
             {
-                errorFolderDetails = await graphClient.Users[$"{clientEmail}"].MailFolders["Inbox"]
+                try
+                {
+                    errorFolderDetails = await graphClient.Users[$"{clientEmail}"].MailFolders["Inbox"]
                                     .ChildFolders[$"{mainFolderId}"]
                                     .ChildFolders[$"{subFolderId1}"]
                                     .ChildFolders[$"{subFolderId2}"]
@@ -140,7 +155,12 @@ namespace GetMailFolderIds
                                     .Request()
                                     .GetAsync();
 
-                errorFolerId = errorFolderDetails.FirstOrDefault(efd => efd.DisplayName.ToLower() == "error")!.Id;
+                    errorFolerId = errorFolderDetails.FirstOrDefault(efd => efd.DisplayName.ToLower() == "error")!.Id;
+                }
+                catch (Exception ex)
+                {
+                    WriteLogClass.WriteToLog(0, $"Exception at get error folder id if condition 3: {ex.Message}", 0);
+                }
             }
 
             return errorFolerId;

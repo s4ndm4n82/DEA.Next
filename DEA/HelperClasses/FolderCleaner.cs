@@ -18,13 +18,11 @@ namespace FolderCleaner
                 filePath = Directory.GetParent(Directory.GetParent(Path.GetDirectoryName(folderPath)!)!.FullName)!;
             }
 
-            Console.WriteLine($"File path before loop: {filePath}");
-
             if (Directory.Exists(filePath!.FullName))
             {
-                WriteLogClass.WriteToLog(3, "Cleaning download folder ....", 1);
+                WriteLogClass.WriteToLog(1, "Cleaning download folder ....", 1);
 
-                string[] folderList = Directory.GetDirectories(filePath.FullName, "*.*", SearchOption.AllDirectories);
+                string[] folderList = Directory.GetDirectories(filePath.FullName, "*.*", SearchOption.TopDirectoryOnly);
 
                 if (DeleteFolders(folderList))
                 {
@@ -33,7 +31,7 @@ namespace FolderCleaner
             }
             else
             {
-                WriteLogClass.WriteToLog(3, "Folder path does not exsits ....", 1);
+                WriteLogClass.WriteToLog(1, "Folder path does not exsits ....", 1);
                 return false;
             }
             return false;
@@ -55,12 +53,11 @@ namespace FolderCleaner
                         {   
                             string folderPath = Directory.GetParent(folder)!.ToString();
                             Directory.Delete(folderPath, true);
-                            Console.WriteLine($"Folder path in loop: {folderPath}");
 
                         }
                         catch (IOException ex)
                         {
-                            WriteLogClass.WriteToLog(2, $"Exception at folder delete: {ex.Message}", 1);
+                            WriteLogClass.WriteToLog(0, $"Exception at folder delete: {ex.Message}", 0);
                         }
                     }
                 }
@@ -68,7 +65,7 @@ namespace FolderCleaner
 
             if (loopCount == folderList.Length)
             {
-                WriteLogClass.WriteToLog(3, $"Removed {folderList.Length} folder from download folder ....", 1);
+                WriteLogClass.WriteToLog(1, $"Removed {folderList.Length} folder from download folder ....", 1);
                 return true;
             }
 
@@ -97,7 +94,7 @@ namespace FolderCleaner
 
             if (loopCount == localFileList.Length)
             {
-                WriteLogClass.WriteToLog(3, $"Deleted {ftpFileList.Count()} from the FTP server ....", 3);
+                WriteLogClass.WriteToLog(1, $"Deleted {ftpFileList.Count()} from the FTP server ....", 3);
                 return true;
             }
             return false;
@@ -112,7 +109,7 @@ namespace FolderCleaner
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(2, $"Exception at FTP file deletetion: {ex.Message}, file name {ftpFileName}.", 3);
+                WriteLogClass.WriteToLog(0, $"Exception at FTP file deletetion: {ex.Message}, file name {ftpFileName}.", 0);
                 return false;
             }
 

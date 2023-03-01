@@ -8,110 +8,74 @@ namespace WriteLog
 {
     internal class WriteLogClass
     {
-        public static void WriteToLog(int Level, string LogEntry, int LogType)
-        {   
-            string LogFileName = "DEA_Logfile_" + DateTime.Now.ToString("dd_MM_yyyy") + ".txt";
-            string LogFile = Path.Combine(FolderFunctionsClass.CheckFolders("logs"), LogFileName);
-            string entryType;
-
-            switch (LogType)
+        /// <summary>
+        /// Class that handles the writing of the log file.
+        /// </summary>
+        /// <param name="loggingLevel"></param>
+        /// <param name="LogEntry"></param>
+        /// <param name="logType"></param>
+        public static void WriteToLog(int loggingLevel, string LogEntry, int logType)
+        {
+            if (loggingLevel >= 0 && logType >= 0)
             {
-                case 1 :
-                    entryType = "[ PRG ]";
-                    break;
+                // Log file name.
+                string LogFileName = "DEA_Logfile_" + DateTime.Now.ToString("dd_MM_yyyy") + ".txt";
+                // Path to the log file.
+                string LogFile = Path.Combine(FolderFunctionsClass.CheckFolders("logs"), LogFileName);
+                // Log file entry type or message entry location type array.
+                string[] entryTypes = { "[ ERR ]", "[ PRG ]", "[ EML ]", "[ FTP ]", "[ RST ]", "[ GRP ]" };
+                // Log file entry type or message entry location type.
+                string entryType = entryTypes[logType];
 
-                case 2 :
-                    entryType = "[ EML ]";
-                    break;
-
-                case 3 :
-                    entryType = "[ FTP ]";
-                    break;
-
-                case 4 :
-                    entryType = "[ RST ]";
-                    break;
-
-                case 5 :
-                    entryType = "[ GRP ]";
-                    break;
-
-                default :
-                    entryType = "[ ERR ]";
-                    break;
+                LoggingLevelSwitch LogControlSwitch = new(); // Creating new log options.
+                // Log levels array.
+                LogEventLevel[] logLevels = { LogEventLevel.Error, LogEventLevel.Information, LogEventLevel.Warning, LogEventLevel.Debug, LogEventLevel.Verbose, LogEventLevel.Fatal };
+                // Retriving log event from the array above.
+                LogEventLevel logLevel = logLevels[loggingLevel];
+                // Creating the log entry text line.
+                string textLine = string.Concat($"{entryType}  ", LogEntry);
+                // Log options.
+                LogControlSwitch.MinimumLevel = logLevel;
+                Log.Logger = new LoggerConfiguration()
+                            .MinimumLevel.ControlledBy(LogControlSwitch)
+                            .WriteTo.File(LogFile)
+                            .WriteTo.Console()
+                            .CreateLogger();
+                // Writing the log to the file.
+                WriteLog(loggingLevel, textLine);
+                // Closing the file and flushing the memory.
+                Log.CloseAndFlush();
             }
-
-            LoggingLevelSwitch LogControlSwitch = new();
-
-            LogEventLevel LogLevel;
-            
-            switch (Level)
-            {
-                case 1 :
-                    LogLevel = LogEventLevel.Error;                    
-                    break;
-
-                case 2 :
-                    LogLevel = LogEventLevel.Warning;
-                    break;
-
-                case 3 :
-                    LogLevel = LogEventLevel.Information;
-                    break;
-
-                case 4 :
-                     LogLevel = LogEventLevel.Debug;
-                    break;
-
-                case 5 :
-                     LogLevel = LogEventLevel.Verbose;
-                    break;
-
-                default :
-                    LogLevel = LogEventLevel.Fatal;
-                    break;
-            }
-
-            string textLine = string.Concat($"{entryType}  ", LogEntry);
-
-            LogControlSwitch.MinimumLevel = LogLevel;
-
-            Log.Logger = new LoggerConfiguration()
-                        .MinimumLevel.ControlledBy(LogControlSwitch)
-                        .WriteTo.File(LogFile)
-                        .WriteTo.Console()                        
-                        .CreateLogger();
-
-            WriteLog(Level, textLine);
-            
-            Log.CloseAndFlush();
         }
 
-        private static void WriteLog(int LogLevel, string LogEntryString)
+        /// <summary>
+        /// Writs the log file with the correct message type.
+        /// </summary>
+        /// <param name="logLevel"></param>
+        /// <param name="logEntryString"></param>
+        private static void WriteLog(int logLevel, string logEntryString)
         {
-            if (LogLevel == 1)
+            
+            switch (logLevel)
             {
-                Log.Error(LogEntryString);
-            }
-            else if (LogLevel == 2)
-            {
-                Log.Warning(LogEntryString);
-            }
-            else if (LogLevel == 3)
-            {
-                Log.Information(LogEntryString);
-            }
-            else if (LogLevel == 4)
-            {
-                Log.Debug(LogEntryString);
-            }
-            else if (LogLevel == 5)
-            {
-                Log.Verbose(LogEntryString);
-            }
-            else
-            {
-                Log.Error(LogEntryString);
+                case 0:
+                    Log.Error(logEntryString);
+                    break;
+                case 1:
+                    Log.Warning(logEntryString);
+                    break;
+                case 2:
+                    Log.Information(logEntryString);
+                    break;
+                case 3:
+                    Log.Debug(logEntryString);
+                    break;
+                case 4:
+                    Log.Verbose(logEntryString);
+                    break;
+                default:
+                    Log.Fatal(logEntryString);
+                    break;
             }
         }
     }

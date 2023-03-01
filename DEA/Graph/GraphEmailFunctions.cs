@@ -40,11 +40,11 @@ namespace GraphEmailFunctions
 
                     fromName = messageDetails.From.EmailAddress.Name;
                     fromEmail = messageDetails.From.EmailAddress.Address;
-                    toEmail = messageDetails.InternetMessageHeaders.Where(toAddress => toAddress.Value.Contains("@efakturamottak.no")).ToString()!;
+                    toEmail = messageDetails.InternetMessageHeaders.Where(toAddress => toAddress.Value.ToLower().Contains("@efakturamottak.no")).ToString()!;
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(3, $"Exception at email forwarder if1: {ex.Message}", 2);
+                    WriteLogClass.WriteToLog(0, $"Exception at email forwarder if1: {ex.Message}", 0);
                 }
             }
 
@@ -61,11 +61,11 @@ namespace GraphEmailFunctions
 
                     fromName = messageDetails.From.EmailAddress.Name;
                     fromEmail = messageDetails.From.EmailAddress.Address;
-                    toEmail = messageDetails.InternetMessageHeaders.Where(toAddress => toAddress.Value.Contains("@efakturamottak.no")).ToString()!;
+                    toEmail = messageDetails.InternetMessageHeaders.Where(toAddress => toAddress.Value.ToLower().Contains("@efakturamottak.no")).ToString()!;
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(3, $"Exception at email forwarder if2: {ex.Message}", 2);
+                    WriteLogClass.WriteToLog(0, $"Exception at email forwarder if2: {ex.Message}", 0);
                 }
             }
 
@@ -83,17 +83,26 @@ namespace GraphEmailFunctions
 
                     fromName = messageDetails.From.EmailAddress.Name;
                     fromEmail = messageDetails.From.EmailAddress.Address;
-                    toEmail = messageDetails.InternetMessageHeaders.Where(toAddress => toAddress.Value.Contains("@efakturamottak.no")).ToString()!;
+                    toEmail = messageDetails.InternetMessageHeaders.Where(toAddress => toAddress.Value.ToLower().Contains("@efakturamottak.no")).ToString()!;
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(3, $"Exception at email forwarder if3: {ex.Message}", 2);
+                    WriteLogClass.WriteToLog(0, $"Exception at email forwarder if3: {ex.Message}", 0);
                 }
             }
 
             if (!string.IsNullOrEmpty(fromName) && !string.IsNullOrEmpty(fromEmail) && !string.IsNullOrEmpty(toEmail))
             {
-                returnResult = await SendForwardEmail(graphClient, mainFolderId, subFolderId1, subFolderId2, fromName, fromEmail, toEmail, clientEmail, messageId, atnStatus);
+                returnResult = await SendForwardEmail(graphClient,
+                                                      mainFolderId,
+                                                      subFolderId1,
+                                                      subFolderId2,
+                                                      fromName,
+                                                      fromEmail,
+                                                      toEmail,
+                                                      clientEmail,
+                                                      messageId,
+                                                      atnStatus);
             }
 
             return (returnResult, toEmail);
@@ -117,7 +126,8 @@ namespace GraphEmailFunctions
                                                          , string mainFolderId, string subFolderId1
                                                          , string subFolderId2, string fromName
                                                          , string fromEmail, string clientEmail
-                                                         , string inEmail, string messageId, int attnStatus)
+                                                         , string inEmail, string messageId
+                                                         , int attnStatus)
         {
             bool forwardSwitch = false;
             string mailBody;
@@ -160,7 +170,7 @@ namespace GraphEmailFunctions
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(3, $"Exception at emaiL forward 1: {ex.Message}", 2);
+                    WriteLogClass.WriteToLog(0, $"Exception at emaiL forward 1: {ex.Message}", 0);
                     forwardSwitch = false;
                 }
             }
@@ -181,7 +191,7 @@ namespace GraphEmailFunctions
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(3, $"Exception at emai forward 2: {ex.Message}", 2);
+                    WriteLogClass.WriteToLog(0, $"Exception at emai forward 2: {ex.Message}", 0);
                     forwardSwitch = false;
                 }
             }
@@ -203,7 +213,7 @@ namespace GraphEmailFunctions
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(3, $"Exception at emai forward 3: {ex.Message}", 2);
+                    WriteLogClass.WriteToLog(0, $"Exception at emai forward 3: {ex.Message}", 0);
                     forwardSwitch = false;
                 }
             }
