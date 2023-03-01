@@ -2,7 +2,19 @@
 using WriteLog;
 using FolderCleaner;
 using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
+using FtpFunctions;
+using UserConfigReader;
+using SftpFunctions; // keep it untill implimentation.
+using System.Drawing.Text;
+using FolderFunctions;
+using Microsoft.Graph;
+using Renci.SshNet.Sftp;
+using System.Diagnostics;
 
+
+// DEA old
+// ~~~~~~~
 // TODO 1: Brake the main graph functions into smaller set of chuncks.
 // TODO 2: Change the usage of DEA.conf to app.conf (But I don't think it's needed. Bcause I use app.conf to stroe some very important data set.).
 // TODO 3: Make the metadata file have the same name as the pdf or attachment file and Remove .pdf extention.
@@ -13,99 +25,68 @@ using Microsoft.Extensions.Configuration;
 // TODO 8: Create a way to move files to error folder and forward the mail if the file attachments are not accepted.
 // TODO 9: Make a internet connection checker.
 
+// DEA.Next
+// ~~~~~~~~
+// TODO 1: Create an XML config file (use app.config).
+// TODO 2: Create an XML reader toload the settings from the config file.
+// TODO 3: Make a FTP/SFTP/FTPS component. <-- Done and working
+// TODO 4: Make it posible to download files from and FTP server. <-- Done and working
+// TODO 5: Change the download from location according to what is set in the above config file. <-- Done and working
+// TODO 6: Keep the files in a holding folder and then convert them into Base64 string. <-- Done and working
+// TODO 7: Make DEA send the POST url to the TPM REST API.<-- Done and working
+// TODO 8: Get the success signal and then delete the file. If not keep the file and send an error mail or message. <-- Done and working
+
 // Aplication title just for fun.
-WriteLogClass.WriteToLog(3, "Starting DEA ....");
 
-// Check for the attachment download folder and the log folder. Then creates the folders if they're missing.
-GraphHelper.CheckFolders("none");
-WriteLogClass.WriteToLog(3, "Checking main folders ....");
+WriteLogClass.WriteToLog(1, "Starting download process ....", 0);
+FolderFunctionsClass.CheckFolders(null!);
 
-// Clean the main download folder.
-FolderCleanerClass.GetFolders(GraphHelper.CheckFolders("Download"));
+//FolderCleanerClass.GetFolders(@"G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\bin\Debug\net6.0\Download\Attachments\email\Contining folder\918147616_0016107559_CamScanner_02132023_11.34.pdf", "emial");
+FolderCleanerClass.GetFolders(@"G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\bin\Debug\net6.0\Download\FTPFiles\Aksesspunkt\Duett\0123456789\918147616_0016107559_CamScanner_02132023_11.34.pdf", string.Empty);
 
-// Getting the Graph and checking the settings for Graph.
-var appConfig = LoadAppSettings();
+Thread.Sleep(100000000);
 
-// Declaring variable to be used with in the if below.
-var ClientId = string.Empty;
-var TenantId = string.Empty;
-var Instance = string.Empty;
-var GraphApiUrl = string.Empty;
-var ClientSecret = string.Empty;
-string[] Scopes = new string[] { };
+int ftpLoopCount = 0;
+int emlLoopCount = 0;
+bool result = false;
 
-// If appConfig is equal to null look for settings with in the appsettings.json file.
-if (appConfig == null)
+UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+IEnumerable<UserConfigReaderClass.Customerdetail> ftpClients = jsonData.CustomerDetails!.Where(ftpc => ftpc.FileDeliveryMethod!.ToUpper() == "FTP");
+IEnumerable<UserConfigReaderClass.Customerdetail> emailClients = jsonData.CustomerDetails!.Where(emailc => emailc.FileDeliveryMethod!.ToUpper() == "EMAIL");
+
+if (ftpClients.Any())
 {
-    // Read the appsettings json file and loads the text in to AppCofigJson variable.
-    // File should be with in the main working directory.
-    var AppConfigJson = new ConfigurationBuilder()
-        .SetBasePath(Directory.GetCurrentDirectory())
-        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-        .Build();
-
-    // Initilize the variables with values.
-    ClientId = AppConfigJson.GetSection("GraphConfig").GetSection("ClientId").Value;
-    TenantId = AppConfigJson.GetSection("GraphConfig").GetSection("TenantId").Value;
-    Instance = AppConfigJson.GetSection("GraphConfig").GetSection("Instance").Value;
-    GraphApiUrl = AppConfigJson.GetSection("GraphConfig").GetSection("GraphApiUrl").Value;
-    ClientSecret = AppConfigJson.GetSection("GraphConfig").GetSection("ClientSecret").Value;
-    Scopes = new string[] { $"{AppConfigJson.GetSection("GraphConfig").GetSection("Scopes").Value}" };
-
-    // If Json file is also returns empty then below error would be shown.
-    if (string.IsNullOrEmpty(ClientId) ||
-        string.IsNullOrEmpty(TenantId) ||
-        string.IsNullOrEmpty(Instance) ||
-        string.IsNullOrEmpty(GraphApiUrl) ||
-        string.IsNullOrEmpty(ClientSecret))
+    foreach (var ftpClient in ftpClients)
     {
-        WriteLogClass.WriteToLog(1, "Set the Graph API permissions. Using dotnet user-secrets set or appsettings.json.... User secrets is not correct.");
+        ftpLoopCount++;
+
+        if (ftpClient.FtpDetails!.FtpType!.ToUpper() == "FTP" || ftpClient.FtpDetails!.FtpType!.ToUpper() == "FTPS")
+        {
+            result = await FtpFunctionsClass.GetFtpFiles(ftpClient.id);
+        }
+        /*else
+        {
+            // Awating to be implimented. Will be added when needed.
+            SftpFunctionsClass.GetSftpFiles(ftpClient.id);
+        }*/
     }
 }
+
+/*if (emailClients.Any())
+{
+    foreach (var emailClient in emailClients)
+    {
+        emlLoopCount++;
+
+        await GraphHelper.InitializGetAttachment(emailClient.id);
+    }
+}*/
+/*
+if (ftpLoopCount == ftpClients.Count() && result)
+{
+    WriteLogClass.WriteToLog(3, "Process completed successfully ... ", 1);
+}
 else
 {
-    // If appConfig is not equal to null then assings all the setting to variables from UserSecrets.
-    ClientId = appConfig["ClientId"];
-    TenantId = appConfig["TenantId"];
-    Instance = appConfig["Instance"];
-    GraphApiUrl = appConfig["GraphApiUrl"];
-    ClientSecret = appConfig["ClientSecret"];
-    Scopes = new string[] { $"{appConfig["Scopes"]}" };// Gets the application permissions which are set from the Azure AD.
-}
-
-// Calls InitializeGraphClient to get the token and connect to the graph API.
-if (!await GraphHelper.InitializeGraphClient(ClientId, Instance, TenantId, GraphApiUrl, ClientSecret, Scopes))
-{
-    WriteLogClass.WriteToLog(1, "Graph client initialization faild  .....");
-}
-else
-{
-    WriteLogClass.WriteToLog(3, "Graph client initialization successful ....");
-    Thread.Sleep(5000);
-    WriteLogClass.WriteToLog(3, "Starting attachment download process ....");
-    await GraphHelper.InitializGetAttachment();
-}
-
-WriteLogClass.WriteToLog(3, "Email processing ended ...\n");
-
-// Loads the settings from user sectrets file.
-static IConfigurationRoot? LoadAppSettings()
-{
-    var appConfigUs = new ConfigurationBuilder()
-         .AddUserSecrets<Program>()
-         .Build();
-
-     // Check for required settings in app secrets.
-     if (string.IsNullOrEmpty(appConfigUs["ClientId"]) ||
-         string.IsNullOrEmpty(appConfigUs["TenantId"]) ||
-         string.IsNullOrEmpty(appConfigUs["Instance"]) ||
-         string.IsNullOrEmpty(appConfigUs["GraphApiUrl"]) ||
-         string.IsNullOrEmpty(appConfigUs["ClientSecret"]))
-     {
-         return null;
-     }
-     else
-     {
-         return appConfigUs;
-     }
-}
+    WriteLogClass.WriteToLog(3, "Process exited with errors ... ", 1);
+}*/
