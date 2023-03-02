@@ -30,9 +30,9 @@ namespace FileFunctions
 
             string[] downloadedFiles = Directory.GetFiles(filePath, "*.*", SearchOption.TopDirectoryOnly).Where(f => acceptedExtentions.IndexOf(Path.GetExtension(f)) >= 0).ToArray();
 
-            string clientOrg = clientDetails.ClientOrgNo!;
-
-            clientOrg = !string.IsNullOrEmpty(recipientEmail) ? recipientEmail : null!;
+            // If recipientEmail not empty clientOrg = revipientEmail.
+            // If recipientEmail is empty clientOrg = clientDetails.ClientOrgNo
+            string clientOrg = recipientEmail ?? clientDetails.ClientOrgNo ?? throw new Exception("ClientOrg is null.");
 
             if (await MakeJsonRequest(ftpConnect,
                                       customerId,
@@ -92,11 +92,11 @@ namespace FileFunctions
                 Files = fileList
             };
 
-            string result = JsonConvert.SerializeObject(TpsJsonRequest, Formatting.Indented);
+            string jsonResult = JsonConvert.SerializeObject(TpsJsonRequest, Formatting.Indented);
 
             try
             {
-                if (await SendFilesToRest(ftpConnect, result, filesToSend[0], customerId, customerProjectId, customerQueue, fileList.Count, ftpFileList, localFileList))
+                if (await SendFilesToRest(ftpConnect, jsonResult, filesToSend[0], customerId, customerProjectId, customerQueue, fileList.Count, ftpFileList, localFileList))
                 {
                     return true;
                 }
@@ -144,7 +144,7 @@ namespace FileFunctions
                     WriteLogClass.WriteToLog(1, $"Uploaded filenames: {WriteNamesToLogClass.GetFileNames(fullFilePath)}", 4);
 
                     // This will run if it's not FTP.
-                    if (ftpConnect == null)
+                    if (!ftpFileList.Any())
                     {
                         return FolderCleanerClass.GetFolders(fullFilePath, "email");
                     }
@@ -161,7 +161,24 @@ namespace FileFunctions
                 else
                 {
                     WriteLogClass.WriteToLog(0, $"Server status code: {serverResponse.StatusCode}, Server Response Error: {serverResponse.Content}", 0);
-                    HandleErrorFilesClass.MoveFilesToErrorFolder(fullFilePath, customerId);
+                    if (HandleErrorFilesClass.MoveFilesToErrorFolder(fullFilePath, customerId))
+                    {
+                        // This will run if it's not FTP.
+                        if (!ftpFileList.Any())
+                        {
+                            if (FolderCleanerClass.GetFolders(fullFilePath, "email"))
+                            {
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            if (await FolderCleanerClass.GetFtpPathAsync(ftpConnect, ftpFileList, localFileList))
+                            {
+                                return false;
+                            }
+                        }
+                    }*/
                     return false;
                 }
             }

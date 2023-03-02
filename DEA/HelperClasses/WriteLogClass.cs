@@ -62,10 +62,10 @@ namespace WriteLog
                     Log.Error(logEntryString);
                     break;
                 case 1:
-                    Log.Warning(logEntryString);
+                    Log.Information(logEntryString); 
                     break;
                 case 2:
-                    Log.Information(logEntryString);
+                    Log.Warning(logEntryString);
                     break;
                 case 3:
                     Log.Debug(logEntryString);

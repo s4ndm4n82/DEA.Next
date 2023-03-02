@@ -150,14 +150,14 @@ namespace GraphAttachmentFunctions
 
             string mainClient = clientDetails.MainCustomer!;
             string clientName = clientDetails.ClientName!;
-            System.Net.Mail.MailAddress recipientEmail = null!;
+            string recipientEmail = string.Empty;
 
             if (mainClient.ToLower() == "digiacc")
             {
                 recipientEmail = new(GetRecipientEmailClass.GetRecipientEmail(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inEmail)); // Get the Recipient email from the email.
             }            
 
-            string downloadPath = Path.Combine(FolderFunctionsClass.CheckFolders("attachments"), recipientEmail.User, GraphHelper.FolderNameRnd(10)); // Creates the file download path.
+            string downloadPath = Path.Combine(FolderFunctionsClass.CheckFolders("attachments"), recipientEmail, GraphHelper.FolderNameRnd(10)); // Creates the file download path.
             Attachment attachmentData = null!; // Variable to store attachment ID.
             List<string> acceptedExtentions = clientDetails.DocumentDetails!.DocumentExtensions!;
             IEnumerable<Attachment> acceptedAtachments = inMessage.Attachments
@@ -243,7 +243,7 @@ namespace GraphAttachmentFunctions
             {   
                 // Call the base 64 converter and the file submitter to the web service.
                 // And then moves to email to export folder. If both functions succed then the varible will be set to true.
-                if (await FileFunctionsClass.SendToWebService(null!, downloadPath, customerId, null!, null!, recipientEmail.User))
+                if (await FileFunctionsClass.SendToWebService(null!, downloadPath, customerId, null!, null!, recipientEmail))
                 {
                     flagReturn = await MoveMailsToExport(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inMessage.Subject, inEmail);
                 }

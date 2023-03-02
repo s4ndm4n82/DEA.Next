@@ -98,7 +98,7 @@ namespace FtpFunctions
                 }
                 else
                 {
-                    WriteLogClass.WriteToLog(1, "File download process was not successful ....", 3);
+                    WriteLogClass.WriteToLog(1, "File upload process failed. Files moved to error folder ....", 3);
                     return false;
                 }
             }
@@ -138,7 +138,7 @@ namespace FtpFunctions
 
                 WriteLogClass.WriteToLog(1, $"Downloaded {downloadedFileList.Count} file/s from {ftpPath} to \\{parentName}\\{lastFolderName} folder ....", 3);
 
-                localFiles = Directory.GetFiles(ftpHoldFolder, "*.*", SearchOption.AllDirectories);
+                localFiles = Directory.GetFiles(ftpHoldFolder, "*.*", SearchOption.TopDirectoryOnly);
 
                 foreach (string ftpFile in filesToDownload)
                 {

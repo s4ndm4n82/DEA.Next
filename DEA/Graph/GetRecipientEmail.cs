@@ -1,6 +1,7 @@
 ﻿using WriteLog;
 using Microsoft.Graph;
 using System.Text.RegularExpressions;
+using System.Net.Mail;
 
 namespace GetRecipientEmail
 {
@@ -8,7 +9,7 @@ namespace GetRecipientEmail
     {
         public static string GetRecipientEmail(GraphServiceClient graphClient, string SubFolderId1, string SubFolderId2, string SubFolderId3, string MessageID, string _Email)
         {
-            string rEmail = string.Empty;
+            MailAddress rEmail = null!;
             IEnumerable<InternetMessageHeader> ToEmails;
             Task<Message> GetToEmail;
 
@@ -66,7 +67,7 @@ namespace GetRecipientEmail
 
                         if (ExtractedEmail.Success)
                         {
-                            rEmail = ExtractedEmail.Value.ToLower().Replace(" ","");
+                            rEmail = new(ExtractedEmail.Value.ToLower().Replace(" ",""));
                             WriteLogClass.WriteToLog(1, $"Recipient email {rEmail} extracted ...", 2);
                             break;
                         }
@@ -78,7 +79,7 @@ namespace GetRecipientEmail
                 WriteLogClass.WriteToLog(0, $"Exception at getting recipient email: {ex.Message}", 0);
             }
 
-            return rEmail;
+            return rEmail.User;
         }
     }
 }

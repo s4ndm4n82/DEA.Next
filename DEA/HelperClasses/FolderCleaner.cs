@@ -21,8 +21,10 @@ namespace FolderCleaner
             if (Directory.Exists(filePath!.FullName))
             {
                 WriteLogClass.WriteToLog(1, "Cleaning download folder ....", 1);
+                //string[] folderList = Directory.GetDirectories(filePath.FullName, "*.*", SearchOption.TopDirectoryOnly);
 
-                string[] folderList = Directory.GetDirectories(filePath.FullName, "*.*", SearchOption.TopDirectoryOnly);
+                DirectoryInfo dirPath = new(filePath!.FullName);
+                IEnumerable<DirectoryInfo> folderList = dirPath.EnumerateDirectories("*.*", SearchOption.TopDirectoryOnly);
 
                 if (DeleteFolders(folderList))
                 {
@@ -37,23 +39,34 @@ namespace FolderCleaner
             return false;
         }
 
-        private static bool DeleteFolders(string[] folderList)
+        private static bool DeleteFolders(IEnumerable<DirectoryInfo> folderList)
         {
-            int loopCount = 0;
+            int fileLoopCount = 0;
             
-            foreach (string folder in folderList)
+            foreach (DirectoryInfo folder in folderList)
             {
-                loopCount++;
-
-                if (Directory.Exists(folder))
+                if (Directory.Exists(folder.FullName))
                 {
-                    if (Directory.GetFiles(folder, "*.*", SearchOption.AllDirectories).Length > 0)
+                    IEnumerable<FileInfo> fileNames = folder.EnumerateFiles("*.*", SearchOption.AllDirectories);
+
+                    if (fileNames.Any())
                     {
                         try
-                        {   
-                            string folderPath = Directory.GetParent(folder)!.ToString();
-                            Directory.Delete(folderPath, true);
+                        {
+                            // TODO 2 :Check this code.
+                            foreach (FileInfo fileName in fileNames)
+                            {
+                                fileName.Delete();
+                                fileLoopCount++;
+                            }
 
+                            if (fileLoopCount == fileNames.Count())
+                            {
+                                folder.Delete();
+                            }
+                            /*string folderPath = Directory.GetParent(folder.FullName)!.ToString();
+                            Directory.Delete(folderPath, true);*/
+                            
                         }
                         catch (IOException ex)
                         {
@@ -63,10 +76,14 @@ namespace FolderCleaner
                 }
             }
 
-            if (loopCount == folderList.Length)
+            if (fileLoopCount == folderList.Count())
             {
-                WriteLogClass.WriteToLog(1, $"Removed {folderList.Length} folder from download folder ....", 1);
+                WriteLogClass.WriteToLog(1, $"Removed {folderList.Count()} folder from download folder ....", 1);
                 return true;
+            }
+            else
+            {
+                WriteLogClass.WriteToLog(1, $"Folder not removed. It's empty ....", 1);
             }
 
             return false;
@@ -100,7 +117,7 @@ namespace FolderCleaner
             return false;
         }
 
-        public static async Task<bool> DeleteFtpFiles(AsyncFtpClient ftpConnect, string ftpFileName)
+        private static async Task<bool> DeleteFtpFiles(AsyncFtpClient ftpConnect, string ftpFileName)
         {
             try
             {

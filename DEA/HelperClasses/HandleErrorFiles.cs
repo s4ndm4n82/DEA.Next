@@ -5,13 +5,14 @@ namespace HandleErrorFiles
 {
     internal class HandleErrorFilesClass
     {
-        public static bool MoveFilesToErrorFolder(string sourceFolderPath, int clientID)
+        public static bool MoveFilesToErrorFolder(string sourcePath, int clientID)
         {
             string clientNo = clientID.ToString();
-            string errorFolderPath = FolderFunctionsClass.CheckFolders("error");
+            string errorFolderPath = FolderFunctionsClass.CheckFolders("error");            
+            string sourceFolderPath = Path.GetDirectoryName(sourcePath)!;
             string sourceFolder = sourceFolderPath.Split(Path.DirectorySeparatorChar).Last();
             string destinationFolderPath = Path.Combine(errorFolderPath, clientNo, sourceFolder);
-            IEnumerable<string> sourceFileNameList = Directory.EnumerateFiles(sourceFolderPath, "*.*", SearchOption.TopDirectoryOnly);
+            string[] sourceFileNameList = Directory.GetFiles(sourceFolderPath, "*.*", SearchOption.TopDirectoryOnly);
 
             if (!Directory.Exists(destinationFolderPath))
             {
@@ -22,7 +23,7 @@ namespace HandleErrorFiles
             {
                 if (DeleteSrcFolder(sourceFolderPath))
                 {
-                    WriteLogClass.WriteToLog(1, $"Moved {sourceFileNameList.Count()} to {destinationFolderPath} ....", 1);
+                    WriteLogClass.WriteToLog(1, $"Moved {sourceFileNameList.Length} file/s to {destinationFolderPath} ....", 1);
                     return true;
                 }
             }
