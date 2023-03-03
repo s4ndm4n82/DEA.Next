@@ -1,5 +1,4 @@
-﻿using Microsoft.Graph;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using WriteLog;
 
 namespace WriteNamesToLog
@@ -16,10 +15,19 @@ namespace WriteNamesToLog
             string returnFileNames = "";
             try
             {
-                DirectoryInfo dir = new(Path.GetDirectoryName(folderPath)!);
-                IEnumerable<string> fileNames = dir.GetFiles("*.*", SearchOption.TopDirectoryOnly).Select(fn => fn.Name);
+                DirectoryInfo dir = Directory.GetParent(folderPath)!;
 
-                return returnFileNames = string.Join(", ", fileNames);
+                string regExString = @"^(?:.+\\ftpfiles\\.*)$";
+                Regex regExSearch = new(regExString, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+                Match regExMatch = regExSearch.Match(folderPath);
+
+                // If regex match path will be taken using new(Path.GetDirectoryName(folderPath)!).
+                // If not path will be directly assigned.
+                //dir = regExMatch.Success ? new(Path.GetDirectoryName(folderPath)!) : new(folderPath);
+                Console.WriteLine(dir);
+                IEnumerable<FileInfo> fileNames = dir.EnumerateFiles("*.*", SearchOption.TopDirectoryOnly);
+
+                return returnFileNames = string.Join(", ", fileNames.Select(fn => fn.Name));
             }
             catch (Exception ex)
             {

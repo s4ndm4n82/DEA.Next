@@ -125,6 +125,12 @@ namespace FileFunctions
         {
             try
             {
+                // Loads all the details from the customer details Json file.
+                UserConfigReaderClass.CustomerDetailsObject JsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+
+                // Just select the data corrosponding to the customer ID.
+                UserConfigReaderClass.Customerdetail clientDetails = JsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId)!;
+
                 // Creating rest api request.
                 var client = new RestClient("https://capture.exacta.no/");
 
@@ -144,16 +150,16 @@ namespace FileFunctions
                     WriteLogClass.WriteToLog(1, $"Uploaded filenames: {WriteNamesToLogClass.GetFileNames(fullFilePath)}", 4);
 
                     // This will run if it's not FTP.
-                    if (!ftpFileList.Any())
+                    if (clientDetails.FileDeliveryMethod.ToLower() == "email")
                     {
-                        return FolderCleanerClass.GetFolders(fullFilePath, "email");
+                        return FolderCleanerClass.GetFolders(fullFilePath);
                     }
                     else
                     {
                         if (await FolderCleanerClass.GetFtpPathAsync(ftpConnect, ftpFileList, localFileList))
                         {
                             // Deletes the file from local hold folder when sending is successful.
-                            return FolderCleanerClass.GetFolders(fullFilePath, string.Empty);                           
+                            return FolderCleanerClass.GetFolders(fullFilePath);
                         }
                     }
                     return false;
@@ -164,9 +170,9 @@ namespace FileFunctions
                     if (HandleErrorFilesClass.MoveFilesToErrorFolder(fullFilePath, customerId))
                     {
                         // This will run if it's not FTP.
-                        if (!ftpFileList.Any())
+                        if (clientDetails.FileDeliveryMethod.ToLower() == "email")
                         {
-                            if (FolderCleanerClass.GetFolders(fullFilePath, "email"))
+                            if (FolderCleanerClass.GetFolders(fullFilePath))
                             {
                                 return false;
                             }
@@ -178,7 +184,7 @@ namespace FileFunctions
                                 return false;
                             }
                         }
-                    }*/
+                    }
                     return false;
                 }
             }

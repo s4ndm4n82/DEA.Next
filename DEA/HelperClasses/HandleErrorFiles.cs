@@ -8,11 +8,14 @@ namespace HandleErrorFiles
         public static bool MoveFilesToErrorFolder(string sourcePath, int clientID)
         {
             string clientNo = clientID.ToString();
-            string errorFolderPath = FolderFunctionsClass.CheckFolders("error");            
+            string errorFolderPath = FolderFunctionsClass.CheckFolders("error");
             string sourceFolderPath = Path.GetDirectoryName(sourcePath)!;
             string sourceFolder = sourceFolderPath.Split(Path.DirectorySeparatorChar).Last();
-            string destinationFolderPath = Path.Combine(errorFolderPath, clientNo, sourceFolder);
-            string[] sourceFileNameList = Directory.GetFiles(sourceFolderPath, "*.*", SearchOption.TopDirectoryOnly);
+            string destinationFolderPath = Path.Combine(errorFolderPath, "CID_" + clientNo, sourceFolder);
+
+            DirectoryInfo dirInfo = new(sourceFolderPath);
+            IEnumerable<FileInfo> sourceFileNameList = dirInfo.EnumerateFiles("*.*", SearchOption.TopDirectoryOnly);
+            int fileCount = sourceFileNameList.Count();
 
             if (!Directory.Exists(destinationFolderPath))
             {
@@ -23,21 +26,21 @@ namespace HandleErrorFiles
             {
                 if (DeleteSrcFolder(sourceFolderPath))
                 {
-                    WriteLogClass.WriteToLog(1, $"Moved {sourceFileNameList.Length} file/s to {destinationFolderPath} ....", 1);
+                    string movedFolder = Path.Combine("CID " + clientNo, sourceFolder);
+                    WriteLogClass.WriteToLog(1, $"Moved {fileCount} file/s to \\{movedFolder} ....", 1);
                     return true;
                 }
             }
             return false;
         }
 
-        private static bool FileMover(string dstPath, IEnumerable<string> srcFileList)
+        private static bool FileMover(string dstPath, IEnumerable<FileInfo> srcFileList)
         {
             try
             {
-                foreach (string srcFile in srcFileList)
-                {
-                    string fileName = Path.GetFileName(srcFile);
-                    string dstFile = Path.Combine(dstPath, fileName);
+                foreach (FileInfo srcFile in srcFileList)
+                {   
+                    string dstFile = Path.Combine(dstPath, srcFile.Name);
 
                     if (File.Exists(dstFile))
                     {
@@ -46,7 +49,7 @@ namespace HandleErrorFiles
                     }
                     else
                     {
-                        File.Move(srcFile, dstFile);
+                        File.Move(srcFile.FullName, dstFile);
                     }                    
                 }
                 return true;
@@ -66,7 +69,8 @@ namespace HandleErrorFiles
 
                 if (!srcFileCount.Any())
                 {
-                    Directory.Delete(srcFolderPath, true);
+                    string dirPath = Path.GetDirectoryName(srcFolderPath)!;
+                    Directory.Delete(dirPath, true);
                 }
                 return true;
             }

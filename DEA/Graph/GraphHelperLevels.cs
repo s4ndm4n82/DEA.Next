@@ -42,11 +42,11 @@ namespace DEA2Levels
                                                                                               , customerId);
                 if (result)
                 {
-                    WriteLogClass.WriteToLog(1, $"Email attachment download completed successfully ....", 2);
+                    WriteLogClass.WriteToLog(1, $"Email attachment downloade and sent to processing successfully ....", 2);
                 }
                 else
                 {
-                    WriteLogClass.WriteToLog(1, $"Email attachment download did not complete successfully ....", 2);
+                    WriteLogClass.WriteToLog(1, $"Email attachment downloaded but sending to processing did not complete successfully. Moved to error folder ....", 2);
                 }
             }
         }

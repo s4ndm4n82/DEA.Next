@@ -1,27 +1,18 @@
 ﻿using FluentFTP;
+using System.Text.RegularExpressions;
 using WriteLog;
 
 namespace FolderCleaner
 {
     internal class FolderCleanerClass
     {
-        public static bool GetFolders(string folderPath, string type)
+        public static bool GetFolders(string folderPath)
         {
-            DirectoryInfo filePath;
-
-            if (type.ToLower() == "email")
-            {
-                filePath = Directory.GetParent(Path.GetDirectoryName(folderPath)!)!;
-            }
-            else
-            {
-                filePath = Directory.GetParent(Directory.GetParent(Path.GetDirectoryName(folderPath)!)!.FullName)!;
-            }
+            DirectoryInfo filePath = Directory.GetParent(Directory.GetParent(Path.GetDirectoryName(folderPath)!)!.FullName)!;
 
             if (Directory.Exists(filePath!.FullName))
             {
                 WriteLogClass.WriteToLog(1, "Cleaning download folder ....", 1);
-                //string[] folderList = Directory.GetDirectories(filePath.FullName, "*.*", SearchOption.TopDirectoryOnly);
 
                 DirectoryInfo dirPath = new(filePath!.FullName);
                 IEnumerable<DirectoryInfo> folderList = dirPath.EnumerateDirectories("*.*", SearchOption.TopDirectoryOnly);
@@ -42,43 +33,54 @@ namespace FolderCleaner
         private static bool DeleteFolders(IEnumerable<DirectoryInfo> folderList)
         {
             int fileLoopCount = 0;
+            int folderLoopCount = 0;
+            int folderCount = folderList.Count();
             
             foreach (DirectoryInfo folder in folderList)
             {
                 if (Directory.Exists(folder.FullName))
                 {
                     IEnumerable<FileInfo> fileNames = folder.EnumerateFiles("*.*", SearchOption.AllDirectories);
+                    int fileCount = fileNames.Count();
 
                     if (fileNames.Any())
                     {
                         try
                         {
-                            // TODO 2 :Check this code.
                             foreach (FileInfo fileName in fileNames)
                             {
                                 fileName.Delete();
                                 fileLoopCount++;
                             }
-
-                            if (fileLoopCount == fileNames.Count())
+                            if (fileLoopCount == fileCount)
                             {
-                                folder.Delete();
+                                folder.Delete(true);
                             }
-                            /*string folderPath = Directory.GetParent(folder.FullName)!.ToString();
-                            Directory.Delete(folderPath, true);*/
-                            
                         }
                         catch (IOException ex)
+                        {
+                            WriteLogClass.WriteToLog(0, $"Exception at folder and file delete: {ex.Message}", 0);
+                        }
+                    }
+                    else if (!fileNames.Any())
+                    {
+                        try
+                        {
+                            string folderPath = Directory.GetParent(folder.FullName)!.ToString();
+                            Directory.Delete(folderPath, true);                            
+                        }
+                        catch (Exception ex)
                         {
                             WriteLogClass.WriteToLog(0, $"Exception at folder delete: {ex.Message}", 0);
                         }
                     }
+                    folderLoopCount++;
                 }
             }
 
-            if (fileLoopCount == folderList.Count())
+            if (folderLoopCount == folderCount)
             {
-                WriteLogClass.WriteToLog(1, $"Removed {folderList.Count()} folder from download folder ....", 1);
+                WriteLogClass.WriteToLog(1, $"Removed {folderCount} folder from download folder ....", 1);
                 return true;
             }
             else

@@ -240,13 +240,12 @@ namespace GraphAttachmentFunctions
             }
 
             if (loopCount > 0 && loopFlag)
-            {   
+            {
                 // Call the base 64 converter and the file submitter to the web service.
                 // And then moves to email to export folder. If both functions succed then the varible will be set to true.
-                if (await FileFunctionsClass.SendToWebService(null!, downloadPath, customerId, null!, null!, recipientEmail))
-                {
-                    flagReturn = await MoveMailsToExport(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inMessage.Subject, inEmail);
-                }
+                await MoveMailsToExport(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inMessage.Subject, inEmail); 
+
+                flagReturn = await FileFunctionsClass.SendToWebService(null!, downloadPath, customerId, null!, null!, recipientEmail);
             }
 
             // Forwards the email if there's no attachments and attachment download loop doesn't run.

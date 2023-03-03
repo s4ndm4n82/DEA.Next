@@ -40,7 +40,7 @@ if (ftpClients.Any())
     }
 }
 
-/*if (emailClients.Any())
+if (emailClients.Any())
 {
     foreach (var emailClient in emailClients)
     {
@@ -57,4 +57,4 @@ if (ftpLoopCount == ftpClients.Count() && result)
 else
 {
     WriteLogClass.WriteToLog(1, "Process exited with errors ... ", 1);
-}*/
+}
