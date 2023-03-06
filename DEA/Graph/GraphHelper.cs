@@ -28,8 +28,9 @@ namespace DEA
         /// <returns></returns>
         public static async Task InitializGetAttachment(int customerId)
         {
+            int result = 0;
             UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
-            UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId);
+            UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId)!;
 
             if(clientDetails != null)
             {
@@ -49,9 +50,10 @@ namespace DEA
                 try
                 {
                     // Calls the function to read ATC emails.
-                    await GraphHelperLevels.GetEmailsAttacments2Levels(graphClient!, clientDetails.EmailDetails.EmailAddress!,
-                                                                       clientDetails.EmailDetails.MainInbox!, clientDetails.EmailDetails.SubInbox1!,
-                                                                       clientDetails.EmailDetails.SubInbox2!, customerId);
+                    result = await GraphHelperLevels.GetEmailsAttacments2Levels(graphClient!, clientDetails.EmailDetails.EmailAddress!,
+                                                                                clientDetails.EmailDetails.MainInbox!, clientDetails.EmailDetails.SubInbox1!,
+                                                                                clientDetails.EmailDetails.SubInbox2!, customerId);
+                    return result;
                 }
                 catch (Exception ex)
                 {
