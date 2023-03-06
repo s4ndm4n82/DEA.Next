@@ -159,7 +159,8 @@ namespace FtpFunctions
                 {
                     WriteLogClass.WriteToLog(1, $"Ftp file count: {filesToDownload.Count()}, Local file count: {localFiles.Length}", 3);
 
-                    return await FileFunctionsClass.SendToWebService(ftpConnect, ftpHoldFolder, clientID, filesToDownload, localFiles, null!);
+                    await FileFunctionsClass.SendToWebService(ftpConnect, ftpHoldFolder, clientID, filesToDownload, localFiles, null!);
+                    return true;
                 }
                 else
                 {

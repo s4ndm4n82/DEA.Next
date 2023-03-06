@@ -25,7 +25,7 @@ namespace GraphAttachmentFunctions
         /// <param name="subFolderId1"></param>
         /// <param name="subFolderId2"></param>
         /// <returns>A bool value (true or false)</returns>
-        public static async Task<bool> GetMessagesWithAttachments([NotNull] GraphServiceClient graphClient,
+        public static async Task<int> GetMessagesWithAttachments([NotNull] GraphServiceClient graphClient,
                                                                   string inEmail,
                                                                   string mainFolderId,
                                                                   string subFolderId1,
@@ -33,7 +33,7 @@ namespace GraphAttachmentFunctions
                                                                   int maxMails,
                                                                   int customerId)
         {
-            bool flag = false;
+            int flag = 0;
             IMailFolderMessagesCollectionPage messages = null!;            
 
             if (!string.IsNullOrEmpty(mainFolderId) && string.IsNullOrEmpty(subFolderId1) && string.IsNullOrEmpty(subFolderId2))
@@ -109,11 +109,11 @@ namespace GraphAttachmentFunctions
                         WriteLogClass.WriteToLog(1, $"Email forwarded to {forwardFalg.Item2} ....", 2);
 
                         var destinationId = await GetMailFolderIdsClass.GetErrorFolderId(graphClient, inEmail, mainFolderId, subFolderId1, subFolderId2);
-                        flag = await GraphHelper.MoveEmails(mainFolderId, subFolderId1, subFolderId2, message.Id, destinationId, inEmail);
 
-                        if (flag)
+                        if (await GraphHelper.MoveEmails(mainFolderId, subFolderId1, subFolderId2, message.Id, destinationId, inEmail))
                         {
                             WriteLogClass.WriteToLog(1, $"No attachments. Mail moved to error folder ....", 2);
+                            flag = 3;
                         }
                     }
                 }
@@ -132,7 +132,7 @@ namespace GraphAttachmentFunctions
         /// <param name="subFolderId1"></param>
         /// <param name="subFolderId2"></param>
         /// <returns>A bool value (true or false)</returns>
-        private static async Task<bool> DownloadAttachments([NotNull]GraphServiceClient graphClient,
+        private static async Task<int> DownloadAttachments([NotNull]GraphServiceClient graphClient,
                                                             Message inMessage,
                                                             string inEmail,
                                                             string mainFolderId,
@@ -142,7 +142,7 @@ namespace GraphAttachmentFunctions
         {
             int loopCount = 0; // In order to check if the loop ran at least once.
 
-            bool flagReturn = false; // Flag to check if the transfer to TPS is successful.
+            int flagReturn = 0; // Flag to check if the transfer to TPS is successful.
             bool loopFlag = false; // To execute the TPS file transfer function at the end of the file download loop.
 
             UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
@@ -152,7 +152,7 @@ namespace GraphAttachmentFunctions
             string clientName = clientDetails.ClientName!;
             string recipientEmail = string.Empty;
 
-            if (mainClient.ToLower() == "digiacc")
+            if (clientDetails.FileDeliveryMethod.ToLower() == "email")
             {
                 recipientEmail = new(GetRecipientEmailClass.GetRecipientEmail(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inEmail)); // Get the Recipient email from the email.
             }            
@@ -243,9 +243,10 @@ namespace GraphAttachmentFunctions
             {
                 // Call the base 64 converter and the file submitter to the web service.
                 // And then moves to email to export folder. If both functions succed then the varible will be set to true.
-                await MoveMailsToExport(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inMessage.Subject, inEmail); 
-
-                flagReturn = await FileFunctionsClass.SendToWebService(null!, downloadPath, customerId, null!, null!, recipientEmail);
+                if (await MoveMailsToExport(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inMessage.Subject, inEmail))
+                {
+                    flagReturn = await FileFunctionsClass.SendToWebService(null!, downloadPath, customerId, null!, null!, recipientEmail);
+                }                
             }
 
             // Forwards the email if there's no attachments and attachment download loop doesn't run.
@@ -258,12 +259,11 @@ namespace GraphAttachmentFunctions
                     WriteLogClass.WriteToLog(1, $"Email forwarded to {forwardFalg.Item2}", 2);
 
                     var destinationId = await GetMailFolderIdsClass.GetErrorFolderId(graphClient, inEmail, mainFolderId, subFolderId1, subFolderId2);
-                    flagReturn = await GraphHelper.MoveEmails(mainFolderId, subFolderId1, subFolderId2, inMessage.Id, destinationId, inEmail);
 
-                    if (flagReturn)
+                    if (await GraphHelper.MoveEmails(mainFolderId, subFolderId1, subFolderId2, inMessage.Id, destinationId, inEmail))
                     {
                         WriteLogClass.WriteToLog(1, $"Mail moved to error folder ....", 2);
-                        flagReturn = true;
+                        flagReturn = 3;
                     }
                 }
             }

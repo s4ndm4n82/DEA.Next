@@ -18,13 +18,13 @@ namespace DEA2Levels
         /// <param name="subFolder1"></param>
         /// <param name="subFolder2"></param>
         /// <returns></returns>
-        public static async Task GetEmailsAttacments2Levels([NotNull] GraphServiceClient graphClient, string clientEmail, string mainMailFolder, string subFolder1, string subFolder2, int customerId)
+        public static async Task<int> GetEmailsAttacments2Levels([NotNull] GraphServiceClient graphClient, string clientEmail, string mainMailFolder, string subFolder1, string subFolder2, int customerId)
         {
             // Parameters read from the config files.
             var ConfigParam = new ReadSettingsClass();
 
             int maxAmountOfEmails = ConfigParam.MaxLoadEmails;
-
+            int result = 0;
             // Get the folder ID's after searching the folder names.
             GetMailFolderIdsClass.clientFolderId folderIds = await GetMailFolderIdsClass.GetChlidFolderIds<GetMailFolderIdsClass>(graphClient, clientEmail, mainMailFolder, subFolder1, subFolder2);
 
@@ -33,22 +33,31 @@ namespace DEA2Levels
                 WriteLogClass.WriteToLog(3, $"Starting attachment download process ....", 2);
 
                 // Initiate the email attachment download and send them to the web service. Should return a bool value.
-                var result = await GraphAttachmentFunctionsClass.GetMessagesWithAttachments(graphClient
+                result = await GraphAttachmentFunctionsClass.GetMessagesWithAttachments(graphClient
                                                                                               , clientEmail
                                                                                               , folderIds.clientMainFolderId!
                                                                                               , folderIds.clientSubFolderId1!
                                                                                               , folderIds.clientSubFolderId2!
                                                                                               , maxAmountOfEmails
                                                                                               , customerId);
-                if (result)
+                switch (result)
                 {
-                    WriteLogClass.WriteToLog(1, $"Email attachment downloade and sent to processing successfully ....", 2);
+                    case 1:
+                        WriteLogClass.WriteToLog(1, $"Email attachment downloade and sent to processing successfully ....", 2);
+                        break;
+                    case 2:
+                        WriteLogClass.WriteToLog(0, $"Uploading file/s didn't complete successfully. Moved files to error folder ....", 2);
+                        break;
+                    case 3:
+                        WriteLogClass.WriteToLog(1, $"No attachment or file type not supported. Email moved to error and forwarded to sender  ....", 2);
+                        break;
+                    default:
+                        WriteLogClass.WriteToLog(0, $"Operation failed ....", 2);
+                        break;
                 }
-                else
-                {
-                    WriteLogClass.WriteToLog(1, $"Email attachment downloaded but sending to processing did not complete successfully. Moved to error folder ....", 2);
-                }
+                return result;
             }
+            return result;
         }
     }
 }

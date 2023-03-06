@@ -15,17 +15,8 @@ namespace WriteNamesToLog
             string returnFileNames = "";
             try
             {
-                DirectoryInfo dir = Directory.GetParent(folderPath)!;
-
-                string regExString = @"^(?:.+\\ftpfiles\\.*)$";
-                Regex regExSearch = new(regExString, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
-                Match regExMatch = regExSearch.Match(folderPath);
-
-                // If regex match path will be taken using new(Path.GetDirectoryName(folderPath)!).
-                // If not path will be directly assigned.
-                //dir = regExMatch.Success ? new(Path.GetDirectoryName(folderPath)!) : new(folderPath);
-                Console.WriteLine(dir);
-                IEnumerable<FileInfo> fileNames = dir.EnumerateFiles("*.*", SearchOption.TopDirectoryOnly);
+                DirectoryInfo dirInfo = new(folderPath);
+                IEnumerable<FileInfo> fileNames = dirInfo.EnumerateFiles("*.*", SearchOption.TopDirectoryOnly);
 
                 return returnFileNames = string.Join(", ", fileNames.Select(fn => fn.Name));
             }

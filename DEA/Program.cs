@@ -26,8 +26,6 @@ if (ftpClients.Any())
 {
     foreach (var ftpClient in ftpClients)
     {
-        ftpLoopCount++;
-
         if (ftpClient.FtpDetails!.FtpType!.ToLower() == "ftp" || ftpClient.FtpDetails!.FtpType!.ToLower() == "ftps")
         {
             result = await FtpFunctionsClass.GetFtpFiles(ftpClient.id);
@@ -37,6 +35,7 @@ if (ftpClients.Any())
             // Awating to be implimented. Will be added when needed.
             SftpFunctionsClass.GetSftpFiles(ftpClient.id);
         }*/
+        ftpLoopCount++;
     }
 }
 
@@ -44,9 +43,8 @@ if (emailClients.Any())
 {
     foreach (var emailClient in emailClients)
     {
-        emlLoopCount++;
-
         await GraphHelper.InitializGetAttachment(emailClient.id);
+        emlLoopCount++;
     }
 }
 

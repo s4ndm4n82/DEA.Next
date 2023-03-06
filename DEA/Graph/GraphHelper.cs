@@ -28,14 +28,14 @@ namespace DEA
         /// <returns></returns>
         public static async Task InitializGetAttachment(int customerId)
         {
-            var jsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
-            var clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId);
+            UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+            UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId);
 
             if(clientDetails != null)
             {
                 try
                 {
-                    graphApiCall(); // Initilizes the graph API.
+                    GraphApiCall(); // Initilizes the graph API.
                 }
                 catch (Exception ex)
                 {
@@ -49,31 +49,21 @@ namespace DEA
                 try
                 {
                     // Calls the function to read ATC emails.
-                    await GraphHelperLevels.GetEmailsAttacments2Levels(graphClient!, clientDetails.EmailDetails.EmailAddress!, clientDetails.EmailDetails.MainInbox!, clientDetails.EmailDetails.SubInbox1!, clientDetails.EmailDetails.SubInbox2!, customerId);
+                    await GraphHelperLevels.GetEmailsAttacments2Levels(graphClient!, clientDetails.EmailDetails.EmailAddress!,
+                                                                       clientDetails.EmailDetails.MainInbox!, clientDetails.EmailDetails.SubInbox1!,
+                                                                       clientDetails.EmailDetails.SubInbox2!, customerId);
                 }
                 catch (Exception ex)
                 {
                     WriteLogClass.WriteToLog(0, $"Exception at GraphHelper2Levels: {ex.Message}", 0);
                 }
             }
-            /*else
-            {
-                try
-                {
-                    // Calls the function for reading accounting emails for attachments.
-                    await GraphHelper1LevelClass.GetEmailsAttacments1Level(graphClient!, clientDetails.EmailDetails.EmailAddress!);
-                }
-                catch (Exception ex)
-                {
-                    WriteLogClass.WriteToLog(2, $"Exception at GraphHelper1Levels: {ex.Message}", string.Empty);
-                }
-            }*/
         }
 
         /// <summary>
         /// As the function name suggest this is the main function that calles the GraphAPI and establish the connection.
         /// </summary>
-        private static async void graphApiCall()
+        private static async void GraphApiCall()
         {
             // Getting the Graph and checking the settings for Graph.
             var appConfig = LoadAppSettings();
