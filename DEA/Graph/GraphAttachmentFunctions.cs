@@ -34,13 +34,13 @@ namespace GraphAttachmentFunctions
                                                                   int customerId)
         {
             int flag = 0;
-            IMailFolderMessagesCollectionPage messages = null!;            
+            IMailFolderMessagesCollectionPage messages = null!;
 
             if (!string.IsNullOrEmpty(mainFolderId) && string.IsNullOrEmpty(subFolderId1) && string.IsNullOrEmpty(subFolderId2))
             {
                 try
                 {
-                    messages = await graphClient.Users[$"{inEmail}"].MailFolders["Inbox"]
+                   messages = await graphClient.Users[$"{inEmail}"].MailFolders["Inbox"]
                            .ChildFolders[$"{mainFolderId}"]
                            .Messages
                            .Request()

@@ -14,51 +14,59 @@ using FolderFunctions;
 WriteLogClass.WriteToLog(1, "Starting download process ....", 1);
 FolderFunctionsClass.CheckFolders(null!);
 
-int ftpLoopCount = 0;
-int emlLoopCount = 0;
-int result = 0;
+int emailResult = 0;
+int ftpResult = 0;
 
+// User cpmfig reader.
 UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
-IEnumerable<UserConfigReaderClass.Customerdetail> ftpClients = jsonData.CustomerDetails!.Where(ftpc => ftpc.FileDeliveryMethod!.ToLower() == "ftp");
-int ftpClientCount = ftpClients.Count();
-IEnumerable<UserConfigReaderClass.Customerdetail> emailClients = jsonData.CustomerDetails!.Where(emailc => emailc.FileDeliveryMethod!.ToLower() == "email");
-int emailClientCount = emailClients.Count();
 
+// Array contaning all the FTP user details.
+IEnumerable<UserConfigReaderClass.Customerdetail> ftpClients = jsonData.CustomerDetails!.Where(ftpc => ftpc.FileDeliveryMethod!.ToLower() == "ftp");
+int ftpClientCount = ftpClients.Count(); // FTP client count.
+
+// Array contaning all the Email user details.
+IEnumerable<UserConfigReaderClass.Customerdetail> emailClients = jsonData.CustomerDetails!.Where(emailc => emailc.FileDeliveryMethod!.ToLower() == "email");
+int emailClientCount = emailClients.Count(); // Email client count.
+
+// FTP download loop.
 if (ftpClientCount > 0)
 {
     foreach (var ftpClient in ftpClients)
     {
         if (ftpClient.FtpDetails!.FtpType!.ToLower() == "ftp" || ftpClient.FtpDetails!.FtpType!.ToLower() == "ftps")
         {
-            await FtpFunctionsClass.GetFtpFiles(ftpClient.id);
+            ftpResult = await FtpFunctionsClass.GetFtpFiles(ftpClient.id);
         }
         /*else
         {
             // Awating to be implimented. Will be added when needed.
             SftpFunctionsClass.GetSftpFiles(ftpClient.id);
         }*/
-        ftpLoopCount++;
     }
 }
 
+// Email download loop.
 if (emailClientCount > 0)
 {
     foreach (var emailClient in emailClients)
     {
-        result = await GraphHelperClass.InitializGetAttachment(emailClient.id);
-        emlLoopCount++;
+        emailResult = await GraphHelperClass.InitializGetAttachment(emailClient.id);
     }
 }
 
-switch (result)
-{
-    case 1:
-        WriteLogClass.WriteToLog(1, "Process completed successfully ....", 1);
-        break;
-    case 2:
-        WriteLogClass.WriteToLog(1, "Process completed with issues ....", 1);
-        break;
-    default:
-        WriteLogClass.WriteToLog(0, "Process terminated due to errors ....", 1);
-        break;
-}
+// Selects the correct status message for the log.
+// Using ternary operator which stands for below pesudocode.
+// IF emailResult = 1 and ftpResult = 1 SET "Process completed successfully ...."
+// ELSE IF emailResult = 2 and ftpResult = 2 SET "Process completed with issues ...."
+// ELSE SET "Process terminated due to errors ...."
+string logMsg = emailResult == 1 && ftpResult == 1 ? "Process completed successfully ...." :
+                emailResult == 2 && ftpResult == 2 ? "Process completed with issues ...." :
+                "Process terminated due to errors ....";
+
+// Select the correct log type.
+// Using ternary operator which stands for below pesudocode.
+// IF emailResult = 1 and ftpResult = 1 OR emailResult = 2 && ftpResult = 2 SET 1
+// ELSE SET 0
+int msgType = (emailResult == 1 && ftpResult == 1) || (emailResult == 2 && ftpResult == 2) ? 1 : 0;
+
+WriteLogClass.WriteToLog(msgType, logMsg, 1);
