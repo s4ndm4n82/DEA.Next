@@ -1,4 +1,4 @@
-﻿using DEA;
+﻿using GraphHelper;
 using WriteLog;
 using ConnectFtp;
 using ConnectFtps;
@@ -61,11 +61,11 @@ namespace FtpFunctions
             string FtpHoldFolder;
             if (!string.IsNullOrEmpty(ftpSubFolder2))
             {
-                FtpHoldFolder = Path.Combine(LocalFtpFolder, ftpMainFolder!, ftpSubFolder1!, ftpSubFolder2, GraphHelper.FolderNameRnd(10));
+                FtpHoldFolder = Path.Combine(LocalFtpFolder, ftpMainFolder!, ftpSubFolder1!, ftpSubFolder2, GraphHelperClass.FolderNameRnd(10));
             }
             else
             {
-                FtpHoldFolder = Path.Combine(LocalFtpFolder, ftpMainFolder!, ftpSubFolder1!, GraphHelper.FolderNameRnd(10));
+                FtpHoldFolder = Path.Combine(LocalFtpFolder, ftpMainFolder!, ftpSubFolder1!, GraphHelperClass.FolderNameRnd(10));
             }
             
             AsyncFtpClient ftp = null!;

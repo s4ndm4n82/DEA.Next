@@ -6,7 +6,7 @@ using FileFunctions;
 using FolderFunctions;
 using WriteLog;
 using WriteNamesToLog;
-using DEA;
+using GraphHelper;
 using GraphEmailFunctions;
 using GetMailFolderIds;
 using UserConfigReader;
@@ -110,7 +110,7 @@ namespace GraphAttachmentFunctions
 
                         var destinationId = await GetMailFolderIdsClass.GetErrorFolderId(graphClient, inEmail, mainFolderId, subFolderId1, subFolderId2);
 
-                        if (await GraphHelper.MoveEmails(mainFolderId, subFolderId1, subFolderId2, message.Id, destinationId, inEmail))
+                        if (await GraphHelperClass.MoveEmails(mainFolderId, subFolderId1, subFolderId2, message.Id, destinationId, inEmail))
                         {
                             WriteLogClass.WriteToLog(1, $"No attachments. Mail moved to error folder ....", 2);
                             flag = 3;
@@ -157,7 +157,7 @@ namespace GraphAttachmentFunctions
                 recipientEmail = new(GetRecipientEmailClass.GetRecipientEmail(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inEmail)); // Get the Recipient email from the email.
             }            
 
-            string downloadPath = Path.Combine(FolderFunctionsClass.CheckFolders("attachments"), recipientEmail, GraphHelper.FolderNameRnd(10)); // Creates the file download path.
+            string downloadPath = Path.Combine(FolderFunctionsClass.CheckFolders("attachments"), recipientEmail, GraphHelperClass.FolderNameRnd(10)); // Creates the file download path.
             Attachment attachmentData = null!; // Variable to store attachment ID.
             List<string> acceptedExtentions = clientDetails.DocumentDetails!.DocumentExtensions!;
             IEnumerable<Attachment> acceptedAtachments = inMessage.Attachments
@@ -260,7 +260,7 @@ namespace GraphAttachmentFunctions
 
                     var destinationId = await GetMailFolderIdsClass.GetErrorFolderId(graphClient, inEmail, mainFolderId, subFolderId1, subFolderId2);
 
-                    if (await GraphHelper.MoveEmails(mainFolderId, subFolderId1, subFolderId2, inMessage.Id, destinationId, inEmail))
+                    if (await GraphHelperClass.MoveEmails(mainFolderId, subFolderId1, subFolderId2, inMessage.Id, destinationId, inEmail))
                     {
                         WriteLogClass.WriteToLog(1, $"Mail moved to error folder ....", 2);
                         flagReturn = 3;
@@ -344,7 +344,7 @@ namespace GraphAttachmentFunctions
                 }
             }
 
-            if (await GraphHelper.MoveEmails(mainFolderId, subFolderId1, subFolderId2, messageId, exportFolder.Id, inEmail))
+            if (await GraphHelperClass.MoveEmails(mainFolderId, subFolderId1, subFolderId2, messageId, exportFolder.Id, inEmail))
             {   
                 WriteLogClass.WriteToLog(1, $"Email {messageSubject} moved to export folder ...", 2);
                 return true;

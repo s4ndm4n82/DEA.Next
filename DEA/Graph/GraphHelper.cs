@@ -1,19 +1,15 @@
 ﻿using Microsoft.Graph;
 using Microsoft.Identity.Client;
 using System.Net.Http.Headers;
-using System.Text.RegularExpressions;
 using WriteLog;
-using DEA2Levels;
-using ReadSettings;
+using GraphGetAttachments;
 using UserConfigReader;
-using CreateMetadataFile; // Might need to use this later so leaving it.
-using System.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace DEA
+namespace GraphHelper
 {
-    public class GraphHelper
+    public class GraphHelperClass
     {
         private static GraphServiceClient? graphClient;
         private static AuthenticationResult? AuthToken;
@@ -26,7 +22,7 @@ namespace DEA
         /// </summary>
         /// <param name="customerId"></param>
         /// <returns></returns>
-        public static async Task InitializGetAttachment(int customerId)
+        public static async Task<int> InitializGetAttachment(int customerId)
         {
             int result = 0;
             UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
@@ -50,7 +46,7 @@ namespace DEA
                 try
                 {
                     // Calls the function to read ATC emails.
-                    result = await GraphHelperLevels.GetEmailsAttacments2Levels(graphClient!, clientDetails.EmailDetails.EmailAddress!,
+                    result = await GraphGetAttachmentsClass.GetEmailsAttacments(graphClient!, clientDetails.EmailDetails.EmailAddress!,
                                                                                 clientDetails.EmailDetails.MainInbox!, clientDetails.EmailDetails.SubInbox1!,
                                                                                 clientDetails.EmailDetails.SubInbox2!, customerId);
                     return result;
@@ -58,8 +54,10 @@ namespace DEA
                 catch (Exception ex)
                 {
                     WriteLogClass.WriteToLog(0, $"Exception at GraphHelper2Levels: {ex.Message}", 0);
+                    return result;
                 }
             }
+            return result;
         }
 
         /// <summary>

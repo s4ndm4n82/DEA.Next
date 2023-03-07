@@ -1,4 +1,4 @@
-﻿using DEA;
+﻿using GraphHelper;
 using WriteLog;
 using FolderCleaner;
 using FtpFunctions;
@@ -16,19 +16,21 @@ FolderFunctionsClass.CheckFolders(null!);
 
 int ftpLoopCount = 0;
 int emlLoopCount = 0;
-bool result = false;
+int result = 0;
 
 UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
 IEnumerable<UserConfigReaderClass.Customerdetail> ftpClients = jsonData.CustomerDetails!.Where(ftpc => ftpc.FileDeliveryMethod!.ToLower() == "ftp");
+int ftpClientCount = ftpClients.Count();
 IEnumerable<UserConfigReaderClass.Customerdetail> emailClients = jsonData.CustomerDetails!.Where(emailc => emailc.FileDeliveryMethod!.ToLower() == "email");
+int emailClientCount = emailClients.Count();
 
-if (ftpClients.Any())
+if (ftpClientCount > 0)
 {
     foreach (var ftpClient in ftpClients)
     {
         if (ftpClient.FtpDetails!.FtpType!.ToLower() == "ftp" || ftpClient.FtpDetails!.FtpType!.ToLower() == "ftps")
         {
-            result = await FtpFunctionsClass.GetFtpFiles(ftpClient.id);
+            await FtpFunctionsClass.GetFtpFiles(ftpClient.id);
         }
         /*else
         {
@@ -39,20 +41,24 @@ if (ftpClients.Any())
     }
 }
 
-if (emailClients.Any())
+if (emailClientCount > 0)
 {
     foreach (var emailClient in emailClients)
     {
-        await GraphHelper.InitializGetAttachment(emailClient.id);
+        result = await GraphHelperClass.InitializGetAttachment(emailClient.id);
         emlLoopCount++;
     }
 }
 
-if (ftpLoopCount == ftpClients.Count() && result)
+switch (result)
 {
-    WriteLogClass.WriteToLog(1, "Process completed successfully ... ", 1);
-}
-else
-{
-    WriteLogClass.WriteToLog(1, "Process exited with errors ... ", 1);
+    case 1:
+        WriteLogClass.WriteToLog(1, "Process completed successfully ....", 1);
+        break;
+    case 2:
+        WriteLogClass.WriteToLog(1, "Process completed with issues ....", 1);
+        break;
+    default:
+        WriteLogClass.WriteToLog(0, "Process terminated due to errors ....", 1);
+        break;
 }

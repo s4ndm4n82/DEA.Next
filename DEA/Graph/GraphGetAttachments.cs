@@ -5,9 +5,9 @@ using GetMailFolderIds;
 using GraphAttachmentFunctions;
 using WriteLog;
 
-namespace DEA2Levels
+namespace GraphGetAttachments
 {
-    internal class GraphHelperLevels
+    internal class GraphGetAttachmentsClass
     {
         /// <summary>
         /// Mainly this will start the email download process and the process to submit files to the web service.
@@ -18,7 +18,7 @@ namespace DEA2Levels
         /// <param name="subFolder1"></param>
         /// <param name="subFolder2"></param>
         /// <returns></returns>
-        public static async Task<int> GetEmailsAttacments2Levels([NotNull] GraphServiceClient graphClient, string clientEmail, string mainMailFolder, string subFolder1, string subFolder2, int customerId)
+        public static async Task<int> GetEmailsAttacments([NotNull] GraphServiceClient graphClient, string clientEmail, string mainMailFolder, string subFolder1, string subFolder2, int customerId)
         {
             // Parameters read from the config files.
             var ConfigParam = new ReadSettingsClass();
