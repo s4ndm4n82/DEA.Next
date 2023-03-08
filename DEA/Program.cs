@@ -59,14 +59,18 @@ if (emailClientCount > 0)
 // IF emailResult = 1 and ftpResult = 1 SET "Process completed successfully ...."
 // ELSE IF emailResult = 2 and ftpResult = 2 SET "Process completed with issues ...."
 // ELSE SET "Process terminated due to errors ...."
-string logMsg = emailResult == 1 && ftpResult == 1 ? "Process completed successfully ...." :
+string logMsg = (emailResult == 1 || emailResult == 1) && (ftpResult == 4 || ftpResult == 4) ? "Process completed successfully ...." :
                 emailResult == 2 && ftpResult == 2 ? "Process completed with issues ...." :
+                emailResult == 1 && (ftpResult == 0 || ftpResult == 4) ? $"Email process completed .... FTP code {ftpResult} ...." :
+                emailResult == 2 && (ftpResult == 0 || ftpResult == 4) ? $"Email process ended with errors .... FTP code {ftpResult} ...." :
+                ftpResult == 1 && (emailResult == 0 || emailResult == 4) ? $"FTP process completed .... Email code {emailResult} ...." :
+                ftpResult == 2 && (emailResult == 0 || emailResult == 4) ? $"FTP process ended with errors .... Email code {emailResult} ...." :
                 "Process terminated due to errors ....";
 
 // Select the correct log type.
 // Using ternary operator which stands for below pesudocode.
 // IF emailResult = 1 and ftpResult = 1 OR emailResult = 2 && ftpResult = 2 SET 1
 // ELSE SET 0
-int msgType = (emailResult == 1 && ftpResult == 1) || (emailResult == 2 && ftpResult == 2) ? 1 : 0;
+int msgType = (emailResult == 1 || emailResult == 4) && (ftpResult == 1 || ftpResult == 4) || (emailResult == 2 && ftpResult == 2) ? 1 : 0;
 
-WriteLogClass.WriteToLog(msgType, logMsg, 1);
+WriteLogClass.WriteToLog(msgType, $"{logMsg}\n", 1);

@@ -40,22 +40,19 @@ namespace GraphGetAttachments
                                                                                               , folderIds.clientSubFolderId2!
                                                                                               , maxAmountOfEmails
                                                                                               , customerId);
-                switch (result)
+                // Selects the message body.
+                string msgBody = result switch
                 {
-                    case 1:
-                        WriteLogClass.WriteToLog(1, $"Email attachment downloade and sent to processing successfully ....", 2);
-                        break;
-                    case 2:
-                        WriteLogClass.WriteToLog(0, $"Uploading file/s didn't complete successfully. Moved files to error folder ....", 2);
-                        break;
-                    case 3:
-                        WriteLogClass.WriteToLog(1, $"No attachment or file type not supported. Email moved to error and forwarded to sender  ....", 2);
-                        break;
-                    default:
-                        WriteLogClass.WriteToLog(0, $"Operation failed ....", 2);
-                        break;
-                }
-                return result;
+                    1 => "Email attachment downloade and sent to processing successfully ....",
+                    2 => "Uploading file/s didn't complete successfully. Moved files to error folder ....",
+                    3 => "No attachment or file type not supported. Email moved to error and forwarded to sender ....",
+                    4 => "No new emails to process ... Process Ended ....",
+                    _ => "Operation failed ....",
+                };
+                // Sets the message type.
+                int msgType = result == 1 || result == 2 || result == 3 || result == 4 ? 1 : 0;
+
+                WriteLogClass.WriteToLog(msgType, msgBody, 2);
             }
             return result;
         }

@@ -93,30 +93,37 @@ namespace GraphAttachmentFunctions
                 }
             }
 
-            foreach (var message in messages)
+            if (messages.Any())
             {
-                if (message.Attachments.Count > 0)
+                foreach (var message in messages)
                 {
-                    WriteLogClass.WriteToLog(1, $"Reading email {message.Subject}", 2);
-                    flag = await DownloadAttachments(graphClient, message, inEmail, mainFolderId, subFolderId1, subFolderId2, customerId);
-                }
-                else
-                {
-                    var forwardFalg = await GraphEmailFunctionsClass.EmailForwarder(graphClient, mainFolderId, subFolderId1, subFolderId2, message.Id, inEmail, 0);
-
-                    if (forwardFalg.Item1)
+                    if (message.Attachments.Count > 0)
                     {
-                        WriteLogClass.WriteToLog(1, $"Email forwarded to {forwardFalg.Item2} ....", 2);
+                        WriteLogClass.WriteToLog(1, $"Reading email {message.Subject}", 2);
+                        flag = await DownloadAttachments(graphClient, message, inEmail, mainFolderId, subFolderId1, subFolderId2, customerId);
+                    }
+                    else
+                    {
+                        var forwardFalg = await GraphEmailFunctionsClass.EmailForwarder(graphClient, mainFolderId, subFolderId1, subFolderId2, message.Id, inEmail, 0);
 
-                        var destinationId = await GetMailFolderIdsClass.GetErrorFolderId(graphClient, inEmail, mainFolderId, subFolderId1, subFolderId2);
-
-                        if (await GraphHelperClass.MoveEmails(mainFolderId, subFolderId1, subFolderId2, message.Id, destinationId, inEmail))
+                        if (forwardFalg.Item1)
                         {
-                            WriteLogClass.WriteToLog(1, $"No attachments. Mail moved to error folder ....", 2);
-                            flag = 3;
+                            WriteLogClass.WriteToLog(1, $"Email forwarded to {forwardFalg.Item2} ....", 2);
+
+                            var destinationId = await GetMailFolderIdsClass.GetErrorFolderId(graphClient, inEmail, mainFolderId, subFolderId1, subFolderId2);
+
+                            if (await GraphHelperClass.MoveEmails(mainFolderId, subFolderId1, subFolderId2, message.Id, destinationId, inEmail))
+                            {
+                                WriteLogClass.WriteToLog(1, $"No attachments. Mail moved to error folder ....", 2);
+                                flag = 3;
+                            }
                         }
                     }
                 }
+            }
+            else
+            {
+                flag = 4;
             }
             return flag;
         }
@@ -164,7 +171,6 @@ namespace GraphAttachmentFunctions
                                                          .Where(x => acceptedExtentions
                                                          .Contains(Path.GetExtension(x.Name.ToLower())) && x.Size > 10240 || (x.Name.ToLower().EndsWith(".pdf") && x.Size < 10240));
             int lastItem = acceptedAtachments.Count();
-            
 
             foreach (Attachment attachment in acceptedAtachments)
             {
@@ -223,7 +229,7 @@ namespace GraphAttachmentFunctions
                 }
 
                 // Attachment properties.
-                FileAttachment attachmentProperties = (FileAttachment)attachmentData;                
+                FileAttachment attachmentProperties = (FileAttachment)attachmentData;
                 byte[] attachmentBytes = attachmentProperties.ContentBytes;
 
                 if (EmailFileHelperClass.FileDownloader(downloadPath, EmailFileHelperClass.FileNameCleaner(attachmentProperties.Name), attachmentBytes))
@@ -232,8 +238,8 @@ namespace GraphAttachmentFunctions
                 }
 
                 if (lastItem == loopCount)
-                {                    
-                    loopFlag = true;                    
+                {
+                    loopFlag = true;
                     WriteLogClass.WriteToLog(1, $"Downloaded {lastItem} attachments from {inMessage.Subject} ....", 2);
                     WriteLogClass.WriteToLog(1, $"Downloaded file names: {WriteNamesToLogClass.GetFileNames(downloadPath)}", 2);
                 }
@@ -246,7 +252,7 @@ namespace GraphAttachmentFunctions
                 if (await MoveMailsToExport(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inMessage.Subject, inEmail))
                 {
                     flagReturn = await FileFunctionsClass.SendToWebService(null!, downloadPath, customerId, null!, null!, recipientEmail);
-                }                
+                }
             }
 
             // Forwards the email if there's no attachments and attachment download loop doesn't run.

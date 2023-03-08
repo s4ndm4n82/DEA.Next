@@ -95,25 +95,20 @@ namespace FtpFunctions
 
                 returnFlag = await DownloadFtpFiles(ftpConnect, ftpPath, FtpHoldFolder, clientID);
 
-                switch (returnFlag)
+                // Selects the message body.
+                string msgBody = returnFlag switch
                 {
-                    case 1:
-                        WriteLogClass.WriteToLog(1, $"Files from client {clientName} downloaded and uploaded for processing ....\n", 3);
-                        break;
-                    case 2:
-                        WriteLogClass.WriteToLog(1, "Uploading files failed. File moved to error ....\n", 3);
-                        break;
-                    case 3:
-                        WriteLogClass.WriteToLog(1, "File download failed ....\n", 3);
-                        break;
-                    default:
-                        WriteLogClass.WriteToLog(1, "Operation failed ....\n", 3);
-                        break;
-                }
+                    1 => $"Files from client {clientName} downloaded and uploaded for processing ....",
+                    2 => "Uploading files failed. File moved to error ....",
+                    3 => "File download failed ....",
+                    4 => "FTP folder is empty ....",
+                    _ => "Operation failed ....",
+                };
+                // Set the message code.
+                int msgCode = (returnFlag == 1 || returnFlag == 2 || returnFlag == 3 || returnFlag == 4) ? 1 : 0;
+                WriteLogClass.WriteToLog(1, $"{msgBody}\n", 3);
 
-                await ftpConnect.Disconnect(); // Disconnects from the FTP server.                
-
-                return returnFlag;
+                await ftpConnect.Disconnect(); // Disconnects from the FTP server.  
             }
             return returnFlag;
         }
@@ -147,7 +142,7 @@ namespace FtpFunctions
             if (downloadedFileList.Count > 0)
             {
                 string lastFolderName = Path.GetFileName(ftpHoldFolder);                
-                string parentName = Directory.GetParent(Path.GetFileName(ftpHoldFolder))!.Name;
+                string parentName = Directory.GetParent(ftpHoldFolder)!.Name;
 
                 WriteLogClass.WriteToLog(1, $"Downloaded {downloadedFileList.Count} file/s from {ftpPath} to \\{parentName}\\{lastFolderName} folder ....", 3);
 
@@ -181,9 +176,8 @@ namespace FtpFunctions
                 }
             }
             else
-            {
-                WriteLogClass.WriteToLog(1, "Folder empty ... skipping", 3);
-                return 0;
+            {   
+                return 4;
             }
         }        
     }

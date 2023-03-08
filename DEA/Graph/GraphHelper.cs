@@ -24,6 +24,7 @@ namespace GraphHelper
         /// <returns></returns>
         public static async Task<int> InitializGetAttachment(int customerId)
         {
+            int result = 0;
             UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
             UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId);
 
@@ -43,18 +44,11 @@ namespace GraphHelper
             if (!clientDetails!.EmailDetails!.MainInbox.IsNullOrEmpty())
             {
                 try
-                {
-                    // Calls the function to read ATC emails.
-<<<<<<< HEAD
+                {                    // Calls the function to read ATC emails.
                     result = await GraphGetAttachmentsClass.GetEmailsAttacments(graphClient!, clientDetails.EmailDetails.EmailAddress!,
                                                                                 clientDetails.EmailDetails.MainInbox!, clientDetails.EmailDetails.SubInbox1!,
                                                                                 clientDetails.EmailDetails.SubInbox2!, customerId);
                     return result;
-=======
-                    await GraphHelperLevels.GetEmailsAttacments2Levels(graphClient!, clientDetails.EmailDetails.EmailAddress!,
-                                                                       clientDetails.EmailDetails.MainInbox!, clientDetails.EmailDetails.SubInbox1!,
-                                                                       clientDetails.EmailDetails.SubInbox2!, customerId);
->>>>>>> parent of ed4ad7d (Late save.)
                 }
                 catch (Exception ex)
                 {
