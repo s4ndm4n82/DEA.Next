@@ -13,7 +13,7 @@ namespace FolderFunctions
         /// <returns></returns>
         public static string CheckFolders(string folderSwitch)
         {
-            string? pathRootFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string pathRootFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
             string[] folderNames = { "Download", "Attachments", "FTPFiles", "Logs", "Error" };
             string folderPath;
             string returnFolderPath = string.Empty;

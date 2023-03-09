@@ -152,7 +152,7 @@ namespace GraphAttachmentFunctions
             int flagReturn = 0; // Flag to check if the transfer to TPS is successful.
             bool loopFlag = false; // To execute the TPS file transfer function at the end of the file download loop.
 
-            UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+            UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
             UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId)!;
 
             string mainClient = clientDetails.MainCustomer!;

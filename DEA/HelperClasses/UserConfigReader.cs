@@ -54,7 +54,7 @@ namespace UserConfigReader
             public List<string>? DocumentExtensions { get; set; }
         }
 
-        public static T ReadAppDotConfig<T>()
+        public static T ReadUserDotConfig<T>()
         {
             T? jsonData = default;
             try

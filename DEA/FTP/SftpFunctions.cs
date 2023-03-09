@@ -11,7 +11,7 @@ namespace SftpFunctions
         // SFTP implimention will be holted until it's needed.
         public static bool GetSftpFiles(int CustomerId)
         {
-            var JsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+            var JsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
 
             var SftpOnlyClient = JsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == CustomerId);
 

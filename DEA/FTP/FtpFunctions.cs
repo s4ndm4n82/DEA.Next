@@ -6,6 +6,7 @@ using FluentFTP;
 using UserConfigReader;
 using FileFunctions;
 using FolderFunctions;
+using ProcessStatusMessageSetter;
 
 namespace FtpFunctions
 {
@@ -19,7 +20,7 @@ namespace FtpFunctions
         public static async Task<int> GetFtpFiles(int Customerid)
         {
             // Loads all the details from the customer details Json file.
-            UserConfigReaderClass.CustomerDetailsObject JsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+            UserConfigReaderClass.CustomerDetailsObject JsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
 
             // Just select the data corrosponding to the customer ID.
             UserConfigReaderClass.Customerdetail clientDetails = JsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == Customerid)!;
@@ -34,7 +35,8 @@ namespace FtpFunctions
 
         public static async Task<int> InitiateFtpDownload(UserConfigReaderClass.Customerdetail FtpClientDetails)
         {
-            int returnFlag = 0;
+            int downloadResult = 0;
+
             // Client details retrived from the Json file.
             int clientID = FtpClientDetails.id;
             string clientName = FtpClientDetails.ClientName!;
@@ -59,15 +61,15 @@ namespace FtpFunctions
             }            
 
             string LocalFtpFolder = FolderFunctionsClass.CheckFolders("ftp");
-            string FtpHoldFolder;
+            string ftpHoldFolder;
 
             if (!string.IsNullOrEmpty(ftpSubFolder2))
             {
-                FtpHoldFolder = Path.Combine(LocalFtpFolder, ftpMainFolder!, ftpSubFolder1!, ftpSubFolder2, GraphHelperClass.FolderNameRnd(10));
+                ftpHoldFolder = Path.Combine(LocalFtpFolder, ftpMainFolder!, ftpSubFolder1!, ftpSubFolder2, GraphHelperClass.FolderNameRnd(10));
             }
             else
             {
-                FtpHoldFolder = Path.Combine(LocalFtpFolder, ftpMainFolder!, ftpSubFolder1!, GraphHelperClass.FolderNameRnd(10));
+                ftpHoldFolder = Path.Combine(LocalFtpFolder, ftpMainFolder!, ftpSubFolder1!, GraphHelperClass.FolderNameRnd(10));
             }
             
             AsyncFtpClient ftp = null!;
@@ -84,7 +86,7 @@ namespace FtpFunctions
             if (ftp == null)
             {
                 WriteLogClass.WriteToLog(1, "Connection to FTP server failed ....", 3);
-                return returnFlag;
+                return downloadResult;
             }
 
             using AsyncFtpClient ftpConnect = ftp!;
@@ -93,24 +95,13 @@ namespace FtpFunctions
             {
                 WriteLogClass.WriteToLog(1, $"Starting file download from {ftpPath} ....", 3);
 
-                returnFlag = await DownloadFtpFiles(ftpConnect, ftpPath, FtpHoldFolder, clientID);
-
-                // Selects the message body.
-                string msgBody = returnFlag switch
-                {
-                    1 => $"Files from client {clientName} downloaded and uploaded for processing ....",
-                    2 => "Uploading files failed. File moved to error ....",
-                    3 => "File download failed ....",
-                    4 => "FTP folder is empty ....",
-                    _ => "Operation failed ....",
-                };
-                // Set the message code.
-                int msgCode = (returnFlag == 1 || returnFlag == 2 || returnFlag == 3 || returnFlag == 4) ? 1 : 0;
-                WriteLogClass.WriteToLog(1, $"{msgBody}\n", 3);
+                downloadResult = await DownloadFtpFiles(ftpConnect, ftpPath, ftpHoldFolder, clientID);
+                
+                WriteLogClass.WriteToLog(ProcessStatusMessageSetterClass.SetMessageTypeOther(downloadResult), $"{ProcessStatusMessageSetterClass.SetProcessStatusOther(downloadResult, "ftp")}\n", 3);
 
                 await ftpConnect.Disconnect(); // Disconnects from the FTP server.  
             }
-            return returnFlag;
+            return downloadResult;
         }
 
         public static async Task<int> DownloadFtpFiles(AsyncFtpClient ftpConnect, string ftpPath, string ftpHoldFolder, int clientID)

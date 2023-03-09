@@ -6,48 +6,50 @@ namespace ConnectFtp
 {
     internal class ConnectFtpClass
     {
-        public static async Task<AsyncFtpClient> ConnectFtp(string HostName, string HostIp, string UserName,string UserPassword)
+        public static async Task<AsyncFtpClient> ConnectFtp(string hostName, string hostIp, string userName,string userPassword)
         {
-            var CloseToken = new CancellationToken();
+            CancellationToken closeToken = new();
 
-            var FtpConnect = new AsyncFtpClient
+            AsyncFtpClient ftpConnect = new()
             {
-                Host = HostName,
-                Credentials = new NetworkCredential(UserName, UserPassword)
+                Host = hostName,
+                Credentials = new NetworkCredential(userName, userPassword)
             };
             try
             {
-                await FtpConnect.Connect(CloseToken);
+                await ftpConnect.Connect(closeToken);
                 WriteLogClass.WriteToLog(1, "FTP Connection successful ....", 3);
             }
             catch
             {
                 WriteLogClass.WriteToLog(1, $"Trying to connect using alt method ....", 3);
-                await ConnectFtpAlt(HostIp, UserName, UserPassword);
+                await ConnectFtpAlt(hostIp, userName, userPassword);
             }
 
-            return FtpConnect;
+            return ftpConnect;
         }
 
-        private static async Task<AsyncFtpClient> ConnectFtpAlt(string _HostIp, string _UserName, string _UserPassword)
+        private static async Task<AsyncFtpClient> ConnectFtpAlt(string _hostIp, string _userName, string _userPassword)
         {
-            var CloseToken = new CancellationToken();
-            
-            var FtpConnect = new AsyncFtpClient();
-                FtpConnect.Host = _HostIp;
-                FtpConnect.Credentials = new NetworkCredential(_UserName, _UserPassword);
+            CancellationToken closeToken = new();
+
+            AsyncFtpClient ftpConnect = new()
+            {
+                Host = _hostIp,
+                Credentials = new NetworkCredential(_userName, _userPassword)
+            };
 
             try
             {
-                await FtpConnect.Connect(CloseToken);
+                await ftpConnect.Connect(closeToken);
                 WriteLogClass.WriteToLog(1, "FTP Alt Connection successful ....", 3);
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(1, $"Exception at FTP connection: {ex.Message}", 3);
+                WriteLogClass.WriteToLog(0, $"Exception at FTP connection: {ex.Message}", 0);
             }
             
-            return FtpConnect;
+            return ftpConnect;
         }
     }
 }

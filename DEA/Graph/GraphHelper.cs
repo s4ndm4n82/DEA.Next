@@ -6,6 +6,7 @@ using GraphGetAttachments;
 using UserConfigReader;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using AppConfigReader;
 
 namespace GraphHelper
 {
@@ -25,7 +26,7 @@ namespace GraphHelper
         public static async Task<int> InitializGetAttachment(int customerId)
         {
             int result = 0;
-            UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+            UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
             UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId);
 
             if(clientDetails != null)
@@ -64,86 +65,40 @@ namespace GraphHelper
         /// </summary>
         private static async void GraphApiCall()
         {
-            // Getting the Graph and checking the settings for Graph.
-            var appConfig = LoadAppSettings();
+            GraphApiInitializer graphApiInitializer = new();
 
-            // Declaring variable to be used with in the if below.
-            var ClientId = string.Empty;
-            var TenantId = string.Empty;
-            var Instance = string.Empty;
-            var GraphApiUrl = string.Empty;
-            var ClientSecret = string.Empty;
-            string[] Scopes = new string[] { };
+            bool success = await graphApiInitializer.GraphInitialize();
 
-            // If appConfig is equal to null look for settings with in the appsettings.json file.
-            if (appConfig == null)
+            if (!success)
             {
-                // Read the appsettings json file and loads the text in to AppCofigJson variable.
-                // File should be with in the main working directory.
-                var AppConfigJson = new ConfigurationBuilder()
-                    .SetBasePath(System.IO.Directory.GetCurrentDirectory())
-                    .AddJsonFile(@".\Config\appsettings.json", optional: true, reloadOnChange: true)
-                    .Build();
-
-                // Initilize the variables with values.
-                ClientId = AppConfigJson.GetSection("GraphConfig").GetSection("ClientId").Value;
-                TenantId = AppConfigJson.GetSection("GraphConfig").GetSection("TenantId").Value;
-                Instance = AppConfigJson.GetSection("GraphConfig").GetSection("Instance").Value;
-                GraphApiUrl = AppConfigJson.GetSection("GraphConfig").GetSection("GraphApiUrl").Value;
-                ClientSecret = AppConfigJson.GetSection("GraphConfig").GetSection("ClientSecret").Value;
-                Scopes = new string[] { $"{AppConfigJson.GetSection("GraphConfig").GetSection("Scopes").Value}" };
-
-                // If Json file is also returns empty then below error would be shown.
-                if (string.IsNullOrEmpty(ClientId) ||
-                    string.IsNullOrEmpty(TenantId) ||
-                    string.IsNullOrEmpty(Instance) ||
-                    string.IsNullOrEmpty(GraphApiUrl) ||
-                    string.IsNullOrEmpty(ClientSecret))
-                {
-                    WriteLogClass.WriteToLog(1, "Set the Graph API permissions. Using dotnet user-secrets set or appsettings.json.... User secrets is not correct.", 1);
-                }
+                WriteLogClass.WriteToLog(0, "Graph client initialization faild  .....", 5);
             }
             else
             {
-                // If appConfig is not equal to null then assings all the setting to variables from UserSecrets.
-                ClientId = appConfig["ClientId"];
-                TenantId = appConfig["TenantId"];
-                Instance = appConfig["Instance"];
-                GraphApiUrl = appConfig["GraphApiUrl"];
-                ClientSecret = appConfig["ClientSecret"];
-                Scopes = new string[] { $"{appConfig["Scopes"]}" };// Gets the application permissions which are set from the Azure AD.
-            }
-
-            // Calls InitializeGraphClient to get the token and connect to the graph API.
-            if (!await InitializeGraphClient(ClientId!, Instance!, TenantId!, GraphApiUrl!, ClientSecret!, Scopes))
-            {
-                WriteLogClass.WriteToLog(1, "Graph client initialization faild  .....", 1);
-            }
-            else
-            {
-                WriteLogClass.WriteToLog(1, "Graph client initialization successful ....", 1);
-                Thread.Sleep(2000);
+                WriteLogClass.WriteToLog(1, "Graph client initialization successful ....", 5);
             }
         }
-        // Loads the settings from user sectrets file.
-        static IConfigurationRoot? LoadAppSettings()
+        /// <summary>
+        /// Initialize and returns the success message.
+        /// </summary>
+        public class GraphApiInitializer
         {
-            var appConfigUs = new ConfigurationBuilder()
-                 .AddUserSecrets<Program>()
-                 .Build();
+            private readonly AppConfigReaderClass.AppSettingsRoot jsonData;
 
-            // Check for required settings in app secrets.
-            if (string.IsNullOrEmpty(appConfigUs["ClientId"]) ||
-                string.IsNullOrEmpty(appConfigUs["TenantId"]) ||
-                string.IsNullOrEmpty(appConfigUs["Instance"]) ||
-                string.IsNullOrEmpty(appConfigUs["GraphApiUrl"]) ||
-                string.IsNullOrEmpty(appConfigUs["ClientSecret"]))
+            public GraphApiInitializer()
             {
-                return null;
+                jsonData = AppConfigReaderClass.ReadAppDotConfig();                
             }
-            else
+
+            public async Task<bool> GraphInitialize()
             {
-                return appConfigUs;
+                AppConfigReaderClass.Graphconfig graphSettings = jsonData.GraphConfig;
+
+                bool success = await InitializeGraphClient(graphSettings.ClientId, graphSettings.Instance,
+                                                           graphSettings.TenantId, graphSettings.GraphApiUrl,
+                                                           graphSettings.ClientSecret, graphSettings.Scopes);
+
+                return success;
             }
         }
 

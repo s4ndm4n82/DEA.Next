@@ -23,7 +23,7 @@ namespace FileFunctions
         {
             WriteLogClass.WriteToLog(1, "Starting file upload process .... ", 4);
 
-            UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+            UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
             UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId)!;
 
             List<string> acceptedExtentions = clientDetails.DocumentDetails!.DocumentExtensions!;
@@ -117,7 +117,7 @@ namespace FileFunctions
             try
             {
                 // Loads all the details from the customer details Json file.
-                UserConfigReaderClass.CustomerDetailsObject JsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+                UserConfigReaderClass.CustomerDetailsObject JsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
 
                 // Just select the data corrosponding to the customer ID.
                 UserConfigReaderClass.Customerdetail clientDetails = JsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId)!;

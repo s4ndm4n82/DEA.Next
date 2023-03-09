@@ -6,52 +6,53 @@ namespace ConnectFtps
 {
     internal class ConnectFtpsClass
     {
-        public static async Task<AsyncFtpClient> ConnectFtps(string HostName, string HostIp, string UserName, string UserPassword)
+        public static async Task<AsyncFtpClient> ConnectFtps(string hostName, string hostIp, string userName, string userPassword)
         {
-            var CancelToken = new CancellationToken();
+            CancellationToken cancelToken = new();
 
-            var FtpsConnect = new AsyncFtpClient
+            AsyncFtpClient ftpsConnect = new()
             {
-                Host = HostName,
-                Credentials = new NetworkCredential(UserName, UserPassword)
+                Host = hostName,
+                Credentials = new NetworkCredential(userName, userPassword)
             };
-            FtpsConnect.Config.EncryptionMode = FtpEncryptionMode.Explicit;
-            FtpsConnect.Config.ValidateAnyCertificate = true;
+            ftpsConnect.Config.EncryptionMode = FtpEncryptionMode.Explicit;
+            ftpsConnect.Config.ValidateAnyCertificate = true;
 
             try
             {
-                await FtpsConnect.Connect(CancelToken);
+                await ftpsConnect.Connect(cancelToken);
                 WriteLogClass.WriteToLog(1, "FTPS Connection successful ....", 3);
             }
             catch
             {
                 WriteLogClass.WriteToLog(1, $"Trying to connect using alt method ....", 3);
-                FtpsConnect = await ConnectFtpsAlt(HostIp, UserName, UserPassword);
+                ftpsConnect = await ConnectFtpsAlt(hostIp, userName, userPassword);
             }
-            return FtpsConnect;
+            return ftpsConnect;
         }
 
-        private static async Task<AsyncFtpClient> ConnectFtpsAlt(string _HostIp, string _UserName, string _UserPassword)
+        private static async Task<AsyncFtpClient> ConnectFtpsAlt(string _hostIp, string _userName, string _userPassword)
         {
-            var CancelToken = new CancellationToken();
+            CancellationToken cancelToken = new();
 
-            var FtpsConnect = new AsyncFtpClient();
-
-            FtpsConnect.Host = _HostIp;
-            FtpsConnect.Credentials = new NetworkCredential(_UserName, _UserPassword);
-            FtpsConnect.Config.EncryptionMode = FtpEncryptionMode.Explicit;
-            FtpsConnect.Config.ValidateAnyCertificate = true;
+            AsyncFtpClient ftpsConnect = new()
+            {
+                Host = _hostIp,
+                Credentials = new NetworkCredential(_userName, _userPassword)
+            };
+            ftpsConnect.Config.EncryptionMode = FtpEncryptionMode.Explicit;
+            ftpsConnect.Config.ValidateAnyCertificate = true;
 
             try
             {
-                await FtpsConnect.Connect(CancelToken);
+                await ftpsConnect.Connect(cancelToken);
                 WriteLogClass.WriteToLog(1, "FTPS Alt Connection successful ....", 3);
             }
             catch (Exception ex)
             {
                 WriteLogClass.WriteToLog(0, $"Exception at FTPS connection: {ex.Message}", 0);
             }
-            return FtpsConnect;
+            return ftpsConnect;
         }
     }
 }
