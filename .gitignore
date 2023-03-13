@@ -369,4 +369,4 @@ app.*
 
 # Unwanted folers.
 SSH.NETHelpFile/
-MetadataSample/
+MetadataSamples/
