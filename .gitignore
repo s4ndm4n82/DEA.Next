@@ -368,5 +368,5 @@ appsettings.*
 app.*
 
 # Unwanted folers.
-SSH.NET Help File/
+SSH.NETHelpFile/
 MetadataSample/
