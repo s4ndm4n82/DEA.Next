@@ -1,17 +1,22 @@
 ﻿using FolderFunctions;
+using UserConfigReader;
 using WriteLog;
 
 namespace HandleErrorFiles
 {
     internal class HandleErrorFilesClass
     {
-        public static bool MoveFilesToErrorFolder(string sourcePath, int clientID)
+        public static bool MoveFilesToErrorFolder(string sourcePath, int clientID, string recivedEmail)
         {
+            UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+            UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails.FirstOrDefault(cid => cid.id == clientID);
+
             string clientNo = clientID.ToString();
             string errorFolderPath = FolderFunctionsClass.CheckFolders("error");
             string sourceFolderPath = Path.GetDirectoryName(sourcePath)!;
             string sourceFolder = sourceFolderPath.Split(Path.DirectorySeparatorChar).Last();
-            string destinationFolderPath = Path.Combine(errorFolderPath, "CID_" + clientNo, sourceFolder);
+            string folderName = clientDetails.FileDeliveryMethod.ToLower() == "email" ? string.Concat("ID_", clientNo, " ", "Email_", recivedEmail) : string.Concat("ID_", clientNo, " ", "Org_", clientDetails.ClientOrgNo);
+            string destinationFolderPath = Path.Combine(errorFolderPath, folderName, sourceFolder);
 
             DirectoryInfo dirInfo = new(sourceFolderPath);
             IEnumerable<FileInfo> sourceFileNameList = dirInfo.EnumerateFiles("*.*", SearchOption.TopDirectoryOnly);
@@ -26,7 +31,7 @@ namespace HandleErrorFiles
             {
                 if (DeleteSrcFolder(sourceFolderPath))
                 {
-                    string movedFolder = Path.Combine("CID " + clientNo, sourceFolder);
+                    string movedFolder = Path.Combine(folderName, sourceFolder);
                     WriteLogClass.WriteToLog(1, $"Moved {fileCount} file/s to \\{movedFolder} ....", 1);
                     return true;
                 }

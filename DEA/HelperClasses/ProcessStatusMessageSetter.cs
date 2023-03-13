@@ -34,6 +34,7 @@
 
         private static ProcessStatusMain GetProcessStatusMain(int emailResult, int ftpResult)
         {
+            // TODO 2: Have to refine this logic again. Seems I've to break this into another one to get the FTP code message.
             if ((emailResult == 1 || emailResult == 4) && (ftpResult == 1 || ftpResult == 4))
             {
                 return ProcessStatusMain.CompletedSuccessfully;
@@ -42,21 +43,13 @@
             {
                 return ProcessStatusMain.CompletedWithIssues;
             }
-            else if (emailResult == 1 && (ftpResult == 0 || ftpResult == 4))
+            else if (emailResult == 1 && (ftpResult == 0 || ftpResult == 2 || ftpResult == 4))
             {
                 return ProcessStatusMain.EmailProcessCompleted;
             }
-            else if (emailResult == 2 && (ftpResult == 0 || ftpResult == 4))
+            else if (emailResult == 2 && (ftpResult == 0 || ftpResult == 1 || ftpResult == 4))
             {
                 return ProcessStatusMain.EmailProcessEndedWithErrors;
-            }
-            else if (ftpResult == 1 && (emailResult == 0 || emailResult == 4))
-            {
-                return ProcessStatusMain.FTPProcessCompleted;
-            }
-            else if (ftpResult == 2 && (emailResult == 0 || emailResult == 4))
-            {
-                return ProcessStatusMain.FTPProcessEndedWithErrors;
             }
             else
             {
@@ -64,17 +57,26 @@
             }
         }
 
+        private static string GetFtpStatus(int ftpResult)
+        {
+            return ftpResult switch
+            {
+                1 => "FTP download completed",
+                2 or 3 => "FTP process completed with issues",
+                4 => "FTP folder empty",
+                _ => "Process terminated due to errors"
+            };
+        }
+
         private static string GetStatusProcessMessageMain(ProcessStatusMain processStatus, int emailResult, int ftpResult)
         {
             return processStatus switch
             {
-                ProcessStatusMain.CompletedSuccessfully => "Process completed successfully....",
-                ProcessStatusMain.CompletedWithIssues => "Process completed with issues....",
-                ProcessStatusMain.EmailProcessCompleted => $"Email process completed.... FTP code {ftpResult}....",
-                ProcessStatusMain.EmailProcessEndedWithErrors => $"Email process ended with errors.... FTP code {ftpResult}....",
-                ProcessStatusMain.FTPProcessCompleted => $"FTP process completed.... Email code {emailResult}....",
-                ProcessStatusMain.FTPProcessEndedWithErrors => $"FTP process ended with errors.... Email code {emailResult}....",
-                ProcessStatusMain.TerminatedDueToErrors => "Process terminated due to errors....",
+                ProcessStatusMain.CompletedSuccessfully => "Process completed successfully ....",
+                ProcessStatusMain.CompletedWithIssues => "Process completed with issues ....",
+                ProcessStatusMain.EmailProcessCompleted => $"Email process completed .... {GetFtpStatus(ftpResult)} ....",
+                ProcessStatusMain.EmailProcessEndedWithErrors => $"Email process ended with errors.... {GetFtpStatus(ftpResult)} ....",
+                ProcessStatusMain.TerminatedDueToErrors => "Process terminated due to errors ....",
                 _ => string.Empty,
             };
         }

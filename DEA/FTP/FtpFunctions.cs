@@ -39,7 +39,6 @@ namespace FtpFunctions
 
             // Client details retrived from the Json file.
             int clientID = FtpClientDetails.id;
-            string clientName = FtpClientDetails.ClientName!;
             string ftpType = FtpClientDetails.FtpDetails!.FtpType!.ToUpper();
             string ftpHostName = FtpClientDetails.FtpDetails!.FtpHostName!;
             string ftpHosIp = FtpClientDetails.FtpDetails.FtpHostIp!;

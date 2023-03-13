@@ -92,7 +92,7 @@ namespace FileFunctions
 
                 string jsonResult = JsonConvert.SerializeObject(TpsJsonRequest, Formatting.Indented);
 
-                returnResult = await SendFilesToRest(ftpConnect, jsonResult, filesToSend[0], customerId, customerProjectId, customerQueue, fileList.Count, ftpFileList, localFileList);
+                returnResult = await SendFilesToRest(ftpConnect, jsonResult, filesToSend[0], customerId, customerProjectId, customerQueue, fileList.Count, ftpFileList, localFileList, clientOrgNo);
 
                 return returnResult;
             }
@@ -112,7 +112,8 @@ namespace FileFunctions
                                                         string queue,
                                                         int fileCount,
                                                         IEnumerable<string> ftpFileList,
-                                                        string[] localFileList)
+                                                        string[] localFileList,
+                                                        string clientOrgNo)
         {
             try
             {
@@ -165,7 +166,8 @@ namespace FileFunctions
                 else
                 {
                     WriteLogClass.WriteToLog(0, $"Server status code: {serverResponse.StatusCode}, Server Response Error: {serverResponse.Content}", 0);
-                    if (HandleErrorFilesClass.MoveFilesToErrorFolder(fullFilePath, customerId))
+
+                    if (HandleErrorFilesClass.MoveFilesToErrorFolder(fullFilePath, customerId, clientOrgNo))
                     {
                         // This will run if it's not FTP.
                         if (clientDetails.FileDeliveryMethod.ToLower() == "email")
