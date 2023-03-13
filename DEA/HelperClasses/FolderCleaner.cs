@@ -1,28 +1,21 @@
 ﻿using FluentFTP;
+using System.Text.RegularExpressions;
 using WriteLog;
 
 namespace FolderCleaner
 {
     internal class FolderCleanerClass
     {
-        public static bool GetFolders(string folderPath, string type)
+        public static bool GetFolders(string folderPath)
         {
-            DirectoryInfo filePath;
-
-            if (type.ToLower() == "email")
-            {
-                filePath = Directory.GetParent(Path.GetDirectoryName(folderPath)!)!;
-            }
-            else
-            {
-                filePath = Directory.GetParent(Directory.GetParent(Path.GetDirectoryName(folderPath)!)!.FullName)!;
-            }
+            DirectoryInfo filePath = Directory.GetParent(Directory.GetParent(Path.GetDirectoryName(folderPath)!)!.FullName)!;
 
             if (Directory.Exists(filePath!.FullName))
             {
                 WriteLogClass.WriteToLog(1, "Cleaning download folder ....", 1);
 
-                string[] folderList = Directory.GetDirectories(filePath.FullName, "*.*", SearchOption.TopDirectoryOnly);
+                DirectoryInfo dirPath = new(filePath!.FullName);
+                IEnumerable<DirectoryInfo> folderList = dirPath.EnumerateDirectories("*.*", SearchOption.TopDirectoryOnly);
 
                 if (DeleteFolders(folderList))
                 {
@@ -37,36 +30,62 @@ namespace FolderCleaner
             return false;
         }
 
-        private static bool DeleteFolders(string[] folderList)
+        private static bool DeleteFolders(IEnumerable<DirectoryInfo> folderList)
         {
-            int loopCount = 0;
+            int fileLoopCount = 0;
+            int folderLoopCount = 0;
+            int folderCount = folderList.Count();
             
-            foreach (string folder in folderList)
+            foreach (DirectoryInfo folder in folderList)
             {
-                loopCount++;
-
-                if (Directory.Exists(folder))
+                if (Directory.Exists(folder.FullName))
                 {
-                    if (Directory.GetFiles(folder, "*.*", SearchOption.AllDirectories).Length > 0)
+                    IEnumerable<FileInfo> fileNames = folder.EnumerateFiles("*.*", SearchOption.AllDirectories);
+                    int fileCount = fileNames.Count();
+
+                    if (fileNames.Any())
                     {
                         try
-                        {   
-                            string folderPath = Directory.GetParent(folder)!.ToString();
-                            Directory.Delete(folderPath, true);
-
+                        {
+                            foreach (FileInfo fileName in fileNames)
+                            {
+                                fileName.Delete();
+                                fileLoopCount++;
+                            }
+                            if (fileLoopCount == fileCount)
+                            {
+                                folder.Delete(true);
+                            }
                         }
                         catch (IOException ex)
+                        {
+                            WriteLogClass.WriteToLog(0, $"Exception at folder and file delete: {ex.Message}", 0);
+                        }
+                    }
+                    else if (!fileNames.Any())
+                    {
+                        try
+                        {
+                            string folderPath = Directory.GetParent(folder.FullName)!.ToString();
+                            Directory.Delete(folderPath, true);                            
+                        }
+                        catch (Exception ex)
                         {
                             WriteLogClass.WriteToLog(0, $"Exception at folder delete: {ex.Message}", 0);
                         }
                     }
+                    folderLoopCount++;
                 }
             }
 
-            if (loopCount == folderList.Length)
+            if (folderLoopCount == folderCount)
             {
-                WriteLogClass.WriteToLog(1, $"Removed {folderList.Length} folder from download folder ....", 1);
+                WriteLogClass.WriteToLog(1, $"Removed {folderCount} folder from download folder ....", 1);
                 return true;
+            }
+            else
+            {
+                WriteLogClass.WriteToLog(1, $"Folder not removed. It's empty ....", 1);
             }
 
             return false;
@@ -100,7 +119,7 @@ namespace FolderCleaner
             return false;
         }
 
-        public static async Task<bool> DeleteFtpFiles(AsyncFtpClient ftpConnect, string ftpFileName)
+        private static async Task<bool> DeleteFtpFiles(AsyncFtpClient ftpConnect, string ftpFileName)
         {
             try
             {

@@ -5,36 +5,36 @@ namespace ConnectSftp
 {
     internal class ConnectSftpClass
     {
-        public static SftpClient ConnectSftp(string HostName, string HostIp, string UserName, string UserPassword)
+        public static SftpClient ConnectSftp(string hostName, string hostIp, string userName, string userPassword)
         {
             // SFTP implimention will be holted until it's needed.
-            ConnectionInfo ConnInfo = new ConnectionInfo(HostName, UserName, new PasswordAuthenticationMethod(UserName, UserPassword));
+            ConnectionInfo connInfo = new(hostName, userName, new PasswordAuthenticationMethod(userName, userPassword));
 
-            SftpClient SftpConnect = new SftpClient(ConnInfo);
+            SftpClient sftpConnect = new(connInfo);
 
             try
             {
-                SftpConnect.Connect();
+                sftpConnect.Connect();
                 WriteLogClass.WriteToLog(1, "SFTP Connection successful ....", 3);
             }
             catch
             {
                 WriteLogClass.WriteToLog(1, "Trying to connect using alt method ....", 3);
-                SftpConnect = ConnectSftpAlt(HostIp, UserName, UserPassword);
+                sftpConnect = ConnectSftpAlt(hostIp, userName, userPassword);
             }
 
-            return SftpConnect;
+            return sftpConnect;
         }
 
-        private static SftpClient ConnectSftpAlt(string _HostIp, string _UserName, string _UserPassword)
+        private static SftpClient ConnectSftpAlt(string _hostIp, string _userName, string _userPassword)
         {
-            ConnectionInfo ConnInfoAlt = new ConnectionInfo(_HostIp, _UserName, new PasswordAuthenticationMethod(_UserName, _UserPassword));
+            ConnectionInfo connInfoAlt = new(_hostIp, _userName, new PasswordAuthenticationMethod(_userName, _userPassword));
 
-            SftpClient SftpConnectAlt = new SftpClient(ConnInfoAlt);
+            SftpClient sftpConnectAlt = new(connInfoAlt);
 
             try
             {
-                SftpConnectAlt.Connect();
+                sftpConnectAlt.Connect();
                 WriteLogClass.WriteToLog(1, "SFTP Alt Connection successful....", 3);
             }
             catch (Exception ex)
@@ -42,7 +42,7 @@ namespace ConnectSftp
                 WriteLogClass.WriteToLog(0, $"Exception at SFTP connection: {ex.Message}", 0);
             }
 
-            return SftpConnectAlt;
+            return sftpConnectAlt;
         }
     }
 }

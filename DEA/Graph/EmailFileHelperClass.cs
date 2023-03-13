@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using FileFunctions;
 using ReadSettings;
 using WriteLog;
-using DEA;
+using GraphHelper;
 using GraphEmailFunctions;
 using GetMailFolderIds;
 

@@ -14,7 +14,7 @@ namespace FileFunctions
 {
     internal class FileFunctionsClass
     {
-        public static async Task<bool> SendToWebService(AsyncFtpClient ftpConnect,
+        public static async Task<int> SendToWebService(AsyncFtpClient ftpConnect,
                                                         string filePath,
                                                         int customerId,
                                                         IEnumerable<string> ftpFileList,
@@ -23,18 +23,18 @@ namespace FileFunctions
         {
             WriteLogClass.WriteToLog(1, "Starting file upload process .... ", 4);
 
-            UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+            UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
             UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId)!;
 
             List<string> acceptedExtentions = clientDetails.DocumentDetails!.DocumentExtensions!;
 
             string[] downloadedFiles = Directory.GetFiles(filePath, "*.*", SearchOption.TopDirectoryOnly).Where(f => acceptedExtentions.IndexOf(Path.GetExtension(f)) >= 0).ToArray();
 
-            string clientOrg = clientDetails.ClientOrgNo!;
+            // If recipientEmail not empty clientOrg = revipientEmail.
+            // If recipientEmail is empty clientOrg = clientDetails.ClientOrgNo
+            string clientOrg = recipientEmail ?? clientDetails.ClientOrgNo ?? throw new Exception("ClientOrg is null.");
 
-            clientOrg = !string.IsNullOrEmpty(recipientEmail) ? recipientEmail : null!;
-
-            if (await MakeJsonRequest(ftpConnect,
+            int returnResult = await MakeJsonRequest(ftpConnect,
                                       customerId,
                                       clientDetails.Token!,
                                       clientDetails.UserName!,
@@ -45,17 +45,12 @@ namespace FileFunctions
                                       clientDetails.ClientIdField!,
                                       downloadedFiles,
                                       ftpFileList,
-                                      localFileList))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+                                      localFileList);
+
+            return returnResult;
         }
 
-        private static async Task<bool> MakeJsonRequest(AsyncFtpClient ftpConnect,
+        private static async Task<int> MakeJsonRequest(AsyncFtpClient ftpConnect,
                                                         int customerId,
                                                         string customerToken,
                                                         string customerUserName,
@@ -68,52 +63,48 @@ namespace FileFunctions
                                                         IEnumerable<string> ftpFileList,
                                                         string[] localFileList)
         {
-            // Creating the file list to be added to the Json request.
-            List<TpsJasonStringClass.FileList> fileList = new();
-            foreach (var file in filesToSend)
-            {   
-                fileList.Add(new TpsJasonStringClass.FileList() { Name = Path.GetFileName(file), Data = Convert.ToBase64String(File.ReadAllBytes(file)) });
-            }
-
-            // Creating the field list to be added to the Json request.
-            List<TpsJasonStringClass.FieldList> idField = new()
-            {
-                new TpsJasonStringClass.FieldList() { Name = clientIdField, Value = clientOrgNo }
-            };
-
-            TpsJasonStringClass.TpsJsonObject TpsJsonRequest = new()
-            {
-                Token = $"{customerToken}",
-                Username = $"{customerUserName}",
-                TemplateKey = $"{customerTemplateKey}",
-                Queue = $"{customerQueue}",
-                ProjectID = $"{customerProjectId}",
-                Fields = idField,
-                Files = fileList
-            };
-
-            string result = JsonConvert.SerializeObject(TpsJsonRequest, Formatting.Indented);
-
+            int returnResult = 0;
             try
             {
-                if (await SendFilesToRest(ftpConnect, result, filesToSend[0], customerId, customerProjectId, customerQueue, fileList.Count, ftpFileList, localFileList))
+                // Creating the file list to be added to the Json request.
+                List<TpsJasonStringClass.FileList> fileList = new();
+                foreach (var file in filesToSend)
                 {
-                    return true;
+                    fileList.Add(new TpsJasonStringClass.FileList() { Name = Path.GetFileName(file), Data = Convert.ToBase64String(File.ReadAllBytes(file)) });
                 }
-                else
+
+                // Creating the field list to be added to the Json request.
+                List<TpsJasonStringClass.FieldList> idField = new()
                 {
-                    return false;
-                }
+                    new TpsJasonStringClass.FieldList() { Name = clientIdField, Value = clientOrgNo }
+                };
+
+                TpsJasonStringClass.TpsJsonObject TpsJsonRequest = new()
+                {
+                    Token = $"{customerToken}",
+                    Username = $"{customerUserName}",
+                    TemplateKey = $"{customerTemplateKey}",
+                    Queue = $"{customerQueue}",
+                    ProjectID = $"{customerProjectId}",
+                    Fields = idField,
+                    Files = fileList
+                };
+
+                string jsonResult = JsonConvert.SerializeObject(TpsJsonRequest, Formatting.Indented);
+
+                returnResult = await SendFilesToRest(ftpConnect, jsonResult, filesToSend[0], customerId, customerProjectId, customerQueue, fileList.Count, ftpFileList, localFileList, clientOrgNo);
+
+                return returnResult;
             }
             catch (Exception ex)
             {
                 WriteLogClass.WriteToLog(0, $"Exception at Json serialization: {ex.Message}", 0);
-                return false;
+                return returnResult;
             }
             
         }
 
-        private static async Task<bool> SendFilesToRest(AsyncFtpClient ftpConnect,
+        private static async Task<int> SendFilesToRest(AsyncFtpClient ftpConnect,
                                                         string jsonResult,
                                                         [NotNull]string fullFilePath,
                                                         int customerId,
@@ -121,54 +112,86 @@ namespace FileFunctions
                                                         string queue,
                                                         int fileCount,
                                                         IEnumerable<string> ftpFileList,
-                                                        string[] localFileList)
+                                                        string[] localFileList,
+                                                        string clientOrgNo)
         {
             try
             {
+                // Loads all the details from the customer details Json file.
+                UserConfigReaderClass.CustomerDetailsObject JsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+
+                // Just select the data corrosponding to the customer ID.
+                UserConfigReaderClass.Customerdetail clientDetails = JsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId)!;
+
                 // Creating rest api request.
-                var client = new RestClient("https://capture.exacta.no/");
+                RestClient client = new("https://capture.exacta.no/");
 
                 //var tpsRequest = new RestRequest("tps_processing/Import?");
-                var tpsRequest = new RestRequest("tps_test_processing/Import?") // Test service. Uncomment the above one and comment this one when putting to production.
+                RestRequest tpsRequest = new("tps_test_processing/Import?") // Test service. Uncomment the above one and comment this one when putting to production.
                 {
                     Method = Method.Post,
                     RequestFormat = DataFormat.Json
                 };
                 tpsRequest.AddBody(jsonResult);
 
-                var serverResponse = await client.ExecuteAsync(tpsRequest); // Executes the request and send to the server.
+                RestResponse serverResponse = await client.ExecuteAsync(tpsRequest); // Executes the request and send to the server.
+                string dirPath = Directory.GetParent(fullFilePath).FullName;
 
                 if (serverResponse.StatusCode == HttpStatusCode.OK)
                 {
                     WriteLogClass.WriteToLog(1, $"Uploaded {fileCount} file to project {projectId} using queue {queue} ....", 4);
-                    WriteLogClass.WriteToLog(1, $"Uploaded filenames: {WriteNamesToLogClass.GetFileNames(fullFilePath)}", 4);
+                    WriteLogClass.WriteToLog(1, $"Uploaded filenames: {WriteNamesToLogClass.GetFileNames(dirPath)}", 4);
 
                     // This will run if it's not FTP.
-                    if (ftpConnect == null)
+                    if (clientDetails.FileDeliveryMethod.ToLower() == "email")
                     {
-                        return FolderCleanerClass.GetFolders(fullFilePath, "email");
+                        if (FolderCleanerClass.GetFolders(fullFilePath))
+                        {
+                            return 1;
+                        }
                     }
                     else
                     {
                         if (await FolderCleanerClass.GetFtpPathAsync(ftpConnect, ftpFileList, localFileList))
                         {
                             // Deletes the file from local hold folder when sending is successful.
-                            return FolderCleanerClass.GetFolders(fullFilePath, string.Empty);                           
+                            if (FolderCleanerClass.GetFolders(dirPath))
+                            {
+                                return 1;
+                            }
                         }
                     }
-                    return false;
+                    return 0;
                 }
                 else
                 {
                     WriteLogClass.WriteToLog(0, $"Server status code: {serverResponse.StatusCode}, Server Response Error: {serverResponse.Content}", 0);
-                    HandleErrorFilesClass.MoveFilesToErrorFolder(fullFilePath, customerId);
-                    return false;
+
+                    if (HandleErrorFilesClass.MoveFilesToErrorFolder(fullFilePath, customerId, clientOrgNo))
+                    {
+                        // This will run if it's not FTP.
+                        if (clientDetails.FileDeliveryMethod.ToLower() == "email")
+                        {
+                            if (FolderCleanerClass.GetFolders(fullFilePath))
+                            {
+                                return 2;
+                            }
+                        }
+                        else
+                        {
+                            if (await FolderCleanerClass.GetFtpPathAsync(ftpConnect, ftpFileList, localFileList))
+                            {
+                                return 2;
+                            }
+                        }
+                    }
+                    return 0;
                 }
             }
             catch (Exception ex)
             {
                 WriteLogClass.WriteToLog(0, $"Exception at rest sharp request: {ex.Message}", 0);
-                return false;
+                return 0;
             }            
         }
     }

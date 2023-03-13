@@ -1,5 +1,4 @@
-﻿using Microsoft.Graph;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using WriteLog;
 
 namespace WriteNamesToLog
@@ -16,10 +15,10 @@ namespace WriteNamesToLog
             string returnFileNames = "";
             try
             {
-                DirectoryInfo dir = new(Path.GetDirectoryName(folderPath)!);
-                IEnumerable<string> fileNames = dir.GetFiles("*.*", SearchOption.TopDirectoryOnly).Select(fn => fn.Name);
+                DirectoryInfo dirInfo = new(folderPath);
+                IEnumerable<FileInfo> fileNames = dirInfo.EnumerateFiles("*.*", SearchOption.TopDirectoryOnly);
 
-                return returnFileNames = string.Join(", ", fileNames);
+                return returnFileNames = string.Join(", ", fileNames.Select(fn => fn.Name));
             }
             catch (Exception ex)
             {

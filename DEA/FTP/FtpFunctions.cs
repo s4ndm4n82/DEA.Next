@@ -1,4 +1,4 @@
-﻿using DEA;
+﻿using GraphHelper;
 using WriteLog;
 using ConnectFtp;
 using ConnectFtps;
@@ -6,6 +6,7 @@ using FluentFTP;
 using UserConfigReader;
 using FileFunctions;
 using FolderFunctions;
+using ProcessStatusMessageSetter;
 
 namespace FtpFunctions
 {
@@ -16,10 +17,10 @@ namespace FtpFunctions
         /// </summary>
         /// <param name="Customerid"></param>
         /// <returns></returns>
-        public static async Task<bool> GetFtpFiles(int Customerid)
+        public static async Task<int> GetFtpFiles(int Customerid)
         {
             // Loads all the details from the customer details Json file.
-            UserConfigReaderClass.CustomerDetailsObject JsonData = UserConfigReaderClass.ReadAppDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+            UserConfigReaderClass.CustomerDetailsObject JsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
 
             // Just select the data corrosponding to the customer ID.
             UserConfigReaderClass.Customerdetail clientDetails = JsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == Customerid)!;
@@ -29,14 +30,15 @@ namespace FtpFunctions
             {
                return await InitiateFtpDownload(clientDetails!);
             }
-            return false;
+            return 0;
         }
 
-        public static async Task<bool> InitiateFtpDownload(UserConfigReaderClass.Customerdetail FtpClientDetails)
+        public static async Task<int> InitiateFtpDownload(UserConfigReaderClass.Customerdetail FtpClientDetails)
         {
+            int downloadResult = 0;
+
             // Client details retrived from the Json file.
             int clientID = FtpClientDetails.id;
-            string clientName = FtpClientDetails.ClientName!;
             string ftpType = FtpClientDetails.FtpDetails!.FtpType!.ToUpper();
             string ftpHostName = FtpClientDetails.FtpDetails!.FtpHostName!;
             string ftpHosIp = FtpClientDetails.FtpDetails.FtpHostIp!;
@@ -58,14 +60,15 @@ namespace FtpFunctions
             }            
 
             string LocalFtpFolder = FolderFunctionsClass.CheckFolders("ftp");
-            string FtpHoldFolder;
+            string ftpHoldFolder;
+
             if (!string.IsNullOrEmpty(ftpSubFolder2))
             {
-                FtpHoldFolder = Path.Combine(LocalFtpFolder, ftpMainFolder!, ftpSubFolder1!, ftpSubFolder2, GraphHelper.FolderNameRnd(10));
+                ftpHoldFolder = Path.Combine(LocalFtpFolder, ftpMainFolder!, ftpSubFolder1!, ftpSubFolder2, GraphHelperClass.FolderNameRnd(10));
             }
             else
             {
-                FtpHoldFolder = Path.Combine(LocalFtpFolder, ftpMainFolder!, ftpSubFolder1!, GraphHelper.FolderNameRnd(10));
+                ftpHoldFolder = Path.Combine(LocalFtpFolder, ftpMainFolder!, ftpSubFolder1!, GraphHelperClass.FolderNameRnd(10));
             }
             
             AsyncFtpClient ftp = null!;
@@ -82,7 +85,7 @@ namespace FtpFunctions
             if (ftp == null)
             {
                 WriteLogClass.WriteToLog(1, "Connection to FTP server failed ....", 3);
-                return false;
+                return downloadResult;
             }
 
             using AsyncFtpClient ftpConnect = ftp!;
@@ -90,25 +93,20 @@ namespace FtpFunctions
             if (await ftpConnect!.DirectoryExists(ftpPath))
             {
                 WriteLogClass.WriteToLog(1, $"Starting file download from {ftpPath} ....", 3);
+
+                downloadResult = await DownloadFtpFiles(ftpConnect, ftpPath, ftpHoldFolder, clientID);
                 
-                if (await DownloadFtpFiles(ftpConnect, ftpPath, FtpHoldFolder, clientID))
-                {
-                    WriteLogClass.WriteToLog(1, $"Files from client {clientName} downloaded and uploaded for processing ....", 3);
-                    return true;
-                }
-                else
-                {
-                    WriteLogClass.WriteToLog(1, "File download process was not successful ....", 3);
-                    return false;
-                }
+                WriteLogClass.WriteToLog(ProcessStatusMessageSetterClass.SetMessageTypeOther(downloadResult), $"{ProcessStatusMessageSetterClass.SetProcessStatusOther(downloadResult, "ftp")}\n", 3);
+
+                await ftpConnect.Disconnect(); // Disconnects from the FTP server.  
             }
-            return false;
+            return downloadResult;
         }
 
-        public static async Task<bool> DownloadFtpFiles(AsyncFtpClient ftpConnect, string ftpPath, string ftpHoldFolder, int clientID)
+        public static async Task<int> DownloadFtpFiles(AsyncFtpClient ftpConnect, string ftpPath, string ftpHoldFolder, int clientID)
         {
             // To capture the loop success flags.
-            bool fileNameFlag = false;
+            int fileNameFlag = 0;
 
             // Initiate FTP connect and gets the file list from the FTP server.
             List<FtpListItem> ftpFilesOnly = new List<FtpListItem>();
@@ -134,11 +132,11 @@ namespace FtpFunctions
             if (downloadedFileList.Count > 0)
             {
                 string lastFolderName = Path.GetFileName(ftpHoldFolder);                
-                string parentName = Directory.GetParent(Path.GetFileName(ftpHoldFolder))!.Name;
+                string parentName = Directory.GetParent(ftpHoldFolder)!.Name;
 
                 WriteLogClass.WriteToLog(1, $"Downloaded {downloadedFileList.Count} file/s from {ftpPath} to \\{parentName}\\{lastFolderName} folder ....", 3);
 
-                localFiles = Directory.GetFiles(ftpHoldFolder, "*.*", SearchOption.AllDirectories);
+                localFiles = Directory.GetFiles(ftpHoldFolder, "*.*", SearchOption.TopDirectoryOnly);
 
                 foreach (string ftpFile in filesToDownload)
                 {
@@ -150,12 +148,12 @@ namespace FtpFunctions
 
                         if (ftpFileName.Equals(localFileName, StringComparison.OrdinalIgnoreCase))
                         {
-                            fileNameFlag = true;
+                            fileNameFlag = 1;
                         }
                     }
                 }
 
-                if (fileNameFlag)
+                if (fileNameFlag == 1)
                 {
                     WriteLogClass.WriteToLog(1, $"Ftp file count: {filesToDownload.Count()}, Local file count: {localFiles.Length}", 3);
 
@@ -164,13 +162,12 @@ namespace FtpFunctions
                 else
                 {
                     WriteLogClass.WriteToLog(1, $"Ftp file count: {filesToDownload.Count()}, Local file count: {localFiles.Length} files doesn't match", 3);
-                    return false;
+                    return 3;
                 }
             }
             else
-            {
-                WriteLogClass.WriteToLog(1, "Folder empty ... skipping", 3);
-                return false;
+            {   
+                return 4;
             }
         }        
     }
