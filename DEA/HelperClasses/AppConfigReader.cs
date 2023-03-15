@@ -3,7 +3,7 @@ using WriteLog;
 
 namespace AppConfigReader
 {
-    internal class AppConfigReaderClass
+    public class AppConfigReaderClass
     {
 
         public class AppSettingsRoot
@@ -15,6 +15,7 @@ namespace AppConfigReader
         public class Programsettings
         {
             public int MaxEmails { get; set; }
+            public int LogsDeleteAfter { get; set; }
         }
 
         public class Graphconfig

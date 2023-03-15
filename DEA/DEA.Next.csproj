@@ -36,9 +36,6 @@
 	<None Update="Config\appsettings.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</None>
-    <None Update="Config\dea.conf.bkp">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
 	<None Update="Config\CustomerConfig.json">
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</None>
