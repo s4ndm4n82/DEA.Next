@@ -27,7 +27,7 @@ namespace GraphGetAttachments
 
             int result = 0;
             // Get the folder ID's after searching the folder names.
-            GetMailFolderIdsClass.clientFolderId folderIds = await GetMailFolderIdsClass.GetChlidFolderIds<GetMailFolderIdsClass>(graphClient, clientEmail, mainMailFolder, subFolder1, subFolder2);
+            GetMailFolderIdsClass.ClientFolderId folderIds = await GetMailFolderIdsClass.GetChlidFolderIds<GetMailFolderIdsClass>(graphClient, clientEmail, mainMailFolder, subFolder1, subFolder2);
 
             if (folderIds != null)
             {

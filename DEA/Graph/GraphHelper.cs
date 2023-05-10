@@ -4,7 +4,6 @@ using System.Net.Http.Headers;
 using WriteLog;
 using GraphGetAttachments;
 using UserConfigReader;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using AppConfigReader;
 
@@ -45,7 +44,8 @@ namespace GraphHelper
             if (!clientDetails!.EmailDetails!.MainInbox.IsNullOrEmpty())
             {
                 try
-                {                    // Calls the function to read ATC emails.
+                {
+                    // Calls the function to read ATC emails.
                     result = await GraphGetAttachmentsClass.GetEmailsAttacments(graphClient!, clientDetails.EmailDetails.EmailAddress!,
                                                                                 clientDetails.EmailDetails.MainInbox!, clientDetails.EmailDetails.SubInbox1!,
                                                                                 clientDetails.EmailDetails.SubInbox2!, customerId);

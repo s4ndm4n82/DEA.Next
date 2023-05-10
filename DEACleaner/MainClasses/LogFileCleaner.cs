@@ -1,22 +1,17 @@
 ﻿using AppConfigReader;
-using FolderFunctions;
+using FindFolder;
 using WriteLog;
 
-namespace LogFileCleanerClass
+namespace LogFileCleaner
 {
-    internal class LogFileCleaner
+    internal class LogFileCleanerClass
     {
         public static int StartCleaner()
         {
             AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
             AppConfigReaderClass.Programsettings programsettings = jsonData.ProgramSettings;
-
-            int logDeleteDays = programsettings.LogsDeleteAfter;
-            //DirectoryInfo logFolderPath = new(FolderFunctionsClass.CheckFolders("logs"));
-            DirectoryInfo logFolderPath = new(@"G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\bin\Debug\net6.0\Logs");            
-            Console.WriteLine(logFolderPath);
-
-            return LogFileDeleter(logFolderPath, logDeleteDays);
+            
+            return LogFileDeleter(FindFoldersClass.FindFolder("logs"), programsettings.LogsDeleteAfter);
         }
 
         private static int LogFileDeleter(DirectoryInfo folderPath, int maxDays)
@@ -30,8 +25,7 @@ namespace LogFileCleanerClass
             {
                 foreach (FileInfo logFile in logFiles)
                 {
-                    //logFile.Delete();
-                    Console.WriteLine(logFile.Name);
+                    logFile.Delete();
                     loopCounter++;
                 }
 

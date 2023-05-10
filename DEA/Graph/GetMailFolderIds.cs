@@ -13,7 +13,7 @@ namespace GetMailFolderIds
         private static IMailFolderChildFoldersCollectionPage? _inboxSubFolder1;
         private static IMailFolderChildFoldersCollectionPage? _inboxSubFolder2;
 
-        public class clientFolderId
+        public class ClientFolderId
         {
             public string? clientMainFolderId { get; set; }
             public string? clientSubFolderId1 { get; set; }
@@ -30,9 +30,9 @@ namespace GetMailFolderIds
         /// <param name="clientSubFolderName1"></param>
         /// <param name="clientSubfolderName2"></param>
         /// <returns></returns>
-        public static async Task<clientFolderId> GetChlidFolderIds<T>([NotNull] GraphServiceClient graphClient, string clientEmail, string clientMainFolderName, string clientSubFolderName1, string clientSubfolderName2)
+        public static async Task<ClientFolderId> GetChlidFolderIds<T>([NotNull] GraphServiceClient graphClient, string clientEmail, string clientMainFolderName, string clientSubFolderName1, string clientSubfolderName2)
         {
-            var folderId = new clientFolderId();
+            var folderId = new ClientFolderId();
 
             if (!string.IsNullOrEmpty(clientMainFolderName))
             {

@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DEA.Next", "DEA\DEA.Next.cs
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DEACleaner", "DEACleaner\DEACleaner.csproj", "{6CBF22F7-C0F9-4A88-9592-A0BC33D0FD3C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DEAMailer", "DEAMailer\DEAMailer.csproj", "{C36EEAB3-01CC-4A2E-91F4-FF70774FF72D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{6CBF22F7-C0F9-4A88-9592-A0BC33D0FD3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CBF22F7-C0F9-4A88-9592-A0BC33D0FD3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CBF22F7-C0F9-4A88-9592-A0BC33D0FD3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C36EEAB3-01CC-4A2E-91F4-FF70774FF72D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C36EEAB3-01CC-4A2E-91F4-FF70774FF72D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C36EEAB3-01CC-4A2E-91F4-FF70774FF72D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C36EEAB3-01CC-4A2E-91F4-FF70774FF72D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

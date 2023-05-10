@@ -9,6 +9,8 @@ namespace AppConfigReader
         public class AppSettingsRoot
         {
             public Programsettings ProgramSettings { get; set; }
+            public Domainsettings DomainSettings { get; set; }
+            public Emailserversettings EmailServerSettings { get; set; }
             public Graphconfig GraphConfig { get; set; }
         }
 
@@ -16,6 +18,39 @@ namespace AppConfigReader
         {
             public int MaxEmails { get; set; }
             public int LogsDeleteAfter { get; set; }
+            public bool SnedErrorEmai { get; set; }
+        }
+
+        public class Domainsettings
+        {
+            public string MainDomain { get; set; }
+            public string RestRequest { get; set; }
+        }
+
+        public class Emailserversettings
+        {
+            public Serversettings ServerSettings { get; set; }
+            public Credntials Credntials { get; set; }
+            public Emailadresses EmailAdresses { get; set; }
+        }
+
+        public class Serversettings
+        {
+            public string SmtpServer { get; set; }
+            public int Port { get; set; }
+        }
+
+        public class Credntials
+        {
+            public string UserName { get; set; }
+            public string Password { get; set; }
+        }
+
+        public class Emailadresses
+        {
+            public string FromEmail { get; set; }
+            public string ReplyEmail { get; set; }
+            public string[] ToEmail { get; set; }
         }
 
         public class Graphconfig
@@ -27,7 +62,6 @@ namespace AppConfigReader
             public string ClientId { get; set; }
             public string[] Scopes { get; set; }
         }
-
 
         public static AppSettingsRoot ReadAppDotConfig()
         {

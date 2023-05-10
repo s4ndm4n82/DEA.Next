@@ -9,6 +9,7 @@ using WriteNamesToLog;
 using FolderCleaner;
 using HandleErrorFiles;
 using FluentFTP;
+using AppConfigReader;
 
 namespace FileFunctions
 {
@@ -118,16 +119,24 @@ namespace FileFunctions
             try
             {
                 // Loads all the details from the customer details Json file.
-                UserConfigReaderClass.CustomerDetailsObject JsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+                UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
 
                 // Just select the data corrosponding to the customer ID.
-                UserConfigReaderClass.Customerdetail clientDetails = JsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId)!;
+                UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId)!;
+
+                // Loading all the settings from the JSON file.
+                AppConfigReaderClass.AppSettingsRoot jsonDataProgram = AppConfigReaderClass.ReadAppDotConfig();
+
+                // Seleceting the domain setting from the domain section of the JSON.
+                AppConfigReaderClass.Domainsettings tpsRequestSettings = jsonDataProgram.DomainSettings;
+
 
                 // Creating rest api request.
-                RestClient client = new("https://capture.exacta.no/");
+                //RestClient client = new("https://capture.exacta.no/");
+                RestClient client = new(tpsRequestSettings.MainDomain);
 
-                //var tpsRequest = new RestRequest("tps_processing/Import?");
-                RestRequest tpsRequest = new("tps_test_processing/Import?") // Test service. Uncomment the above one and comment this one when putting to production.
+                RestRequest tpsRequest = new(tpsRequestSettings.RestRequest)
+                //RestRequest tpsRequest = new("tps_test_processing/Import?") // Test service. Uncomment the above one and comment this one when putting to production.
                 {
                     Method = Method.Post,
                     RequestFormat = DataFormat.Json
