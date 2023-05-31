@@ -10,6 +10,7 @@ using FolderCleaner;
 using HandleErrorFiles;
 using FluentFTP;
 using AppConfigReader;
+using Microsoft.Graph;
 
 namespace FileFunctions
 {
@@ -29,7 +30,7 @@ namespace FileFunctions
 
             List<string> acceptedExtentions = clientDetails.DocumentDetails!.DocumentExtensions!;
 
-            string[] downloadedFiles = Directory.GetFiles(filePath, "*.*", SearchOption.TopDirectoryOnly).Where(f => acceptedExtentions.IndexOf(Path.GetExtension(f)) >= 0).ToArray();
+            string[] downloadedFiles = System.IO.Directory.GetFiles(filePath, "*.*", SearchOption.TopDirectoryOnly).Where(f => acceptedExtentions.IndexOf(Path.GetExtension(f)) >= 0).ToArray();
 
             // If recipientEmail not empty clientOrg = revipientEmail.
             // If recipientEmail is empty clientOrg = clientDetails.ClientOrgNo
@@ -71,7 +72,7 @@ namespace FileFunctions
                 List<TpsJasonStringClass.FileList> fileList = new();
                 foreach (var file in filesToSend)
                 {
-                    fileList.Add(new TpsJasonStringClass.FileList() { Name = Path.GetFileName(file), Data = Convert.ToBase64String(File.ReadAllBytes(file)) });
+                    fileList.Add(new TpsJasonStringClass.FileList() { Name = Path.GetFileName(file), Data = Convert.ToBase64String(System.IO.File.ReadAllBytes(file)) });
                 }
 
                 // Creating the field list to be added to the Json request.
@@ -132,11 +133,8 @@ namespace FileFunctions
 
 
                 // Creating rest api request.
-                //RestClient client = new("https://capture.exacta.no/");
-                RestClient client = new(tpsRequestSettings.MainDomain);
-
-                RestRequest tpsRequest = new(tpsRequestSettings.RestRequest)
-                //RestRequest tpsRequest = new("tps_test_processing/Import?") // Test service. Uncomment the above one and comment this one when putting to production.
+                RestClient client = new($"{tpsRequestSettings.MainDomain}");
+                RestRequest tpsRequest = new($"{tpsRequestSettings.RestRequest}")
                 {
                     Method = Method.Post,
                     RequestFormat = DataFormat.Json
@@ -144,7 +142,7 @@ namespace FileFunctions
                 tpsRequest.AddBody(jsonResult);
 
                 RestResponse serverResponse = await client.ExecuteAsync(tpsRequest); // Executes the request and send to the server.
-                string dirPath = Directory.GetParent(fullFilePath).FullName;
+                string dirPath = System.IO.Directory.GetParent(fullFilePath).FullName;
 
                 if (serverResponse.StatusCode == HttpStatusCode.OK)
                 {

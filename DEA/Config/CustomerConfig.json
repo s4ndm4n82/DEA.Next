@@ -2,11 +2,11 @@
   "CustomerDetails": [
     {
       "id": 1,
-      "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZGNfaW1wb3J0IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiTm9ybWFsIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI1OGRiZTAzOC1mNGIwLTQzNjYtYjJiYi03ZTZiZjU1YzBiOGQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6ImM0YzQwYzk0LTdiMmEtNDI0ZS04MzVlLWVkODA5MmYyODE0YyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvdXNlcmRhdGEiOiJ7XCJDYW5VcGxvYWRcIjp0cnVlLFwiQ2FuRGVsZXRlXCI6dHJ1ZSxcIkNhbkV4cG9ydFwiOnRydWUsXCJDYW5Bc3NpZ25cIjp0cnVlLFwiQ2FuUHJvY2Vzc1wiOnRydWUsXCJDYW5VcGRhdGVcIjp0cnVlfSIsImV4cCI6MTcwNzU1NTIwNywiaXNzIjoid3d3LmRpZ2l0YWxjYXB0dXJlLm5vIiwiYXVkIjoiaHR0cHM6Ly93d3cuZGlnaXRhbGNhcHR1cmUubm8vdHBzIn0.LwJFHuAjo-F7UT6NQqblzYS_GWtd70rM9GUYlFzMn4E",
-      "UserName": "dcimport",
+      "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiaW1wb3J0X2VmYWN0byIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImltcG9ydEBlZmFjdG8uY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI3MmJlYzAyMy00NzJhLTQyNDEtOGRjZS00Njg4YWM0MGMzYTQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6Ijk0NGNmZDU2LTkxZDAtNGMzNC04ZWFjLWEwMmQzYzMzNDc0ZCIsImV4cCI6MTcxNTMzMTUyNywiaXNzIjoid3d3LmRpZ2l0YWxjYXB0dXJlLm5vIiwiYXVkIjoiaHR0cHM6Ly93d3cuZGlnaXRhbGNhcHR1cmUubm8vdHBzIn0.bryqn7oK4PYgNeDm2RFwyU6ua_IcrDEnZLlnR05Suuw",
+      "UserName": "import_efacto",
       "TemplateKey": "",
-      "Queue": "6",
-      "ProjetID": "0c298408-76b9-4f4c-9941-edb101126329",
+      "Queue": "0",
+      "ProjetID": "d33f2483-c79f-4110-a0ab-e234fbcf37a0",
       "MainCustomer": "Aksesspunkt",
       "ClientName": "Duett",
       "ClientOrgNo": "932971917",
@@ -14,13 +14,13 @@
       "FileDeliveryMethod": "FTP",
       "FtpDetails": {
         "FtpType": "FTP",
-        "FtpHostName": "localhost",
+        "FtpHostName": "ftp.digiacc.no",
         "FtpHostIp": "",
-        "FtpUser": "testuser",
-        "FtpPassword": "jackkills",
-        "FtpMainFolder": "Aksesspunkt",
-        "FtpSubFolder1": "Duett",
-        "FtpSubFolder2": ""
+        "FtpUser": "ftp.digiacc.no|EHFPortalConvert",
+        "FtpPassword": "Nt*N-9&z!V9]mPve",
+        "FtpMainFolder": "Navitro_importvic",
+        "FtpSubFolder1": "932971917",
+        "FtpSubFolder2": "FTPTestFolder"
       },
       "EmailDetails": {
         "EmailAddress": "",
@@ -37,16 +37,16 @@
     },
     {
       "id": 2,
-      "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZGNfaW1wb3J0IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiTm9ybWFsIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI1OGRiZTAzOC1mNGIwLTQzNjYtYjJiYi03ZTZiZjU1YzBiOGQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6ImM0YzQwYzk0LTdiMmEtNDI0ZS04MzVlLWVkODA5MmYyODE0YyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvdXNlcmRhdGEiOiJ7XCJDYW5VcGxvYWRcIjp0cnVlLFwiQ2FuRGVsZXRlXCI6dHJ1ZSxcIkNhbkV4cG9ydFwiOnRydWUsXCJDYW5Bc3NpZ25cIjp0cnVlLFwiQ2FuUHJvY2Vzc1wiOnRydWUsXCJDYW5VcGRhdGVcIjp0cnVlfSIsImV4cCI6MTcwNzU1NTIwNywiaXNzIjoid3d3LmRpZ2l0YWxjYXB0dXJlLm5vIiwiYXVkIjoiaHR0cHM6Ly93d3cuZGlnaXRhbGNhcHR1cmUubm8vdHBzIn0.LwJFHuAjo-F7UT6NQqblzYS_GWtd70rM9GUYlFzMn4E",
-      "UserName": "dcimport",
+      "Token": "",
+      "UserName": "",
       "TemplateKey": "",
-      "Queue": "6",
-      "ProjetID": "0c298408-76b9-4f4c-9941-edb101126329",
-      "MainCustomer": "DigiAcc",
-      "ClientName": "Direct",
+      "Queue": "",
+      "ProjetID": "",
+      "MainCustomer": "",
+      "ClientName": "",
       "ClientOrgNo": "",
-      "ClientIdField": "Internal ID",
-      "FileDeliveryMethod": "email",
+      "ClientIdField": "",
+      "FileDeliveryMethod": "",
       "FtpDetails": {
         "FtpType": "",
         "FtpHostName": "",
@@ -58,8 +58,8 @@
         "FtpSubFolder2": ""
       },
       "EmailDetails": {
-        "EmailAddress": "sandaruwan@efakturamottak.no",
-        "MainInbox": "Level 1",
+        "EmailAddress": "",
+        "MainInbox": "",
         "SubInbox1": "",
         "SubInbox2": ""
       },
