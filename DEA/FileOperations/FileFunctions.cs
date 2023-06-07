@@ -10,7 +10,6 @@ using FolderCleaner;
 using HandleErrorFiles;
 using FluentFTP;
 using AppConfigReader;
-using Microsoft.Graph;
 
 namespace FileFunctions
 {
@@ -142,7 +141,7 @@ namespace FileFunctions
                 tpsRequest.AddBody(jsonResult);
 
                 RestResponse serverResponse = await client.ExecuteAsync(tpsRequest); // Executes the request and send to the server.
-                string dirPath = System.IO.Directory.GetParent(fullFilePath).FullName;
+                string dirPath = Directory.GetParent(fullFilePath).FullName;
 
                 if (serverResponse.StatusCode == HttpStatusCode.OK)
                 {

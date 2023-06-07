@@ -3,7 +3,7 @@ using WriteLog;
 
 namespace UserConfigReader
 {
-    internal class UserConfigReaderClass
+    public class UserConfigReaderClass
     {
         public class CustomerDetailsObject
         {
