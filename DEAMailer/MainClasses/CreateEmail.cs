@@ -1,7 +1,8 @@
 ﻿using System.Text.RegularExpressions;
+using Microsoft.IdentityModel.Tokens;
 using WriteLog;
 using UserConfigReader;
-using Microsoft.IdentityModel.Tokens;
+using Emailer;
 
 namespace CreatEmail
 {
@@ -44,7 +45,7 @@ namespace CreatEmail
                             Array.Resize(ref detailsArray, detailsArray.Length + 1);
 
                             // [^1] is equal to [detailsArray.Length - 1]. Which add the value to the last index of the array.
-                            detailsArray[^1] = "- Client " + clientDetails.ClientName + " has files " + emailInfor.FileCount + " error folder.";
+                            detailsArray[^1] = " - Client " + clientDetails.ClientName + " has files " + emailInfor.FileCount + " error folder.";
                         }
                     }
                     else
@@ -59,24 +60,39 @@ namespace CreatEmail
                 }
                 else
                 {
-                    WriteLogClass.WriteToLog(0, "Client details array is empty.", 0);
+                    WriteLogClass.WriteToLog(0,"Client details array is empty.", 0);
                 }
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(0, $"Exeption at SartCreatingEmail under CreatEmailClass: {ex.Message}", 0);
+                WriteLogClass.WriteToLog(0,$"Exeption at SartCreatingEmail under CreatEmailClass: {ex.Message}", 0);
             }
             return 0;
         }
 
         public static int CreatEmailBody(string[] detailsArray, int folderCount)
         {
-            string folderDetails = string.Join(Environment.NewLine, detailsArray);
-            string emailBody = $@"There a total of {folderCount} problem folder/s waiting in error DEA.Next folder.{Environment.NewLine}{Environment.NewLine}{folderDetails}";
+            try
+            {
+                string folderDetails = string.Join(Environment.NewLine, detailsArray);
+                string emailBody = $@"There a total of {folderCount} problem folder/s waiting in error DEA.Next folder.{Environment.NewLine}{Environment.NewLine}{folderDetails}";
 
-            Console.WriteLine(emailBody);
-
-            return 0;
+                if(!folderDetails.IsNullOrEmpty())
+                {
+                    EmailerClass.EmailSenderHandler(emailBody);
+                    return 1;
+                }
+                else
+                {
+                    WriteLogClass.WriteToLog(1,"Folder details array was empty or set to null.", 1);
+                    return 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(0,$"Exeption at CreatEmailBody CreatEmailClass: {ex.Message}", 0);
+                return 0;
+            }            
         }
     }
 }

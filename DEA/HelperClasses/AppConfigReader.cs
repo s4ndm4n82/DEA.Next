@@ -31,7 +31,7 @@ namespace AppConfigReader
         {
             public Serversettings ServerSettings { get; set; }
             public Credntials Credntials { get; set; }
-            public Emailadresses EmailAdresses { get; set; }
+            public Emailsettings EmailSettings { get; set; }
         }
 
         public class Serversettings
@@ -46,11 +46,12 @@ namespace AppConfigReader
             public string Password { get; set; }
         }
 
-        public class Emailadresses
+        public class Emailsettings
         {
             public string FromEmail { get; set; }
             public string ReplyEmail { get; set; }
             public string[] ToEmail { get; set; }
+            public string Subject { get; set; }
         }
 
         public class Graphconfig
