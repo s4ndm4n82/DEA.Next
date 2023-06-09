@@ -45,7 +45,7 @@ namespace CreatEmail
                             Array.Resize(ref detailsArray, detailsArray.Length + 1);
 
                             // [^1] is equal to [detailsArray.Length - 1]. Which add the value to the last index of the array.
-                            detailsArray[^1] = " - Client " + clientDetails.ClientName + " has files " + emailInfor.FileCount + " error folder.";
+                            detailsArray[^1] = " - Client " + clientDetails.ClientName + " has " + emailInfor.FileCount + " files in the error folder.";
                         }
                     }
                     else

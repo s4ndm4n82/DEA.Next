@@ -33,11 +33,11 @@ namespace Emailer
             try
             {
                 smtpClient.Send(emailMessage);
-                Console.WriteLine("Message sent successfully.");
+                WriteLogClass.WriteToLog(1,"Message sent successfully.",1);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error sending email: {0}", ex.Message);
+                WriteLogClass.WriteToLog(0,$"Error sending email: {ex.Message}",0);
             }
 
             return 0;
