@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net;
-using System.Net.Mail;
+﻿using System.Net.Mail;
 using WriteLog;
 using AppConfigReader;
 
