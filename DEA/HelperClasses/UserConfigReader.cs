@@ -12,8 +12,7 @@ namespace UserConfigReader
 
         public class Customerdetail
         {
-            public int id { get; set; }
-            public Domaindetails DomainDetails { get; set; }
+            public int id { get; set; }            
             public string? Token { get; set; }
             public string? UserName { get; set; }
             public string? TemplateKey { get; set; }
@@ -24,6 +23,7 @@ namespace UserConfigReader
             public string? ClientOrgNo { get; set; }
             public string? ClientIdField { get; set; }
             public string? FileDeliveryMethod { get; set; }
+            public Domaindetails DomainDetails { get; set; }
             public Ftpdetails? FtpDetails { get; set; }
             public Emaildetails? EmailDetails { get; set; }
             public Documentdetails? DocumentDetails { get; set; }

@@ -1,12 +1,5 @@
-﻿using Microsoft.Graph;
-using System.Diagnostics.CodeAnalysis;
-using System.Text.RegularExpressions;
-using FileFunctions;
-using ReadSettings;
+﻿using System.Text.RegularExpressions;
 using WriteLog;
-using GraphHelper;
-using GraphEmailFunctions;
-using GetMailFolderIds;
 
 namespace EmailFileHelper
 {
