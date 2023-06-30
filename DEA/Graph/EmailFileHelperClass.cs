@@ -24,11 +24,11 @@ namespace EmailFileHelper
         }
         public static bool FileDownloader(string DownloadFolderPath, string DownloadFileName, byte[] DownloadFileData)
         {
-            if (!System.IO.Directory.Exists(DownloadFolderPath))
+            if (!Directory.Exists(DownloadFolderPath))
             {
                 try
                 {
-                    System.IO.Directory.CreateDirectory(DownloadFolderPath);
+                    Directory.CreateDirectory(DownloadFolderPath);
                 }
                 catch (Exception ex)
                 {
@@ -41,7 +41,7 @@ namespace EmailFileHelper
 
                 // Writes the file on to the local hard disk.
                 // If same file name exists it will be renamed.
-                System.IO.File.WriteAllBytes(FileRenamer(DownloadFolderPath, DownloadFileName), DownloadFileData);
+                File.WriteAllBytes(FileRenamer(DownloadFolderPath, DownloadFileName), DownloadFileData);
                 return true;
             }
             catch (Exception ex)
@@ -59,7 +59,7 @@ namespace EmailFileHelper
             var FilePathOnly = Path.GetDirectoryName(FullToDownloadFile);
             int Count = 1;
 
-            while (System.IO.File.Exists(FullToDownloadFile)) // If file exists starts to rename from next file.
+            while (File.Exists(FullToDownloadFile)) // If file exists starts to rename from next file.
             {
                 var NewFileName = string.Format("{0}({1})", FileNameOnly, Count++); // Makes the new file name.
                 FullToDownloadFile = Path.Combine(FilePathOnly!, NewFileName + FileExtention); // Set tthe new path as the download file path.
