@@ -9,7 +9,6 @@ using WriteNamesToLog;
 using FolderCleaner;
 using HandleErrorFiles;
 using FluentFTP;
-using AppConfigReader;
 
 namespace FileFunctions
 {
@@ -124,20 +123,14 @@ namespace FileFunctions
                 // Just select the data corrosponding to the customer ID.
                 UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId)!;
 
-                // Loading all the settings from the JSON file.
-                AppConfigReaderClass.AppSettingsRoot jsonDataProgram = AppConfigReaderClass.ReadAppDotConfig();
-
-                // Seleceting the domain setting from the domain section of the JSON.
-                AppConfigReaderClass.Domainsettings tpsRequestSettings = jsonDataProgram.DomainSettings;
-
-
                 // Creating rest api request.
-                RestClient client = new($"{tpsRequestSettings.MainDomain}");
-                RestRequest tpsRequest = new($"{tpsRequestSettings.RestRequest}")
+                RestClient client = new($"{clientDetails.DomainDetails.MainDomain}");
+                RestRequest tpsRequest = new($"{clientDetails.DomainDetails.TpsRequestUrl}")
                 {
                     Method = Method.Post,
                     RequestFormat = DataFormat.Json
-                };
+                };               
+
                 tpsRequest.AddBody(jsonResult);
 
                 RestResponse serverResponse = await client.ExecuteAsync(tpsRequest); // Executes the request and send to the server.

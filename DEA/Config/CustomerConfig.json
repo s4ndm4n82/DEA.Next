@@ -2,25 +2,29 @@
   "CustomerDetails": [
     {
       "id": 1,
-      "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiaW1wb3J0X2VmYWN0byIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImltcG9ydEBlZmFjdG8uY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI3MmJlYzAyMy00NzJhLTQyNDEtOGRjZS00Njg4YWM0MGMzYTQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6Ijk0NGNmZDU2LTkxZDAtNGMzNC04ZWFjLWEwMmQzYzMzNDc0ZCIsImV4cCI6MTcxNTMzMTUyNywiaXNzIjoid3d3LmRpZ2l0YWxjYXB0dXJlLm5vIiwiYXVkIjoiaHR0cHM6Ly93d3cuZGlnaXRhbGNhcHR1cmUubm8vdHBzIn0.bryqn7oK4PYgNeDm2RFwyU6ua_IcrDEnZLlnR05Suuw",
-      "UserName": "import_efacto",
+      "DomainDetails": {
+        "MainDomain": "https://capture.exacta.no/",
+        "TpsRequestUrl": "tps_test_processing/Import?"
+      },
+      "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZGNfaW1wb3J0IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiaW1wb3J0QGRpZ2l0YWxjYXB0dXJlLm5vIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI1OGRiZTAzOC1mNGIwLTQzNjYtYjJiYi03ZTZiZjU1YzBiOGQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6ImM0YzQwYzk0LTdiMmEtNDI0ZS04MzVlLWVkODA5MmYyODE0YyIsImV4cCI6MTcxOTU2NDM5MywiaXNzIjoid3d3LmRpZ2l0YWxjYXB0dXJlLm5vIiwiYXVkIjoiaHR0cHM6Ly93d3cuZGlnaXRhbGNhcHR1cmUubm8vdHBzIn0.KKzq2ubLLYQA2GinbtYkBvikkQQQRKX2Qr3HGY2h5uc",
+      "UserName": "dc_import",
       "TemplateKey": "",
-      "Queue": "0",
-      "ProjetID": "d33f2483-c79f-4110-a0ab-e234fbcf37a0",
+      "Queue": "6",
+      "ProjetID": "0c298408-76b9-4f4c-9941-edb101126329",
       "MainCustomer": "Aksesspunkt",
       "ClientName": "Duett",
       "ClientOrgNo": "932971917",
-      "ClientIdField": "Internal ID",
+      "ClientIdField": "Customer Organization No",
       "FileDeliveryMethod": "FTP",
       "FtpDetails": {
         "FtpType": "FTP",
-        "FtpHostName": "ftp.digiacc.no",
+        "FtpHostName": "localhost",
         "FtpHostIp": "",
-        "FtpUser": "ftp.digiacc.no|EHFPortalConvert",
-        "FtpPassword": "Nt*N-9&z!V9]mPve",
-        "FtpMainFolder": "Navitro_importvic",
-        "FtpSubFolder1": "932971917",
-        "FtpSubFolder2": "FTPTestFolder"
+        "FtpUser": "testuser",
+        "FtpPassword": "jackkills",
+        "FtpMainFolder": "Aksesspunkt",
+        "FtpSubFolder1": "Duett",
+        "FtpSubFolder2": ""
       },
       "EmailDetails": {
         "EmailAddress": "",
@@ -37,6 +41,10 @@
     },
     {
       "id": 2,
+      "DomainDetails": {
+        "MainDomain": "",
+        "TpsRequestUrl": ""
+      },
       "Token": "",
       "UserName": "",
       "TemplateKey": "",

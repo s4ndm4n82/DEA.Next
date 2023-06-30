@@ -9,7 +9,6 @@ namespace AppConfigReader
         public class AppSettingsRoot
         {
             public Programsettings ProgramSettings { get; set; }
-            public Domainsettings DomainSettings { get; set; }
             public Emailserversettings EmailServerSettings { get; set; }
             public Graphconfig GraphConfig { get; set; }
         }
@@ -19,12 +18,6 @@ namespace AppConfigReader
             public int MaxEmails { get; set; }
             public int LogsDeleteAfter { get; set; }
             public bool SnedErrorEmai { get; set; }
-        }
-
-        public class Domainsettings
-        {
-            public string MainDomain { get; set; }
-            public string RestRequest { get; set; }
         }
 
         public class Emailserversettings
