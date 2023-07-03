@@ -1,9 +1,9 @@
-﻿using GraphHelper;
-using WriteLog;
+﻿using WriteLog;
 using FtpFunctions;
 using UserConfigReader;
 using FolderFunctions;
 using ProcessStatusMessageSetter;
+using GraphHelper;
 
 
 // DEA.Next
@@ -35,15 +35,15 @@ if (ftpClientCount > 0)
 {
     foreach (var ftpClient in ftpClients)
     {
-        if (ftpClient.FtpDetails!.FtpType!.ToLower() == "ftp" || ftpClient.FtpDetails!.FtpType!.ToLower() == "ftps")
+        if ((ftpClient.FtpDetails!.FtpType!.ToLower() == "ftp" || ftpClient.FtpDetails!.FtpType!.ToLower() == "ftps") && ftpClient.CustomerStatus == 1)
         {
-            ftpResult = await FtpFunctionsClass.GetFtpFiles(ftpClient.id);
+            ftpResult = await FtpFunctionsClass.GetFtpFiles(ftpClient.Id);
         }
-        /*else
+        else
         {
             // Awating to be implimented. Will be added when needed.
-            SftpFunctionsClass.GetSftpFiles(ftpClient.id);
-        }*/
+            //SftpFunctionsClass.GetSftpFiles(ftpClient.id);
+        }
     }
 }
 
@@ -52,7 +52,10 @@ if (emailClientCount > 0)
 {
     foreach (var emailClient in emailClients)
     {
-        emailResult = await GraphHelperClass.InitializGetAttachment(emailClient.id);
+        if (emailClient.CustomerStatus == 1)
+        {
+            emailResult = await GraphHelperClass.InitializGetAttachment(emailClient.Id);
+        }        
     }
 }
 

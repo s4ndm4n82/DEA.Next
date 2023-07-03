@@ -37,7 +37,7 @@ namespace CreatEmail
                         emailInfor.FileCount = subFolderPath.EnumerateFiles("*.*", SearchOption.AllDirectories).Count();
 
                         UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
-                        UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == emailInfor.CustomerID)!;
+                        UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == emailInfor.CustomerID)!;
 
                         if (!clientDetails.ClientName.IsNullOrEmpty())
                         {

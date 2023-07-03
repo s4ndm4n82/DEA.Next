@@ -1,7 +1,8 @@
 {
   "CustomerDetails": [
     {
-      "id": 1,
+      "id": 1, // IMPORTANT. Hast add manually and increment by 1 each time
+      "CustomerStatus": 1, // Customer status. If active 1 if not 0.
       "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZGNfaW1wb3J0IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiaW1wb3J0QGRpZ2l0YWxjYXB0dXJlLm5vIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI1OGRiZTAzOC1mNGIwLTQzNjYtYjJiYi03ZTZiZjU1YzBiOGQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6ImM0YzQwYzk0LTdiMmEtNDI0ZS04MzVlLWVkODA5MmYyODE0YyIsImV4cCI6MTcxOTU2NDM5MywiaXNzIjoid3d3LmRpZ2l0YWxjYXB0dXJlLm5vIiwiYXVkIjoiaHR0cHM6Ly93d3cuZGlnaXRhbGNhcHR1cmUubm8vdHBzIn0.KKzq2ubLLYQA2GinbtYkBvikkQQQRKX2Qr3HGY2h5uc",
       "UserName": "dc_import",
       "TemplateKey": "",
@@ -11,7 +12,7 @@
       "ClientName": "Duett",
       "ClientOrgNo": "932971917",
       "ClientIdField": "Customer Organization No",
-      "FileDeliveryMethod": "FTP",
+      "FileDeliveryMethod": "ftp",
       "DomainDetails": {
         "MainDomain": "https://capture.exacta.no/",
         "TpsRequestUrl": "tps_test_processing/Import?"
@@ -41,6 +42,7 @@
     },
     {
       "id": 2,
+      "CustomerStatus": 0,
       "Token": "",
       "UserName": "",
       "TemplateKey": "",
@@ -50,13 +52,13 @@
       "ClientName": "Sandaruwan",
       "ClientOrgNo": "",
       "ClientIdField": "",
-      "FileDeliveryMethod": "",
+      "FileDeliveryMethod": "FTP",
       "DomainDetails": {
         "MainDomain": "",
         "TpsRequestUrl": ""
       },
       "FtpDetails": {
-        "FtpType": "",
+        "FtpType": "ftp",
         "FtpHostName": "",
         "FtpHostIp": "",
         "FtpUser": "",

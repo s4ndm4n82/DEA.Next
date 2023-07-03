@@ -23,7 +23,7 @@ namespace FtpFunctions
             UserConfigReaderClass.CustomerDetailsObject JsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
 
             // Just select the data corrosponding to the customer ID.
-            UserConfigReaderClass.Customerdetail clientDetails = JsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == Customerid)!;
+            UserConfigReaderClass.Customerdetail clientDetails = JsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == Customerid)!;
 
             // Starts the file download process if the client details are not empty.
             if (clientDetails != null)
@@ -38,7 +38,7 @@ namespace FtpFunctions
             int downloadResult = 0;
 
             // Client details retrived from the Json file.
-            int clientID = FtpClientDetails.id;
+            int clientID = FtpClientDetails.Id;
             string ftpType = FtpClientDetails.FtpDetails!.FtpType!.ToUpper();
             string ftpHostName = FtpClientDetails.FtpDetails!.FtpHostName!;
             string ftpHosIp = FtpClientDetails.FtpDetails.FtpHostIp!;

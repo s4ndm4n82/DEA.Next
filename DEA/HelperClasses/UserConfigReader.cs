@@ -12,7 +12,8 @@ namespace UserConfigReader
 
         public class Customerdetail
         {
-            public int id { get; set; }            
+            public int Id { get; set; }
+            public int CustomerStatus { get; set; }
             public string? Token { get; set; }
             public string? UserName { get; set; }
             public string? TemplateKey { get; set; }

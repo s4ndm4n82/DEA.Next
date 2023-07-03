@@ -24,7 +24,7 @@ namespace FileFunctions
             WriteLogClass.WriteToLog(1, "Starting file upload process .... ", 4);
 
             UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
-            UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId)!;
+            UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == customerId)!;
 
             List<string> acceptedExtentions = clientDetails.DocumentDetails!.DocumentExtensions!;
 
@@ -121,7 +121,7 @@ namespace FileFunctions
                 UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
 
                 // Just select the data corrosponding to the customer ID.
-                UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId)!;
+                UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == customerId)!;
 
                 // Creating rest api request.
                 RestClient client = new($"{clientDetails.DomainDetails.MainDomain}");
