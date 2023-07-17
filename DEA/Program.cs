@@ -4,17 +4,19 @@ using UserConfigReader;
 using FolderFunctions;
 using ProcessStatusMessageSetter;
 using GraphHelper;
+using RunTimer;
 
 
 // DEA.Next
 // ~~~~~~~~
-// TODO 1: Rewrite the code to match Graph v5.0.0.
-// TODO 2: Change the error subfolder name creation when email clients are handled.
+// TODO 1: Rewrite the code to match Graph v5.0.0. +
 
 // Aplication title just for fun.
 
 WriteLogClass.WriteToLog(1, "Starting download process ....", 1);
 FolderFunctionsClass.CheckFolders(null!);
+
+Console.WriteLine(RunTimerClass.RunTimeChecker());
 
 int emailResult = 0;
 int ftpResult = 0;

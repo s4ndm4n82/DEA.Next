@@ -10,6 +10,7 @@ namespace AppConfigReader
         {
             public Programsettings ProgramSettings { get; set; }
             public Emailserversettings EmailServerSettings { get; set; }
+            public Timingsettings TimingSettings { get; set; }
             public Graphconfig GraphConfig { get; set; }
         }
 
@@ -17,7 +18,7 @@ namespace AppConfigReader
         {
             public int MaxEmails { get; set; }
             public int LogsDeleteAfter { get; set; }
-            public bool SnedErrorEmai { get; set; }
+            public bool SnedErrorEmail { get; set; }
         }
 
         public class Emailserversettings
@@ -45,6 +46,13 @@ namespace AppConfigReader
             public string ReplyEmail { get; set; }
             public string[] ToEmail { get; set; }
             public string Subject { get; set; }
+        }
+
+        public class Timingsettings
+        {
+            public int ErrorCheckInterval { get; set; }
+            public string PreviousRunTime { get; set; }
+            public string PreviousRunDate { get; set; }
         }
 
         public class Graphconfig
