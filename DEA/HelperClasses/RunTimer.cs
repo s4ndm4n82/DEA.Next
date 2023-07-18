@@ -5,8 +5,9 @@ namespace RunTimer
 {
     internal class RunTimerClass
     {
-        public static (string,double) RunTimeChecker()
-        {   
+        public static bool RunTimeChecker()
+        {
+            string previousDate = GetJsonFileData().PreviousRunDate;
             double timeItnterval = TimeSpan.FromMinutes(GetJsonFileData().ErrorCheckInterval).TotalMinutes;
             double previousTime = TimeSpan.Parse(GetJsonFileData().PreviousRunTime).TotalMinutes;
             double timeNow = TimeSpan.Parse(DateTime.Now.ToString("t")).TotalMinutes;
@@ -15,11 +16,17 @@ namespace RunTimer
 
             if (timeDiff >= timeItnterval)
             {
-                AppConfigUpdaterClass.UpdateConfigFile(timeNow);
-                return (temp,timeDiff);
+                if (previousDate != DateTime.Now.ToString("d"))
+                {
+                    AppConfigUpdaterClass.UpdateConfigFile(DateTime.Now.ToString("t"), DateTime.Now.ToString("d"));
+                }
+                else
+                {
+                    AppConfigUpdaterClass.UpdateConfigFile(DateTime.Now.ToString("t"), string.Empty);
+                }
+                return true;
             }
-
-             return ("Out of if", timeDiff);
+            return false;
         }
 
         private static AppConfigReaderClass.Timingsettings GetJsonFileData()

@@ -1,16 +1,34 @@
 ﻿using AppConfigReader;
-using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using WriteLog;
 
 namespace AppConfigUpdater
 {
     internal class AppConfigUpdaterClass
     {
-        public static string UpdateConfigFile(double runTime)
+        public static void UpdateConfigFile(string lastRunTime, string lastRunDate)
         {
-            AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
-            AppConfigReaderClass.Timingsettings timeSettings = jsonData.TimingSettings;
+            try
+            {
+                AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
+                AppConfigReaderClass.Timingsettings timeSettings = jsonData.TimingSettings;
 
-            JToken jToken = timeSettings.
+                timeSettings.PreviousRunTime = lastRunTime;
+
+                if (!string.IsNullOrEmpty(lastRunDate))
+                {
+                    timeSettings.PreviousRunDate = lastRunDate;
+                }
+                 
+                string updatedJson = JsonConvert.SerializeObject(jsonData, Formatting.Indented);
+
+                File.WriteAllText(@".\Config\appsettings.json", updatedJson);
+                WriteLogClass.WriteToLog(1, "Config file updated with recent time and date.", 1);
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(0, $"Error at configupdater: {ex.Message}", 0);
+            }            
         }
     }
 }
