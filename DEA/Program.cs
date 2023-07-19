@@ -4,7 +4,7 @@ using UserConfigReader;
 using FolderFunctions;
 using ProcessStatusMessageSetter;
 using GraphHelper;
-using RunTimer;
+using RunTimedFunctions;
 
 
 // DEA.Next
@@ -16,7 +16,7 @@ using RunTimer;
 WriteLogClass.WriteToLog(1, "Starting download process ....", 1);
 FolderFunctionsClass.CheckFolders(null!);
 
-Console.WriteLine(RunTimerClass.RunTimeChecker());
+Console.WriteLine(RunTimedFunctionsClass.CallFileCleaner());
 
 int emailResult = 0;
 int ftpResult = 0;

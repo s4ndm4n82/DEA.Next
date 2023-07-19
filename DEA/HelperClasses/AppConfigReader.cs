@@ -16,8 +16,7 @@ namespace AppConfigReader
 
         public class Programsettings
         {
-            public int MaxEmails { get; set; }
-            public int LogsDeleteAfter { get; set; }
+            public int MaxEmails { get; set; }            
             public bool SnedErrorEmail { get; set; }
         }
 
@@ -51,6 +50,7 @@ namespace AppConfigReader
         public class Timingsettings
         {
             public int ErrorCheckInterval { get; set; }
+            public int LogsDeleteAfter { get; set; }
             public string PreviousRunTime { get; set; }
             public string PreviousRunDate { get; set; }
         }

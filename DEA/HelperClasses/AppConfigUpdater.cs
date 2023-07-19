@@ -13,9 +13,12 @@ namespace AppConfigUpdater
                 AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
                 AppConfigReaderClass.Timingsettings timeSettings = jsonData.TimingSettings;
 
-                timeSettings.PreviousRunTime = lastRunTime;
+                if (timeSettings != null)
+                {
+                    timeSettings.PreviousRunTime = lastRunTime;
+                }                
 
-                if (!string.IsNullOrEmpty(lastRunDate))
+                if (lastRunDate != timeSettings.PreviousRunDate || lastRunDate != null)
                 {
                     timeSettings.PreviousRunDate = lastRunDate;
                 }

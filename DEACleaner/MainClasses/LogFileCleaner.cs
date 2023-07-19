@@ -9,9 +9,9 @@ namespace LogFileCleaner
         public static int StartCleaner()
         {
             AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
-            AppConfigReaderClass.Programsettings programsettings = jsonData.ProgramSettings;
+            AppConfigReaderClass.Timingsettings timeSettings = jsonData.TimingSettings;
             
-            return LogFileDeleter(FindFoldersClass.FindFolder("logs"), programsettings.LogsDeleteAfter);
+            return LogFileDeleter(FindFoldersClass.FindFolder("logs"), timeSettings.LogsDeleteAfter);
         }
 
         private static int LogFileDeleter(DirectoryInfo folderPath, int maxDays)
