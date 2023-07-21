@@ -16,7 +16,7 @@ using RunTimedFunctions;
 WriteLogClass.WriteToLog(1, "Starting download process ....", 1);
 FolderFunctionsClass.CheckFolders(null!);
 
-Console.WriteLine(RunTimedFunctionsClass.CallFileCleaner());
+Console.WriteLine(RunTimedFunctionsClass.CallDeaCleaner());
 
 int emailResult = 0;
 int ftpResult = 0;
