@@ -15,7 +15,7 @@ namespace CreatEmail
             public int FolderCount { get; set; }
         }
 
-        public static int StartCreatingEmail(DirectoryInfo folderPath, IEnumerable<DirectoryInfo> folderList)
+        public static bool StartCreatingEmail(DirectoryInfo folderPath, IEnumerable<DirectoryInfo> folderList)
         {
             try
             {
@@ -56,21 +56,29 @@ namespace CreatEmail
 
                 if (detailsArray != null && detailsArray.Length != 0)
                 {
-                    CreatEmailBody(detailsArray, emailInfor.FolderCount);
+                    if (CreatEmailBody(detailsArray, emailInfor.FolderCount))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
                 else
                 {
                     WriteLogClass.WriteToLog(0,"Client details array is empty.", 0);
+                    return false;
                 }
             }
             catch (Exception ex)
             {
                 WriteLogClass.WriteToLog(0,$"Exeption at SartCreatingEmail under CreatEmailClass: {ex.Message}", 0);
             }
-            return 0;
+            return false;
         }
 
-        public static int CreatEmailBody(string[] detailsArray, int folderCount)
+        public static bool CreatEmailBody(string[] detailsArray, int folderCount)
         {
             try
             {
@@ -79,20 +87,26 @@ namespace CreatEmail
 
                 if(!folderDetails.IsNullOrEmpty())
                 {
-                    EmailerClass.EmailSenderHandler(emailBody);
-                    return 1;
+                    if (EmailerClass.EmailSenderHandler(emailBody))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
                 else
                 {
                     WriteLogClass.WriteToLog(1,"Folder details array was empty or set to null.", 1);
-                    return 0;
+                    return false;
                 }
             }
             catch (Exception ex)
             {
                 WriteLogClass.WriteToLog(0,$"Exeption at CreatEmailBody CreatEmailClass: {ex.Message}", 0);
-                return 0;
-            }            
+                return false;
+            }
         }
     }
 }

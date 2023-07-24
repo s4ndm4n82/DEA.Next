@@ -6,7 +6,7 @@ namespace Emailer
 {
     internal class EmailerClass
     {
-        public static int EmailSenderHandler(string emailBody)
+        public static bool EmailSenderHandler(string emailBody)
         {
             AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
             AppConfigReaderClass.Emailserversettings emailSettings = jsonData.EmailServerSettings;
@@ -32,13 +32,13 @@ namespace Emailer
             {
                 smtpClient.Send(emailMessage);
                 WriteLogClass.WriteToLog(1,"Message sent successfully.",1);
+                return true;
             }
             catch (Exception ex)
             {
                 WriteLogClass.WriteToLog(0,$"Error sending email: {ex.Message}",0);
+                return false;
             }
-
-            return 0;
         }
     }
 }

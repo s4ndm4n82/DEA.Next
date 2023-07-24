@@ -1,3 +1,3 @@
 ﻿using ErrorFolderChecker;
 
-ErrorFolderCheckerClass.ErrorFolderChecker();
+Console.WriteLine(ErrorFolderCheckerClass.ErrorFolderChecker());

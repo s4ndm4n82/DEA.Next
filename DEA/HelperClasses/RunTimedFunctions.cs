@@ -25,9 +25,13 @@ namespace RunTimedFunctions
 
             if (timeDiff >= timeItnterval)
             {
-                AppConfigUpdaterClass.UpdateConfigFile(DateTime.Now.ToString("t"), null);
-                RunProcess(GetWorkingDir(), "DEAMailer.exe");
-                return true;
+                if (RunProcess(GetWorkingDir(), "DEAMailer.exe"))
+                {
+                    if (AppConfigUpdaterClass.UpdateConfigFile(DateTime.Now.ToString("t"), null))
+                    {
+                        return true;
+                    }
+                }
             }
             return false;
         }
@@ -46,24 +50,15 @@ namespace RunTimedFunctions
 
             if (dateDiff.TotalDays >= dateInterval)
             {
-                AppConfigUpdaterClass.UpdateConfigFile(null, dateNow.ToString("d"));
-                RunProcess(GetWorkingDir(), "DEACleaner.exe");
-                return true;
+                if (RunProcess(GetWorkingDir(), "DEACleaner.exe"))
+                {
+                    if (AppConfigUpdaterClass.UpdateConfigFile(null, dateNow.ToString("d")))
+                    {
+                        return true;
+                    }
+                }
             }
-
             return false;
-        }
-
-        /// <summary>
-        /// Reads and load the jason file data to be edited from the above functions
-        /// </summary>
-        /// <returns>The loaded json data from the config file.</returns>
-        private static AppConfigReaderClass.Timingsettings GetJsonFileData()
-        {
-            AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
-            AppConfigReaderClass.Timingsettings timeSettings = jsonData.TimingSettings;
-
-            return timeSettings;
         }
 
         /// <summary>
@@ -71,7 +66,7 @@ namespace RunTimedFunctions
         /// </summary>
         /// <param name="workingDirPath"></param>
         /// <param name="exeFileName"></param>
-        private static void RunProcess(string workingDirPath, string exeFileName)
+        private static bool RunProcess(string workingDirPath, string exeFileName)
         {
             ProcessStartInfo processInfo = new()
             {
@@ -88,34 +83,31 @@ namespace RunTimedFunctions
                 EnableRaisingEvents = true // Enables Exited event to be raised.
             };
 
-            startProcess.OutputDataReceived += (reciver, d) =>
+            startProcess.OutputDataReceived += (sender, d) =>
             {
-                /*if (!string.IsNullOrEmpty(d.Data))
-                {*/
-                    Console.WriteLine("Output: {0}", d.Data);
-                //}
+                if (!string.IsNullOrEmpty(d.Data))
+                {
+                    Console.WriteLine($"{d.Data}");
+                }
             };
 
             startProcess.Exited += (sender, e) =>
             {
-                //WriteLogClass.WriteToLog(1, $"{Path.GetFileNameWithoutExtension(exeFileName)} has exited.", 1);
-                Console.WriteLine($"{Path.GetFileNameWithoutExtension(exeFileName)} has exited.");
+                WriteLogClass.WriteToLog(1, $"{Path.GetFileNameWithoutExtension(exeFileName)} process ended.", 1);
             };
 
             try
             {
                 startProcess.Start();
+                startProcess.BeginOutputReadLine();
                 startProcess.WaitForExit();
+                return true;
             }
             catch (Exception ex)
             {
                 WriteLogClass.WriteToLog(0, $"Exception at starting process function: {ex.Message}", 0);
+                return false;
             }
-        }
-
-        private static void StartProcess_Exited(object? sender, EventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -127,6 +119,18 @@ namespace RunTimedFunctions
             string currentWorkingDir = Environment.CurrentDirectory;
 
             return currentWorkingDir;
+        }
+
+        /// <summary>
+        /// Reads and load the jason file data to be edited from the above functions
+        /// </summary>
+        /// <returns>The loaded json data from the config file.</returns>
+        private static AppConfigReaderClass.Timingsettings GetJsonFileData()
+        {
+            AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
+            AppConfigReaderClass.Timingsettings timeSettings = jsonData.TimingSettings;
+
+            return timeSettings;
         }
     }
 }
