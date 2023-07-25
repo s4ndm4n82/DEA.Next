@@ -19,7 +19,7 @@ FolderFunctionsClass.CheckFolders(null!);
 Console.WriteLine(RunTimedFunctionsClass.CallDeaCleaner());
 Console.WriteLine(RunTimedFunctionsClass.CallDeaMailer());
 
-int emailResult = 0;
+/*int emailResult = 0;
 int ftpResult = 0;
 
 // User cpmfig reader.
@@ -58,8 +58,8 @@ if (emailClientCount > 0)
         if (emailClient.CustomerStatus == 1)
         {
             emailResult = await GraphHelperClass.InitializGetAttachment(emailClient.Id);
-        }        
+        }
     }
 }
 
-WriteLogClass.WriteToLog(ProcessStatusMessageSetterClass.SetMessageTypeMain(emailResult, ftpResult), $"{ProcessStatusMessageSetterClass.SetProcessStatusMain(emailResult, ftpResult)}\n", 1);
+WriteLogClass.WriteToLog(ProcessStatusMessageSetterClass.SetMessageTypeMain(emailResult, ftpResult), $"{ProcessStatusMessageSetterClass.SetProcessStatusMain(emailResult, ftpResult)}\n", 1);*/

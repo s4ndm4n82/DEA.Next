@@ -1,3 +1,7 @@
-﻿using ErrorFolderChecker;
+﻿using CreatEmail;
+using ErrorFolderChecker;
 
-Console.WriteLine(ErrorFolderCheckerClass.ErrorFolderChecker());
+if (ErrorFolderCheckerClass.ErrorFolderChecker().Item1.Any())
+{
+    CreateEmailClass.StartCreatingEmail(ErrorFolderCheckerClass.ErrorFolderChecker().Item2, ErrorFolderCheckerClass.ErrorFolderChecker().Item1);
+}
