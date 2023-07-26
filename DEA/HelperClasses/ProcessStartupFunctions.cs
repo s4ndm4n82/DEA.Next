@@ -1,5 +1,4 @@
-﻿using FluentFTP;
-using FtpFunctions;
+﻿using FtpFunctions;
 using GraphHelper;
 using ProcessStatusMessageSetter;
 using UserConfigReader;
@@ -11,7 +10,7 @@ namespace ProcessSartupFunctions
     {
         readonly UserConfigReaderClass.CustomerDetailsObject jsonDataObject = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
 
-        public static async Task<bool> StartupProcess()
+        public static async Task StartupProcess()
         {
             int ftpReturnCode = 0;
             int emailReturnCode =0;
@@ -20,10 +19,7 @@ namespace ProcessSartupFunctions
             UserConfigReaderClass.Customerdetail[] jsonCustomerData = jsonData.jsonDataObject.CustomerDetails;
 
             IEnumerable<UserConfigReaderClass.Customerdetail> ftpClients = jsonCustomerData.Where(ftpc => ftpc.FileDeliveryMethod!.ToLower() == "ftp");
-            int ftpClientCount = ftpClients.Count();
-
             IEnumerable<UserConfigReaderClass.Customerdetail> emailClients = jsonCustomerData.Where(emailc => emailc.FileDeliveryMethod!.ToLower() == "email");
-            int emailClientCount = emailClients.Count();
 
             if (ftpClients.Any())
             {
@@ -36,8 +32,6 @@ namespace ProcessSartupFunctions
             }
 
             WriteLastStatusMessage(emailReturnCode, ftpReturnCode);
-            
-            return false;
         }
 
         private static async Task<int> StartFtpDownload(IEnumerable<UserConfigReaderClass.Customerdetail> ftpClients)
