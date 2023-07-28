@@ -17,7 +17,8 @@ namespace AppConfigReader
         public class Programsettings
         {
             public int MaxEmails { get; set; }            
-            public bool SnedErrorEmail { get; set; }
+            public bool SendErrorEmail { get; set; }
+            public bool CleanLogs { get; set; } 
         }
 
         public class Emailserversettings

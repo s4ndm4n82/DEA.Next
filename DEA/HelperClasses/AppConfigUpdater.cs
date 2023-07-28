@@ -26,7 +26,7 @@ namespace AppConfigUpdater
                 string updatedJson = JsonConvert.SerializeObject(jsonData, Formatting.Indented);
 
                 File.WriteAllText(@".\Config\appsettings.json", updatedJson);
-                WriteLogClass.WriteToLog(1, "Config file updated with recent time and date.", 1);
+                WriteLogClass.WriteToLog(1, "Config file updated ....", 1);
                 return true;
             }
             catch (Exception ex)

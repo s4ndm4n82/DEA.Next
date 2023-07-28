@@ -1,11 +1,8 @@
 ﻿using WriteLog;
-using FtpFunctions;
-using UserConfigReader;
 using FolderFunctions;
-using ProcessStatusMessageSetter;
-using GraphHelper;
 using RunTimedFunctions;
 using ProcessSartupFunctions;
+using ErrorFolderChecker;
 
 
 // DEA.Next
@@ -14,10 +11,17 @@ using ProcessSartupFunctions;
 
 // Aplication title just for fun.
 
-WriteLogClass.WriteToLog(1, "Starting download process ....", 1);
 FolderFunctionsClass.CheckFolders(null!);
 
-Console.WriteLine(RunTimedFunctionsClass.CallDeaCleaner());
-Console.WriteLine(RunTimedFunctionsClass.CallDeaMailer());
+if (!ErrorFolderCheckerClass.ErrorFolderChecker().Item1.Any())
+{
+    WriteLogClass.WriteToLog(1, "Starting download process ....", 1);
+    await ProcessStartupFunctionsClass.StartupProcess();
+}
+else
+{
+    RunTimedFunctionsClass.CallDeaTimedProcesses("deamailer");
+    WriteLogClass.WriteToLog(1, "Error folder is not empty. Check and empty the error folder before continuing ....", 1);
+}
 
-await ProcessStartupFunctionsClass.StartupProcess();
+RunTimedFunctionsClass.CallDeaTimedProcesses("deacleaner");

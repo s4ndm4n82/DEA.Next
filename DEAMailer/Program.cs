@@ -1,7 +1,11 @@
-﻿using CreatEmail;
+﻿using AppConfigReader;
+using CreatEmail;
 using ErrorFolderChecker;
 
-if (ErrorFolderCheckerClass.ErrorFolderChecker().Item1.Any())
+AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
+AppConfigReaderClass.Programsettings programSettings = jsonData.ProgramSettings;
+
+if (programSettings.SendErrorEmail)
 {
     CreateEmailClass.StartCreatingEmail(ErrorFolderCheckerClass.ErrorFolderChecker().Item2, ErrorFolderCheckerClass.ErrorFolderChecker().Item1);
 }

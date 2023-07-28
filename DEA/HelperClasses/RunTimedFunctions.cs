@@ -11,21 +11,27 @@ namespace RunTimedFunctions
     internal class RunTimedFunctionsClass
     {
         /// <summary>
-        /// Runs the error folder checker (DEAMailer.exe) which will check the error folder for files.
-        /// If there's anyfiles in the folder an email will be sent to configured emails informing them that there's files in the errrs folder that need to be manually cleared.
+        /// The main function that calls the two process to clean the log files folder and to check the error folder.
         /// </summary>
-        /// <returns>Returns a bool value as true or false.</returns>
-        public static bool CallDeaMailer()
+        /// <param name="processName"></param>
+        /// <returns></returns>
+        public static bool CallDeaTimedProcesses(string processName)
         {
+            string processFileName = Path.ChangeExtension(processName, ".exe").ToLower();
+
             double timeItnterval = TimeSpan.FromMinutes(GetJsonFileData().ErrorCheckInterval).TotalMinutes;
             double previousTime = TimeSpan.Parse(GetJsonFileData().PreviousRunTime).TotalMinutes;
             double timeNow = TimeSpan.Parse(DateTime.Now.ToString("t")).TotalMinutes;
-
             double timeDiff = timeNow - previousTime;
+
+            int dateInterval = GetJsonFileData().LogsDeleteAfter;
+            DateTime previousRunDate = DateTime.Parse(GetJsonFileData().PreviousRunDate);
+            DateTime dateNow = DateTime.Parse(DateTime.Now.ToString("d"));
+            TimeSpan dateDiff = dateNow - previousRunDate;
 
             if (timeDiff >= timeItnterval)
             {
-                if (RunProcess(GetWorkingDir(), "DEAMailer.exe"))
+                if (RunProcess(GetWorkingDir(), processFileName))
                 {
                     if (AppConfigUpdaterClass.UpdateConfigFile(DateTime.Now.ToString("t"), null))
                     {
@@ -33,24 +39,10 @@ namespace RunTimedFunctions
                     }
                 }
             }
-            return false;
-        }
-
-        /// <summary>
-        /// Calls the log folder cleaner (DEACleaner.exe) which will run periodically and cleans the log foler if the files are older than configured dates.
-        /// </summary>
-        /// <returns>Returns a bool value as true or false</returns>
-        public static bool CallDeaCleaner()
-        {
-            int dateInterval = GetJsonFileData().LogsDeleteAfter;
-            DateTime previousRunDate = DateTime.Parse(GetJsonFileData().PreviousRunDate);
-            DateTime dateNow = DateTime.Parse(DateTime.Now.ToString("d"));
-
-            TimeSpan dateDiff = dateNow - previousRunDate;
 
             if (dateDiff.TotalDays >= dateInterval)
             {
-                if (RunProcess(GetWorkingDir(), "DEACleaner.exe"))
+                if (RunProcess(GetWorkingDir(), processFileName))
                 {
                     if (AppConfigUpdaterClass.UpdateConfigFile(null, dateNow.ToString("d")))
                     {
@@ -58,6 +50,7 @@ namespace RunTimedFunctions
                     }
                 }
             }
+
             return false;
         }
 
