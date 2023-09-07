@@ -28,7 +28,7 @@ namespace FileFunctions
 
             List<string> acceptedExtentions = clientDetails.DocumentDetails!.DocumentExtensions!;
 
-            string[] downloadedFiles = Directory.GetFiles(filePath, "*.*", SearchOption.TopDirectoryOnly).Where(f => acceptedExtentions.IndexOf(Path.GetExtension(f)) >= 0).ToArray();
+            string[] downloadedFiles = Directory.GetFiles(filePath, "*.*", SearchOption.TopDirectoryOnly).Where(f => acceptedExtentions.IndexOf(Path.GetExtension(f).ToLower()) >= 0).ToArray();
 
             // If recipientEmail not empty clientOrg = revipientEmail.
             // If recipientEmail is empty clientOrg = clientDetails.ClientOrgNo
