@@ -92,7 +92,17 @@ namespace FileFunctions
 
                 string jsonResult = JsonConvert.SerializeObject(TpsJsonRequest, Formatting.Indented);
 
-                returnResult = await SendFilesToRest(ftpConnect, jsonResult, filesToSend[0], customerId, customerProjectId, customerQueue, fileList.Count, ftpFileList, localFileList, clientOrgNo);
+                returnResult = await SendFilesToRest(ftpConnect,
+                                                    jsonResult,
+                                                    filesToSend[0],
+                                                    customerId,
+                                                    customerProjectId,
+                                                    customerQueue,
+                                                    fileList.Count,
+                                                    ftpFileList,
+                                                    localFileList,
+                                                    fileList.Select(f => f.Name).ToArray(),
+                                                    clientOrgNo);
 
                 return returnResult;
             }
@@ -113,6 +123,7 @@ namespace FileFunctions
                                                         int fileCount,
                                                         IEnumerable<string> ftpFileList,
                                                         string[] localFileList,
+                                                        string[] jsonFileList,
                                                         string clientOrgNo)
         {
             try
@@ -144,7 +155,7 @@ namespace FileFunctions
                     // This will run if it's not FTP.
                     if (clientDetails.FileDeliveryMethod.ToLower() == "email")
                     {
-                        if (FolderCleanerClass.GetFolders(fullFilePath))
+                        if (FolderCleanerClass.GetFolders(fullFilePath, null))
                         {
                             return 1;
                         }
@@ -154,7 +165,7 @@ namespace FileFunctions
                         if (await FolderCleanerClass.GetFtpPathAsync(ftpConnect, ftpFileList, localFileList))
                         {
                             // Deletes the file from local hold folder when sending is successful.
-                            if (FolderCleanerClass.GetFolders(dirPath))
+                            if (FolderCleanerClass.GetFolders(dirPath, jsonFileList))
                             {
                                 return 1;
                             }
@@ -171,7 +182,7 @@ namespace FileFunctions
                         // This will run if it's not FTP.
                         if (clientDetails.FileDeliveryMethod.ToLower() == "email")
                         {
-                            if (FolderCleanerClass.GetFolders(fullFilePath))
+                            if (FolderCleanerClass.GetFolders(fullFilePath, null))
                             {
                                 return 2;
                             }
