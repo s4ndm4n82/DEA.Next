@@ -145,57 +145,37 @@ namespace FileFunctions
                 tpsRequest.AddBody(jsonResult);
 
                 RestResponse serverResponse = await client.ExecuteAsync(tpsRequest); // Executes the request and send to the server.
-                string dirPath = Directory.GetParent(fullFilePath).FullName;
+                string dirPath = Directory.GetParent(fullFilePath).FullName; // Gets the directory path of the file.
 
                 if (serverResponse.StatusCode == HttpStatusCode.OK)
                 {
                     WriteLogClass.WriteToLog(1, $"Uploaded {fileCount} file to project {projectId} using queue {queue} ....", 4);
                     WriteLogClass.WriteToLog(1, $"Uploaded filenames: {WriteNamesToLogClass.GetFileNames(dirPath)}", 4);
 
-                    // This will run if it's not FTP.
-                    if (clientDetails.FileDeliveryMethod.ToLower() == "email")
-                    {
-                        if (FolderCleanerClass.GetFolders(fullFilePath, null))
-                        {
-                            return 1;
-                        }
-                    }
-                    else
-                    {
-                        if (await FolderCleanerClass.GetFtpPathAsync(ftpConnect, ftpFileList, localFileList))
-                        {
-                            // Deletes the file from local hold folder when sending is successful.
-                            if (FolderCleanerClass.GetFolders(dirPath, jsonFileList))
-                            {
-                                return 1;
-                            }
-                        }
-                    }
-                    return 0;
+                    /* Below if ... else stament is written using the ternary operator. The function of the code described below.
+                     * if the file delivery method is email then it will run the funcation from folder cleaner class which will delete
+                     * the file from the hold folder and when it success returns 1. If the condition is not met it'll the function GetFtpPathAsync()
+                     * from the FolderCleanerClass and then removes the files from the local hold folder when the sending is successful. And returns 1
+                     * on fail returns 0.*/
+                    return clientDetails.FileDeliveryMethod.ToLower() == "email" ?
+                           FolderCleanerClass.GetFolders(fullFilePath, null) ? 1 : 0 :
+                           await FolderCleanerClass.GetFtpPathAsync(ftpConnect, ftpFileList, localFileList) &&
+                           FolderCleanerClass.GetFolders(dirPath, jsonFileList) ? 1 : 0;
                 }
                 else
                 {
                     WriteLogClass.WriteToLog(0, $"Server status code: {serverResponse.StatusCode}, Server Response Error: {serverResponse.Content}", 0);
 
-                    if (HandleErrorFilesClass.MoveFilesToErrorFolder(fullFilePath, customerId, clientOrgNo))
-                    {
-                        // This will run if it's not FTP.
-                        if (clientDetails.FileDeliveryMethod.ToLower() == "email")
-                        {
-                            if (FolderCleanerClass.GetFolders(fullFilePath, null))
-                            {
-                                return 2;
-                            }
-                        }
-                        else
-                        {
-                            if (await FolderCleanerClass.GetFtpPathAsync(ftpConnect, ftpFileList, localFileList))
-                            {
-                                return 2;
-                            }
-                        }
-                    }
-                    return 0;
+                    /* Below if ... else stament is written using the ternary operator. The function of the code described below.
+                     * If the file upload is not successful then it will run the funcation from HandleErrorFilesClass which will move the files
+                     * to the "Error" folder and keeps the files there. If the file delivery method is email then it will run the funcation from
+                     * FolderCleanerClass which will delete the file from the hold folder and when it success returns 2. If the condition is not met
+                     * it'll the function GetFtpPathAsync() from the FolderCleanerClass and then removes the files from the local hold folder when
+                     * the sending is successful. And returns 2 on fail returns 0.*/
+                    return HandleErrorFilesClass.MoveFilesToErrorFolder(fullFilePath, customerId, clientOrgNo) ?
+                           clientDetails.FileDeliveryMethod.ToLower() == "email" ?
+                               FolderCleanerClass.GetFolders(fullFilePath, null) ? 2 : 0 :
+                               await FolderCleanerClass.GetFtpPathAsync(ftpConnect, ftpFileList, localFileList) ? 2 : 0 : 0;
                 }
             }
             catch (Exception ex)
