@@ -9,7 +9,7 @@ namespace HandleErrorFiles
         public static bool MoveFilesToErrorFolder(string sourcePath, int clientID, string recivedEmail)
         {
             UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
-            UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails.FirstOrDefault(cid => cid.id == clientID);
+            UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails.FirstOrDefault(cid => cid.Id == clientID);
 
             string clientNo = clientID.ToString();
             string errorFolderPath = FolderFunctionsClass.CheckFolders("error");

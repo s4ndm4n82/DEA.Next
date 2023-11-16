@@ -13,7 +13,7 @@ namespace SftpFunctions
         {
             var JsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
 
-            var SftpOnlyClient = JsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == CustomerId);
+            var SftpOnlyClient = JsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == CustomerId);
 
             if (SftpOnlyClient != null)
             {
@@ -24,7 +24,7 @@ namespace SftpFunctions
 
         public static bool InitiateSftpDownload(UserConfigReaderClass.Customerdetail SftpClientDetails)
         {
-            int clientID = SftpClientDetails.id;
+            int clientID = SftpClientDetails.Id;
             string ftpType = SftpClientDetails.FtpDetails!.FtpType!;
             string ftpHostName = SftpClientDetails.FtpDetails!.FtpHostName!;
             string ftpHosIp = SftpClientDetails.FtpDetails.FtpHostIp!;

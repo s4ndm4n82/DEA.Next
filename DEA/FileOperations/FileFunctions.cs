@@ -24,11 +24,11 @@ namespace FileFunctions
             WriteLogClass.WriteToLog(1, "Starting file upload process .... ", 4);
 
             UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
-            UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId)!;
+            UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == customerId)!;
 
             List<string> acceptedExtentions = clientDetails.DocumentDetails!.DocumentExtensions!;
 
-            string[] downloadedFiles = Directory.GetFiles(filePath, "*.*", SearchOption.TopDirectoryOnly).Where(f => acceptedExtentions.IndexOf(Path.GetExtension(f)) >= 0).ToArray();
+            string[] downloadedFiles = Directory.GetFiles(filePath, "*.*", SearchOption.TopDirectoryOnly).Where(f => acceptedExtentions.IndexOf(Path.GetExtension(f).ToLower()) >= 0).ToArray();
 
             // If recipientEmail not empty clientOrg = revipientEmail.
             // If recipientEmail is empty clientOrg = clientDetails.ClientOrgNo
@@ -92,7 +92,17 @@ namespace FileFunctions
 
                 string jsonResult = JsonConvert.SerializeObject(TpsJsonRequest, Formatting.Indented);
 
-                returnResult = await SendFilesToRest(ftpConnect, jsonResult, filesToSend[0], customerId, customerProjectId, customerQueue, fileList.Count, ftpFileList, localFileList, clientOrgNo);
+                returnResult = await SendFilesToRest(ftpConnect,
+                                                    jsonResult,
+                                                    filesToSend[0],
+                                                    customerId,
+                                                    customerProjectId,
+                                                    customerQueue,
+                                                    fileList.Count,
+                                                    ftpFileList,
+                                                    localFileList,
+                                                    fileList.Select(f => f.Name).ToArray(),
+                                                    clientOrgNo);
 
                 return returnResult;
             }
@@ -113,79 +123,59 @@ namespace FileFunctions
                                                         int fileCount,
                                                         IEnumerable<string> ftpFileList,
                                                         string[] localFileList,
+                                                        string[] jsonFileList,
                                                         string clientOrgNo)
         {
             try
             {
                 // Loads all the details from the customer details Json file.
-                UserConfigReaderClass.CustomerDetailsObject JsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+                UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
 
                 // Just select the data corrosponding to the customer ID.
-                UserConfigReaderClass.Customerdetail clientDetails = JsonData.CustomerDetails!.FirstOrDefault(cid => cid.id == customerId)!;
+                UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == customerId)!;
 
                 // Creating rest api request.
-                RestClient client = new("https://capture.exacta.no/");
-
-                //var tpsRequest = new RestRequest("tps_processing/Import?");
-                RestRequest tpsRequest = new("tps_test_processing/Import?") // Test service. Uncomment the above one and comment this one when putting to production.
+                RestClient client = new($"{clientDetails.DomainDetails.MainDomain}");
+                RestRequest tpsRequest = new($"{clientDetails.DomainDetails.TpsRequestUrl}")
                 {
                     Method = Method.Post,
                     RequestFormat = DataFormat.Json
-                };
+                };               
+
                 tpsRequest.AddBody(jsonResult);
 
                 RestResponse serverResponse = await client.ExecuteAsync(tpsRequest); // Executes the request and send to the server.
-                string dirPath = Directory.GetParent(fullFilePath).FullName;
+                string dirPath = Directory.GetParent(fullFilePath).FullName; // Gets the directory path of the file.
 
                 if (serverResponse.StatusCode == HttpStatusCode.OK)
                 {
                     WriteLogClass.WriteToLog(1, $"Uploaded {fileCount} file to project {projectId} using queue {queue} ....", 4);
                     WriteLogClass.WriteToLog(1, $"Uploaded filenames: {WriteNamesToLogClass.GetFileNames(dirPath)}", 4);
 
-                    // This will run if it's not FTP.
-                    if (clientDetails.FileDeliveryMethod.ToLower() == "email")
-                    {
-                        if (FolderCleanerClass.GetFolders(fullFilePath))
-                        {
-                            return 1;
-                        }
-                    }
-                    else
-                    {
-                        if (await FolderCleanerClass.GetFtpPathAsync(ftpConnect, ftpFileList, localFileList))
-                        {
-                            // Deletes the file from local hold folder when sending is successful.
-                            if (FolderCleanerClass.GetFolders(dirPath))
-                            {
-                                return 1;
-                            }
-                        }
-                    }
-                    return 0;
+                    /* Below if ... else stament is written using the ternary operator. The function of the code described below.
+                     * if the file delivery method is email then it will run the funcation from folder cleaner class which will delete
+                     * the file from the hold folder and when it success returns 1. If the condition is not met it'll the function GetFtpPathAsync()
+                     * from the FolderCleanerClass and then removes the files from the local hold folder when the sending is successful. And returns 1
+                     * on fail returns 0.*/
+                    return clientDetails.FileDeliveryMethod.ToLower() == "email" ?
+                           FolderCleanerClass.GetFolders(fullFilePath, null) ? 1 : 0 :
+                           await FolderCleanerClass.GetFtpPathAsync(ftpConnect, ftpFileList, localFileList) &&
+                           FolderCleanerClass.GetFolders(dirPath, jsonFileList) ? 1 : 0;
                 }
                 else
                 {
                     WriteLogClass.WriteToLog(0, $"Server status code: {serverResponse.StatusCode}, Server Response Error: {serverResponse.Content}", 0);
 
-                    if (HandleErrorFilesClass.MoveFilesToErrorFolder(fullFilePath, customerId, clientOrgNo))
-                    {
-                        // This will run if it's not FTP.
-                        if (clientDetails.FileDeliveryMethod.ToLower() == "email")
-                        {
-                            if (FolderCleanerClass.GetFolders(fullFilePath))
-                            {
-                                return 2;
-                            }
-                        }
-                        else
-                        {
-                            if (await FolderCleanerClass.GetFtpPathAsync(ftpConnect, ftpFileList, localFileList))
-                            {
-                                return 2;
-                            }
-                        }
-                    }
-                    return 0;
+                    /* Below if ... else stament is written using the ternary operator. The function of the code described below.
+                     * If the file upload is not successful then it will run the funcation from HandleErrorFilesClass which will move the files
+                     * to the "Error" folder and keeps the files there. If the file delivery method is email then it will run the funcation from
+                     * FolderCleanerClass which will delete the file from the hold folder and when it success returns 2. If the condition is not met
+                     * it'll the function GetFtpPathAsync() from the FolderCleanerClass and then removes the files from the local hold folder when
+                     * the sending is successful. And returns 2 on fail returns 0.*/
+                    return HandleErrorFilesClass.MoveFilesToErrorFolder(fullFilePath, customerId, clientOrgNo) ?
+                           clientDetails.FileDeliveryMethod.ToLower() == "email" ?
+                               FolderCleanerClass.GetFolders(fullFilePath, null) ? 2 : 0 :
+                               await FolderCleanerClass.GetFtpPathAsync(ftpConnect, ftpFileList, localFileList) ? 2 : 0 : 0;
                 }
             }
             catch (Exception ex)

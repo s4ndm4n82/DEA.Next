@@ -1,59 +1,27 @@
-﻿using GraphHelper;
-using WriteLog;
-using FtpFunctions;
-using UserConfigReader;
+﻿using WriteLog;
 using FolderFunctions;
-using ProcessStatusMessageSetter;
+using RunTimedFunctions;
+using ProcessSartupFunctions;
+using ErrorFolderChecker;
 
 
 // DEA.Next
 // ~~~~~~~~
-// TODO 1: Rewrite the code to match Graph v5.0.0.
-// TODO 2: Change the error subfolder name creation when email clients are handled.
+// TODO 1: Rewrite the code to match Graph v5.0.0. +
 
 // Aplication title just for fun.
 
-WriteLogClass.WriteToLog(1, "Starting download process ....", 1);
 FolderFunctionsClass.CheckFolders(null!);
 
-int emailResult = 0;
-int ftpResult = 0;
-
-// User cpmfig reader.
-UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
-
-// Array contaning all the FTP user details.
-IEnumerable<UserConfigReaderClass.Customerdetail> ftpClients = jsonData.CustomerDetails!.Where(ftpc => ftpc.FileDeliveryMethod!.ToLower() == "ftp");
-int ftpClientCount = ftpClients.Count(); // FTP client count.
-
-// Array contaning all the Email user details.
-IEnumerable<UserConfigReaderClass.Customerdetail> emailClients = jsonData.CustomerDetails!.Where(emailc => emailc.FileDeliveryMethod!.ToLower() == "email");
-int emailClientCount = emailClients.Count(); // Email client count.
-
-// FTP download loop.
-if (ftpClientCount > 0)
+if (!ErrorFolderCheckerClass.ErrorFolderChecker().Item1.Any())
 {
-    foreach (var ftpClient in ftpClients)
-    {
-        if (ftpClient.FtpDetails!.FtpType!.ToLower() == "ftp" || ftpClient.FtpDetails!.FtpType!.ToLower() == "ftps")
-        {
-            ftpResult = await FtpFunctionsClass.GetFtpFiles(ftpClient.id);
-        }
-        /*else
-        {
-            // Awating to be implimented. Will be added when needed.
-            SftpFunctionsClass.GetSftpFiles(ftpClient.id);
-        }*/
-    }
+    WriteLogClass.WriteToLog(1, "Starting download process ....", 1);
+    await ProcessStartupFunctionsClass.StartupProcess();
+}
+else
+{
+    RunTimedFunctionsClass.CallDeaTimedProcesses("deamailer");
+    WriteLogClass.WriteToLog(1, "Error folder is not empty. Check and empty the error folder before continuing ....", 1);
 }
 
-// Email download loop.
-if (emailClientCount > 0)
-{
-    foreach (var emailClient in emailClients)
-    {
-        emailResult = await GraphHelperClass.InitializGetAttachment(emailClient.id);
-    }
-}
-
-WriteLogClass.WriteToLog(ProcessStatusMessageSetterClass.SetMessageTypeMain(emailResult, ftpResult), $"{ProcessStatusMessageSetterClass.SetProcessStatusMain(emailResult, ftpResult)}\n", 1);
+RunTimedFunctionsClass.CallDeaTimedProcesses("deacleaner");

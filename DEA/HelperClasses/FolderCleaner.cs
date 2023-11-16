@@ -1,12 +1,11 @@
 ﻿using FluentFTP;
-using System.Text.RegularExpressions;
 using WriteLog;
 
 namespace FolderCleaner
 {
     internal class FolderCleanerClass
     {
-        public static bool GetFolders(string folderPath)
+        public static bool GetFolders(string folderPath, string[] jsonFileNames)
         {
             DirectoryInfo filePath = Directory.GetParent(Directory.GetParent(Path.GetDirectoryName(folderPath)!)!.FullName)!;
 
@@ -17,7 +16,7 @@ namespace FolderCleaner
                 DirectoryInfo dirPath = new(filePath!.FullName);
                 IEnumerable<DirectoryInfo> folderList = dirPath.EnumerateDirectories("*.*", SearchOption.TopDirectoryOnly);
 
-                if (DeleteFolders(folderList))
+                if (DeleteFolders(folderList, jsonFileNames))
                 {
                     return true;
                 }
@@ -30,7 +29,7 @@ namespace FolderCleaner
             return false;
         }
 
-        private static bool DeleteFolders(IEnumerable<DirectoryInfo> folderList)
+        private static bool DeleteFolders(IEnumerable<DirectoryInfo> folderList, string[] jsonFileList)
         {
             int fileLoopCount = 0;
             int folderLoopCount = 0;
@@ -133,6 +132,11 @@ namespace FolderCleaner
             }
 
         }
-        
+
+        private static void LogException(string message, Exception ex)
+        {
+            WriteLogClass.WriteToLog(0, $"Exception at {message}: {ex.Message}", 0);
+        }
+
     }
 }

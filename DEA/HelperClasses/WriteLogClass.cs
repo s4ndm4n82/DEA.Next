@@ -1,12 +1,11 @@
-﻿using GraphHelper;
-using Serilog;
+﻿using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 using FolderFunctions;
 
 namespace WriteLog
 {
-    internal class WriteLogClass
+    public class WriteLogClass
     {
         /// <summary>
         /// Class that handles the writing of the log file.

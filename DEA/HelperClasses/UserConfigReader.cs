@@ -3,7 +3,7 @@ using WriteLog;
 
 namespace UserConfigReader
 {
-    internal class UserConfigReaderClass
+    public class UserConfigReaderClass
     {
         public class CustomerDetailsObject
         {
@@ -12,7 +12,8 @@ namespace UserConfigReader
 
         public class Customerdetail
         {
-            public int id { get; set; }
+            public int Id { get; set; }
+            public int CustomerStatus { get; set; }
             public string? Token { get; set; }
             public string? UserName { get; set; }
             public string? TemplateKey { get; set; }
@@ -23,11 +24,16 @@ namespace UserConfigReader
             public string? ClientOrgNo { get; set; }
             public string? ClientIdField { get; set; }
             public string? FileDeliveryMethod { get; set; }
+            public Domaindetails DomainDetails { get; set; }
             public Ftpdetails? FtpDetails { get; set; }
             public Emaildetails? EmailDetails { get; set; }
             public Documentdetails? DocumentDetails { get; set; }
         }
-
+        public class Domaindetails
+        {
+            public string MainDomain { get; set; }
+            public string TpsRequestUrl { get; set; }
+        }
         public class Ftpdetails
         {
             public string? FtpType { get; set; }

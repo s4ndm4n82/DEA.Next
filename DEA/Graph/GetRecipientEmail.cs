@@ -79,7 +79,8 @@ namespace GetRecipientEmail
                 WriteLogClass.WriteToLog(0, $"Exception at getting recipient email: {ex.Message}", 0);
             }
 
-            return rEmail.User;
+            //return rEmail.User;
+            return rEmail.Address;
         }
     }
 }

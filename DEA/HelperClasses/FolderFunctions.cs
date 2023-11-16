@@ -4,7 +4,7 @@ using WriteLog;
 
 namespace FolderFunctions
 {
-    internal class FolderFunctionsClass
+    public class FolderFunctionsClass
     {
         /// <summary>
         /// Checks and creates the main folders that used by the app. And also returns the path for those folders when needed.
