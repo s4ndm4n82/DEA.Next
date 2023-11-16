@@ -5,9 +5,14 @@ namespace FolderCleaner
 {
     internal class FolderCleanerClass
     {
-        public static bool GetFolders(string folderPath, string[] jsonFileNames)
+        public static bool GetFolders(string folderPath, IEnumerable<string> jsonFileNames)
         {
-            DirectoryInfo filePath = Directory.GetParent(Directory.GetParent(Path.GetDirectoryName(folderPath)!)!.FullName)!;
+            if (Directory.Exists(folderPath))
+            {
+                WriteLogClass.WriteToLog(1, "Cleaning download folder ....", 1);
+                return DeleteFolders(folderPath, jsonFileNames) ? true : false;
+            }
+            /*DirectoryInfo filePath = Directory.GetParent(Directory.GetParent(Path.GetDirectoryName(folderPath)!)!.FullName)!;
 
             if (Directory.Exists(filePath!.FullName))
             {
@@ -25,17 +30,27 @@ namespace FolderCleaner
             {
                 WriteLogClass.WriteToLog(1, "Folder path does not exsits ....", 1);
                 return false;
-            }
+            }*/
             return false;
         }
 
-        private static bool DeleteFolders(IEnumerable<DirectoryInfo> folderList, string[] jsonFileList)
+        private static bool DeleteFolders(string folderPath, IEnumerable<string> jsonFileList)
         {
-            int fileLoopCount = 0;
+            /*int fileLoopCount = 0;
             int folderLoopCount = 0;
-            int folderCount = folderList.Count();
-            
-            foreach (DirectoryInfo folder in folderList)
+            int folderCount = folderList.Count();*/
+
+            IEnumerable<string> fileList = Directory.EnumerateFiles(folderPath, "*.*");
+
+            v
+                ar matchedFileNames = Path.GetFileName(fileList).Intersect(jsonFileList);
+
+            foreach (var matchedFileName in matchedFileNames)
+            {
+                Console.WriteLine(matchedFileName);
+            }
+
+            /*foreach (DirectoryInfo folder in folderList)
             {
                 if (Directory.Exists(folder.FullName))
                 {
@@ -85,7 +100,7 @@ namespace FolderCleaner
             else
             {
                 WriteLogClass.WriteToLog(1, $"Folder not removed. It's empty ....", 1);
-            }
+            }*/
 
             return false;
         }

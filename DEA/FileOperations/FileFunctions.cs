@@ -123,7 +123,7 @@ namespace FileFunctions
                                                         int fileCount,
                                                         IEnumerable<string> ftpFileList,
                                                         string[] localFileList,
-                                                        string[] jsonFileList,
+                                                        IEnumerable<string> jsonFileList,
                                                         string clientOrgNo)
         {
             try
