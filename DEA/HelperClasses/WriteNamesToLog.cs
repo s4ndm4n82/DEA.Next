@@ -27,5 +27,18 @@ namespace WriteNamesToLog
             }
             
         }
+        public static string WriteMissedFilenames(IEnumerable<string> missedFileName)
+        {
+            string returnMissedFileNames = "";
+            try
+            {
+                return returnMissedFileNames = string.Join(", ", missedFileName);
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(0, $"Exception at write missed file names: {ex.Message}", 0);
+                return returnMissedFileNames;
+            }
+        }
     }
 }

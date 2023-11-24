@@ -6,17 +6,19 @@ namespace HandleErrorFiles
 {
     internal class HandleErrorFilesClass
     {
-        public static bool MoveFilesToErrorFolder(string sourcePath, int clientID, string recivedEmail)
+        public static readonly string ErrorFolderPath = FolderFunctionsClass.CheckFolders("error");
+
+        public static bool MoveAllFilesToErrorFolder(string sourcePath, int clientID, string recivedEmail)
         {
             UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
             UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails.FirstOrDefault(cid => cid.Id == clientID);
 
-            string clientNo = clientID.ToString();
-            string errorFolderPath = FolderFunctionsClass.CheckFolders("error");
+            string clientNo = clientID.ToString();            
             string sourceFolderPath = Path.GetDirectoryName(sourcePath)!;
             string sourceFolder = sourceFolderPath.Split(Path.DirectorySeparatorChar).Last();
-            string folderName = clientDetails.FileDeliveryMethod.ToLower() == "email" ? string.Concat("ID_", clientNo, " ", "Email_", recivedEmail) : string.Concat("ID_", clientNo, " ", "Org_", clientDetails.ClientOrgNo);
-            string destinationFolderPath = Path.Combine(errorFolderPath, folderName, sourceFolder);
+            string folderName = clientDetails.FileDeliveryMethod.ToLower() == "email" ? string.Concat("ID_", clientNo, " ", "Email_", recivedEmail)
+                                                                                        : string.Concat("ID_", clientNo, " ", "Org_", clientDetails.ClientOrgNo);
+            string destinationFolderPath = Path.Combine(ErrorFolderPath, folderName, sourceFolder);
 
             DirectoryInfo dirInfo = new(sourceFolderPath);
             IEnumerable<FileInfo> sourceFileNameList = dirInfo.EnumerateFiles("*.*", SearchOption.TopDirectoryOnly);
@@ -44,7 +46,7 @@ namespace HandleErrorFiles
             try
             {
                 foreach (FileInfo srcFile in srcFileList)
-                {   
+                {
                     string dstFile = Path.Combine(dstPath, srcFile.Name);
 
                     if (File.Exists(dstFile))
@@ -55,7 +57,7 @@ namespace HandleErrorFiles
                     else
                     {
                         File.Move(srcFile.FullName, dstFile);
-                    }                    
+                    }
                 }
                 return true;
             }
@@ -82,6 +84,53 @@ namespace HandleErrorFiles
             catch (Exception ex)
             {
                 WriteLogClass.WriteToLog(0, $"Exception at folder delete: {ex.Message}", 0);
+                return false;
+            }
+        }
+
+        public static bool MoveFilesToErrorFolder(string sourcePath, IEnumerable<string> fileNames, int? customerId, string clientEmail)
+        {
+            UserConfigReaderClass.CustomerDetailsObject jsonDetails = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+            UserConfigReaderClass.Customerdetail clientDetails = jsonDetails.CustomerDetails.FirstOrDefault(cid => cid.Id == customerId);
+
+            string sourcFolderName = sourcePath.Split(Path.DirectorySeparatorChar).Last();
+            string destinationFolderName = clientDetails.FileDeliveryMethod.ToLower() == "email" ? string.Concat("ID_", customerId.ToString(), " ", "Email_", clientEmail)
+                                                                                        : string.Concat("ID_", customerId.ToString(), " ", "Org_", clientDetails.ClientOrgNo);
+
+            string destinationFolderPath = Path.Combine(ErrorFolderPath, destinationFolderName, sourcFolderName); // customerID is used to create a folder for each sourc
+
+            Directory.CreateDirectory(!Directory.Exists(destinationFolderPath) ? destinationFolderPath : null);
+
+            MoveEachFile(sourcePath, destinationFolderPath, fileNames);
+
+            Console.WriteLine(destinationFolderPath);
+            return true;
+        }
+
+        private static bool MoveEachFile(string srcPath, string dstPath, IEnumerable<string> fileNames)
+        {
+            try
+            {
+                foreach (string fileName in fileNames)
+                {
+                    string srcFile = Path.Combine(srcPath, fileName);
+                    string dstFile = Path.Combine(dstPath, fileName);
+
+                    if (File.Exists(dstFile))
+                    {
+                        WriteLogClass.WriteToLog(1, "File already exists ....", 1);
+                        continue;
+                    }
+                    else
+                    {
+                        File.Move(srcFile, dstFile);
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(0, $"Exception at single file mover: {ex.Message}", 0);
                 return false;
             }
         }

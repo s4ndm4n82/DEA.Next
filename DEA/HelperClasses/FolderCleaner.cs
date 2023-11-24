@@ -1,16 +1,18 @@
 ﻿using FluentFTP;
+using HandleErrorFiles;
 using WriteLog;
+using WriteNamesToLog;
 
 namespace FolderCleaner
 {
     internal class FolderCleanerClass
     {
-        public static bool GetFolders(string folderPath, IEnumerable<string> jsonFileNames)
+        public static bool GetFolders(string downloadfolderPath, IEnumerable<string> jsonFileNames, int? customerID, string clientEmail)
         {
-            if (Directory.Exists(folderPath))
+            if (Directory.Exists(downloadfolderPath))
             {
                 WriteLogClass.WriteToLog(1, "Cleaning download folder ....", 1);
-                return DeleteFolders(folderPath, jsonFileNames) ? true : false;
+                return DeleteFolders(downloadfolderPath, jsonFileNames, customerID, clientEmail) ? true : false;
             }
             /*DirectoryInfo filePath = Directory.GetParent(Directory.GetParent(Path.GetDirectoryName(folderPath)!)!.FullName)!;
 
@@ -34,21 +36,13 @@ namespace FolderCleaner
             return false;
         }
 
-        private static bool DeleteFolders(string folderPath, IEnumerable<string> jsonFileList)
+        private static bool DeleteFolders(string downloadedFolderPath, IEnumerable<string> jsonFileList, int? customerId, string clientEmail)
         {
             /*int fileLoopCount = 0;
             int folderLoopCount = 0;
-            int folderCount = folderList.Count();*/
+            int folderCount = folderList.Count();*/            
 
-            IEnumerable<string> fileList = Directory.EnumerateFiles(folderPath, "*.*");
-
-            v
-                ar matchedFileNames = Path.GetFileName(fileList).Intersect(jsonFileList);
-
-            foreach (var matchedFileName in matchedFileNames)
-            {
-                Console.WriteLine(matchedFileName);
-            }
+            CheckMissedFiles(downloadedFolderPath, jsonFileList, customerId, clientEmail);
 
             /*foreach (DirectoryInfo folder in folderList)
             {
@@ -148,10 +142,24 @@ namespace FolderCleaner
 
         }
 
-        private static void LogException(string message, Exception ex)
+        private static bool CheckMissedFiles(string downloadedFolderPath, IEnumerable<string> jsonFileList, int? customerId, string clienEmail)
         {
-            WriteLogClass.WriteToLog(0, $"Exception at {message}: {ex.Message}", 0);
-        }
+            IEnumerable<string> downloadedFileList = Directory.EnumerateFiles(downloadedFolderPath, "*.*");
 
+            IEnumerable<string> jsonFileNames = jsonFileList.Select(jsonFilePath => Path.GetFileName(jsonFilePath));
+            IEnumerable<string> downloadedFileNames = downloadedFileList.Select(downloadedFilePath => Path.GetFileName(downloadedFilePath));
+            IEnumerable<string> unmatchedFileNames = jsonFileNames.Except(downloadedFileNames).Concat(downloadedFileNames.Except(jsonFileNames));
+
+            if (unmatchedFileNames.Any())
+            {
+                WriteLogClass.WriteToLog(1, $"Missed {unmatchedFileNames.Count()} files ....", 1);
+                bool fileMoveResult = HandleErrorFilesClass.MoveFilesToErrorFolder(downloadedFolderPath, unmatchedFileNames, customerId, clienEmail);
+
+                WriteLogClass.WriteToLog(1, fileMoveResult ? $"Moved files {WriteNamesToLogClass.WriteMissedFilenames(unmatchedFileNames)}"
+                                                           : "Failed to move files to error folder.", 1);
+                return fileMoveResult;
+            }
+            return false;
+        }
     }
 }

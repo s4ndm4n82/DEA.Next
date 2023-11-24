@@ -158,9 +158,9 @@ namespace FileFunctions
                      * from the FolderCleanerClass and then removes the files from the local hold folder when the sending is successful. And returns 1
                      * on fail returns 0.*/
                     return clientDetails.FileDeliveryMethod.ToLower() == "email" ?
-                           FolderCleanerClass.GetFolders(fullFilePath, null) ? 1 : 0 :
+                           FolderCleanerClass.GetFolders(fullFilePath, null, null, clientOrgNo) ? 1 : 0 :
                            await FolderCleanerClass.GetFtpPathAsync(ftpConnect, ftpFileList, localFileList) &&
-                           FolderCleanerClass.GetFolders(dirPath, jsonFileList) ? 1 : 0;
+                           FolderCleanerClass.GetFolders(dirPath, jsonFileList, customerId, null) ? 1 : 0;
                 }
                 else
                 {
@@ -172,9 +172,9 @@ namespace FileFunctions
                      * FolderCleanerClass which will delete the file from the hold folder and when it success returns 2. If the condition is not met
                      * it'll the function GetFtpPathAsync() from the FolderCleanerClass and then removes the files from the local hold folder when
                      * the sending is successful. And returns 2 on fail returns 0.*/
-                    return HandleErrorFilesClass.MoveFilesToErrorFolder(fullFilePath, customerId, clientOrgNo) ?
+                    return HandleErrorFilesClass.MoveAllFilesToErrorFolder(fullFilePath, customerId, clientOrgNo) ?
                            clientDetails.FileDeliveryMethod.ToLower() == "email" ?
-                               FolderCleanerClass.GetFolders(fullFilePath, null) ? 2 : 0 :
+                               FolderCleanerClass.GetFolders(fullFilePath, null, null, clientOrgNo) ? 2 : 0 :
                                await FolderCleanerClass.GetFtpPathAsync(ftpConnect, ftpFileList, localFileList) ? 2 : 0 : 0;
                 }
             }
