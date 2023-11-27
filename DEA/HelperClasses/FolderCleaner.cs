@@ -152,11 +152,11 @@ namespace FolderCleaner
 
             if (unmatchedFileNames.Any())
             {
-                WriteLogClass.WriteToLog(1, $"Missed {unmatchedFileNames.Count()} files ....", 1);
+                //WriteLogClass.WriteToLog(1, $"Missed {unmatchedFileNames} files ....", 1);
                 bool fileMoveResult = HandleErrorFilesClass.MoveFilesToErrorFolder(downloadedFolderPath, unmatchedFileNames, customerId, clienEmail);
 
-                WriteLogClass.WriteToLog(1, fileMoveResult ? $"Moved files {WriteNamesToLogClass.WriteMissedFilenames(unmatchedFileNames)}"
-                                                           : "Failed to move files to error folder.", 1);
+                WriteLogClass.WriteToLog(1, $"Moved files {WriteNamesToLogClass.WriteMissedFilenames(unmatchedFileNames)}", 1);
+
                 return fileMoveResult;
             }
             return false;

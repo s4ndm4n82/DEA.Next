@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using WriteLog;
+﻿using WriteLog;
 
 namespace WriteNamesToLog
 {

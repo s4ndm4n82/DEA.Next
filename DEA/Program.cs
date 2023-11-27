@@ -13,7 +13,7 @@ using ErrorFolderChecker;
 
 FolderFunctionsClass.CheckFolders(null!);
 
-if (!ErrorFolderCheckerClass.ErrorFolderChecker().Item1.Any())
+if (ErrorFolderCheckerClass.ErrorFolderChecker().Item1.Count() < 5)
 {
     WriteLogClass.WriteToLog(1, "Starting download process ....", 1);
     await ProcessStartupFunctionsClass.StartupProcess();
