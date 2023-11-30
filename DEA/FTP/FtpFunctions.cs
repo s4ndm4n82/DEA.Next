@@ -7,6 +7,7 @@ using UserConfigReader;
 using FileFunctions;
 using FolderFunctions;
 using ProcessStatusMessageSetter;
+using FolderCleaner;
 
 namespace FtpFunctions
 {
@@ -103,72 +104,47 @@ namespace FtpFunctions
             return downloadResult;
         }
 
-        public static async Task<int> DownloadFtpFiles(AsyncFtpClient ftpConnect, string ftpPath, string ftpHoldFolder, int clientID)
+        private static async Task<int> DownloadFtpFiles(AsyncFtpClient ftpConnect, string ftpPath, string ftpHoldFolder, int clientID)
         {
-            // To capture the loop success flags.
-            int fileNameFlag = 0;
-
-            // Initiate FTP connect and gets the file list from the FTP server.
-            List<FtpListItem> ftpFilesOnly = new List<FtpListItem>();
-
-            foreach (var fileItem in await ftpConnect.GetListing(ftpPath))
+            try
             {
-                // Only select files only. Sub directories are skipped.
-                if (fileItem.Type == FtpObjectType.File)
-                {
-                    ftpFilesOnly.Add(new FtpListItem() { Name = fileItem.Name, FullName = fileItem.FullName });
-                }                
+                // TODO: Add max file limit. Here and to config file.
+                IEnumerable<FtpListItem> ftpFileNameList = await ftpConnect.GetListing(ftpPath);
+                IEnumerable<string> filesToDownload = ftpFileNameList
+                                               .Where(f => f.Type == FtpObjectType.File)
+                                               .Select(f => f.FullName).ToArray();
+
+
+                return await FileDownloadFuntcion(ftpConnect, filesToDownload, ftpHoldFolder, clientID);
             }
-            
-            // Puts the full filename into a string list.
-            IEnumerable<string> filesToDownload = ftpFilesOnly.Select(f => f.FullName.ToString());
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(0, $"Exception at file download: {ex.Message}", 0);
+                return -1;
+            }
+        }
+
+        private static async Task
+
+        private static async Task<int> FileDownloadFuntcion(AsyncFtpClient ftpConnect, IEnumerable<string> filesToDownload, string ftpHoldFolder, int clientId)
+        {
 
             // Downloads files from the server and counts them.
-            List<FtpResult> downloadedFileList = await ftpConnect.DownloadFiles(ftpHoldFolder, filesToDownload, FtpLocalExists.Resume, FtpVerify.Retry);
-            
-            // Array to store downloaded file list.
-            string[] localFiles;
-
-            if (downloadedFileList.Count > 0)
+            IEnumerable<FtpResult> downloadResult = await ftpConnect.DownloadFiles(ftpHoldFolder, filesToDownload, FtpLocalExists.Resume, FtpVerify.Retry);
+            if (!downloadResult.Any())
             {
-                string lastFolderName = Path.GetFileName(ftpHoldFolder);                
-                string parentName = Directory.GetParent(ftpHoldFolder)!.Name;
-
-                WriteLogClass.WriteToLog(1, $"Downloaded {downloadedFileList.Count} file/s from {ftpPath} to \\{parentName}\\{lastFolderName} folder ....", 3);
-
-                localFiles = Directory.GetFiles(ftpHoldFolder, "*.*", SearchOption.TopDirectoryOnly);
-
-                foreach (string ftpFile in filesToDownload)
-                {
-                    string ftpFileName = Path.GetFileNameWithoutExtension(ftpFile);
-                    
-                    foreach (string localFile in localFiles)
-                    {
-                        string localFileName = Path.GetFileNameWithoutExtension(localFile);
-
-                        if (ftpFileName.Equals(localFileName, StringComparison.OrdinalIgnoreCase))
-                        {
-                            fileNameFlag = 1;
-                        }
-                    }
-                }
-
-                if (fileNameFlag == 1)
-                {
-                    WriteLogClass.WriteToLog(1, $"Ftp file count: {filesToDownload.Count()}, Local file count: {localFiles.Length}", 3);
-
-                    return await FileFunctionsClass.SendToWebService(ftpConnect, ftpHoldFolder, clientID, filesToDownload, localFiles, null!);
-                }
-                else
-                {
-                    WriteLogClass.WriteToLog(1, $"Ftp file count: {filesToDownload.Count()}, Local file count: {localFiles.Length} files doesn't match", 3);
-                    return 3;
-                }
-            }
-            else
-            {   
                 return 4;
             }
-        }        
+
+            IEnumerable<string> unmatchedFileList = FolderCleanerClass.CheckMissedFiles(ftpHoldFolder, filesToDownload);
+            if (unmatchedFileList.Any())
+            {
+                WriteLogClass.WriteToLog(1, $"Ftp file count: {filesToDownload.Count()}, Local file count: {unmatchedFileList.Count()} files doesn't match", 3);
+                return 3;
+            }
+
+            string[] localFiles = Directory.GetFiles(ftpHoldFolder, "*.*", SearchOption.TopDirectoryOnly);
+            return await FileFunctionsClass.SendToWebService(ftpConnect, ftpHoldFolder, clientId, filesToDownload, localFiles, null!);
+        }
     }
 }

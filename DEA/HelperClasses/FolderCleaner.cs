@@ -38,11 +38,18 @@ namespace FolderCleaner
         /// <param name="clientEmail"></param>
         /// <returns></returns>
         private static bool FolderCleaningProcess(string downloadedFolderPath, IEnumerable<string> jsonFileList, int? customerId, string clientEmail)
-        {   
-            if (!CheckMissedFiles(downloadedFolderPath, jsonFileList, customerId, clientEmail))
+        {
+            IEnumerable<string> nameList = CheckMissedFiles(downloadedFolderPath, jsonFileList);
+
+            if (nameList.Any()) // If there are any unmatched files.
             {
-                WriteLogClass.WriteToLog(0, "Check missed files failed ....", 0);
-                return false;
+                // Calls the MoveFilesToErrorFolder method to start moving the missed files.
+                bool fileMoveResult = HandleErrorFilesClass.MoveFilesToErrorFolder(downloadedFolderPath, nameList, customerId, clientEmail);
+                // Writes the result to the log.
+                WriteLogClass.WriteToLog(1, fileMoveResult ? $"Moved files {WriteNamesToLogClass.WriteMissedFilenames(nameList)}"
+                                                           : "Moving files was unsuccessful ...", 1);
+                // Returns the result.
+                return fileMoveResult;
             }
 
             if (!DeleteFiles(downloadedFolderPath))
@@ -87,6 +94,23 @@ namespace FolderCleaner
             return result;
         }
 
+        public static IEnumerable<string> CheckMissedFiles(string localFolderPath, IEnumerable<string> remoteFileList)
+        {
+            // Makes the downloaded files list from the folder path.
+            IEnumerable<string> downloadedFileList = Directory.EnumerateFiles(localFolderPath, "*.*");
+
+            // Creates file name only list from the json file list.
+            IEnumerable<string> jsonFileNames = remoteFileList.Select(jsonFilePath => Path.GetFileName(jsonFilePath));
+            // Creates file name only list from the downloaded file list.
+            IEnumerable<string> downloadedFileNames = downloadedFileList.Select(downloadedFilePath => Path.GetFileName(downloadedFilePath));
+            // Gets the unmatched file names. From matching the above two lists.
+            IEnumerable<string> unmatchedFileNames = jsonFileNames.Except(downloadedFileNames).Concat(downloadedFileNames.Except(jsonFileNames));
+
+            WriteLogClass.WriteToLog(1, !unmatchedFileNames.Any() ? "No missed files found ...."
+                                                                  : $"Found {unmatchedFileNames.Count()} missed files ....", 1);
+            return unmatchedFileNames;
+        }
+
         private static async Task<bool> DeleteFtpFiles(AsyncFtpClient ftpConnect, string ftpFileName)
         {
             try
@@ -104,41 +128,10 @@ namespace FolderCleaner
 
         private static string GetFtpPath(string ftpFilePath)
         {
-            int lastSlashIndex = ftpFilePath.LastIndexOf('/');
-            //string directoryPath = ftpFilePath.Substring(0, lastSlashIndex) + '/';
+            int lastSlashIndex = ftpFilePath.LastIndexOf('/');            
             string directoryPath = string.Concat(ftpFilePath.Substring(0, lastSlashIndex), '/');
 
             return directoryPath;
-        }
-
-        private static bool CheckMissedFiles(string downloadedFolderPath, IEnumerable<string> jsonFileList, int? customerId, string clienEmail)
-        {
-            // Makes the downloaded files list from the folder path.
-            IEnumerable<string> downloadedFileList = Directory.EnumerateFiles(downloadedFolderPath, "*.*");
-
-            // Creates file name only list from the json file list.
-            IEnumerable<string> jsonFileNames = jsonFileList.Select(jsonFilePath => Path.GetFileName(jsonFilePath));
-            // Creates file name only list from the downloaded file list.
-            IEnumerable<string> downloadedFileNames = downloadedFileList.Select(downloadedFilePath => Path.GetFileName(downloadedFilePath));
-            // Gets the unmatched file names. From matching the above two lists.
-            IEnumerable<string> unmatchedFileNames = jsonFileNames.Except(downloadedFileNames).Concat(downloadedFileNames.Except(jsonFileNames));
-            // Copy of the unmatchedFileNames list to stop it from resetting.
-            IEnumerable<string> nameList = unmatchedFileNames.ToList();
-
-            if (nameList.Any()) // If there are any unmatched files.
-            {
-                WriteLogClass.WriteToLog(1, $"Found {nameList.Count()} missed files ....", 1);
-                // Calls the MoveFilesToErrorFolder method to start moving the missed files.
-                bool fileMoveResult = HandleErrorFilesClass.MoveFilesToErrorFolder(downloadedFolderPath, unmatchedFileNames, customerId, clienEmail);
-                // Writes the result to the log.
-                WriteLogClass.WriteToLog(1, fileMoveResult ? $"Moved files {WriteNamesToLogClass.WriteMissedFilenames(nameList)}"
-                                                           : "Moving files was unsuccessful ..." , 1);
-                // Returns the result.
-                return fileMoveResult;
-            }
-            // If there are no missed files.
-            WriteLogClass.WriteToLog(1, "No missed files ....", 1);
-            return true;
         }
 
         private static bool DeleteFiles(string downloadFolderPath)

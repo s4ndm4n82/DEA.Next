@@ -15,9 +15,9 @@ namespace GetMailFolderIds
 
         public class ClientFolderId
         {
-            public string? clientMainFolderId { get; set; }
-            public string? clientSubFolderId1 { get; set; }
-            public string? clientSubFolderId2 { get; set; }
+            public string? ClientMainFolderId { get; set; }
+            public string? ClientSubFolderId1 { get; set; }
+            public string? ClientSubFolderId2 { get; set; }
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace GetMailFolderIds
                                          .Request()
                                          .GetAsync();
 
-                    folderId.clientMainFolderId = _inboxClientMainFolder.FirstOrDefault(x => x.DisplayName == clientMainFolderName)!.Id;
+                    folderId.ClientMainFolderId = _inboxClientMainFolder.FirstOrDefault(x => x.DisplayName == clientMainFolderName)!.Id;
                 }
                 catch (Exception ex)
                 {
@@ -52,17 +52,17 @@ namespace GetMailFolderIds
 
             }
 
-            if (!string.IsNullOrEmpty(folderId.clientMainFolderId) && !string.IsNullOrEmpty(clientSubFolderName1) && string.IsNullOrEmpty(clientSubfolderName2))
+            if (!string.IsNullOrEmpty(folderId.ClientMainFolderId) && !string.IsNullOrEmpty(clientSubFolderName1) && string.IsNullOrEmpty(clientSubfolderName2))
             {
                 try
                 {
                     _inboxSubFolder1 = await graphClient.Users[$"{clientEmail}"].MailFolders["Inbox"]
-                                   .ChildFolders[$"{folderId.clientMainFolderId}"]
+                                   .ChildFolders[$"{folderId.ClientMainFolderId}"]
                                    .ChildFolders
                                    .Request()
                                    .GetAsync();
 
-                    folderId.clientSubFolderId1 = _inboxSubFolder1.FirstOrDefault(y => y.DisplayName == clientSubFolderName1)!.Id;
+                    folderId.ClientSubFolderId1 = _inboxSubFolder1.FirstOrDefault(y => y.DisplayName == clientSubFolderName1)!.Id;
                 }
                 catch (Exception ex)
                 {
@@ -70,18 +70,18 @@ namespace GetMailFolderIds
                 }
             }
 
-            if (!string.IsNullOrEmpty(folderId.clientMainFolderId) && !string.IsNullOrEmpty(folderId.clientSubFolderId1) && !string.IsNullOrEmpty(clientSubfolderName2))
+            if (!string.IsNullOrEmpty(folderId.ClientMainFolderId) && !string.IsNullOrEmpty(folderId.ClientSubFolderId1) && !string.IsNullOrEmpty(clientSubfolderName2))
             {
                 try
                 {
                     _inboxSubFolder2 = await graphClient.Users[$"{clientEmail}"].MailFolders["Inbox"]
-                                   .ChildFolders[$"{folderId.clientMainFolderId}"]
-                                   .ChildFolders[$"{folderId.clientSubFolderId1}"]
+                                   .ChildFolders[$"{folderId.ClientMainFolderId}"]
+                                   .ChildFolders[$"{folderId.ClientSubFolderId1}"]
                                    .ChildFolders
                                    .Request()
                                    .GetAsync();
 
-                    folderId.clientSubFolderId2 = _inboxSubFolder2.FirstOrDefault(z => z.DisplayName == clientSubfolderName2)!.Id;
+                    folderId.ClientSubFolderId2 = _inboxSubFolder2.FirstOrDefault(z => z.DisplayName == clientSubfolderName2)!.Id;
                 }
                 catch (Exception ex)
                 {
