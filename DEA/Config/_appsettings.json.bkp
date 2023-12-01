@@ -1,0 +1,41 @@
+{
+  "ProgramSettings": {
+    "MaxEmails": 40,
+    "SendErrorEmail": true,
+    "CleanLogs": true
+  },
+  "EmailServerSettings": {
+    "ServerSettings": {
+      "SmtpServer": "",
+      "Port": 25
+    },
+    "Credntials": {
+      "UserName": "",
+      "Password": ""
+    },
+    "EmailSettings": {
+      "FromEmail": "",
+      "ReplyEmail": "",
+      "ToEmail": [
+        ""
+      ],
+      "Subject": ""
+    }
+  },
+  "TimingSettings": {
+    "ErrorCheckInterval": 10,
+    "LogsDeleteAfter": 30,
+    "PreviousRunTime": "",
+    "PreviousRunDate": ""
+  },
+  "GraphConfig": {
+    "TenantId": "",
+    "Instance": "",
+    "GraphApiUrl": "",
+    "ClientSecret": "",
+    "ClientId": "",
+    "Scopes": [
+      "https://graph.microsoft.com/.default"
+    ]
+  }
+}

@@ -8,6 +8,7 @@ using FileFunctions;
 using FolderFunctions;
 using ProcessStatusMessageSetter;
 using FolderCleaner;
+using AppConfigReader;
 
 namespace FtpFunctions
 {
@@ -106,45 +107,60 @@ namespace FtpFunctions
 
         private static async Task<int> DownloadFtpFiles(AsyncFtpClient ftpConnect, string ftpPath, string ftpHoldFolder, int clientID)
         {
+            int result = -1;
+
             try
             {
-                // TODO: Add max file limit. Here and to config file.
+                AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
                 IEnumerable<FtpListItem> ftpFileNameList = await ftpConnect.GetListing(ftpPath);
                 IEnumerable<string> filesToDownload = ftpFileNameList
                                                .Where(f => f.Type == FtpObjectType.File)
                                                .Select(f => f.FullName).ToArray();
+                if (!filesToDownload.Any())
+                {
+                    return 4;
+                }
 
+                int batchSize = jsonData.ProgramSettings.MaxFtpFiles;
+                int totalFtpFiles = filesToDownload.Count();
+                int batchCurrentIndex = 0;
 
-                return await FileDownloadFuntcion(ftpConnect, filesToDownload, ftpHoldFolder, clientID);
+                while (batchCurrentIndex < totalFtpFiles)
+                {
+                    IEnumerable<string> currentBatch = filesToDownload.Skip(batchCurrentIndex).Take(batchSize);
+                    result = await FileDownloadFuntcion(ftpConnect, currentBatch, ftpHoldFolder, clientID);
+
+                    if (result == 3 || result == 4)
+                    {
+                        return result;
+                    }
+
+                    batchCurrentIndex += batchSize;
+                }
+                return result;
             }
             catch (Exception ex)
             {
                 WriteLogClass.WriteToLog(0, $"Exception at file download: {ex.Message}", 0);
-                return -1;
+                return result;
             }
         }
 
-        private static async Task
-
-        private static async Task<int> FileDownloadFuntcion(AsyncFtpClient ftpConnect, IEnumerable<string> filesToDownload, string ftpHoldFolder, int clientId)
+        private static async Task<int> FileDownloadFuntcion(AsyncFtpClient ftpConnect, IEnumerable<string> currentBatch, string ftpHoldFolder, int clientId)
         {
 
-            // Downloads files from the server and counts them.
-            IEnumerable<FtpResult> downloadResult = await ftpConnect.DownloadFiles(ftpHoldFolder, filesToDownload, FtpLocalExists.Resume, FtpVerify.Retry);
-            if (!downloadResult.Any())
-            {
-                return 4;
-            }
+            // Downloads files from the server.
+            IEnumerable<FtpResult> downloadResult = await ftpConnect.DownloadFiles(ftpHoldFolder, currentBatch, FtpLocalExists.Resume, FtpVerify.Retry);
 
-            IEnumerable<string> unmatchedFileList = FolderCleanerClass.CheckMissedFiles(ftpHoldFolder, filesToDownload);
+            IEnumerable<string> unmatchedFileList = FolderCleanerClass.CheckMissedFiles(ftpHoldFolder, currentBatch);
             if (unmatchedFileList.Any())
             {
-                WriteLogClass.WriteToLog(1, $"Ftp file count: {filesToDownload.Count()}, Local file count: {unmatchedFileList.Count()} files doesn't match", 3);
+                WriteLogClass.WriteToLog(1, $"Ftp file count: {currentBatch.Count()}, Local file count: {unmatchedFileList.Count()} files doesn't match", 3);
                 return 3;
             }
 
             string[] localFiles = Directory.GetFiles(ftpHoldFolder, "*.*", SearchOption.TopDirectoryOnly);
-            return await FileFunctionsClass.SendToWebService(ftpConnect, ftpHoldFolder, clientId, filesToDownload, localFiles, null!);
+            return await FileFunctionsClass.SendToWebService(ftpConnect, ftpHoldFolder, clientId, currentBatch, localFiles, null!);
         }
     }
 }

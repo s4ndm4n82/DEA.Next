@@ -3,13 +3,15 @@ using FolderFunctions;
 using RunTimedFunctions;
 using ProcessSartupFunctions;
 using ErrorFolderChecker;
-
+using DisplayLogoClass;
 
 // DEA.Next
 // ~~~~~~~~
 // TODO 1: Rewrite the code to match Graph v5.0.0. +
 
 // Aplication title just for fun.
+
+DisplayLogo.Logo();
 
 FolderFunctionsClass.CheckFolders(null!);
 

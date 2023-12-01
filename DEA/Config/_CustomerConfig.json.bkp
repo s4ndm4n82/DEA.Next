@@ -1,0 +1,44 @@
+{
+  "CustomerDetails": [
+    {
+      "id": 1, // IMPORTANT. Hast add manually and increment by 1 each time
+      "CustomerStatus": 1, // Customer status. If active 1 if not 0.
+      "Token": "",
+      "UserName": "",
+      "TemplateKey": "",
+      "Queue": "",
+      "ProjetID": "",
+      "MainCustomer": "",
+      "ClientName": "",
+      "ClientOrgNo": "",
+      "ClientIdField": "",
+      "FileDeliveryMethod": "",
+      "DomainDetails": {
+        "MainDomain": "",
+        "TpsRequestUrl": ""
+      },
+      "FtpDetails": {
+        "FtpType": "",
+        "FtpHostName": "",
+        "FtpHostIp": "",
+        "FtpUser": "",
+        "FtpPassword": "",
+        "FtpMainFolder": "",
+        "FtpSubFolder1": "",
+        "FtpSubFolder2": ""
+      },
+      "EmailDetails": {
+        "EmailAddress": "",
+        "MainInbox": "",
+        "SubInbox1": "",
+        "SubInbox2": ""
+      },
+      "DocumentDetails": {
+        "DocumentType": "",
+        "DocumentExtensions": [
+          ""
+        ]
+      }
+    }
+  ]
+}
