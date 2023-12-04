@@ -159,7 +159,7 @@ namespace FileFunctions
                      * on fail returns 0.*/
                     return clientDetails.FileDeliveryMethod.ToLower() == "email" ?
                            FolderCleanerClass.GetFolders(fullFilePath, null, null, clientOrgNo) ? 1 : 0 :
-                           await FolderCleanerClass.GetFtpPathAsync(ftpConnect, ftpFileList, localFileList) &&
+                           await FolderCleanerClass.StartFtpFileDelete(ftpConnect, ftpFileList, localFileList) &&
                            FolderCleanerClass.GetFolders(dirPath, jsonFileList, customerId, null) ? 1 : 0;
                 }
                 else
@@ -175,7 +175,7 @@ namespace FileFunctions
                     return HandleErrorFilesClass.MoveAllFilesToErrorFolder(fullFilePath, customerId, clientOrgNo) ?
                            clientDetails.FileDeliveryMethod.ToLower() == "email" ?
                                FolderCleanerClass.GetFolders(fullFilePath, null, null, clientOrgNo) ? 2 : 0 :
-                               await FolderCleanerClass.GetFtpPathAsync(ftpConnect, ftpFileList, localFileList) ? 2 : 0 : 0;
+                               await FolderCleanerClass.StartFtpFileDelete(ftpConnect, ftpFileList, localFileList) ? 2 : 0 : 0;
                 }
             }
             catch (Exception ex)

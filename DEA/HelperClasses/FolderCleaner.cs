@@ -39,35 +39,43 @@ namespace FolderCleaner
         /// <returns></returns>
         private static bool FolderCleaningProcess(string downloadedFolderPath, IEnumerable<string> jsonFileList, int? customerId, string clientEmail)
         {
-            IEnumerable<string> nameList = CheckMissedFiles(downloadedFolderPath, jsonFileList);
+            bool fileMoveResult = true; // Store the result of move files to error folder.
+            IEnumerable<string> nameList = CheckMissedFiles(downloadedFolderPath, jsonFileList);            
 
             if (nameList.Any()) // If there are any unmatched files.
             {
                 // Calls the MoveFilesToErrorFolder method to start moving the missed files.
-                bool fileMoveResult = HandleErrorFilesClass.MoveFilesToErrorFolder(downloadedFolderPath, nameList, customerId, clientEmail);
+                fileMoveResult = HandleErrorFilesClass.MoveFilesToErrorFolder(downloadedFolderPath, nameList, customerId, clientEmail);
                 // Writes the result to the log.
                 WriteLogClass.WriteToLog(1, fileMoveResult ? $"Moved files {WriteNamesToLogClass.WriteMissedFilenames(nameList)}"
                                                            : "Moving files was unsuccessful ...", 1);
-                // Returns the result.
-                return fileMoveResult;
             }
 
+            // File delete failes will be written to the log. And return false.
             if (!DeleteFiles(downloadedFolderPath))
             {
                 WriteLogClass.WriteToLog(0, "Delete files failed ....", 0);
                 return false;
             }
 
+            // Folder delete failes will be written to the log. And return false.
             if (!DeleteEmptyFolders(downloadedFolderPath))
             {
                 WriteLogClass.WriteToLog(0, "Delete empty folders failed ....", 0);
                 return false;
             }
 
-            return true;
+            return fileMoveResult;
         }
 
-        public static async Task<bool> GetFtpPathAsync(AsyncFtpClient ftpConnect, IEnumerable<string> ftpFileList, string[] localFileList)
+        /// <summary>
+        /// Start the FTP file delete process.
+        /// </summary>
+        /// <param name="ftpConnect">Ftp conntection token.</param>
+        /// <param name="ftpFileList">File list from the FTP server.</param>
+        /// <param name="localFileList">File list from the local download folder.</param>
+        /// <returns>The result of remove process or false.</returns>
+        public static async Task<bool> StartFtpFileDelete(AsyncFtpClient ftpConnect, IEnumerable<string> ftpFileList, string[] localFileList)
         {
             // Local file name list.
             IEnumerable<string> localFileNames = localFileList.Select(localFilePath => Path.GetFileName(localFilePath));
@@ -77,7 +85,7 @@ namespace FolderCleaner
             IEnumerable<string> matchingFileNames = localFileNames.Intersect(ftpFileNames);
             // Get the FTP path from the first FTP file.
             string ftpPath = GetFtpPath(ftpFileList.FirstOrDefault());
-            // Result.
+            // Result of the foreach loop.
             bool result = false;
 
             // If there are no matching files, return.
@@ -94,6 +102,12 @@ namespace FolderCleaner
             return result;
         }
 
+        /// <summary>
+        /// Check for any missing files from the upload process.
+        /// </summary>
+        /// <param name="localFolderPath">Local download process path</param>
+        /// <param name="remoteFileList">FTP files list.</param>
+        /// <returns>Returns the unmatched file names list.</returns>
         public static IEnumerable<string> CheckMissedFiles(string localFolderPath, IEnumerable<string> remoteFileList)
         {
             // Makes the downloaded files list from the folder path.
@@ -111,10 +125,17 @@ namespace FolderCleaner
             return unmatchedFileNames;
         }
 
+        /// <summary>
+        /// Deletes files from the FTP server.
+        /// </summary>
+        /// <param name="ftpConnect">FTP connection token.</param>
+        /// <param name="ftpFileName">FTP files list.</param>
+        /// <returns>Return true or false.</returns>
         private static async Task<bool> DeleteFtpFiles(AsyncFtpClient ftpConnect, string ftpFileName)
         {
             try
             {
+                // Delete the FTP file.
                 await ftpConnect.DeleteFile(ftpFileName);
                 return true;
             }
@@ -126,24 +147,37 @@ namespace FolderCleaner
 
         }
 
+        /// <summary>
+        /// Get the FTP path from the first FTP file.
+        /// </summary>
+        /// <param name="ftpFilePath">FTP file path with the file name.</param>
+        /// <returns>Directory path</returns>
         private static string GetFtpPath(string ftpFilePath)
         {
-            int lastSlashIndex = ftpFilePath.LastIndexOf('/');            
-            string directoryPath = string.Concat(ftpFilePath.Substring(0, lastSlashIndex), '/');
+            int lastSlashIndex = ftpFilePath.LastIndexOf('/');
+            string directoryPath = string.Concat(ftpFilePath[..lastSlashIndex], '/');
 
             return directoryPath;
         }
 
+        /// <summary>
+        /// Delete all files from the download folder.
+        /// </summary>
+        /// <param name="downloadFolderPath">Path of the local download folder.</param>
+        /// <returns>Returns true or false.</returns>
         private static bool DeleteFiles(string downloadFolderPath)
         {
+            // Returns if the loacal directory is missing without executing the remove code.
             if (!Directory.Exists(downloadFolderPath))
             {
                 return false;
             }
 
+            // Makes the downloaded files list from the folder path.
             IEnumerable<string> downloadedFileNames = Directory.EnumerateFiles(downloadFolderPath, "*.*");
-            bool result = true;
+            bool result = true; // Result of the foreach loop.
 
+            // Delete files.
             foreach (string fileName in downloadedFileNames)
             {
                 try
@@ -160,6 +194,11 @@ namespace FolderCleaner
             return result;
         }
 
+        /// <summary>
+        /// Delete all the empty folders from the download folder.
+        /// </summary>
+        /// <param name="downloadFolderPath"></param>
+        /// <returns></returns>
         private static bool DeleteEmptyFolders(string downloadFolderPath)
         {
             string fullPath = Path.GetFullPath(downloadFolderPath);
@@ -174,6 +213,7 @@ namespace FolderCleaner
             {
                 try
                 {
+                    // Delete the folders.
                     Directory.Delete(emptyFolder);
                 }
                 catch (Exception ex)
@@ -182,7 +222,7 @@ namespace FolderCleaner
                     result = false;
                 }
             }
-                return result;
+            return result;
         }
     }
 }

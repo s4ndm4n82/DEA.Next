@@ -34,101 +34,110 @@ namespace FtpFunctions
             }
             return 0;
         }
-
+        
+        /// <summary>
+        /// Start the FTP file download process.
+        /// </summary>
+        /// <param name="FtpClientDetails">All the client details from the config file.</param>
+        /// <returns>Return true or false.</returns>
         public static async Task<int> InitiateFtpDownload(UserConfigReaderClass.Customerdetail FtpClientDetails)
         {
-            int downloadResult = 0;
+            int downloadResult = 0; // Return value
 
-            // Client details retrived from the Json file.
+            // All the details from the clinet configuration.
+            UserConfigReaderClass.Ftpdetails clientFtpDetails = FtpClientDetails.FtpDetails;           
+
+            // Ftp details retrived from the Json file.
             int clientID = FtpClientDetails.Id;
-            string ftpType = FtpClientDetails.FtpDetails!.FtpType!.ToUpper();
-            string ftpHostName = FtpClientDetails.FtpDetails!.FtpHostName!;
-            string ftpHosIp = FtpClientDetails.FtpDetails.FtpHostIp!;
-            string ftpUser = FtpClientDetails.FtpDetails.FtpUser!;
-            string ftpPassword = FtpClientDetails.FtpDetails.FtpPassword!;
-            string ftpMainFolder = FtpClientDetails.FtpDetails.FtpMainFolder!;
-            string ftpSubFolder1 = FtpClientDetails.FtpDetails.FtpSubFolder1!.Replace(" ", "");
-            string ftpSubFolder2 = FtpClientDetails.FtpDetails.FtpSubFolder2!.Replace(" ", "");
-            string ftpPath;
+            string ftpType = clientFtpDetails.FtpType.ToLower();
+            string ftpHostName = clientFtpDetails.FtpHostName;
+            string ftpHosIp = clientFtpDetails.FtpHostIp;
+            string ftpUser = clientFtpDetails.FtpUser;
+            string ftpPassword = clientFtpDetails.FtpPassword;
+            string ftpFolderPath = clientFtpDetails.FtpMainFolder;
+            string downloadFolder = Path.Combine(FolderFunctionsClass.CheckFolders("ftp")
+                                                , ftpFolderPath.Trim('/').Replace('/', '\\'));
 
-            // Creating the FTP folder path. Can go up to 3 levels of folders.
-            if (!string.IsNullOrEmpty(ftpSubFolder2))
-            {
-                ftpPath = $@"/{ftpMainFolder}/{ftpSubFolder1}/{ftpSubFolder2}";
-            }
-            else
-            {
-                ftpPath = $@"/{ftpMainFolder}/{ftpSubFolder1}";
-            }            
+            // Get's the FTP conntection token
+            AsyncFtpClient ftpConnectToken = await ConnectFtpClass.ConnectFtp(ftpHostName, ftpHosIp, ftpUser, ftpPassword);
 
-            string LocalFtpFolder = FolderFunctionsClass.CheckFolders("ftp");
-            string ftpHoldFolder;
-
-            if (!string.IsNullOrEmpty(ftpSubFolder2))
+            // If the user FTP config type is FTPS.
+            if (ftpType == "FTPS")
             {
-                ftpHoldFolder = Path.Combine(LocalFtpFolder, ftpMainFolder!, ftpSubFolder1!, ftpSubFolder2, GraphHelperClass.FolderNameRnd(10));
-            }
-            else
-            {
-                ftpHoldFolder = Path.Combine(LocalFtpFolder, ftpMainFolder!, ftpSubFolder1!, GraphHelperClass.FolderNameRnd(10));
-            }
-            
-            AsyncFtpClient ftp = null!;
-
-            if (ftpType == "FTP")
-            {
-                ftp = await ConnectFtpClass.ConnectFtp(ftpHostName!, ftpHosIp!, ftpUser!, ftpPassword!);
-            }
-            else if (ftpType == "FTPS")
-            {
-                ftp = await ConnectFtpsClass.ConnectFtps(ftpHostName!, ftpHosIp!, ftpUser!, ftpPassword!);
+                ftpConnectToken = await ConnectFtpsClass.ConnectFtps(ftpHostName, ftpHosIp, ftpUser, ftpPassword);
             }
 
-            if (ftp == null)
+            // If the connection token equals null then returns early terminating the execution.
+            if (ftpConnectToken == null)
             {
                 WriteLogClass.WriteToLog(1, "Connection to FTP server failed ....", 3);
                 return downloadResult;
             }
 
-            using AsyncFtpClient ftpConnect = ftp!;
-
-            if (await ftpConnect!.DirectoryExists(ftpPath))
+            // Starts the file download process
+            using AsyncFtpClient ftpConnect = ftpConnectToken;
+            try
             {
-                WriteLogClass.WriteToLog(1, $"Starting file download from {ftpPath} ....", 3);
+                WriteLogClass.WriteToLog(1, $"Starting file download from {ftpFolderPath} ....", 3);
 
-                downloadResult = await DownloadFtpFiles(ftpConnect, ftpPath, ftpHoldFolder, clientID);
-                
-                WriteLogClass.WriteToLog(ProcessStatusMessageSetterClass.SetMessageTypeOther(downloadResult), $"{ProcessStatusMessageSetterClass.SetProcessStatusOther(downloadResult, "ftp")}\n", 3);
+                downloadResult = await DownloadFtpFiles(ftpConnect, ftpFolderPath, downloadFolder, clientID);
 
-                await ftpConnect.Disconnect(); // Disconnects from the FTP server.  
+                WriteLogClass.WriteToLog(ProcessStatusMessageSetterClass.SetMessageTypeOther(downloadResult),
+                                         $"{ProcessStatusMessageSetterClass.SetProcessStatusOther(downloadResult, "ftp")}\n", 3);
+                return downloadResult;
             }
-            return downloadResult;
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(0, $"Exception at FTP file download: {ex.Message}", 0);
+                return downloadResult;
+            }
         }
 
-        private static async Task<int> DownloadFtpFiles(AsyncFtpClient ftpConnect, string ftpPath, string ftpHoldFolder, int clientID)
+        /// <summary>
+        /// Download the files from the FTP server in batches cofigured in the appsettings.json file.
+        /// </summary>
+        /// <param name="ftpConnect">FTP connection token.</param>
+        /// <param name="ftpPath">FTP folder path</param>
+        /// <param name="downloadFolderPath">Local download folder path.</param>
+        /// <param name="clientID">ID of the client take from the config file.</param>
+        /// <returns></returns>
+        private static async Task<int> DownloadFtpFiles(AsyncFtpClient ftpConnect, string ftpPath, string downloadFolderPath, int clientID)
         {
+            // Return value.
             int result = -1;
 
             try
             {
+                // Reads the appsettings.json file.
                 AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
+                // Gets the FTP file list.
                 IEnumerable<FtpListItem> ftpFileNameList = await ftpConnect.GetListing(ftpPath);
+                // Gets the files to download.
                 IEnumerable<string> filesToDownload = ftpFileNameList
                                                .Where(f => f.Type == FtpObjectType.File)
                                                .Select(f => f.FullName).ToArray();
+
+                // If there are no files to download then returns early terminating the execution.
                 if (!filesToDownload.Any())
                 {
                     return 4;
                 }
 
+                // Starts the file download process.
                 int batchSize = jsonData.ProgramSettings.MaxFtpFiles;
                 int totalFtpFiles = filesToDownload.Count();
                 int batchCurrentIndex = 0;
 
-                while (batchCurrentIndex < totalFtpFiles)
+                while (batchCurrentIndex < totalFtpFiles) // Loop until all the files are downloaded.
                 {
+                    // Download folder path.
+                    string downloaFolder = Path.Combine(downloadFolderPath, GraphHelperClass.FolderNameRnd(10));
+                    // Gets the current batch of files.
                     IEnumerable<string> currentBatch = filesToDownload.Skip(batchCurrentIndex).Take(batchSize);
-                    result = await FileDownloadFuntcion(ftpConnect, currentBatch, ftpHoldFolder, clientID);
+                    // Starts the file download process.
+                    await ftpConnect.DownloadFiles(downloaFolder, currentBatch, FtpLocalExists.Resume, FtpVerify.Retry);
+
+                    result = await FileDownloadFuntcion(ftpConnect, currentBatch, downloaFolder, clientID);
 
                     if (result == 3 || result == 4)
                     {
@@ -146,12 +155,17 @@ namespace FtpFunctions
             }
         }
 
+        /// <summary>
+        /// File download function. This will be parsing the files to the FTP client and downloading them the the local folder.
+        /// </summary>
+        /// <param name="ftpConnect">FTP connection token.</param>
+        /// <param name="currentBatch">Files downloaded from the server.</param>
+        /// <param name="ftpHoldFolder">Local download folder.</param>
+        /// <param name="clientId">Client ID.</param>
+        /// <param name="downloadResult"></param>
+        /// <returns></returns>
         private static async Task<int> FileDownloadFuntcion(AsyncFtpClient ftpConnect, IEnumerable<string> currentBatch, string ftpHoldFolder, int clientId)
         {
-
-            // Downloads files from the server.
-            IEnumerable<FtpResult> downloadResult = await ftpConnect.DownloadFiles(ftpHoldFolder, currentBatch, FtpLocalExists.Resume, FtpVerify.Retry);
-
             IEnumerable<string> unmatchedFileList = FolderCleanerClass.CheckMissedFiles(ftpHoldFolder, currentBatch);
             if (unmatchedFileList.Any())
             {

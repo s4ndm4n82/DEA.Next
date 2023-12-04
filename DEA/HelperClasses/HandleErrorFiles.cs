@@ -101,10 +101,7 @@ namespace HandleErrorFiles
 
             Directory.CreateDirectory(!Directory.Exists(destinationFolderPath) ? destinationFolderPath : null);
 
-            MoveEachFile(sourcePath, destinationFolderPath, fileNames);
-
-            Console.WriteLine(destinationFolderPath);
-            return true;
+            return MoveEachFile(sourcePath, destinationFolderPath, fileNames);
         }
 
         private static bool MoveEachFile(string srcPath, string dstPath, IEnumerable<string> fileNames)
