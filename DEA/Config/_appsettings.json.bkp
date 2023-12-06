@@ -1,6 +1,10 @@
 {
   "ProgramSettings": {
-    "MaxEmails": 40,
+    "MaxEmails": 40, // Number of emails can be loaded at a given time.
+    "MaxMainEmailFolders": 20, // Number of client inbox folders that can be loaded at a given time.
+    "MaxSubEmailFolders": 40, // Number of sub inbox folders that can be loaded at a given time.
+    "MaxFtpFiles": 2, // Number of files that can be in a download batch. Max file limit is 200.
+    "MaxErrorFolders": 1, // Amount of folders that can be in the "Error" folder.
     "SendErrorEmail": true,
     "CleanLogs": true
   },

@@ -23,9 +23,7 @@
         "FtpHostIp": "",
         "FtpUser": "",
         "FtpPassword": "",
-        "FtpMainFolder": "",
-        "FtpSubFolder1": "",
-        "FtpSubFolder2": ""
+        "FtpMainFolder": ""
       },
       "EmailDetails": {
         "EmailAddress": "",

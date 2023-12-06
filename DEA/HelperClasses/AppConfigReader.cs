@@ -18,7 +18,10 @@ namespace AppConfigReader
         {
             public bool CleanLogs { get; set; }
             public int MaxEmails { get; set; }
+            public int MaxMainEmailFolders { get; set; }
+            public int MaxSubEmailFolders { get; set; }
             public int MaxFtpFiles { get; set; }
+            public int MaxErrorFolders { get; set; }
             public bool SendErrorEmail { get; set; }            
         }
 

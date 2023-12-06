@@ -24,9 +24,7 @@
         "FtpUser": "testuser",
         "FtpPassword": "jackkills",
         //"FtpMainFolder": "Aksesspunkt",
-        "FtpMainFolder": "/Aksesspunkt/Duett",
-        "FtpSubFolder1": "",
-        "FtpSubFolder2": ""
+        "FtpMainFolder": "/Aksesspunkt/Duett"
       },
       "EmailDetails": {
         "EmailAddress": "",
@@ -64,9 +62,7 @@
         "FtpHostIp": "",
         "FtpUser": "",
         "FtpPassword": "",
-        "FtpMainFolder": "",
-        "FtpSubFolder1": "",
-        "FtpSubFolder2": ""
+        "FtpMainFolder": ""
       },
       "EmailDetails": {
         "EmailAddress": "apptesting@efakturamottak.no",
@@ -81,6 +77,46 @@
           ".jpg",
           ".jpeg",
           ".tif"
+        ]
+      }
+    },
+    {
+      "id": 3, // IMPORTANT. Hast add manually and increment by 1 each time
+      "CustomerStatus": 0, // Customer status. If active 1 if not 0.
+      "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiaW1wb3J0X2FkdmFuaWEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ0ZXN0QGFkdmFuaWEubm8iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjA0NWQzMDljLTMzMjAtNDQwMS1iOWY1LTFlYTdiNDdhOWViYSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcHJpbWFyeWdyb3Vwc2lkIjoiOGMyMjhjZjUtOTQ1Mi00MmJiLWJmMGMtOGY5MTZlOTVlMDVkIiwiZXhwIjoxNzMyMjcxMTYzLCJpc3MiOiJ3d3cuZGlnaXRhbGNhcHR1cmUubm8iLCJhdWQiOiJodHRwczovL3d3dy5kaWdpdGFsY2FwdHVyZS5uby90cHMifQ.lIe3wGQgrbEv9P0yh8vI7LZ_lRv51HcdwWHU2ArkYNk",
+      "UserName": "import_advania",
+      "TemplateKey": "",
+      "Queue": "4",
+      "ProjetID": "a6ce004d-a4db-4753-85c2-4f550e646801",
+      "MainCustomer": "Advania Norge",
+      "ClientName": "Kristiansand Bygg",
+      "ClientOrgNo": "993853623",
+      "ClientIdField": "Customer Organization No",
+      "FileDeliveryMethod": "email",
+      "DomainDetails": {
+        "MainDomain": "https://capture.exacta.no/",
+        "TpsRequestUrl": "tps_processing2/Import?"
+      },
+      "FtpDetails": {
+        "FtpType": "",
+        "FtpHostName": "",
+        "FtpHostIp": "",
+        "FtpUser": "",
+        "FtpPassword": "",
+        "FtpMainFolder": "",
+        "FtpSubFolder1": "",
+        "FtpSubFolder2": ""
+      },
+      "EmailDetails": {
+        "EmailAddress": "atc@efakturamottak.no",
+        "MainInbox": "Enkeltstående",
+        "SubInbox1": "Kristiansand Bygg",
+        "SubInbox2": ""
+      },
+      "DocumentDetails": {
+        "DocumentType": "PDF",
+        "DocumentExtensions": [
+          ".pdf"
         ]
       }
     }

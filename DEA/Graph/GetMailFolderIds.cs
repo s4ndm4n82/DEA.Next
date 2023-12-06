@@ -1,4 +1,5 @@
-﻿using Microsoft.Graph;
+﻿using AppConfigReader;
+using Microsoft.Graph;
 using System.Diagnostics.CodeAnalysis;
 using WriteLog;
 
@@ -32,7 +33,10 @@ namespace GetMailFolderIds
         /// <returns></returns>
         public static async Task<ClientFolderId> GetChlidFolderIds<T>([NotNull] GraphServiceClient graphClient, string clientEmail, string clientMainFolderName, string clientSubFolderName1, string clientSubfolderName2)
         {
-            var folderId = new ClientFolderId();
+            AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
+            AppConfigReaderClass.Programsettings programSettings = jsonData.ProgramSettings;
+
+            GetMailFolderIdsClass.ClientFolderId folderId = new();
 
             if (!string.IsNullOrEmpty(clientMainFolderName))
             {
@@ -41,6 +45,7 @@ namespace GetMailFolderIds
                     _inboxClientMainFolder = await graphClient.Users[$"{clientEmail}"].MailFolders["Inbox"]
                                          .ChildFolders
                                          .Request()
+                                         .Top (programSettings.MaxMainEmailFolders)
                                          .GetAsync();
 
                     folderId.ClientMainFolderId = _inboxClientMainFolder.FirstOrDefault(x => x.DisplayName == clientMainFolderName)!.Id;
@@ -60,6 +65,7 @@ namespace GetMailFolderIds
                                    .ChildFolders[$"{folderId.ClientMainFolderId}"]
                                    .ChildFolders
                                    .Request()
+                                   .Top (programSettings.MaxSubEmailFolders)
                                    .GetAsync();
 
                     folderId.ClientSubFolderId1 = _inboxSubFolder1.FirstOrDefault(y => y.DisplayName == clientSubFolderName1)!.Id;
@@ -79,6 +85,7 @@ namespace GetMailFolderIds
                                    .ChildFolders[$"{folderId.ClientSubFolderId1}"]
                                    .ChildFolders
                                    .Request()
+                                   .Top (programSettings.MaxSubEmailFolders)
                                    .GetAsync();
 
                     folderId.ClientSubFolderId2 = _inboxSubFolder2.FirstOrDefault(z => z.DisplayName == clientSubfolderName2)!.Id;
