@@ -9,7 +9,6 @@ using WriteNamesToLog;
 using FolderCleaner;
 using HandleErrorFiles;
 using FluentFTP;
-using Microsoft.Graph;
 
 namespace FileFunctions
 {
@@ -29,7 +28,7 @@ namespace FileFunctions
             // Loading the accepted extension list.
             List<string> acceptedExtentions = clientDetails.DocumentDetails.DocumentExtensions;
             // Creating the list of file in the local download folder.
-            string[] downloadedFiles = System.IO.Directory.GetFiles(filePath, "*.*", SearchOption.TopDirectoryOnly)
+            string[] downloadedFiles = Directory.GetFiles(filePath, "*.*", SearchOption.TopDirectoryOnly)
                                                           .Where(f => acceptedExtentions.IndexOf(Path.GetExtension(f).ToLower()) >= 0)
                                                           .ToArray();
 
@@ -73,7 +72,7 @@ namespace FileFunctions
                 List<TpsJasonStringClass.FileList> fileList = new();
                 foreach (var file in filesToSend)
                 {
-                    fileList.Add(new TpsJasonStringClass.FileList() { Name = Path.GetFileName(file), Data = Convert.ToBase64String(System.IO.File.ReadAllBytes(file)) });
+                    fileList.Add(new TpsJasonStringClass.FileList() { Name = Path.GetFileName(file), Data = Convert.ToBase64String(File.ReadAllBytes(file)) });
                 }
 
                 // Creating the field list to be added to the Json request.
@@ -148,7 +147,7 @@ namespace FileFunctions
                 tpsRequest.AddBody(jsonResult);
 
                 RestResponse serverResponse = await client.ExecuteAsync(tpsRequest); // Executes the request and send to the server.
-                string dirPath = System.IO.Directory.GetParent(fullFilePath).FullName; // Gets the directory path of the file.
+                string dirPath = Directory.GetParent(fullFilePath).FullName; // Gets the directory path of the file.
 
                 if (serverResponse.StatusCode != HttpStatusCode.OK)
                 {
