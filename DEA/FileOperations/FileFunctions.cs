@@ -9,6 +9,7 @@ using WriteNamesToLog;
 using FolderCleaner;
 using HandleErrorFiles;
 using FluentFTP;
+using Microsoft.Graph;
 
 namespace FileFunctions
 {
@@ -25,10 +26,12 @@ namespace FileFunctions
 
             UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
             UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == customerId)!;
-
-            List<string> acceptedExtentions = clientDetails.DocumentDetails!.DocumentExtensions!;
-
-            string[] downloadedFiles = Directory.GetFiles(filePath, "*.*", SearchOption.TopDirectoryOnly).Where(f => acceptedExtentions.IndexOf(Path.GetExtension(f).ToLower()) >= 0).ToArray();
+            // Loading the accepted extension list.
+            List<string> acceptedExtentions = clientDetails.DocumentDetails.DocumentExtensions;
+            // Creating the list of file in the local download folder.
+            string[] downloadedFiles = System.IO.Directory.GetFiles(filePath, "*.*", SearchOption.TopDirectoryOnly)
+                                                          .Where(f => acceptedExtentions.IndexOf(Path.GetExtension(f).ToLower()) >= 0)
+                                                          .ToArray();
 
             // If recipientEmail not empty clientOrg = revipientEmail.
             // If recipientEmail is empty clientOrg = clientDetails.ClientOrgNo
@@ -70,7 +73,7 @@ namespace FileFunctions
                 List<TpsJasonStringClass.FileList> fileList = new();
                 foreach (var file in filesToSend)
                 {
-                    fileList.Add(new TpsJasonStringClass.FileList() { Name = Path.GetFileName(file), Data = Convert.ToBase64String(File.ReadAllBytes(file)) });
+                    fileList.Add(new TpsJasonStringClass.FileList() { Name = Path.GetFileName(file), Data = Convert.ToBase64String(System.IO.File.ReadAllBytes(file)) });
                 }
 
                 // Creating the field list to be added to the Json request.
@@ -145,7 +148,7 @@ namespace FileFunctions
                 tpsRequest.AddBody(jsonResult);
 
                 RestResponse serverResponse = await client.ExecuteAsync(tpsRequest); // Executes the request and send to the server.
-                string dirPath = Directory.GetParent(fullFilePath).FullName; // Gets the directory path of the file.
+                string dirPath = System.IO.Directory.GetParent(fullFilePath).FullName; // Gets the directory path of the file.
 
                 if (serverResponse.StatusCode != HttpStatusCode.OK)
                 {
@@ -172,7 +175,6 @@ namespace FileFunctions
                                           ftpConnect,
                                           ftpFileList,
                                           localFileList);
-                return 0;
             }
             catch (Exception ex)
             {
@@ -194,33 +196,42 @@ namespace FileFunctions
                                                        IEnumerable<string> ftpFileList,
                                                        string[] localFileList)
         {
-            WriteLogClass.WriteToLog(1, $"Uploaded {fileCount} file to project {projectId} using queue {queue} ....", 4);
-            WriteLogClass.WriteToLog(1, $"Uploaded filenames: {WriteNamesToLogClass.GetFileNames(downloadFolderPath)}", 4);
-
-            // This will run if it's not FTP.
-            if (deliveryType == "email")
+            try
             {
-                if (FolderCleanerClass.GetFolders(fullFilePath, null, null, clientOrgNo))
+                WriteLogClass.WriteToLog(1, $"Uploaded {fileCount} file to project {projectId} using queue {queue} ....", 4);
+                WriteLogClass.WriteToLog(1, $"Uploaded filenames: {WriteNamesToLogClass.GetFileNames(downloadFolderPath)}", 4);
+
+                // This will run if it's not FTP.
+                if (deliveryType == DeliveryType.email)
                 {
+                    if (FolderCleanerClass.GetFolders(fullFilePath, null, null, clientOrgNo))
+                    {
+                        return 1;
+                    }
+                }
+                else if (deliveryType == DeliveryType.ftp)
+                {
+                    if (!await FolderCleanerClass.StartFtpFileDelete(ftpConnect, ftpFileList, localFileList))
+                    {
+                        return -1;
+                    }
+
+                    // Deletes the file from local hold folder when sending is successful.
+                    if (!FolderCleanerClass.GetFolders(downloadFolderPath, jsonFileList, customerId, null))
+                    {
+                        return -1;
+                    }
+
                     return 1;
                 }
+                return 0; // Default return.
             }
-            else
+            catch (Exception ex)
             {
-                if (!await FolderCleanerClass.StartFtpFileDelete(ftpConnect, ftpFileList, localFileList))
-                {
-                    return -1;
-                }
-
-                // Deletes the file from local hold folder when sending is successful.
-                if (!FolderCleanerClass.GetFolders(downloadFolderPath, jsonFileList, customerId, null))
-                {
-                    return -1;
-                }
-
-                return 1;
+                WriteLogClass.WriteToLog(1, $"Error in ServerOnSuccess: {ex.Message}", 1);
+                return -1;
             }
-            return 0;
+            
         }
 
         private static async Task<int> ServerOnFail(string deliveryType,
@@ -233,30 +244,44 @@ namespace FileFunctions
                                                     HttpStatusCode serverStatusCode,
                                                     string serverResponseContent)
         {
-            WriteLogClass.WriteToLog(0, $"Server status code: {serverStatusCode}, Server Response Error: {serverResponseContent}", 0);
-
-            if (!HandleErrorFilesClass.MoveAllFilesToErrorFolder(fullFilePath, customerId, clientOrgNo))
+            try
             {
-                WriteLogClass.WriteToLog(1, "Moving files failed ....", 1);
+                WriteLogClass.WriteToLog(0, $"Server status code: {serverStatusCode}, Server Response Error: {serverResponseContent}", 0);
+
+                if (!HandleErrorFilesClass.MoveAllFilesToErrorFolder(fullFilePath, customerId, clientOrgNo))
+                {
+                    WriteLogClass.WriteToLog(1, "Moving files failed ....", 1);
+                    return -1;
+                }
+
+                // This will run if it's not FTP.
+                if (deliveryType == DeliveryType.email)
+                {
+                    if (FolderCleanerClass.GetFolders(fullFilePath, null, null, clientOrgNo))
+                    {
+                        return 2;
+                    }
+                }
+                else if (deliveryType == DeliveryType.ftp)
+                {
+                    if (await FolderCleanerClass.StartFtpFileDelete(ftpConnect, ftpFileList, localFileList))
+                    {
+                        return 2;
+                    }
+                }
+                return 0; // Deafult return
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(1, $"Error in ServerOnFail: {ex.Message}", 1);
                 return -1;
             }
+        }
 
-            // This will run if it's not FTP.
-            if (deliveryType == "email")
-            {
-                if (FolderCleanerClass.GetFolders(fullFilePath, null, null, clientOrgNo))
-                {
-                    return 2;
-                }
-            }
-            else
-            {
-                if (await FolderCleanerClass.StartFtpFileDelete(ftpConnect, ftpFileList, localFileList))
-                {
-                    return 2;
-                }
-            }
-            return 0;
+        public static class DeliveryType
+        {
+            public const string email = "email";
+            public const string ftp = "ftp";
         }
     }
 }
