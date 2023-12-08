@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
 using UserConfigReader;
 using RestSharp;
@@ -16,8 +15,9 @@ namespace FileFunctions
     {
         public static async Task<int> SendToWebService(AsyncFtpClient ftpConnect,
                                                         string filePath,
+                                                        string orginalfileName,
                                                         int customerId,
-                                                        IEnumerable<string> ftpFileList,
+                                                        string[] ftpFileList,
                                                         string[] localFileList,
                                                         string recipientEmail)
         {
@@ -30,6 +30,7 @@ namespace FileFunctions
             // Creating the list of file in the local download folder.
             string[] downloadedFiles = Directory.GetFiles(filePath, "*.*", SearchOption.TopDirectoryOnly)
                                                           .Where(f => acceptedExtentions.IndexOf(Path.GetExtension(f).ToLower()) >= 0)
+                                                          .Where(g => Path.GetFileNameWithoutExtension(g).Equals(Path.GetFileNameWithoutExtension(orginalfileName), StringComparison.OrdinalIgnoreCase))
                                                           .ToArray();
 
             // If recipientEmail not empty clientOrg = revipientEmail.
@@ -38,13 +39,13 @@ namespace FileFunctions
 
             int returnResult = await MakeJsonRequest(ftpConnect,
                                       customerId,
-                                      clientDetails.Token!,
-                                      clientDetails.UserName!,
-                                      clientDetails.TemplateKey!,
-                                      clientDetails.Queue!,
-                                      clientDetails.ProjetID!,
+                                      clientDetails.Token,
+                                      clientDetails.UserName,
+                                      clientDetails.TemplateKey,
+                                      clientDetails.Queue,
+                                      clientDetails.ProjetID,
                                       clientOrg,
-                                      clientDetails.ClientIdField!,
+                                      clientDetails.ClientIdField,
                                       downloadedFiles,
                                       ftpFileList,
                                       localFileList);
@@ -62,17 +63,17 @@ namespace FileFunctions
                                                         string clientOrgNo,
                                                         string clientIdField,
                                                         string[] filesToSend,
-                                                        IEnumerable<string> ftpFileList,
+                                                        string[] ftpFileList,
                                                         string[] localFileList)
         {
             int returnResult = 0;
             try
             {
                 // Creating the file list to be added to the Json request.
-                List<TpsJasonStringClass.FileList> fileList = new();
+                List<TpsJasonStringClass.FileList> jsonFileList = new();
                 foreach (var file in filesToSend)
                 {
-                    fileList.Add(new TpsJasonStringClass.FileList() { Name = Path.GetFileName(file), Data = Convert.ToBase64String(File.ReadAllBytes(file)) });
+                    jsonFileList.Add(new TpsJasonStringClass.FileList() { Name = Path.GetFileName(file), Data = Convert.ToBase64String(File.ReadAllBytes(file)) });
                 }
 
                 // Creating the field list to be added to the Json request.
@@ -89,7 +90,7 @@ namespace FileFunctions
                     Queue = $"{customerQueue}",
                     ProjectID = $"{customerProjectId}",
                     Fields = idField,
-                    Files = fileList
+                    Files = jsonFileList
                 };
 
                 string jsonResult = JsonConvert.SerializeObject(TpsJsonRequest, Formatting.Indented);
@@ -100,10 +101,10 @@ namespace FileFunctions
                                                     customerId,
                                                     customerProjectId,
                                                     customerQueue,
-                                                    fileList.Count,
+                                                    jsonFileList.Count,
                                                     ftpFileList,
                                                     localFileList,
-                                                    fileList.Select(f => f.Name).ToArray(),
+                                                    jsonFileList.Select(f => f.Name).ToArray(),
                                                     clientOrgNo);
 
                 return returnResult;
@@ -118,14 +119,14 @@ namespace FileFunctions
 
         private static async Task<int> SendFilesToRest(AsyncFtpClient ftpConnect,
                                                         string jsonResult,
-                                                        [NotNull]string fullFilePath,
+                                                        string fullFilePath,
                                                         int customerId,
                                                         string projectId,
                                                         string queue,
                                                         int fileCount,
-                                                        IEnumerable<string> ftpFileList,
+                                                        string[] ftpFileList,
                                                         string[] localFileList,
-                                                        IEnumerable<string> jsonFileList,
+                                                        string[] jsonFileList,
                                                         string clientOrgNo)
         {
             try
@@ -188,11 +189,11 @@ namespace FileFunctions
                                                        string deliveryType,
                                                        string fullFilePath,
                                                        string downloadFolderPath,
-                                                       IEnumerable<string> jsonFileList,
+                                                       string[] jsonFileList,
                                                        int customerId,
                                                        string clientOrgNo,
                                                        AsyncFtpClient ftpConnect,
-                                                       IEnumerable<string> ftpFileList,
+                                                       string[] ftpFileList,
                                                        string[] localFileList)
         {
             try
@@ -203,7 +204,7 @@ namespace FileFunctions
                 // This will run if it's not FTP.
                 if (deliveryType == DeliveryType.email)
                 {
-                    if (FolderCleanerClass.GetFolders(fullFilePath, null, null, clientOrgNo))
+                    if (FolderCleanerClass.GetFolders(fullFilePath, jsonFileList, null, clientOrgNo, DeliveryType.email))
                     {
                         return 1;
                     }
@@ -216,7 +217,7 @@ namespace FileFunctions
                     }
 
                     // Deletes the file from local hold folder when sending is successful.
-                    if (!FolderCleanerClass.GetFolders(downloadFolderPath, jsonFileList, customerId, null))
+                    if (!FolderCleanerClass.GetFolders(downloadFolderPath, jsonFileList, customerId, null, DeliveryType.ftp))
                     {
                         return -1;
                     }
@@ -238,7 +239,7 @@ namespace FileFunctions
                                                     int customerId,
                                                     string clientOrgNo,
                                                     AsyncFtpClient ftpConnect,
-                                                    IEnumerable<string> ftpFileList,
+                                                    string[] ftpFileList,
                                                     string[] localFileList,
                                                     HttpStatusCode serverStatusCode,
                                                     string serverResponseContent)
@@ -256,7 +257,7 @@ namespace FileFunctions
                 // This will run if it's not FTP.
                 if (deliveryType == DeliveryType.email)
                 {
-                    if (FolderCleanerClass.GetFolders(fullFilePath, null, null, clientOrgNo))
+                    if (FolderCleanerClass.GetFolders(fullFilePath, null, null, clientOrgNo, DeliveryType.email))
                     {
                         return 2;
                     }

@@ -12,6 +12,7 @@ using UserConfigReader;
 using AppConfigReader;
 using Directory = System.IO.Directory;
 using FileFunctions;
+using FolderCleaner;
 
 namespace GraphAttachmentFunctions
 {
@@ -373,34 +374,38 @@ namespace GraphAttachmentFunctions
         {
             try
             {
+                if (!Directory.Exists(downloadFolderPath))
+                {
+                    return -1;
+                }
+
                 int uploadResult = 0;
                 int batchSize = AppConfigData();
                 int batchCurrentIndex = 0;
 
+                DirectoryInfo downloadDirectoryInfo = new(downloadFolderPath);
+                FileInfo[] downloadedFileNameList = downloadDirectoryInfo.GetFiles();
+
                 // This loop is not perfect and this seems upload all 9 files at once.
-                while (true)
+                while (batchCurrentIndex < downloadedFileNameList.Length)
                 {
-                    if (!Directory.Exists(downloadFolderPath))
+                    IEnumerable<FileInfo> currentBatch = downloadedFileNameList
+                                                        .Skip(batchCurrentIndex)
+                                                        .Take(batchSize)
+                                                        .ToArray();
+
+                    foreach (FileInfo file in currentBatch)
                     {
-                        return -1;
+                        uploadResult = await FileFunctionsClass.SendToWebService(null, downloadFolderPath, Path.GetFileNameWithoutExtension(file.Name), customerId, null, null, toEmail);
                     }
-
-                    IEnumerable<string> downloadedFileNameList = Directory.EnumerateFiles(downloadFolderPath);
-                    int totalLocalFileCount = downloadedFileNameList.Count();
-
-                    if (batchCurrentIndex > totalLocalFileCount)
-                    {
-                        break;
-                    }
-
-                    IEnumerable<string> currentBatch = downloadedFileNameList.Skip(batchCurrentIndex).Take(batchSize);
-                    if (currentBatch.Any())
-                    {
-                        uploadResult = await FileFunctionsClass.SendToWebService(null!, downloadFolderPath, customerId, null!, null!, toEmail);
-                    }                    
 
                     // Increment the batch index
                     batchCurrentIndex += batchSize;
+                }
+
+                if (uploadResult == 1)
+                {
+                    FolderCleanerClass.DeleteEmptyFolders(downloadFolderPath);
                 }
 
                 return uploadResult;

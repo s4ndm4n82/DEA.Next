@@ -122,6 +122,11 @@ namespace FtpFunctions
                 {
                     return 4;
                 }
+                // Download folder path.
+                string downloaFolder = Path.Combine(downloadFolderPath, GraphHelperClass.FolderNameRnd(10));
+
+                // Starts the file download process.
+                List<FtpResult> downloadResult = await ftpConnect.DownloadFiles(downloaFolder, filesToDownload, FtpLocalExists.Resume, FtpVerify.Retry);
 
                 // Starts the file download process.
                 int batchSize = jsonData.ProgramSettings.MaxBatchSize;
@@ -130,14 +135,13 @@ namespace FtpFunctions
 
                 while (batchCurrentIndex < totalFtpFiles) // Loop until all the files are downloaded.
                 {
-                    // Download folder path.
-                    string downloaFolder = Path.Combine(downloadFolderPath, GraphHelperClass.FolderNameRnd(10));
                     // Gets the current batch of files.
-                    IEnumerable<string> currentBatch = filesToDownload.Skip(batchCurrentIndex).Take(batchSize);
-                    // Starts the file download process.
-                    await ftpConnect.DownloadFiles(downloaFolder, currentBatch, FtpLocalExists.Resume, FtpVerify.Retry);
-
-                    result = await FilesUploadFuntcion(ftpConnect, currentBatch, downloaFolder, clientID);
+                    IEnumerable<FtpResult> currentBatch = downloadResult.Skip(batchCurrentIndex).Take(batchSize);
+                    
+                    foreach (FtpResult ftpFile in currentBatch)
+                    {
+                        result = await FilesUploadFuntcion(ftpConnect, currentBatch.Select(r => r.RemotePath.ToString()).ToArray(), downloaFolder, ftpFile.Name, clientID);
+                    }                    
 
                     if (result == 3 || result == 4)
                     {
@@ -165,19 +169,23 @@ namespace FtpFunctions
         /// <param name="downloadResult"></param>
         /// <returns></returns>
         private static async Task<int> FilesUploadFuntcion(AsyncFtpClient ftpConnect,
-                                                          IEnumerable<string> currentBatch,
+                                                          string[] currentBatch,
                                                           string ftpHoldFolder,
+                                                          string fileName,
                                                           int clientId)
         {
-            IEnumerable<string> unmatchedFileList = FolderCleanerClass.CheckMissedFiles(ftpHoldFolder, currentBatch);
+            string[] matchingFileName = currentBatch.Where(fileName => fileName
+                                                           .Equals(fileName, StringComparison.OrdinalIgnoreCase))
+                                                           .ToArray();
+            /*IEnumerable<string> unmatchedFileList = FolderCleanerClass.CheckMissedFiles(ftpHoldFolder, currentBatch);
             if (unmatchedFileList.Any())
             {
                 WriteLogClass.WriteToLog(1, $"Ftp file count: {currentBatch.Count()}, Local file count: {unmatchedFileList.Count()} files doesn't match", 3);
                 return 3;
-            }
-
+            }*/
+            // TODO: The file list need to contains only the files that are downloaded.
             string[] localFiles = Directory.GetFiles(ftpHoldFolder, "*.*", SearchOption.TopDirectoryOnly);
-            return await FileFunctionsClass.SendToWebService(ftpConnect, ftpHoldFolder, clientId, currentBatch, localFiles, null!);
+            return await FileFunctionsClass.SendToWebService(ftpConnect, ftpHoldFolder, fileName, clientId, matchingFileName, localFiles, null!);
         }
     }
 }
