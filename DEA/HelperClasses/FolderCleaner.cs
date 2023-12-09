@@ -59,7 +59,10 @@ namespace FolderCleaner
 
                 if (deliverType == DeliveryType.email)
                 {
-                    return AttachmentFileDelete(downloadedFolderPath, jsonFileList);
+                    if (!AttachmentFileDelete(downloadedFolderPath, jsonFileList))
+                    {
+                        return false;
+                    }
                 }
 
                 // File delete files will be written to the log. And return false.
@@ -73,7 +76,10 @@ namespace FolderCleaner
                 if (nameList.Any()) // If there are any unmatched files.
                 {
                     // Calls the MoveFilesToErrorFolder method to start moving the missed files.
-                    fileMoveResult = HandleErrorFilesClass.MoveFilesToErrorFolder(downloadedFolderPath, nameList, customerId, clientEmail);
+                    fileMoveResult = HandleErrorFilesClass.MoveFilesToErrorFolder(downloadedFolderPath,
+                                                                                  nameList,
+                                                                                  customerId,
+                                                                                  clientEmail);
                     // Writes the result to the log.
                     WriteLogClass.WriteToLog(1, fileMoveResult ? $"Moved files {WriteNamesToLogClass.WriteMissedFilenames(nameList)}"
                                                                : "Moving files was unsuccessful ...", 1);

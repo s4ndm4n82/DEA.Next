@@ -124,22 +124,40 @@ namespace HandleErrorFiles
         /// <param name="customerId">Customer ID.</param>
         /// <param name="clientEmail">If user uses email to deliver files then need this to make the folder name.</param>
         /// <returns>True or false.</returns>
-        public static bool MoveFilesToErrorFolder(string sourcePath, IEnumerable<string> fileNames, int? customerId, string clientEmail)
+        public static bool MoveFilesToErrorFolder(string downloadFolderPath,
+                                                  IEnumerable<string> fileNames,
+                                                  int? customerId,
+                                                  string clientEmail)
         {
-            // Read the user config file.
-            UserConfigReaderClass.CustomerDetailsObject jsonDetails = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
-            UserConfigReaderClass.Customerdetail clientDetails = jsonDetails.CustomerDetails.FirstOrDefault(cid => cid.Id == customerId);
-            // Source folder name.
-            string sourcFolderName = sourcePath.Split(Path.DirectorySeparatorChar).Last();
-            // Destination folder name.
-            string destinationFolderName = clientDetails.FileDeliveryMethod.ToLower() == "email" ? string.Concat("ID_", customerId.ToString(), " ", "Email_", clientEmail)
-                                                                                        : string.Concat("ID_", customerId.ToString(), " ", "Org_", clientDetails.ClientOrgNo);
-            // Destination folder path.
-            string destinationFolderPath = Path.Combine(ErrorFolderPath, destinationFolderName, sourcFolderName);
-            // Create destination folder.
-            Directory.CreateDirectory(!Directory.Exists(destinationFolderPath) ? destinationFolderPath : null);
-            // Move files.
-            return MoveEachFile(sourcePath, destinationFolderPath, fileNames);
+            try
+            {
+                // Read the user config file.
+                UserConfigReaderClass.CustomerDetailsObject jsonDetails = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+                UserConfigReaderClass.Customerdetail clientDetails = jsonDetails.CustomerDetails.FirstOrDefault(cid => cid.Id == customerId);
+
+                // Source folder path.
+                string sourcePath = Path.GetDirectoryName(downloadFolderPath);
+                // Source folder name.
+                string sourcFolderName = sourcePath.Split(Path.DirectorySeparatorChar).Last();
+                // Destination folder name.
+                string destinationFolderName = clientDetails.FileDeliveryMethod.ToLower() == "email" ? string.Concat("ID_", customerId.ToString(), " ", "Email_", clientEmail)
+                                                                                            : string.Concat("ID_", customerId.ToString(), " ", "Org_", clientDetails.ClientOrgNo);
+                // Destination folder path.
+                string destinationFolderPath = Path.Combine(ErrorFolderPath, destinationFolderName, sourcFolderName);
+                // Create destination folder.
+                //Directory.CreateDirectory(!Directory.Exists(destinationFolderPath) ? destinationFolderPath : null);
+                if (!Directory.Exists(destinationFolderPath))
+                {
+                    Directory.CreateDirectory(destinationFolderPath);
+                }
+                // Move files.
+                return MoveEachFile(sourcePath, destinationFolderPath, fileNames, clientDetails.FileDeliveryMethod.ToLower());
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(0, $"Exception at single file mover: {ex.Message}", 0);
+                return false;
+            }
         }
 
         /// <summary>
@@ -149,14 +167,22 @@ namespace HandleErrorFiles
         /// <param name="dstPath">Destination path.</param>
         /// <param name="fileNames">List of the file names.</param>
         /// <returns></returns>
-        private static bool MoveEachFile(string srcPath, string dstPath, IEnumerable<string> fileNames)
+        private static bool MoveEachFile(string srcPath, string dstPath, IEnumerable<string> fileNames, string deliveryType)
         {
             try
             {
+                WriteLogClass.WriteToLog(1, $"Moving files to {dstPath} ....", 1);
                 foreach (string fileName in fileNames)
                 {
-                    string srcFile = Path.Combine(srcPath, fileName);
-                    string dstFile = Path.Combine(dstPath, fileName);
+                    string cleanFileName = fileName;
+
+                    if (deliveryType == DeliveryType.ftp)
+                    {
+                        cleanFileName = Path.GetFileName(fileName);
+                    }
+
+                    string srcFile = Path.Combine(srcPath, cleanFileName);
+                    string dstFile = Path.Combine(dstPath, cleanFileName);
 
                     if (File.Exists(dstFile))
                     {
@@ -167,7 +193,8 @@ namespace HandleErrorFiles
                     {
                         File.Move(srcFile, dstFile);
                     }
-                }
+                    WriteLogClass.WriteToLog(1, $"Moved {cleanFileName} file/s to \\{dstPath} ....", 1);
+                }                
                 return true;
             }
             catch (Exception ex)
@@ -175,6 +202,12 @@ namespace HandleErrorFiles
                 WriteLogClass.WriteToLog(0, $"Exception at single file mover: {ex.Message}", 0);
                 return false;
             }
+        }
+
+        private static class DeliveryType
+        {
+            public const string email = "email";
+            public const string ftp = "ftp";
         }
     }
 }

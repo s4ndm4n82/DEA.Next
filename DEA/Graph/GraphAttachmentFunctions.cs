@@ -174,6 +174,7 @@ namespace GraphAttachmentFunctions
                                                          .Where(x => acceptedExtentions
                                                          .Contains(Path.GetExtension(x.Name.ToLower())) && x.Size > 10240 || (x.Name.ToLower().EndsWith(".pdf") && x.Size < 10240));
             int lastItem = acceptedAtachments.Count();
+            List<string> attachedFileNames = new();
 
             foreach (Attachment attachment in acceptedAtachments)
             {
@@ -234,6 +235,7 @@ namespace GraphAttachmentFunctions
                 // Attachment properties.
                 FileAttachment attachmentProperties = (FileAttachment)attachmentData;
                 byte[] attachmentBytes = attachmentProperties.ContentBytes;
+                attachedFileNames.Add(attachmentProperties.Name);
 
                 if (EmailFileHelperClass.FileDownloader(downloadPath, EmailFileHelperClass.FileNameCleaner(attachmentProperties.Name), attachmentBytes))
                 {
@@ -244,7 +246,7 @@ namespace GraphAttachmentFunctions
                 {
                     loopFlag = true;
                     WriteLogClass.WriteToLog(1, $"Downloaded {lastItem} attachments from {inMessage.Subject} ....", 2);
-                    WriteLogClass.WriteToLog(1, $"Downloaded file names: {WriteNamesToLogClass.GetFileNames(downloadPath)}", 2);
+                    WriteLogClass.WriteToLog(1, $"Downloaded file names: {WriteNamesToLogClass.GetFileNames(attachedFileNames.ToArray())}", 2);
                 }
             }
 
@@ -394,9 +396,9 @@ namespace GraphAttachmentFunctions
                                                         .Take(batchSize)
                                                         .ToArray();
 
-                    foreach (FileInfo file in currentBatch)
+                    foreach (FileInfo fileInBatch in currentBatch)
                     {
-                        uploadResult = await FileFunctionsClass.SendToWebService(null, downloadFolderPath, Path.GetFileNameWithoutExtension(file.Name), customerId, null, null, toEmail);
+                        uploadResult = await FileFunctionsClass.SendToWebService(null, downloadFolderPath, Path.GetFileNameWithoutExtension(fileInBatch.Name), customerId, new string[] { fileInBatch.Name }, null, toEmail);
                     }
 
                     // Increment the batch index

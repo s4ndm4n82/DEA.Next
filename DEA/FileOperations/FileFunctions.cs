@@ -199,7 +199,7 @@ namespace FileFunctions
             try
             {
                 WriteLogClass.WriteToLog(1, $"Uploaded {fileCount} file to project {projectId} using queue {queue} ....", 4);
-                WriteLogClass.WriteToLog(1, $"Uploaded filenames: {WriteNamesToLogClass.GetFileNames(downloadFolderPath)}", 4);
+                WriteLogClass.WriteToLog(1, $"Uploaded filenames: {WriteNamesToLogClass.GetFileNames(jsonFileList)}", 4);
 
                 // This will run if it's not FTP.
                 if (deliveryType == DeliveryType.email)
@@ -248,7 +248,7 @@ namespace FileFunctions
             {
                 WriteLogClass.WriteToLog(0, $"Server status code: {serverStatusCode}, Server Response Error: {serverResponseContent}", 0);
 
-                if (!HandleErrorFilesClass.MoveAllFilesToErrorFolder(fullFilePath, customerId, clientOrgNo))
+                if (!HandleErrorFilesClass.MoveFilesToErrorFolder(fullFilePath, ftpFileList, customerId, clientOrgNo))
                 {
                     WriteLogClass.WriteToLog(1, "Moving files failed ....", 1);
                     return -1;
@@ -257,7 +257,7 @@ namespace FileFunctions
                 // This will run if it's not FTP.
                 if (deliveryType == DeliveryType.email)
                 {
-                    if (FolderCleanerClass.GetFolders(fullFilePath, null, null, clientOrgNo, DeliveryType.email))
+                    if (FolderCleanerClass.GetFolders(fullFilePath, ftpFileList , null, clientOrgNo, DeliveryType.email))
                     {
                         return 2;
                     }
@@ -266,7 +266,10 @@ namespace FileFunctions
                 {
                     if (await FolderCleanerClass.StartFtpFileDelete(ftpConnect, ftpFileList, localFileList))
                     {
-                        return 2;
+                        if (FolderCleanerClass.DeleteEmptyFolders(fullFilePath))
+                        {
+                            return 2;
+                        }
                     }
                 }
                 return 0; // Deafult return

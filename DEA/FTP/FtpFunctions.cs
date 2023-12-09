@@ -140,6 +140,7 @@ namespace FtpFunctions
                     
                     foreach (FtpResult ftpFile in currentBatch)
                     {
+                        //result = await FilesUploadFuntcion(ftpConnect, currentBatch.Select(r => r.RemotePath.ToString()).ToArray(), downloaFolder, ftpFile.Name, clientID);
                         result = await FilesUploadFuntcion(ftpConnect, currentBatch.Select(r => r.RemotePath.ToString()).ToArray(), downloaFolder, ftpFile.Name, clientID);
                     }                    
 
@@ -174,8 +175,8 @@ namespace FtpFunctions
                                                           string fileName,
                                                           int clientId)
         {
-            string[] matchingFileName = currentBatch.Where(fileName => fileName
-                                                           .Equals(fileName, StringComparison.OrdinalIgnoreCase))
+            string[] matchingFileName = currentBatch.Where(f => Path.GetFileNameWithoutExtension(f)
+                                                           .Equals(Path.GetFileNameWithoutExtension(fileName), StringComparison.OrdinalIgnoreCase))
                                                            .ToArray();
             /*IEnumerable<string> unmatchedFileList = FolderCleanerClass.CheckMissedFiles(ftpHoldFolder, currentBatch);
             if (unmatchedFileList.Any())
