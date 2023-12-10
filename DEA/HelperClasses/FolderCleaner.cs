@@ -1,7 +1,5 @@
 ﻿using FluentFTP;
 using HandleErrorFiles;
-using System.Linq;
-using System.Text.RegularExpressions;
 using WriteLog;
 using WriteNamesToLog;
 

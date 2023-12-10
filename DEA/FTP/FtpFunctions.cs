@@ -7,7 +7,6 @@ using UserConfigReader;
 using FileFunctions;
 using FolderFunctions;
 using ProcessStatusMessageSetter;
-using FolderCleaner;
 using AppConfigReader;
 
 namespace FtpFunctions
