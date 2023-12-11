@@ -21,36 +21,44 @@ namespace FileFunctions
                                                         string[] localFileList,
                                                         string recipientEmail)
         {
-            WriteLogClass.WriteToLog(1, "Starting file upload process .... ", 4);
+            try
+            {
+                WriteLogClass.WriteToLog(1, "Starting file upload process .... ", 4);
 
-            UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
-            UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == customerId)!;
-            // Loading the accepted extension list.
-            List<string> acceptedExtentions = clientDetails.DocumentDetails.DocumentExtensions;
-            // Creating the list of file in the local download folder.
-            string[] downloadedFiles = Directory.GetFiles(filePath, "*.*", SearchOption.TopDirectoryOnly)
-                                                          .Where(f => acceptedExtentions.IndexOf(Path.GetExtension(f).ToLower()) >= 0)
-                                                          .Where(g => Path.GetFileNameWithoutExtension(g).Equals(Path.GetFileNameWithoutExtension(orginalfileName), StringComparison.OrdinalIgnoreCase))
-                                                          .ToArray();
+                UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+                UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == customerId)!;
+                // Loading the accepted extension list.
+                List<string> acceptedExtentions = clientDetails.DocumentDetails.DocumentExtensions;
+                // Creating the list of file in the local download folder.
+                string[] downloadedFiles = Directory.GetFiles(filePath, "*.*", SearchOption.TopDirectoryOnly)
+                                                              .Where(f => acceptedExtentions.IndexOf(Path.GetExtension(f).ToLower()) >= 0)
+                                                              .Where(g => Path.GetFileNameWithoutExtension(g).Equals(Path.GetFileNameWithoutExtension(orginalfileName), StringComparison.OrdinalIgnoreCase))
+                                                              .ToArray();
 
-            // If recipientEmail not empty clientOrg = revipientEmail.
-            // If recipientEmail is empty clientOrg = clientDetails.ClientOrgNo
-            string clientOrg = recipientEmail ?? clientDetails.ClientOrgNo ?? throw new Exception("ClientOrg is null.");
+                // If recipientEmail not empty clientOrg = revipientEmail.
+                // If recipientEmail is empty clientOrg = clientDetails.ClientOrgNo
+                string clientOrg = recipientEmail ?? clientDetails.ClientOrgNo ?? throw new Exception("ClientOrg is null.");
 
-            int returnResult = await MakeJsonRequest(ftpConnect,
-                                      customerId,
-                                      clientDetails.Token,
-                                      clientDetails.UserName,
-                                      clientDetails.TemplateKey,
-                                      clientDetails.Queue,
-                                      clientDetails.ProjetID,
-                                      clientOrg,
-                                      clientDetails.ClientIdField,
-                                      downloadedFiles,
-                                      ftpFileList,
-                                      localFileList);
+                int returnResult = await MakeJsonRequest(ftpConnect,
+                                          customerId,
+                                          clientDetails.Token,
+                                          clientDetails.UserName,
+                                          clientDetails.TemplateKey,
+                                          clientDetails.Queue,
+                                          clientDetails.ProjetID,
+                                          clientOrg,
+                                          clientDetails.ClientIdField,
+                                          downloadedFiles,
+                                          ftpFileList,
+                                          localFileList);
 
-            return returnResult;
+                return returnResult;
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(1, $"Exception at SendToWebService: {ex.Message}", 1);
+                return -1;
+            }
         }
 
         private static async Task<int> MakeJsonRequest(AsyncFtpClient ftpConnect,
@@ -203,10 +211,10 @@ namespace FileFunctions
 
                 // This will run if it's not FTP.
                 if (deliveryType == DeliveryType.email)
-                {
-                    if (FolderCleanerClass.GetFolders(fullFilePath, jsonFileList, null, clientOrgNo, DeliveryType.email))
+                {   
+                    if (!FolderCleanerClass.GetFolders(fullFilePath, jsonFileList, null, clientOrgNo, DeliveryType.email))
                     {
-                        return 1;
+                        return -1;
                     }
                 }
                 else if (deliveryType == DeliveryType.ftp)
@@ -220,11 +228,9 @@ namespace FileFunctions
                     if (!FolderCleanerClass.GetFolders(downloadFolderPath, jsonFileList, customerId, null, DeliveryType.ftp))
                     {
                         return -1;
-                    }
-
-                    return 1;
+                    }                    
                 }
-                return 0; // Default return.
+                return 1;
             }
             catch (Exception ex)
             {
