@@ -1,6 +1,7 @@
-﻿using Microsoft.Graph;
+﻿using WriteLog;
+using Microsoft.Graph;
 using System.Text.RegularExpressions;
-using WriteLog;
+using System.Net.Mail;
 
 namespace GetRecipientEmail
 {
@@ -8,7 +9,7 @@ namespace GetRecipientEmail
     {
         public static string GetRecipientEmail(GraphServiceClient graphClient, string SubFolderId1, string SubFolderId2, string SubFolderId3, string MessageID, string _Email)
         {
-            var rEmail = string.Empty;
+            MailAddress rEmail = null!;
             IEnumerable<InternetMessageHeader> ToEmails;
             Task<Message> GetToEmail;
 
@@ -54,20 +55,20 @@ namespace GetRecipientEmail
                             .GetAsync();
                 }
 
-                ToEmails = GetToEmail.Result.InternetMessageHeaders.Where(adrs => adrs.Value.Contains("@efakturamottak.no"));
+                ToEmails = GetToEmail.Result.InternetMessageHeaders.Where(adrs => adrs.Value.ToLower().Contains("@efakturamottak.no"));
 
                 foreach (var ToEmail in ToEmails)
                 {
                     if (!string.IsNullOrEmpty(ToEmail.Value))
                     {
                         string RegExString = @"[0-9a-z]+@efakturamottak\.no";
-                        Regex RecivedEmail = new Regex(RegExString, RegexOptions.IgnoreCase);
-                        var ExtractedEmail = RecivedEmail.Match(ToEmail.Value);
+                        Regex RecivedEmail = new(RegExString, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+                        var ExtractedEmail = RecivedEmail.Match(ToEmail.Value.ToLower());
 
                         if (ExtractedEmail.Success)
                         {
-                            rEmail = ExtractedEmail.Value.ToLower().Replace(" ","");
-                            WriteLogClass.WriteToLog(3, $"Recipient email {rEmail} extracted ...");
+                            rEmail = new(ExtractedEmail.Value.ToLower().Replace(" ",""));
+                            WriteLogClass.WriteToLog(1, $"Recipient email {rEmail} extracted ...", 2);
                             break;
                         }
                     }
@@ -75,10 +76,11 @@ namespace GetRecipientEmail
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(1, $"Exception at getting recipient email: {ex.Message}");
+                WriteLogClass.WriteToLog(0, $"Exception at getting recipient email: {ex.Message}", 0);
             }
 
-            return rEmail;
+            //return rEmail.User;
+            return rEmail.Address;
         }
     }
 }

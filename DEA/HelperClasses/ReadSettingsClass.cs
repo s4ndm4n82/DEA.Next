@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using WriteLog;
 
 namespace ReadSettings
 {
@@ -16,13 +12,13 @@ namespace ReadSettings
             try
             {
                 var ConfigFolderPath = Directory.GetCurrentDirectory(); // Working Directory.
-                var ConfigFileName = "dea.conf"; // Config file name.
+                var ConfigFileName = @".\Config\dea.conf"; // Config file name.
                 var ConfigFileFullPath = Path.Combine(ConfigFolderPath, ConfigFileName); // Makes the config file path.
                 DeaConfigs = File.ReadAllLines(ConfigFileFullPath);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Exception at reading the conf file: {0}", ex.Message);
+                WriteLogClass.WriteToLog(0, $"Exception at reading the conf file: {ex.Message}", 0);
             }
 
             return DeaConfigs;
@@ -40,7 +36,7 @@ namespace ReadSettings
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Exception at caonf value return: {0}", ex.Message);
+                WriteLogClass.WriteToLog(0, $"Exception at caonf value return: {ex.Message}", 0);
             }
 
             return ConfigValue;

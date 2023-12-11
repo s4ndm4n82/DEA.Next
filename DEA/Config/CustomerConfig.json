@@ -1,0 +1,87 @@
+{
+  "CustomerDetails": [
+    {
+      "id": 1, // IMPORTANT. Hast add manually and increment by 1 each time
+      "CustomerStatus": 1, // Customer status. If active 1 if not 0.
+      "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZGNfaW1wb3J0IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiaW1wb3J0QGRpZ2l0YWxjYXB0dXJlLm5vIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI1OGRiZTAzOC1mNGIwLTQzNjYtYjJiYi03ZTZiZjU1YzBiOGQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6ImM0YzQwYzk0LTdiMmEtNDI0ZS04MzVlLWVkODA5MmYyODE0YyIsImV4cCI6MTcxOTU2NDM5MywiaXNzIjoid3d3LmRpZ2l0YWxjYXB0dXJlLm5vIiwiYXVkIjoiaHR0cHM6Ly93d3cuZGlnaXRhbGNhcHR1cmUubm8vdHBzIn0.KKzq2ubLLYQA2GinbtYkBvikkQQQRKX2Qr3HGY2h5uc",
+      "UserName": "dc_import",
+      "TemplateKey": "",
+      "Queue": "6",
+      "ProjetID": "0c298408-76b9-4f4c-9941-edb101126329",
+      "MainCustomer": "Aksesspunkt",
+      "ClientName": "Duett",
+      "ClientOrgNo": "932971917",
+      "ClientIdField": "Internal ID",
+      "FileDeliveryMethod": "ftp",
+      "DomainDetails": {
+        "MainDomain": "https://capture.exacta.no/",
+        "TpsRequestUrl": "tps_test_processing/Import?"
+      },
+      "FtpDetails": {
+        "FtpType": "FTP",
+        "FtpHostName": "localhost",
+        "FtpHostIp": "",
+        "FtpUser": "testuser",
+        "FtpPassword": "jackkills",
+        "FtpMainFolder": "Aksesspunkt",
+        "FtpSubFolder1": "Duett",
+        "FtpSubFolder2": ""
+      },
+      "EmailDetails": {
+        "EmailAddress": "",
+        "MainInbox": "",
+        "SubInbox1": "",
+        "SubInbox2": ""
+      },
+      "DocumentDetails": {
+        "DocumentType": "PDF",
+        "DocumentExtensions": [
+          ".pdf"
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "CustomerStatus": 0,
+      "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiaW1wb3J0X2RpZ2lhY2MiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJpbXBvcnRfZGlnaWFjY0BlZGVudHJpLmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiODk4MmZjM2QtNDg1Mi00MDc1LWIzN2QtODk1OTZkMTI4YTU5IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9wcmltYXJ5Z3JvdXBzaWQiOiI2YWNhMTI0MS1hNDU1LTRkNjAtODExNi01MjMyNDYwMDIzZGQiLCJleHAiOjE3MTk0OTE2ODMsImlzcyI6Ind3dy5kaWdpdGFsY2FwdHVyZS5ubyIsImF1ZCI6Imh0dHBzOi8vd3d3LmRpZ2l0YWxjYXB0dXJlLm5vL3RwcyJ9.zaptjtzoVOOQdbT2ENGr_2in7ZGzj9xdAM1mB_gI32o",
+      "UserName": "import_digiacc",
+      "TemplateKey": "",
+      "Queue": "0",
+      "ProjetID": "bdf75f60-070c-4184-8962-01e7d46bf19e",
+      "MainCustomer": "DigiAcc",
+      "ClientName": "DigiAcc",
+      "ClientOrgNo": "",
+      "ClientIdField": "InternalAccountingID",
+      "FileDeliveryMethod": "email",
+      "DomainDetails": {
+        "MainDomain": "https://capture.exacta.no/",
+        "TpsRequestUrl": "tps_test_processing/Import?"
+      },
+      "FtpDetails": {
+        "FtpType": "",
+        "FtpHostName": "",
+        "FtpHostIp": "",
+        "FtpUser": "",
+        "FtpPassword": "",
+        "FtpMainFolder": "",
+        "FtpSubFolder1": "",
+        "FtpSubFolder2": ""
+      },
+      "EmailDetails": {
+        "EmailAddress": "apptesting@efakturamottak.no",
+        "MainInbox": "Level 1",
+        "SubInbox1": "",
+        "SubInbox2": ""
+      },
+      "DocumentDetails": {
+        "DocumentType": "MULTI",
+        "DocumentExtensions": [
+          ".pdf",
+          ".jpg",
+          ".jpeg",
+          ".tif"
+        ]
+      }
+    }
+  ]
+}

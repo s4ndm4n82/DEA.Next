@@ -365,3 +365,8 @@ FodyWeavers.xsd
 
 # Settings json
 appsettings.*
+app.*
+
+# Unwanted folers.
+SSH.NETHelpFile/
+MetadataSamples/

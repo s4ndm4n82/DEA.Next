@@ -1,8 +1,8 @@
 ﻿using Microsoft.Graph;
 using System.Xml;
 using System.Text;
-using WriteLog;
 using System.Text.RegularExpressions;
+using WriteLog;
 
 namespace CreateMetadataFile
 {
@@ -10,7 +10,8 @@ namespace CreateMetadataFile
     {   
         public static bool WriteMetadataXml(string ToEmail, string SavePath, string SaveFileName)
         {
-            // TODO 1 : Create a funstion to get the to email address from emails and pass it to here.
+            // TODO 1 : Not needed anymore remove this.
+
             var XmlSaveFile = Path.Combine(SavePath, SaveFileName);
             var XmlSaveSwitch = false;
 
@@ -44,17 +45,17 @@ namespace CreateMetadataFile
 
                     if (System.IO.File.Exists(XmlSaveFile))
                     {
-                        WriteLogClass.WriteToLog(3, $"Metdata file created ....");
+                        WriteLogClass.WriteToLog(1, $"Metdata file created ....", 1);
                         XmlSaveSwitch = true;
                     }
                     else
                     {
-                        WriteLogClass.WriteToLog(1, $"Unable to create metadata ....");
+                        WriteLogClass.WriteToLog(1, $"Unable to create metadata ....", 1);
                     }
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(1, $"Exception at Xml metadata file creation: {ex.Message}");
+                    WriteLogClass.WriteToLog(1, $"Exception at Xml metadata file creation: {ex.Message}", 1);
                 }
             }
 
@@ -110,7 +111,7 @@ namespace CreateMetadataFile
                         if (ExtractedEmail.Success)
                         {
                             var PassEmail = ExtractedEmail.Value.ToLower();
-                            WriteLogClass.WriteToLog(3, $"Recipient email {PassEmail} extracted ...");
+                            WriteLogClass.WriteToLog(1, $"Recipient email {PassEmail} extracted ...", 1);
                             FileFlag = WriteMetadataXml(PassEmail, _FolderPath, FileName);
                         }
                     }                    
@@ -118,7 +119,7 @@ namespace CreateMetadataFile
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(1, $"Exception at GetToEmail4Xml {ex.Message}");                
+                WriteLogClass.WriteToLog(0, $"Exception at GetToEmail4Xml {ex.Message}", 0);                
             }
 
             return FileFlag;
