@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text;
 using WriteLog;
 
 namespace WriteNamesToLog
@@ -10,22 +10,37 @@ namespace WriteNamesToLog
         /// </summary>
         /// <param name="folderPath"></param>
         /// <returns></returns>
-        public static string GetFileNames(string folderPath)
+        public static string GetFileNames(string[] jsonFileList)
         {
-            string returnFileNames = "";
             try
             {
-                DirectoryInfo dirInfo = new(folderPath);
-                IEnumerable<FileInfo> fileNames = dirInfo.EnumerateFiles("*.*", SearchOption.TopDirectoryOnly);
-
-                return returnFileNames = string.Join(", ", fileNames.Select(fn => fn.Name));
+                if (jsonFileList == null && jsonFileList.Length !> 0)
+                {
+                    WriteLogClass.WriteToLog(0, "File list is empty", 0);
+                    return "";
+                }
+                
+                return String.Join(", ", jsonFileList);
             }
             catch (Exception ex)
             {
                 WriteLogClass.WriteToLog(0, $"Exception at get file names: {ex.Message}", 0);
-                return returnFileNames;
+                return "";
             }
             
+        }
+        public static string WriteMissedFilenames(IEnumerable<string> missedFileName)
+        {
+            string returnMissedFileNames = "";
+            try
+            {
+                return returnMissedFileNames = string.Join(", ", missedFileName);
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(0, $"Exception at write missed file names: {ex.Message}", 0);
+                return returnMissedFileNames;
+            }
         }
     }
 }

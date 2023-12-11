@@ -3,7 +3,8 @@ using FolderFunctions;
 using RunTimedFunctions;
 using ProcessSartupFunctions;
 using ErrorFolderChecker;
-
+using DisplayLogoClass;
+using AppConfigReader;
 
 // DEA.Next
 // ~~~~~~~~
@@ -11,17 +12,21 @@ using ErrorFolderChecker;
 
 // Aplication title just for fun.
 
+DisplayLogo.Logo();
+
 FolderFunctionsClass.CheckFolders(null!);
 
-if (!ErrorFolderCheckerClass.ErrorFolderChecker().Item1.Any())
-{
-    WriteLogClass.WriteToLog(1, "Starting download process ....", 1);
-    await ProcessStartupFunctionsClass.StartupProcess();
-}
-else
+AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
+int maxErrorFolders = jsonData.ProgramSettings.MaxErrorFolders;
+int errorFolderItemCount = ErrorFolderCheckerClass.ErrorFolderChecker().Item1.Count();
+
+if (errorFolderItemCount > maxErrorFolders)
 {
     RunTimedFunctionsClass.CallDeaTimedProcesses("deamailer");
-    WriteLogClass.WriteToLog(1, "Error folder is not empty. Check and empty the error folder before continuing ....", 1);
+    WriteLogClass.WriteToLog(2, $"Error folder contains {errorFolderItemCount} folders. Check and empty the error folder ....", 1);
 }
+
+WriteLogClass.WriteToLog(1, "Starting download process ....", 1);
+await ProcessStartupFunctionsClass.StartupProcess();
 
 RunTimedFunctionsClass.CallDeaTimedProcesses("deacleaner");

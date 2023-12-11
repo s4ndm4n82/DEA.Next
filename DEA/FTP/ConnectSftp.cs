@@ -40,6 +40,7 @@ namespace ConnectSftp
             catch (Exception ex)
             {
                 WriteLogClass.WriteToLog(0, $"Exception at SFTP connection: {ex.Message}", 0);
+                return null;
             }
 
             return sftpConnectAlt;

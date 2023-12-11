@@ -2,7 +2,6 @@
 using System.Diagnostics.CodeAnalysis;
 using GetRecipientEmail;
 using EmailFileHelper;
-using FileFunctions;
 using FolderFunctions;
 using WriteLog;
 using WriteNamesToLog;
@@ -10,6 +9,10 @@ using GraphHelper;
 using GraphEmailFunctions;
 using GetMailFolderIds;
 using UserConfigReader;
+using AppConfigReader;
+using Directory = System.IO.Directory;
+using FileFunctions;
+using FolderCleaner;
 
 namespace GraphAttachmentFunctions
 {
@@ -129,7 +132,7 @@ namespace GraphAttachmentFunctions
         }
 
         /// <summary>
-        /// This function would start downloading the attachmetns. But his will only download attachments which are above
+        /// This function would start downloading the attachmetns. But only download attachments which are above
         /// 10kB (10240 Bytes). But any PDF file will be downloaded regardless of the file size.
         /// </summary>
         /// <param name="graphClient"></param>
@@ -171,6 +174,7 @@ namespace GraphAttachmentFunctions
                                                          .Where(x => acceptedExtentions
                                                          .Contains(Path.GetExtension(x.Name.ToLower())) && x.Size > 10240 || (x.Name.ToLower().EndsWith(".pdf") && x.Size < 10240));
             int lastItem = acceptedAtachments.Count();
+            List<string> attachedFileNames = new();
 
             foreach (Attachment attachment in acceptedAtachments)
             {
@@ -231,6 +235,7 @@ namespace GraphAttachmentFunctions
                 // Attachment properties.
                 FileAttachment attachmentProperties = (FileAttachment)attachmentData;
                 byte[] attachmentBytes = attachmentProperties.ContentBytes;
+                attachedFileNames.Add(attachmentProperties.Name);
 
                 if (EmailFileHelperClass.FileDownloader(downloadPath, EmailFileHelperClass.FileNameCleaner(attachmentProperties.Name), attachmentBytes))
                 {
@@ -241,7 +246,7 @@ namespace GraphAttachmentFunctions
                 {
                     loopFlag = true;
                     WriteLogClass.WriteToLog(1, $"Downloaded {lastItem} attachments from {inMessage.Subject} ....", 2);
-                    WriteLogClass.WriteToLog(1, $"Downloaded file names: {WriteNamesToLogClass.GetFileNames(downloadPath)}", 2);
+                    WriteLogClass.WriteToLog(1, $"Downloaded file names: {WriteNamesToLogClass.GetFileNames(attachedFileNames.ToArray())}", 2);
                 }
             }
 
@@ -249,10 +254,13 @@ namespace GraphAttachmentFunctions
             {
                 // Call the base 64 converter and the file submitter to the web service.
                 // And then moves to email to export folder. If both functions succed then the varible will be set to true.
-                if (await MoveMailsToExport(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inMessage.Subject, inEmail))
+                if (!await MoveMailsToExport(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inMessage.Subject, inEmail))
                 {
-                    flagReturn = await FileFunctionsClass.SendToWebService(null!, downloadPath, customerId, null!, null!, recipientEmail);
+                    //flagReturn = await FileFunctionsClass.SendToWebService(null!, downloadPath, customerId, null!, null!, recipientEmail);
+                    return flagReturn;
                 }
+
+                return await StartAttachmentFilesUplaod(downloadPath, customerId, recipientEmail);
             }
 
             // Forwards the email if there's no attachments and attachment download loop doesn't run.
@@ -360,6 +368,62 @@ namespace GraphAttachmentFunctions
                 WriteLogClass.WriteToLog(1, $"Email {messageSubject} not moved to export folder ...", 2);
                 return false;
             }
+        }
+
+        private static async Task<int> StartAttachmentFilesUplaod(string downloadFolderPath,
+                                                                  int customerId,
+                                                                  string toEmail)
+        {
+            try
+            {
+                if (!Directory.Exists(downloadFolderPath))
+                {
+                    return -1;
+                }
+
+                int uploadResult = 0;
+                int batchSize = AppConfigData();
+                int batchCurrentIndex = 0;
+
+                DirectoryInfo downloadDirectoryInfo = new(downloadFolderPath);
+                FileInfo[] downloadedFileNameList = downloadDirectoryInfo.GetFiles();
+
+                // This loop is not perfect and this seems upload all 9 files at once.
+                while (batchCurrentIndex < downloadedFileNameList.Length)
+                {
+                    IEnumerable<FileInfo> currentBatch = downloadedFileNameList
+                                                        .Skip(batchCurrentIndex)
+                                                        .Take(batchSize)
+                                                        .ToArray();
+
+                    foreach (FileInfo fileInBatch in currentBatch)
+                    {
+                        uploadResult = await FileFunctionsClass.SendToWebService(null, downloadFolderPath, Path.GetFileNameWithoutExtension(fileInBatch.Name), customerId, new string[] { fileInBatch.Name }, null, toEmail);
+                    }
+
+                    // Increment the batch index
+                    batchCurrentIndex += batchSize;
+                }
+
+                if (uploadResult == 1)
+                {
+                    FolderCleanerClass.DeleteEmptyFolders(downloadFolderPath);
+                }
+
+                return uploadResult;
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(0, $"Exception at StartAttachmentFilesUplaod: {ex.Message}", 0);
+                return -1;
+            }            
+        }
+
+        public static dynamic AppConfigData()
+        {
+            AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
+            int maxBatchSize = jsonData.ProgramSettings.MaxBatchSize;
+            return maxBatchSize;
         }
     }
 }

@@ -36,9 +36,9 @@ namespace GraphGetAttachments
                 // Initiate the email attachment download and send them to the web service. Should return a bool value.
                 result = await GraphAttachmentFunctionsClass.GetMessagesWithAttachments(graphClient
                                                                                               , clientEmail
-                                                                                              , folderIds.clientMainFolderId!
-                                                                                              , folderIds.clientSubFolderId1!
-                                                                                              , folderIds.clientSubFolderId2!
+                                                                                              , folderIds.ClientMainFolderId!
+                                                                                              , folderIds.ClientSubFolderId1!
+                                                                                              , folderIds.ClientSubFolderId2!
                                                                                               , maxMalis.MaxEmails
                                                                                               , customerId);
 
