@@ -403,12 +403,7 @@ namespace GraphAttachmentFunctions
                     // Increment the batch index
                     batchCurrentIndex += batchSize;
                 }
-
-                /*if (uploadResult == 1)
-                {
-                    FolderCleanerClass.DeleteEmptyFolders(downloadFolderPath);
-                }*/
-
+                
                 return uploadResult;
             }
             catch (Exception ex)
