@@ -51,6 +51,7 @@ namespace ConnectFtps
             catch (Exception ex)
             {
                 WriteLogClass.WriteToLog(0, $"Exception at FTPS connection: {ex.Message}", 0);
+                return null;
             }
             return ftpsConnect;
         }

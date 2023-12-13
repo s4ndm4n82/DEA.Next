@@ -366,6 +366,7 @@ FodyWeavers.xsd
 # Settings json
 appsettings.*
 app.*
+CustomerConfig.*
 
 # Unwanted folers.
 SSH.NETHelpFile/

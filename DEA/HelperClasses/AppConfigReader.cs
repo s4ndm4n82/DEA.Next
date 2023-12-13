@@ -15,10 +15,14 @@ namespace AppConfigReader
         }
 
         public class Programsettings
-        {
-            public int MaxEmails { get; set; }            
+        {            
+            public int MaxEmails { get; set; }
+            public int MaxMainEmailFolders { get; set; }
+            public int MaxSubEmailFolders { get; set; }
+            public int MaxBatchSize { get; set; }
+            public int MaxErrorFolders { get; set; }
             public bool SendErrorEmail { get; set; }
-            public bool CleanLogs { get; set; } 
+            public bool CleanLogs { get; set; }
         }
 
         public class Emailserversettings
