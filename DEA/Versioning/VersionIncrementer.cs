@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 using WriteLog;
 
 namespace VersionIncrementerClass
@@ -14,12 +9,20 @@ namespace VersionIncrementerClass
         {
             try
             {
+                // Get the current working directory
                 string workingDirectory = Environment.CurrentDirectory;
+                // Get the app root directory
                 string appRootDirectory = workingDirectory.Split("\\bin")[0];
+                // Get the path to the AssemblyInfo.cs file
                 string assemplyInfoFilePath = Path.Combine(appRootDirectory, "Versioning", "AssemblyInfo.cs");
-
+                // Read the AssemblyInfo.cs file
                 string assemblyInfo = File.ReadAllText(assemplyInfoFilePath);
-
+                // Check if the file exists
+                if (!File.Exists(assemplyInfoFilePath))
+                {
+                    return;
+                }
+                // Update the numbers
                 UpdateNumbers(assemblyInfo,
                              assemplyInfoFilePath,
                              ExtractAssemblyNumbers(assemblyInfo).Item1,
@@ -38,10 +41,12 @@ namespace VersionIncrementerClass
 
             try
             {
+                // Extract the current version number.
                 Match matchNumber = Regex.Match(assemblyInfo, @"AssemblyVersion\(""\d+\.\d+\.\d+\.\d+""\)");
 
                 if (matchNumber.Success)
                 {
+                    // Extract the version numbers.
                     string[] versionNumbers = matchNumber.Value
                                               .Trim('(', ')', '"')
                                               .Split('.')
@@ -50,6 +55,7 @@ namespace VersionIncrementerClass
                     buildNumber = int.Parse(versionNumbers[1]);
                     revisionNumber = int.Parse(versionNumbers[2]);                    
                 }
+                // Return the version numbers
                 return (buildNumber, revisionNumber);
             }
             catch (Exception ex)
@@ -65,14 +71,16 @@ namespace VersionIncrementerClass
         {
             try
             {
+                // Increment the revision number.
                 revisionNumber++;
-
+                // Check if the revision number is greater than 1000
+                // If it is, increment the build number and reset the revision number.
                 if (revisionNumber == 1000)
                 {
                     buildNumber++;
                     revisionNumber = 0;
                 }
-
+                // Update the numbers
                 if (buildNumber == 10)
                 {
                     UpdateMinorNumber(assemblyInfo, assemblyInfoFilePath);
