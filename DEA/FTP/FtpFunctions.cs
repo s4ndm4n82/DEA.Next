@@ -139,7 +139,6 @@ namespace FtpFunctions
                     
                     foreach (FtpResult ftpFile in currentBatch)
                     {
-                        //result = await FilesUploadFuntcion(ftpConnect, currentBatch.Select(r => r.RemotePath.ToString()).ToArray(), downloaFolder, ftpFile.Name, clientID);
                         result = await FilesUploadFuntcion(ftpConnect, currentBatch.Select(r => r.RemotePath.ToString()).ToArray(), downloaFolder, ftpFile.Name, clientID);
                     }                    
 
@@ -183,7 +182,6 @@ namespace FtpFunctions
                 WriteLogClass.WriteToLog(1, $"Ftp file count: {currentBatch.Count()}, Local file count: {unmatchedFileList.Count()} files doesn't match", 3);
                 return 3;
             }*/
-            // TODO: The file list need to contains only the files that are downloaded.
             string[] localFiles = Directory.GetFiles(ftpHoldFolder, "*.*", SearchOption.TopDirectoryOnly);
             return await FileFunctionsClass.SendToWebService(ftpConnect, ftpHoldFolder, fileName, clientId, matchingFileName, localFiles, null!);
         }

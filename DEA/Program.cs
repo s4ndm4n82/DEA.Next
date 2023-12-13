@@ -5,12 +5,15 @@ using ProcessSartupFunctions;
 using ErrorFolderChecker;
 using DisplayLogoClass;
 using AppConfigReader;
+using VersionIncrementerClass;
 
 // DEA.Next
 // ~~~~~~~~
 // TODO 1: Rewrite the code to match Graph v5.0.0. +
 
 // Aplication title just for fun.
+
+VersionIncrementer.IncrementVersion();
 
 DisplayLogo.Logo();
 

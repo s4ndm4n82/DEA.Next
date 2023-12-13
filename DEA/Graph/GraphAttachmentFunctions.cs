@@ -256,7 +256,6 @@ namespace GraphAttachmentFunctions
                 // And then moves to email to export folder. If both functions succed then the varible will be set to true.
                 if (!await MoveMailsToExport(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inMessage.Subject, inEmail))
                 {
-                    //flagReturn = await FileFunctionsClass.SendToWebService(null!, downloadPath, customerId, null!, null!, recipientEmail);
                     return flagReturn;
                 }
 
@@ -404,12 +403,7 @@ namespace GraphAttachmentFunctions
                     // Increment the batch index
                     batchCurrentIndex += batchSize;
                 }
-
-                if (uploadResult == 1)
-                {
-                    FolderCleanerClass.DeleteEmptyFolders(downloadFolderPath);
-                }
-
+                
                 return uploadResult;
             }
             catch (Exception ex)
