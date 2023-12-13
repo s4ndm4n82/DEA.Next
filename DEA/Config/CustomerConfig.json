@@ -23,7 +23,8 @@
         "FtpHostIp": "",
         "FtpUser": "testuser",
         "FtpPassword": "jackkills",
-        "FtpMainFolder": "/Aksesspunkt/Duett"
+        //"FtpMainFolder": "/Aksesspunkt/Duett"
+        "FtpMainFolder": "/Aksesspunkt"
       },
       "EmailDetails": {
         "EmailAddress": "",

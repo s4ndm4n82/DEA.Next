@@ -6,15 +6,18 @@ using ErrorFolderChecker;
 using DisplayLogoClass;
 using AppConfigReader;
 using VersionIncrementerClass;
+using FtpListFoldersInServerClass;
 
 // DEA.Next
 // ~~~~~~~~
 // TODO 1: Rewrite the code to match Graph v5.0.0. +
 
+FtpListFoldersInServer.CheckFtpFolders();
 // Increments the version number
 VersionIncrementer.IncrementVersion();
 // Displays the logo
 DisplayLogo.Logo();
+
 // Checks and creates the main folders that used by the app.
 FolderFunctionsClass.CheckFolders(null!);
 // Get the set amount of allowed error folders.

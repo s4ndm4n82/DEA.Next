@@ -74,12 +74,12 @@ namespace FtpFunctions
             }
 
             // Starts the file download process
-            using AsyncFtpClient ftpConnect = ftpConnectToken;
+            using (ftpConnectToken)
             try
             {
                 WriteLogClass.WriteToLog(1, $"Starting file download from {ftpFolderPath} ....", 3);
 
-                downloadResult = await DownloadFtpFiles(ftpConnect, ftpFolderPath, downloadFolder, clientID);
+                downloadResult = await DownloadFtpFiles(ftpConnectToken, ftpFolderPath, downloadFolder, clientID);
 
                 WriteLogClass.WriteToLog(ProcessStatusMessageSetterClass.SetMessageTypeOther(downloadResult),
                                          $"{ProcessStatusMessageSetterClass.SetProcessStatusOther(downloadResult, "ftp")}\n", 3);
