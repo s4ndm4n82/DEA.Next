@@ -7,7 +7,7 @@
       "UserName": "dc_import",
       "TemplateKey": "",
       "Queue": "6",
-      "ProjetID": "690e35df-73b1-4802-46a5-08da8ffc4c42",
+      "ProjetID": "0c298408-76b9-4f4c-9941-edb101126329",
       "MainCustomer": "Aksesspunkt",
       "ClientName": "Duett",
       "ClientOrgNo": "932971917",
@@ -23,8 +23,9 @@
         "FtpHostIp": "",
         "FtpUser": "testuser",
         "FtpPassword": "jackkills",
-        //"FtpMainFolder": "/Aksesspunkt/Duett"
-        "FtpMainFolder": "/Aksesspunkt"
+        "FtpMainFolder": "/Aksesspunkt/Duett",
+        //"FtpMainFolder": "/Aksesspunkt",
+        "FtpFolderLoop": 0
       },
       "EmailDetails": {
         "EmailAddress": "",
@@ -62,7 +63,8 @@
         "FtpHostIp": "",
         "FtpUser": "",
         "FtpPassword": "",
-        "FtpMainFolder": ""
+        "FtpMainFolder": "",
+        "FtpFolderLoop": 0
       },
       "EmailDetails": {
         "EmailAddress": "apptesting@efakturamottak.no",

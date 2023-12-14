@@ -369,6 +369,13 @@ namespace GraphAttachmentFunctions
             }
         }
 
+        /// <summary>
+        /// Batch file upload function. The while loop will upload file untill it ends.
+        /// </summary>
+        /// <param name="downloadFolderPath">Local download folder path.</param>
+        /// <param name="customerId">Customer ID</param>
+        /// <param name="toEmail">Email the client has sent email to.</param>
+        /// <returns></returns>
         private static async Task<int> StartAttachmentFilesUplaod(string downloadFolderPath,
                                                                   int customerId,
                                                                   string toEmail)
