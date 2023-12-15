@@ -9,6 +9,6 @@
 [assembly: AssemblyTitle("DEAMailer")]
 
 // Version information for an assembly consists of the following four values:
-[assembly: AssemblyVersion("1.0.0.*")]
-[assembly: AssemblyFileVersion("1.0.0.*")]
-[assembly: AssemblyInformationalVersion("1.0.0.*")]
+[assembly: AssemblyVersion("1.0.1.*")]
+[assembly: AssemblyFileVersion("1.0.1.*")]
+[assembly: AssemblyInformationalVersion("1.0.1.*")]
