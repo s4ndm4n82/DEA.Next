@@ -23,7 +23,7 @@
         "FtpHostIp": "",
         "FtpUser": "testuser",
         "FtpPassword": "jackkills",
-        "FtpFolderLoop": 0,
+        "FtpFolderLoop": 1,
         "FtpMainFolder": "/Aksesspunkt/Duett"
         //"FtpMainFolder": "/Aksesspunkt",
 

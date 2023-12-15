@@ -72,7 +72,7 @@ namespace FtpFunctions
                 {
                     WriteLogClass.WriteToLog(1, $"Starting file download from {GetFtpDetails(clientId).FtpMainFolder} ....", 3);
 
-                    if (GetFtpDetails(clientId).FtpFolderLoop == 0)
+                    if (GetFtpDetails(clientId).FtpFolderLoop == 1)
                     {
                         downloadResult = await FtpLoopDownload.StartFtpLoopDownload(ftpConnectToken,
                                                                               GetFtpDetails(clientId).FtpMainFolder,
@@ -80,7 +80,7 @@ namespace FtpFunctions
                                                                               clientId);
                     }
 
-                    if (GetFtpDetails(clientId).FtpFolderLoop == 1)
+                    if (GetFtpDetails(clientId).FtpFolderLoop == 0)
                     {
                         downloadResult = await DownloadFtpFiles.DownloadFtpFilesFunction(ftpConnectToken,
                                                                  GetFtpDetails(clientId).FtpMainFolder,
