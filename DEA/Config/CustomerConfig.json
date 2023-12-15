@@ -23,9 +23,10 @@
         "FtpHostIp": "",
         "FtpUser": "testuser",
         "FtpPassword": "jackkills",
-        "FtpMainFolder": "/Aksesspunkt/Duett",
+        "FtpFolderLoop": 0,
+        "FtpMainFolder": "/Aksesspunkt/Duett"
         //"FtpMainFolder": "/Aksesspunkt",
-        "FtpFolderLoop": 0
+
       },
       "EmailDetails": {
         "EmailAddress": "",
@@ -63,8 +64,8 @@
         "FtpHostIp": "",
         "FtpUser": "",
         "FtpPassword": "",
-        "FtpMainFolder": "",
-        "FtpFolderLoop": 0
+        "FtpFolderLoop": 0,
+        "FtpMainFolder": ""
       },
       "EmailDetails": {
         "EmailAddress": "apptesting@efakturamottak.no",
