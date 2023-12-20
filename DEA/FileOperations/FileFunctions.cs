@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using Newtonsoft.Json;
-using UserConfigReader;
+using UserConfigSetterClass;
 using RestSharp;
 using TpsJsonString;
 using WriteLog;
@@ -25,8 +25,8 @@ namespace FileFunctions
             {
                 WriteLogClass.WriteToLog(1, "Starting file upload process .... ", 4);
 
-                UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
-                UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == customerId)!;
+                UserConfigSetterClass.UserConfigSetter.CustomerDetailsObject jsonData = await UserConfigSetterClass.UserConfigSetter.ReadUserDotConfigAsync<UserConfigSetterClass.UserConfigSetter.CustomerDetailsObject>();
+                UserConfigSetterClass.UserConfigSetter.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == customerId)!;
                 // Loading the accepted extension list.
                 List<string> acceptedExtentions = clientDetails.DocumentDetails.DocumentExtensions;
                 // Creating the list of file in the local download folder.
@@ -140,10 +140,10 @@ namespace FileFunctions
             try
             {
                 // Loads all the details from the customer details Json file.
-                UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
+                UserConfigSetterClass.UserConfigSetter.CustomerDetailsObject jsonData = await UserConfigSetterClass.UserConfigSetter.ReadUserDotConfigAsync<UserConfigSetterClass.UserConfigSetter.CustomerDetailsObject>();
 
                 // Just select the data corrosponding to the customer ID.
-                UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == customerId)!;
+                UserConfigSetterClass.UserConfigSetter.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == customerId)!;
 
                 // Creating rest api request.
                 RestClient client = new($"{clientDetails.DomainDetails.MainDomain}");
@@ -254,7 +254,7 @@ namespace FileFunctions
             {
                 WriteLogClass.WriteToLog(0, $"Server status code: {serverStatusCode}, Server Response Error: {serverResponseContent}", 0);
 
-                if (!HandleErrorFilesClass.MoveFilesToErrorFolder(fullFilePath, ftpFileList, customerId, clientOrgNo))
+                if (!await HandleErrorFilesClass.MoveFilesToErrorFolder(fullFilePath, ftpFileList, customerId, clientOrgNo))
                 {
                     WriteLogClass.WriteToLog(1, "Moving files failed ....", 1);
                     return -1;

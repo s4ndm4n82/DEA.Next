@@ -3,7 +3,7 @@ using Microsoft.Identity.Client;
 using System.Net.Http.Headers;
 using WriteLog;
 using GraphGetAttachments;
-using UserConfigReader;
+using UserConfigSetterClass;
 using Microsoft.IdentityModel.Tokens;
 using AppConfigReader;
 
@@ -25,8 +25,8 @@ namespace GraphHelper
         public static async Task<int> InitializGetAttachment(int customerId)
         {
             int result = 0;
-            UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
-            UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == customerId);
+            UserConfigSetterClass.UserConfigSetter.CustomerDetailsObject jsonData = await UserConfigSetterClass.UserConfigSetter.ReadUserDotConfigAsync<UserConfigSetterClass.UserConfigSetter.CustomerDetailsObject>();
+            UserConfigSetterClass.UserConfigSetter.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == customerId);
 
             if(clientDetails != null)
             {

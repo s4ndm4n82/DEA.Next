@@ -2,7 +2,7 @@
 using ConnectFtp;
 using ConnectFtps;
 using FluentFTP;
-using UserConfigReader;
+using UserConfigSetterClass;
 using FolderFunctions;
 using ProcessStatusMessageSetter;
 using DownloadFtpFilesClass;
@@ -36,26 +36,27 @@ namespace FtpFunctions
         {
             int downloadResult = 0; // Return value
             AsyncFtpClient ftpConnectToken = null;
+            UserConfigSetterClass.UserConfigSetter.Ftpdetails ftpDetails = await GetFtpDetails(clientId);
 
             string downloadFolder = Path.Combine(FolderFunctionsClass.CheckFolders("ftp")
-                                                , GetFtpDetails(clientId).FtpMainFolder.Trim('/').Replace('/', '\\'));
+                                                , ftpDetails.FtpMainFolder.Trim('/').Replace('/', '\\'));
 
             // If the user FTP config type is FTP.
-            if (GetFtpDetails(clientId).FtpType == FtpNames.Ftp)
+            if (ftpDetails.FtpType == FtpNames.Ftp)
             {
-                ftpConnectToken = await ConnectFtpClass.ConnectFtp(GetFtpDetails(clientId).FtpHostName,
-                                                                                  GetFtpDetails(clientId).FtpHostIp,
-                                                                                  GetFtpDetails(clientId).FtpUser,
-                                                                                  GetFtpDetails(clientId).FtpPassword);
+                ftpConnectToken = await ConnectFtpClass.ConnectFtp(ftpDetails.FtpHostName,
+                                                                                  ftpDetails.FtpHostIp,
+                                                                                  ftpDetails.FtpUser,
+                                                                                  ftpDetails.FtpPassword);
             }
 
             // If the user FTP config type is FTPS.
-            if (GetFtpDetails(clientId).FtpType == "FTPS")
+            if (ftpDetails.FtpType == "FTPS")
             {
-                ftpConnectToken = await ConnectFtpsClass.ConnectFtps(GetFtpDetails(clientId).FtpHostName,
-                                                                     GetFtpDetails(clientId).FtpHostIp,
-                                                                     GetFtpDetails(clientId).FtpUser,
-                                                                     GetFtpDetails(clientId).FtpPassword);
+                ftpConnectToken = await ConnectFtpsClass.ConnectFtps(ftpDetails.FtpHostName,
+                                                                     ftpDetails.FtpHostIp,
+                                                                     ftpDetails.FtpUser,
+                                                                     ftpDetails.FtpPassword);
             }
 
 
@@ -70,20 +71,20 @@ namespace FtpFunctions
             using (ftpConnectToken)
                 try
                 {
-                    WriteLogClass.WriteToLog(1, $"Starting file download from {GetFtpDetails(clientId).FtpMainFolder} ....", 3);
+                    WriteLogClass.WriteToLog(1, $"Starting file download from {ftpDetails.FtpMainFolder} ....", 3);
 
-                    if (GetFtpDetails(clientId).FtpFolderLoop == 1)
+                    if (ftpDetails.FtpFolderLoop == 1)
                     {
                         downloadResult = await FtpLoopDownload.StartFtpLoopDownload(ftpConnectToken,
-                                                                              GetFtpDetails(clientId).FtpMainFolder,
+                                                                              ftpDetails.FtpMainFolder,
                                                                               downloadFolder,
                                                                               clientId);
                     }
 
-                    if (GetFtpDetails(clientId).FtpFolderLoop == 0)
+                    if (ftpDetails.FtpFolderLoop == 0)
                     {
                         downloadResult = await DownloadFtpFiles.DownloadFtpFilesFunction(ftpConnectToken,
-                                                                 GetFtpDetails(clientId).FtpMainFolder,
+                                                                 ftpDetails.FtpMainFolder,
                                                                  downloadFolder,
                                                                  clientId);
                     }                    
@@ -99,11 +100,11 @@ namespace FtpFunctions
                 }
         }
 
-        private static UserConfigReaderClass.Ftpdetails GetFtpDetails(int clientId)
+        private static async Task<UserConfigSetterClass.UserConfigSetter.Ftpdetails> GetFtpDetails(int clientId)
         {
-            UserConfigReaderClass.CustomerDetailsObject jsonDate = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
-            UserConfigReaderClass.Customerdetail customerDetails = jsonDate.CustomerDetails.FirstOrDefault(cid => cid.Id == clientId);
-            UserConfigReaderClass.Ftpdetails ftpDetails = customerDetails.FtpDetails;
+            UserConfigSetterClass.UserConfigSetter.CustomerDetailsObject jsonDate = await UserConfigSetterClass.UserConfigSetter.ReadUserDotConfigAsync<UserConfigSetterClass.UserConfigSetter.CustomerDetailsObject>();
+            UserConfigSetterClass.UserConfigSetter.Customerdetail customerDetails = jsonDate.CustomerDetails.FirstOrDefault(cid => cid.Id == clientId);
+            UserConfigSetterClass.UserConfigSetter.Ftpdetails ftpDetails = customerDetails.FtpDetails;
 
             return ftpDetails;
         }

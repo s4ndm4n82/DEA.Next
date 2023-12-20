@@ -1,18 +1,20 @@
 ﻿using Microsoft.Graph;
 using System.Diagnostics.CodeAnalysis;
 using GetRecipientEmail;
-using EmailFileHelper;
+using FileNameCleanerClass;
 using FolderFunctions;
 using WriteLog;
 using WriteNamesToLog;
 using GraphHelper;
 using GraphEmailFunctions;
 using GetMailFolderIds;
-using UserConfigReader;
 using AppConfigReader;
 using Directory = System.IO.Directory;
 using FileFunctions;
 using FolderCleaner;
+using UserConfigRetriverClass;
+using UserConfigSetterClass;
+using GraphDownloadAttachmentFilesClass;
 
 namespace GraphAttachmentFunctions
 {
@@ -36,99 +38,134 @@ namespace GraphAttachmentFunctions
                                                                   int maxMails,
                                                                   int customerId)
         {
-            int flag = 0;
-            IMailFolderMessagesCollectionPage messages = null!;
+            List<string> folderIds = new() { mainFolderId, subFolderId1, subFolderId2 };
+            folderIds.RemoveAll(string.IsNullOrEmpty); // Remove the empty once.
 
-            if (!string.IsNullOrEmpty(mainFolderId) && string.IsNullOrEmpty(subFolderId1) && string.IsNullOrEmpty(subFolderId2))
+            if (!folderIds.Any())
             {
-                try
-                {
-                   messages = await graphClient.Users[$"{inEmail}"].MailFolders["Inbox"]
-                           .ChildFolders[$"{mainFolderId}"]
-                           .Messages
-                           .Request()
-                           .Expand("attachments")
-                           .Top(maxMails)
-                           .GetAsync();
-                }
-                catch (Exception ex)
-                {
-                    WriteLogClass.WriteToLog(0, $"Excpetion at geting messages 1: {ex.Message}", 0);
-                }
+                return 4;
             }
 
-            if (!string.IsNullOrEmpty(mainFolderId) && !string.IsNullOrEmpty(subFolderId1) && string.IsNullOrEmpty(subFolderId2))
+            IMailFolderRequestBuilder requestBuidler = graphClient.Users[$"{inEmail}"].MailFolders["Inbox"];
+
+            foreach (string folderId in folderIds)
             {
-                try
-                {
-                    messages = await graphClient.Users[$"{inEmail}"].MailFolders["Inbox"]
-                           .ChildFolders[$"{mainFolderId}"]
-                           .ChildFolders[$"{subFolderId1}"]
-                           .Messages
-                           .Request()
-                           .Expand("attachments")
-                           .Top(maxMails)
-                           .GetAsync();
-                }
-                catch (Exception ex)
-                {
-                    WriteLogClass.WriteToLog(0, $"Excpetion at geting messages 2: {ex.Message}", 0);
-                }
+                // Change the request builder to the next folder. If it is the last folder, then we will get the messages from there.
+                requestBuidler = requestBuidler.ChildFolders[$"{folderId}"];
             }
 
-            if (!string.IsNullOrEmpty(mainFolderId) && !string.IsNullOrEmpty(subFolderId1) && !string.IsNullOrEmpty(subFolderId2))
+            // Empty variable to store the messages.
+            IMailFolderMessagesCollectionPage messages;
+            try
             {
-                try
+                // Get the messages with attachments.
+                messages = await requestBuidler
+                                 .Messages
+                                 .Request()
+                                 .Expand("attachments")
+                                 .Top(maxMails)
+                                 .GetAsync();
+
+                // If there are no messages, then return 4.
+                if (!messages.Any())
                 {
-                    messages = await graphClient.Users[$"{inEmail}"].MailFolders["Inbox"]
-                           .ChildFolders[$"{mainFolderId}"]
-                           .ChildFolders[$"{subFolderId1}"]
-                           .ChildFolders[$"{subFolderId2}"]
-                           .Messages
-                           .Request()
-                           .Expand("attachments")
-                           .Top(maxMails)
-                           .GetAsync();
-                }
-                catch (Exception ex)
-                {
-                    WriteLogClass.WriteToLog(0, $"Excpetion at geting messages 2: {ex.Message}", 0);
+                    return 4;
                 }
             }
-
-            if (messages.Any())
+            catch (Exception ex)
             {
-                foreach (var message in messages)
+                // Log the failure and return the error code.
+                WriteLogClass.WriteToLog(0, $"Exception at GetMessagesWithAttachments: {ex.Message}", 0);
+                return 4; // 4 is an error code.
+            }
+
+            // Process the messages. And adds all the returned results to a list.
+            List<Task<int>> taskReturns = new();
+            foreach (Message message in messages)
+            {
+                taskReturns.Add(ProcessMessageAsync(graphClient,
+                                                    message,
+                                                    inEmail,
+                                                    mainFolderId,
+                                                    subFolderId1,
+                                                    subFolderId2,
+                                                    customerId));
+            }
+
+            // Wait for all the tasks to complete.
+            int[] results = await Task.WhenAll(taskReturns);
+
+            // Error code list.
+            int[] errorCodes = { 4, 3, 1 };
+
+            // Get the first error code from the list.
+            int flag = errorCodes.FirstOrDefault(code => results.Contains(code));
+
+            // If there is no error code, then return 0.
+            flag = flag != 0 ? flag : 0;
+
+            return flag;
+        }
+
+        private static async Task<int> ProcessMessageAsync(GraphServiceClient graphClient,
+                                                           Message message,
+                                                           string inEmail,
+                                                           string mainFolderId,
+                                                           string subFolderId1,
+                                                           string subFolderId2,
+                                                           int customerId)
+        {
+            if (!message.Attachments.Any())
+            {
+                // If there are no attachments, forward the email and return 3.
+                (bool forwardSuccess, string forwardResult) = await GraphEmailFunctionsClass.EmailForwarder(graphClient,
+                                                                                                  mainFolderId,
+                                                                                                  subFolderId1,
+                                                                                                  subFolderId2,
+                                                                                                  message.Id,
+                                                                                                  inEmail,
+                                                                                                  customerId);
+                if (!forwardSuccess)
                 {
-                    if (message.Attachments.Count > 0)
-                    {
-                        WriteLogClass.WriteToLog(1, $"Reading email {message.Subject}", 2);
-                        flag = await DownloadAttachments(graphClient, message, inEmail, mainFolderId, subFolderId1, subFolderId2, customerId);
-                    }
-                    else
-                    {
-                        var forwardFalg = await GraphEmailFunctionsClass.EmailForwarder(graphClient, mainFolderId, subFolderId1, subFolderId2, message.Id, inEmail, 0);
-
-                        if (forwardFalg.Item1)
-                        {
-                            WriteLogClass.WriteToLog(1, $"Email forwarded to {forwardFalg.Item2} ....", 2);
-
-                            var destinationId = await GetMailFolderIdsClass.GetErrorFolderId(graphClient, inEmail, mainFolderId, subFolderId1, subFolderId2);
-
-                            if (await GraphHelperClass.MoveEmails(mainFolderId, subFolderId1, subFolderId2, message.Id, destinationId, inEmail))
-                            {
-                                WriteLogClass.WriteToLog(1, $"No attachments. Mail moved to error folder ....", 2);
-                                flag = 3;
-                            }
-                        }
-                    }
+                    // Log the failure and return an error code
+                    WriteLogClass.WriteToLog(1, $"Failed to forward email {message.Id}.", 2);
+                    return 4; // Error code for failure
                 }
+
+                string destinationId = await GetMailFolderIdsClass.GetErrorFolderId(graphClient,
+                                                                    inEmail,
+                                                                    mainFolderId,
+                                                                    subFolderId1,
+                                                                    subFolderId2);
+
+                bool moveSuccess = await GraphHelperClass.MoveEmails(mainFolderId,
+                                                                     subFolderId1,
+                                                                     subFolderId2,
+                                                                     message.Id,
+                                                                     destinationId,
+                                                                     inEmail);
+                if (!moveSuccess)
+                {
+                    // Log the failure and return an error code
+                    WriteLogClass.WriteToLog(1, $"Failed to move email {message.Id} to error folder.", 2);
+                    return 4; // Error code for failure
+                }
+
+                // Log the problem and retuen 3.
+                WriteLogClass.WriteToLog(1, $"No attachments. Email forwarded to {forwardResult} and moved to error folder.", 2);
+                return 3; // Success code for no attachments
             }
             else
             {
-                flag = 4;
+                // If there are attachments, download them.
+                return await DownloadAttachments(graphClient,
+                                                 message,
+                                                 inEmail,
+                                                 mainFolderId,
+                                                 subFolderId1,
+                                                 subFolderId2,
+                                                 customerId);
             }
-            return flag;
         }
 
         /// <summary>
@@ -150,33 +187,87 @@ namespace GraphAttachmentFunctions
                                                             string subFolderId2,
                                                             int customerId)
         {
-            int loopCount = 0; // In order to check if the loop ran at least once.
+            int downloadCount = 0;
+            UserConfigSetter.Customerdetail clientDeails = await UserConfigRetriver.RetriveUserConfigById(customerId);
+            
+            string recipientEmail = GraphDownloadAttachmentFiles.DetermineRecipientEmail(graphClient,
+                                                                                         clientDeails,
+                                                                                         mainFolderId,
+                                                                                         subFolderId1,
+                                                                                         subFolderId2,
+                                                                                         inMessage.Id,
+                                                                                         inEmail);
+
+            string downloadFolderPath = GraphDownloadAttachmentFiles.CreateDownloadPath(recipientEmail);
+            IEnumerable<Attachment> attachmentList = GraphDownloadAttachmentFiles.FilterAttachments(inMessage.Attachments, clientDeails.DocumentDetails.DocumentExtensions);
+            List<string> attachmentFileNameList = new();
+
+            foreach (Attachment attachment in attachmentList)
+            {
+                try
+                {
+                    Attachment attachmentData = await GraphDownloadAttachmentFiles.FetchAttachmentData(graphClient,
+                                                                                                       inEmail,
+                                                                                                       mainFolderId,
+                                                                                                       subFolderId1,
+                                                                                                       subFolderId2,
+                                                                                                       inMessage.Id,
+                                                                                                       attachment.Id);
+
+                    if (await GraphDownloadAttachmentFiles.SaveAttachmentToFile(attachmentData,
+                                                                                downloadFolderPath,
+                                                                                FileNameCleaner.FileNameCleanerFunction(attachment.Name)))
+                    {
+                        attachmentFileNameList.Add(attachment.Name);
+                        downloadCount++;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    WriteLogClass.WriteToLog(0, $"Exception when processing attachment {inMessage.Subject}: {ex.Message}", 0);
+                }
+            }
+
+            if (attachmentList.Count() == downloadCount)
+            {
+                WriteLogClass.WriteToLog(1, $"Downloaded file names: {WriteNamesToLogClass.GetFileNames(attachmentFileNameList.ToArray())}", 2);
+                if (!await MoveMailsToExport(graphClient,
+                                             mainFolderId,
+                                             subFolderId1,
+                                             subFolderId2,
+                                             inMessage.Id,
+                                             inMessage.Subject,
+                                             inEmail))
+                {
+                    return 0;
+                }
+
+                return await StartAttachmentFilesUplaod(downloadFolderPath, customerId, recipientEmail);
+            }
+
+            /*int loopCount = 0; // In order to check if the loop ran at least once.
 
             int flagReturn = 0; // Flag to check if the transfer to TPS is successful.
             bool loopFlag = false; // To execute the TPS file transfer function at the end of the file download loop.
+            Attachment attachmentData = null; // Variable to store attachment ID.
 
-            UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
-            UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == customerId)!;
+            UserConfigSetterClass.CustomerDetailsObject jsonData = await UserConfigSetterClass.ReadUserDotConfigAsync<UserConfigSetterClass.CustomerDetailsObject>();
+            UserConfigSetterClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == customerId)!;
 
             string mainClient = clientDetails.MainCustomer!;
             string clientName = clientDetails.ClientName!;
-            string recipientEmail = string.Empty;
-
-            if (clientDetails.FileDeliveryMethod.ToLower() == "email")
-            {
-                recipientEmail = new(GetRecipientEmailClass.GetRecipientEmail(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inEmail)); // Get the Recipient email from the email.
-            }            
+            string recipientEmail = GetRecipientEmailClass.GetRecipientEmail(graphClient, mainFolderId, subFolderId1, subFolderId2, inMessage.Id, inEmail);
 
             string downloadPath = Path.Combine(FolderFunctionsClass.CheckFolders("attachments"), recipientEmail, GraphHelperClass.FolderNameRnd(10)); // Creates the file download path.
-            Attachment attachmentData = null!; // Variable to store attachment ID.
+            
             List<string> acceptedExtentions = clientDetails.DocumentDetails!.DocumentExtensions!;
             IEnumerable<Attachment> acceptedAtachments = inMessage.Attachments
                                                          .Where(x => acceptedExtentions
                                                          .Contains(Path.GetExtension(x.Name.ToLower())) && x.Size > 10240 || (x.Name.ToLower().EndsWith(".pdf") && x.Size < 10240));
             int lastItem = acceptedAtachments.Count();
-            List<string> attachedFileNames = new();
 
-            foreach (Attachment attachment in acceptedAtachments)
+            List<string> attachedFileNames = new();
+            /*foreach (Attachment attachment in acceptedAtachments)
             {
                 if (!string.IsNullOrEmpty(mainFolderId) && string.IsNullOrEmpty(subFolderId1) && string.IsNullOrEmpty(subFolderId2))
                 {
@@ -248,9 +339,9 @@ namespace GraphAttachmentFunctions
                     WriteLogClass.WriteToLog(1, $"Downloaded {lastItem} attachments from {inMessage.Subject} ....", 2);
                     WriteLogClass.WriteToLog(1, $"Downloaded file names: {WriteNamesToLogClass.GetFileNames(attachedFileNames.ToArray())}", 2);
                 }
-            }
+            }*/
 
-            if (loopCount > 0 && loopFlag)
+            /*if (loopCount > 0 && loopFlag)
             {
                 // Call the base 64 converter and the file submitter to the web service.
                 // And then moves to email to export folder. If both functions succed then the varible will be set to true.
@@ -280,7 +371,58 @@ namespace GraphAttachmentFunctions
                     }
                 }
             }
-            return flagReturn;
+            return flagReturn;*/
+        }
+
+        /// <summary>
+        /// Batch file upload function. The while loop will upload file untill it ends.
+        /// </summary>
+        /// <param name="downloadFolderPath">Local download folder path.</param>
+        /// <param name="customerId">Customer ID</param>
+        /// <param name="toEmail">Email the client has sent email to.</param>
+        /// <returns></returns>
+        private static async Task<int> StartAttachmentFilesUplaod(string downloadFolderPath,
+                                                                  int customerId,
+                                                                  string toEmail)
+        {
+            try
+            {
+                if (!Directory.Exists(downloadFolderPath))
+                {
+                    return -1;
+                }
+
+                int uploadResult = 0;
+                int batchSize = AppConfigData();
+                int batchCurrentIndex = 0;
+
+                DirectoryInfo downloadDirectoryInfo = new(downloadFolderPath);
+                FileInfo[] downloadedFileNameList = downloadDirectoryInfo.GetFiles();
+
+                // This loop is not perfect and this seems upload all 9 files at once.
+                while (batchCurrentIndex < downloadedFileNameList.Length)
+                {
+                    IEnumerable<FileInfo> currentBatch = downloadedFileNameList
+                                                        .Skip(batchCurrentIndex)
+                                                        .Take(batchSize)
+                                                        .ToArray();
+
+                    foreach (FileInfo fileInBatch in currentBatch)
+                    {
+                        uploadResult = await FileFunctionsClass.SendToWebService(null, downloadFolderPath, Path.GetFileNameWithoutExtension(fileInBatch.Name), customerId, new string[] { fileInBatch.Name }, null, toEmail);
+                    }
+
+                    // Increment the batch index
+                    batchCurrentIndex += batchSize;
+                }
+                
+                return uploadResult;
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(0, $"Exception at StartAttachmentFilesUplaod: {ex.Message}", 0);
+                return -1;
+            }            
         }
 
         /// <summary>
@@ -358,7 +500,7 @@ namespace GraphAttachmentFunctions
             }
 
             if (await GraphHelperClass.MoveEmails(mainFolderId, subFolderId1, subFolderId2, messageId, exportFolder.Id, inEmail))
-            {   
+            {
                 WriteLogClass.WriteToLog(1, $"Email {messageSubject} moved to export folder ...", 2);
                 return true;
             }
@@ -367,57 +509,6 @@ namespace GraphAttachmentFunctions
                 WriteLogClass.WriteToLog(1, $"Email {messageSubject} not moved to export folder ...", 2);
                 return false;
             }
-        }
-
-        /// <summary>
-        /// Batch file upload function. The while loop will upload file untill it ends.
-        /// </summary>
-        /// <param name="downloadFolderPath">Local download folder path.</param>
-        /// <param name="customerId">Customer ID</param>
-        /// <param name="toEmail">Email the client has sent email to.</param>
-        /// <returns></returns>
-        private static async Task<int> StartAttachmentFilesUplaod(string downloadFolderPath,
-                                                                  int customerId,
-                                                                  string toEmail)
-        {
-            try
-            {
-                if (!Directory.Exists(downloadFolderPath))
-                {
-                    return -1;
-                }
-
-                int uploadResult = 0;
-                int batchSize = AppConfigData();
-                int batchCurrentIndex = 0;
-
-                DirectoryInfo downloadDirectoryInfo = new(downloadFolderPath);
-                FileInfo[] downloadedFileNameList = downloadDirectoryInfo.GetFiles();
-
-                // This loop is not perfect and this seems upload all 9 files at once.
-                while (batchCurrentIndex < downloadedFileNameList.Length)
-                {
-                    IEnumerable<FileInfo> currentBatch = downloadedFileNameList
-                                                        .Skip(batchCurrentIndex)
-                                                        .Take(batchSize)
-                                                        .ToArray();
-
-                    foreach (FileInfo fileInBatch in currentBatch)
-                    {
-                        uploadResult = await FileFunctionsClass.SendToWebService(null, downloadFolderPath, Path.GetFileNameWithoutExtension(fileInBatch.Name), customerId, new string[] { fileInBatch.Name }, null, toEmail);
-                    }
-
-                    // Increment the batch index
-                    batchCurrentIndex += batchSize;
-                }
-                
-                return uploadResult;
-            }
-            catch (Exception ex)
-            {
-                WriteLogClass.WriteToLog(0, $"Exception at StartAttachmentFilesUplaod: {ex.Message}", 0);
-                return -1;
-            }            
         }
 
         public static dynamic AppConfigData()

@@ -8,6 +8,7 @@
       "TemplateKey": "",
       "Queue": "6",
       "ProjetID": "0c298408-76b9-4f4c-9941-edb101126329",
+      //"ProjetID": "690e35df-73b1-4802-46a5-08da8ffc4c42",
       "MainCustomer": "Aksesspunkt",
       "ClientName": "Duett",
       "ClientOrgNo": "932971917",
@@ -23,7 +24,7 @@
         "FtpHostIp": "",
         "FtpUser": "testuser",
         "FtpPassword": "jackkills",
-        "FtpFolderLoop": 1,
+        "FtpFolderLoop": 0,
         "FtpMainFolder": "/Aksesspunkt/Duett"
         //"FtpMainFolder": "/Aksesspunkt",
 
@@ -92,7 +93,7 @@
       "Queue": "4",
       "ProjetID": "a6ce004d-a4db-4753-85c2-4f550e646801",
       "MainCustomer": "Advania Norge",
-      "ClientName": "Kristiansand Bygg",
+      "ClientName": "Kristiansand Byggentrepenør AS",
       "ClientOrgNo": "993853623",
       "ClientIdField": "Customer Organization No",
       "FileDeliveryMethod": "email",
@@ -113,7 +114,7 @@
       "EmailDetails": {
         "EmailAddress": "atc@efakturamottak.no",
         "MainInbox": "Enkeltstående",
-        "SubInbox1": "Kristiansand Bygg",
+        "SubInbox1": "Kristiansand Byggentrepenør AS",
         "SubInbox2": ""
       },
       "DocumentDetails": {

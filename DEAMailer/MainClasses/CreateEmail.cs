@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using Microsoft.IdentityModel.Tokens;
 using WriteLog;
-using UserConfigReader;
+using UserConfigSetterClass;
 using Emailer;
 
 namespace CreatEmail
@@ -36,8 +36,8 @@ namespace CreatEmail
                         emailInfor.CustomerID = int.Parse(matchValue.Groups[1].Value);
                         emailInfor.FileCount = subFolderPath.EnumerateFiles("*.*", SearchOption.AllDirectories).Count();
 
-                        UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
-                        UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == emailInfor.CustomerID)!;
+                        UserConfigSetterClass.UserConfigSetter.CustomerDetailsObject jsonData = UserConfigSetterClass.UserConfigSetter.ReadUserDotConfigAsync<UserConfigSetterClass.UserConfigSetter.CustomerDetailsObject>();
+                        UserConfigSetterClass.UserConfigSetter.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == emailInfor.CustomerID)!;
 
                         if (!clientDetails.ClientName.IsNullOrEmpty())
                         {

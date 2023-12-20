@@ -1,11 +1,11 @@
 ﻿using System.Text.RegularExpressions;
 using WriteLog;
 
-namespace EmailFileHelper
+namespace FileNameCleanerClass
 {
-    internal class EmailFileHelperClass
+    internal class FileNameCleaner
     {
-        public static string FileNameCleaner(string attachedFileName)
+        public static string FileNameCleanerFunction(string attachedFileName)
         {
             try
             {
@@ -20,60 +20,6 @@ namespace EmailFileHelper
             catch (Exception ex)
             {
                 WriteLogClass.WriteToLog(0, $"Exception at FileNameCleaner: {ex}", 0);
-                return "";
-            }
-        }
-
-        public static bool FileDownloader(string DownloadFolderPath, string DownloadFileName, byte[] DownloadFileData)
-        {
-            if (!Directory.Exists(DownloadFolderPath))
-            {
-                try
-                {
-                    Directory.CreateDirectory(DownloadFolderPath);
-                }
-                catch (Exception ex)
-                {
-                    WriteLogClass.WriteToLog(0, $"Exception at download folder creation: {ex.Message}", 0);
-                }
-            }
-
-            try
-            {
-
-                // Writes the file on to the local hard disk.
-                // If same file name exists it will be renamed.
-                File.WriteAllBytes(FileRenamer(DownloadFolderPath, DownloadFileName), DownloadFileData);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                WriteLogClass.WriteToLog(0, $"Exception at download path: {ex.Message}", 0);
-                return false;
-            }
-        }
-
-        private static string FileRenamer(string filePath, string fileName)
-        {
-            try
-            {
-                string FullToDownloadFile = Path.Combine(filePath, fileName);
-                string FileNameOnly = Path.GetFileNameWithoutExtension(FullToDownloadFile);
-                string FileExtention = Path.GetExtension(FullToDownloadFile);
-                string FilePathOnly = Path.GetDirectoryName(FullToDownloadFile);
-                int Count = 1;
-
-                while (File.Exists(FullToDownloadFile)) // If file exists starts to rename from next file.
-                {
-                    string NewFileName = string.Format("{0}({1})", FileNameOnly, Count++); // Makes the new file name.
-                    FullToDownloadFile = Path.Combine(FilePathOnly!, NewFileName + FileExtention); // Set tthe new path as the download file path.
-                }
-
-                return FullToDownloadFile;
-            }
-            catch (Exception ex)
-            {
-                WriteLogClass.WriteToLog(0, $"Exception at file renamer: {ex.Message}", 0);
                 return "";
             }
         }
