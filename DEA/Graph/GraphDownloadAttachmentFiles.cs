@@ -40,10 +40,11 @@ namespace GraphDownloadAttachmentFilesClass
 
         public static IEnumerable<Attachment> FilterAttachments(IEnumerable<Attachment> attachments, List<string> acceptedExtensions)
         {
-            return attachments.Where(
-                attachment => acceptedExtensions.Contains(Path.GetExtension(attachment.Name.ToLower()))
-                               && attachment.Size > 10240
-                               || (attachment.Name.ToLower().EndsWith(".pdf") && attachment.Size < 10240));
+            List<string> normalizedAcceptedExtensions = acceptedExtensions.Select(ext => ext.ToLower()).ToList();
+
+            return attachments.Where(attachment => normalizedAcceptedExtensions.Contains(Path.GetExtension(attachment.Name).ToLower())
+                                     && attachment.Size > 10240
+                                     || (Path.GetExtension(attachment.Name).ToLower() == ".pdf" && attachment.Size < 10240));
         }
 
         public static async Task<Attachment> FetchAttachmentData(GraphServiceClient graphClient,

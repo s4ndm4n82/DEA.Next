@@ -30,7 +30,7 @@ namespace UploadFtpFilesClass
                 return 3;
             }*/
             string[] localFiles = Directory.GetFiles(ftpHoldFolder, "*.*", SearchOption.TopDirectoryOnly);
-            return await FileFunctionsClass.SendToWebService(ftpConnect, ftpHoldFolder, fileName, clientId, matchingFileName, localFiles, null!);
+            return await FileFunctionsClass.SendToWebService(ftpConnect, ftpHoldFolder, clientId, matchingFileName, localFiles, null!);
         }
     }
 }

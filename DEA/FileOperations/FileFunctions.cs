@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using Newtonsoft.Json;
-using UserConfigSetterClass;
 using RestSharp;
 using TpsJsonString;
 using WriteLog;
@@ -8,6 +7,8 @@ using WriteNamesToLog;
 using FolderCleaner;
 using HandleErrorFiles;
 using FluentFTP;
+using UserConfigSetterClass;
+using UserConfigRetriverClass;
 
 namespace FileFunctions
 {
@@ -15,7 +16,6 @@ namespace FileFunctions
     {
         public static async Task<int> SendToWebService(AsyncFtpClient ftpConnect,
                                                         string filePath,
-                                                        string orginalfileName,
                                                         int customerId,
                                                         string[] ftpFileList,
                                                         string[] localFileList,
@@ -24,20 +24,38 @@ namespace FileFunctions
             try
             {
                 WriteLogClass.WriteToLog(1, "Starting file upload process .... ", 4);
+                
+                /*string clientOrg = recipientEmail;
+                if (clientDetails.SendEmail == 0)
+                {
+                    clientOrg = clientDetails.ClientOrgNo;
+                }*/
 
-                UserConfigSetterClass.UserConfigSetter.CustomerDetailsObject jsonData = await UserConfigSetterClass.UserConfigSetter.ReadUserDotConfigAsync<UserConfigSetterClass.UserConfigSetter.CustomerDetailsObject>();
-                UserConfigSetterClass.UserConfigSetter.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == customerId)!;
+                UserConfigSetter.Customerdetail clientDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
+
+                string clientOrg = clientDetails.SendEmail == 0 ? clientDetails.ClientOrgNo : recipientEmail;
+
                 // Loading the accepted extension list.
-                List<string> acceptedExtentions = clientDetails.DocumentDetails.DocumentExtensions;
+                List<string> acceptedExtentions = clientDetails.DocumentDetails.DocumentExtensions
+                                                  .Select(e => e.ToLower())
+                                                  .ToList();
+
                 // Creating the list of file in the local download folder.
                 string[] downloadedFiles = Directory.GetFiles(filePath, "*.*", SearchOption.TopDirectoryOnly)
-                                                              .Where(f => acceptedExtentions.IndexOf(Path.GetExtension(f).ToLower()) >= 0)
-                                                              .Where(g => Path.GetFileNameWithoutExtension(g).Equals(Path.GetFileNameWithoutExtension(orginalfileName), StringComparison.OrdinalIgnoreCase))
+                                                              .Where(f => acceptedExtentions.Contains(Path.GetExtension(f).ToLower()))
+                                                              .Where(f => ftpFileList.Any(g => Path.GetFileNameWithoutExtension(f).Equals(Path.GetFileNameWithoutExtension(g), StringComparison.OrdinalIgnoreCase)))
                                                               .ToArray();
 
+                if (!acceptedExtentions.Any())
+                {
+                    WriteLogClass.WriteToLog(1, "No matching files in the download list ....", 1);
+                    return -1;
+                }
+
+                
                 // If recipientEmail not empty clientOrg = revipientEmail.
                 // If recipientEmail is empty clientOrg = clientDetails.ClientOrgNo
-                string clientOrg = recipientEmail ?? clientDetails.ClientOrgNo ?? throw new Exception("ClientOrg is null.");
+                //string clientOrg = recipientEmail ?? clientDetails.ClientOrgNo ?? throw new Exception("ClientOrg is null.");
 
                 int returnResult = await MakeJsonRequest(ftpConnect,
                                           customerId,
@@ -139,11 +157,7 @@ namespace FileFunctions
         {
             try
             {
-                // Loads all the details from the customer details Json file.
-                UserConfigSetterClass.UserConfigSetter.CustomerDetailsObject jsonData = await UserConfigSetterClass.UserConfigSetter.ReadUserDotConfigAsync<UserConfigSetterClass.UserConfigSetter.CustomerDetailsObject>();
-
-                // Just select the data corrosponding to the customer ID.
-                UserConfigSetterClass.UserConfigSetter.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == customerId)!;
+                UserConfigSetter.Customerdetail clientDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
 
                 // Creating rest api request.
                 RestClient client = new($"{clientDetails.DomainDetails.MainDomain}");
@@ -212,7 +226,7 @@ namespace FileFunctions
                 // This will run if it's not FTP.
                 if (deliveryType == DeliveryType.email)
                 {   
-                    if (!FolderCleanerClass.GetFolders(fullFilePath, jsonFileList, null, clientOrgNo, DeliveryType.email))
+                    if (! await FolderCleanerClass.GetFolders(fullFilePath, jsonFileList, null, clientOrgNo, DeliveryType.email))
                     {
                         return -1;
                     }
@@ -225,7 +239,7 @@ namespace FileFunctions
                     }
 
                     // Deletes the file from local hold folder when sending is successful.
-                    if (!FolderCleanerClass.GetFolders(downloadFolderPath, jsonFileList, customerId, null, DeliveryType.ftp))
+                    if (!await FolderCleanerClass.GetFolders(downloadFolderPath, jsonFileList, customerId, null, DeliveryType.ftp))
                     {
                         return -1;
                     }                    
@@ -263,7 +277,7 @@ namespace FileFunctions
                 // This will run if it's not FTP.
                 if (deliveryType == DeliveryType.email)
                 {
-                    if (FolderCleanerClass.GetFolders(fullFilePath, ftpFileList , null, clientOrgNo, DeliveryType.email))
+                    if (await FolderCleanerClass.GetFolders(fullFilePath, ftpFileList , null, clientOrgNo, DeliveryType.email))
                     {
                         return 2;
                     }
