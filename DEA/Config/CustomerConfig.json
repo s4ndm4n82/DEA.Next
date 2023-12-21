@@ -12,6 +12,7 @@
       "MaxBatchSize": 2, // Number of files that can be in a download batch. Max file limit is 200.
       "MainCustomer": "Aksesspunkt",
       "ClientName": "Duett",
+      "SendEmail": 0, // If 1 then send email. If 0 then use configured org.
       "ClientOrgNo": "932971917",
       "ClientIdField": "Internal ID",
       "FileDeliveryMethod": "ftp",
@@ -25,7 +26,7 @@
         "FtpHostIp": "",
         "FtpUser": "testuser",
         "FtpPassword": "jackkills",
-        "FtpFolderLoop": 0,
+        "FtpFolderLoop": 0, // If 1, then loop through folders. If 0, then only main folder.
         "FtpMainFolder": "/Aksesspunkt/Duett"
         //"FtpMainFolder": "/Aksesspunkt",
 
@@ -54,7 +55,7 @@
       "MaxBatchSize": 2, // Number of files that can be in a download batch. Max file limit is 200.
       "MainCustomer": "DigiAcc",
       "ClientName": "DigiAcc",
-      "SendEmail": 0,
+      "SendEmail": 1,
       "ClientOrgNo": "123456",
       "ClientIdField": "InternalAccountingID",
       "FileDeliveryMethod": "email",
