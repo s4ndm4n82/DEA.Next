@@ -2,11 +2,14 @@
 using FluentFTP;
 using GraphHelper;
 using UploadFtpFilesClass;
+using UserConfigRetriverClass;
+using UserConfigSetterClass;
 using WriteLog;
+using WriteNamesToLog;
 
 namespace DownloadFtpFilesClass
 {
-    internal class DownloadFtpFiles
+    internal class FtpFilesDownload
     {
         /// <summary>
         /// Download the files from the FTP server in batches cofigured in the appsettings.json file.
@@ -24,7 +27,7 @@ namespace DownloadFtpFilesClass
             try
             {
                 // Reads the appsettings.json file.
-                AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
+                UserConfigSetter.Customerdetail jsonData = await UserConfigRetriver.RetriveUserConfigById(clientID);
                 // Gets the FTP file list.
                 IEnumerable<FtpListItem> ftpFileNameList = await ftpConnect.GetListing(ftpPath);
                 // Gets the files to download.
@@ -36,28 +39,36 @@ namespace DownloadFtpFilesClass
                 // If there are no files to download then returns early terminating the execution.
                 if (!filesToDownload.Any())
                 {
+                    WriteLogClass.WriteToLog(0, "The filesToDownload list is empty ....", 0);
                     return 4;
                 }
+
                 // Download folder path.
                 string downloaFolder = Path.Combine(downloadFolderPath, GraphHelperClass.FolderNameRnd(10));
 
                 // Starts the file download process.
                 List<FtpResult> downloadResult = await ftpConnect.DownloadFiles(downloaFolder, filesToDownload, FtpLocalExists.Resume, FtpVerify.Retry);
 
+                if (!downloadResult.Any())
+                {
+                    WriteLogClass.WriteToLog(0, "The downloadResult list is empty ....", 0);
+                    return 4;
+                }
+
+                WriteLogClass.WriteToLog(1, $"Downloaded file names: {WriteNamesToLogClass.GetFileNames(downloadResult.Select(f => f.Name.ToString()).ToArray())}", 2);
+
                 // Starts the file download process.
-                int batchSize = jsonData.ProgramSettings.MaxBatchSize;
-                int totalFtpFiles = filesToDownload.Count();
+                int batchSize = jsonData.MaxBatchSize;
                 int batchCurrentIndex = 0;
 
-                while (batchCurrentIndex < totalFtpFiles) // Loop until all the files are downloaded.
+                while (batchCurrentIndex < downloadResult.Count) // Loop until all the files are downloaded.
                 {
                     // Gets the current batch of files.
-                    IEnumerable<FtpResult> currentBatch = downloadResult.Skip(batchCurrentIndex).Take(batchSize);
-
-                    foreach (FtpResult ftpFile in currentBatch)
-                    {
-                        result = await UploadFtpFiles.FilesUploadFuntcion(ftpConnect, currentBatch.Select(r => r.RemotePath.ToString()).ToArray(), downloaFolder, ftpFile.Name, clientID);
-                    }
+                    IEnumerable<FtpResult> currentBatch = downloadResult
+                                                          .Skip(batchCurrentIndex)
+                                                          .Take(batchSize);
+                    
+                    result = await FtpFilesUpload.FilesUploadFuntcion(ftpConnect, currentBatch.Select(r => r.RemotePath.ToString()).ToArray(), downloaFolder, currentBatch.Select(s => s.Name.ToString()).ToArray(), clientID);
 
                     if (result == 3 || result == 4)
                     {

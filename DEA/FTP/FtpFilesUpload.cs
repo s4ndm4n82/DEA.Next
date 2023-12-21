@@ -3,7 +3,7 @@ using FluentFTP;
 
 namespace UploadFtpFilesClass
 {
-    internal class UploadFtpFiles
+    internal class FtpFilesUpload
     {
         /// <summary>
         /// File download function. This will be parsing the files to the FTP client and downloading them the the local folder.
@@ -17,20 +17,19 @@ namespace UploadFtpFilesClass
         public static async Task<int> FilesUploadFuntcion(AsyncFtpClient ftpConnect,
                                                           string[] currentBatch,
                                                           string ftpHoldFolder,
-                                                          string fileName,
+                                                          string[] fileNames,
                                                           int clientId)
         {
-            string[] matchingFileName = currentBatch.Where(f => Path.GetFileNameWithoutExtension(f)
-                                                           .Equals(Path.GetFileNameWithoutExtension(fileName), StringComparison.OrdinalIgnoreCase))
-                                                           .ToArray();
-            /*IEnumerable<string> unmatchedFileList = FolderCleanerClass.CheckMissedFiles(ftpHoldFolder, currentBatch);
-            if (unmatchedFileList.Any())
-            {
-                WriteLogClass.WriteToLog(1, $"Ftp file count: {currentBatch.Count()}, Local file count: {unmatchedFileList.Count()} files doesn't match", 3);
-                return 3;
-            }*/
+            string[] matchingFileNames = currentBatch
+                                         .Where(batchFile => fileNames
+                                         .Any(fileName => Path.GetFileNameWithoutExtension(batchFile)
+                                         .Equals(
+                                             Path.GetFileNameWithoutExtension(fileName),
+                                             StringComparison.OrdinalIgnoreCase)))
+                                         .ToArray();
+
             string[] localFiles = Directory.GetFiles(ftpHoldFolder, "*.*", SearchOption.TopDirectoryOnly);
-            return await FileFunctionsClass.SendToWebService(ftpConnect, ftpHoldFolder, clientId, matchingFileName, localFiles, null!);
+            return await FileFunctionsClass.SendToWebService(ftpConnect, ftpHoldFolder, clientId, matchingFileNames, localFiles, null!);
         }
     }
 }

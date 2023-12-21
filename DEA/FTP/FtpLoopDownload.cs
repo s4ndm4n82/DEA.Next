@@ -76,7 +76,7 @@ namespace FtpLoopDownloadClass
                 foreach (string ftpFolder in ftpFoldersNotEmptyList)
                 {
                     string downloadFolder = Path.Combine(downloadFolderPath, Path.GetFileName(ftpFolder));
-                    result = await DownloadFtpFiles.DownloadFtpFilesFunction(ftpConnectToken,
+                    result = await FtpFilesDownload.DownloadFtpFilesFunction(ftpConnectToken,
                                                                              ftpFolder,
                                                                              downloadFolder,
                                                                              clientId);

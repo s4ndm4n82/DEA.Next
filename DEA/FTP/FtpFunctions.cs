@@ -51,7 +51,7 @@ namespace FtpFunctions
             }
 
             // If the user FTP config type is FTPS.
-            if (ftpDetails.FtpType == "FTPS")
+            if (ftpDetails.FtpType == FtpNames.Ftps)
             {
                 ftpConnectToken = await ConnectFtpsClass.ConnectFtps(ftpDetails.FtpHostName,
                                                                      ftpDetails.FtpHostIp,
@@ -83,7 +83,7 @@ namespace FtpFunctions
 
                     if (ftpDetails.FtpFolderLoop == 0)
                     {
-                        downloadResult = await DownloadFtpFiles.DownloadFtpFilesFunction(ftpConnectToken,
+                        downloadResult = await FtpFilesDownload.DownloadFtpFilesFunction(ftpConnectToken,
                                                                  ftpDetails.FtpMainFolder,
                                                                  downloadFolder,
                                                                  clientId);
@@ -100,11 +100,11 @@ namespace FtpFunctions
                 }
         }
 
-        private static async Task<UserConfigSetterClass.UserConfigSetter.Ftpdetails> GetFtpDetails(int clientId)
+        private static async Task<UserConfigSetter.Ftpdetails> GetFtpDetails(int clientId)
         {
-            UserConfigSetterClass.UserConfigSetter.CustomerDetailsObject jsonDate = await UserConfigSetterClass.UserConfigSetter.ReadUserDotConfigAsync<UserConfigSetterClass.UserConfigSetter.CustomerDetailsObject>();
-            UserConfigSetterClass.UserConfigSetter.Customerdetail customerDetails = jsonDate.CustomerDetails.FirstOrDefault(cid => cid.Id == clientId);
-            UserConfigSetterClass.UserConfigSetter.Ftpdetails ftpDetails = customerDetails.FtpDetails;
+            UserConfigSetter.CustomerDetailsObject jsonDate = await UserConfigSetter.ReadUserDotConfigAsync<UserConfigSetter.CustomerDetailsObject>();
+            UserConfigSetter.Customerdetail customerDetails = jsonDate.CustomerDetails.FirstOrDefault(cid => cid.Id == clientId);
+            UserConfigSetter.Ftpdetails ftpDetails = customerDetails.FtpDetails;
 
             return ftpDetails;
         }
