@@ -56,7 +56,7 @@
       "MainCustomer": "DigiAcc",
       "ClientName": "DigiAcc",
       "SendEmail": 1,
-      "ClientOrgNo": "123456",
+      "ClientOrgNo": "",
       "ClientIdField": "InternalAccountingID",
       "FileDeliveryMethod": "email",
       "DomainDetails": {
