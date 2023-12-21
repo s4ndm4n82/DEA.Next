@@ -6,6 +6,7 @@ using UserConfigSetterClass;
 using File = System.IO.File;
 using Directory = System.IO.Directory;
 using WriteLog;
+using FileRenamerClass;
 
 namespace GraphDownloadAttachmentFilesClass
 {
@@ -95,7 +96,7 @@ namespace GraphDownloadAttachmentFilesClass
             {
                 try
                 {
-                    await File.WriteAllBytesAsync(FileRenamer(filePath, fileName), fileAttachment.ContentBytes);
+                    await File.WriteAllBytesAsync(FileRenamer.FileRenamerFunction(filePath, fileName), fileAttachment.ContentBytes);
                     return true;
                 }
                 catch (Exception ex)
@@ -106,31 +107,6 @@ namespace GraphDownloadAttachmentFilesClass
                 }
             }
             return false;
-        }
-
-        private static string FileRenamer(string filePath, string fileName)
-        {
-            try
-            {
-                string FullToDownloadFile = Path.Combine(filePath, fileName);
-                string FileNameOnly = Path.GetFileNameWithoutExtension(FullToDownloadFile);
-                string FileExtention = Path.GetExtension(FullToDownloadFile);
-                string FilePathOnly = Path.GetDirectoryName(FullToDownloadFile);
-                int Count = 1;
-
-                while (File.Exists(FullToDownloadFile)) // If file exists starts to rename from next file.
-                {
-                    string NewFileName = string.Format("{0}({1})", FileNameOnly, Count++); // Makes the new file name.
-                    FullToDownloadFile = Path.Combine(FilePathOnly!, NewFileName + FileExtention); // Set tthe new path as the download file path.
-                }
-
-                return FullToDownloadFile;
-            }
-            catch (Exception ex)
-            {
-                WriteLogClass.WriteToLog(0, $"Exception at file renamer: {ex.Message}", 0);
-                return "";
-            }
-        }
+        }        
     }
 }

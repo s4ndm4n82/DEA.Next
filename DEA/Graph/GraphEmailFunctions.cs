@@ -61,7 +61,7 @@ namespace GraphEmailFunctions
 
                     fromName = messageDetails.From.EmailAddress.Name;
                     fromEmail = messageDetails.From.EmailAddress.Address;
-                    toEmail = messageDetails.InternetMessageHeaders.Where(toAddress => toAddress.Value.ToLower().Contains("@efakturamottak.no")).ToString()!;
+                    //toEmail = messageDetails.InternetMessageHeaders.Where(toAddress => toAddress.Value.ToLower().Contains("@efakturamottak.no")).ToString()!;
                 }
                 catch (Exception ex)
                 {
@@ -191,7 +191,7 @@ namespace GraphEmailFunctions
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(0, $"Exception at emai forward 2: {ex.Message}", 0);
+                    WriteLogClass.WriteToLog(0, $"Exception at email forward 2: {ex.Message}", 0);
                     forwardSwitch = false;
                 }
             }

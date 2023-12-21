@@ -6,12 +6,15 @@ using WriteNamesToLog;
 using GraphHelper;
 using GraphEmailFunctions;
 using GetMailFolderIds;
-using AppConfigReader;
 using Directory = System.IO.Directory;
 using FileFunctions;
 using UserConfigRetriverClass;
 using UserConfigSetterClass;
 using GraphDownloadAttachmentFilesClass;
+using GraphMoveEmailsToExportClass;
+using GraphMoveEmailsToErrorFolderClass;
+using Renci.SshNet.Messages;
+using Message = Microsoft.Graph.Message;
 
 namespace GraphAttachmentFunctions
 {
@@ -27,13 +30,13 @@ namespace GraphAttachmentFunctions
         /// <param name="subFolderId1"></param>
         /// <param name="subFolderId2"></param>
         /// <returns>A bool value (true or false)</returns>
-        public static async Task<int> GetMessagesWithAttachments([NotNull] GraphServiceClient graphClient,
-                                                                  string inEmail,
-                                                                  string mainFolderId,
-                                                                  string subFolderId1,
-                                                                  string subFolderId2,
-                                                                  int maxMails,
-                                                                  int customerId)
+        public static async Task<int> GetMessagesWithAttachments(GraphServiceClient graphClient,
+                                                                 string inEmail,
+                                                                 string mainFolderId,
+                                                                 string subFolderId1,
+                                                                 string subFolderId2,
+                                                                 int maxMails,
+                                                                 int customerId)
         {
             List<string> folderIds = new() { mainFolderId, subFolderId1, subFolderId2 };
             folderIds.RemoveAll(string.IsNullOrEmpty); // Remove the empty once.
@@ -112,40 +115,44 @@ namespace GraphAttachmentFunctions
                                                            string subFolderId2,
                                                            int customerId)
         {
-            if (!message.Attachments.Any())
+            UserConfigSetter.Customerdetail clientDeails = await UserConfigRetriver.RetriveUserConfigById(customerId);
+            IEnumerable<Attachment> attachmentList = GraphDownloadAttachmentFiles.FilterAttachments(message.Attachments, clientDeails.DocumentDetails.DocumentExtensions);
+
+            if (!attachmentList.Any())
             {
                 try
                 {
                     // If there are no attachments, forward the email and return 3.
                     (bool forwardSuccess, string forwardResult) = await GraphEmailFunctionsClass.EmailForwarder(graphClient,
-                                                                                                      mainFolderId,
-                                                                                                      subFolderId1,
-                                                                                                      subFolderId2,
-                                                                                                      message.Id,
-                                                                                                      inEmail,
-                                                                                                      customerId);
+                                                                                                                mainFolderId,
+                                                                                                                subFolderId1,
+                                                                                                                subFolderId2,
+                                                                                                                message.Id,
+                                                                                                                inEmail,
+                                                                                                                customerId);
                     if (!forwardSuccess)
                     {
                         // Log the failure and return an error code
-                        WriteLogClass.WriteToLog(1, $"Failed to forward email {message.Id}.", 2);
+                        WriteLogClass.WriteToLog(1, $"Failed to forward email {message.Subject}.", 2);
                         return 4; // Error code for failure
                     }
 
                     // Get the error folder id.
                     string destinationId = await GetMailFolderIdsClass.GetErrorFolderId(graphClient,
-                                                                        inEmail,
-                                                                        mainFolderId,
-                                                                        subFolderId1,
-                                                                        subFolderId2);
-                    if (destinationId == null)
+                                                                                        inEmail,
+                                                                                        mainFolderId,
+                                                                                        subFolderId1,
+                                                                                        subFolderId2);
+                    if (destinationId != null)
                     {
                         // Move the email to the error folder. And returns a bool value.
-                        bool moveSuccess = await GraphHelperClass.MoveEmails(mainFolderId,
-                                                                             subFolderId1,
-                                                                             subFolderId2,
-                                                                             message.Id,
-                                                                             destinationId,
-                                                                             inEmail);
+                        bool moveSuccess = await GraphMoveEmailsToErrorFolder.MoveEmailsToErrorFolder(graphClient,
+                                                                                                      mainFolderId,
+                                                                                                      subFolderId1,
+                                                                                                      subFolderId2,
+                                                                                                      message.Id,
+                                                                                                      destinationId,
+                                                                                                      inEmail);
                         if (!moveSuccess)
                         {
                             // Log the failure and return an error code
@@ -172,6 +179,8 @@ namespace GraphAttachmentFunctions
                     // If there are attachments, download them.
                     return await DownloadAttachments(graphClient,
                                                      message,
+                                                     attachmentList,
+                                                     clientDeails,
                                                      inEmail,
                                                      mainFolderId,
                                                      subFolderId1,
@@ -197,16 +206,18 @@ namespace GraphAttachmentFunctions
         /// <param name="subFolderId1"></param>
         /// <param name="subFolderId2"></param>
         /// <returns>A bool value (true or false)</returns>
-        private static async Task<int> DownloadAttachments([NotNull]GraphServiceClient graphClient,
-                                                            Message inMessage,
-                                                            string inEmail,
-                                                            string mainFolderId,
-                                                            string subFolderId1,
-                                                            string subFolderId2,
-                                                            int customerId)
+        private static async Task<int> DownloadAttachments(GraphServiceClient graphClient,
+                                                           Message inMessage,
+                                                           IEnumerable<Attachment> attachmentList,
+                                                           UserConfigSetter.Customerdetail clientDeails,
+                                                           string inEmail,
+                                                           string mainFolderId,
+                                                           string subFolderId1,
+                                                           string subFolderId2,
+                                                           int customerId)
         {
             int downloadCount = 0;
-            UserConfigSetter.Customerdetail clientDeails = await UserConfigRetriver.RetriveUserConfigById(customerId);
+            //UserConfigSetter.Customerdetail clientDeails = await UserConfigRetriver.RetriveUserConfigById(customerId);
             
             string recipientEmail = GraphDownloadAttachmentFiles.DetermineRecipientEmail(graphClient,
                                                                                          clientDeails,
@@ -217,7 +228,7 @@ namespace GraphAttachmentFunctions
                                                                                          inEmail);
 
             string downloadFolderPath = GraphDownloadAttachmentFiles.CreateDownloadPath(recipientEmail);
-            IEnumerable<Attachment> attachmentList = GraphDownloadAttachmentFiles.FilterAttachments(inMessage.Attachments, clientDeails.DocumentDetails.DocumentExtensions);
+            //IEnumerable<Attachment> attachmentList = GraphDownloadAttachmentFiles.FilterAttachments(inMessage.Attachments, clientDeails.DocumentDetails.DocumentExtensions);
 
             if (!attachmentList.Any())
             {
@@ -256,7 +267,7 @@ namespace GraphAttachmentFunctions
             if (attachmentList.Count() == downloadCount)
             {
                 WriteLogClass.WriteToLog(1, $"Downloaded file names: {WriteNamesToLogClass.GetFileNames(attachmentFileNameList.ToArray())}", 2);
-                if (!await MoveMailsToExport(graphClient,
+                if (!await GraphMoveEmailsToExport.MoveEmailsToExport(graphClient,
                                              mainFolderId,
                                              subFolderId1,
                                              subFolderId2,
@@ -334,92 +345,6 @@ namespace GraphAttachmentFunctions
                 WriteLogClass.WriteToLog(0, $"Exception at StartAttachmentFilesUplaod: {ex.Message}", 0);
                 return -1;
             }
-        }
-
-        /// <summary>
-        /// After download ends with succession this function will be called. Which will move the completed email to another folder.
-        /// Normally it's called "Exported".
-        /// </summary>
-        /// <param name="graphClient"></param>
-        /// <param name="mainFolderId"></param>
-        /// <param name="subFolderId1"></param>
-        /// <param name="subFolderId2"></param>
-        /// <param name="messageId"></param>
-        /// <param name="messageSubject"></param>
-        /// <param name="inEmail"></param>
-        /// <returns>A bool value (true or false)</returns>
-        private static async Task<bool> MoveMailsToExport([NotNull] GraphServiceClient graphClient, string mainFolderId, string subFolderId1, string subFolderId2, string messageId, string messageSubject, string inEmail)
-        {
-            IMailFolderChildFoldersCollectionPage moveLocation;
-            MailFolder exportFolder = null!;
-
-            if (!string.IsNullOrEmpty(mainFolderId) && string.IsNullOrEmpty(subFolderId1) && string.IsNullOrEmpty(subFolderId2))
-            {
-                try
-                {
-                    moveLocation = await graphClient.Users[$"{inEmail}"].MailFolders["Inbox"]
-                               .ChildFolders[$"{mainFolderId}"]
-                               .ChildFolders
-                               .Request()
-                               .GetAsync();
-
-                    exportFolder = moveLocation.FirstOrDefault(x => x.DisplayName == "Exported")!;
-                }
-                catch (Exception ex)
-                {
-                    WriteLogClass.WriteToLog(0, $"Exception at detination folder name 1st if: {ex.Message}", 0);
-                }
-            }
-
-            if (!string.IsNullOrEmpty(mainFolderId) && !string.IsNullOrEmpty(subFolderId1) && string.IsNullOrEmpty(subFolderId2))
-            {
-                try
-                {
-                    moveLocation = await graphClient.Users[$"{inEmail}"].MailFolders["Inbox"]
-                               .ChildFolders[$"{mainFolderId}"]
-                               .ChildFolders[$"{subFolderId1}"]
-                               .ChildFolders
-                               .Request()
-                               .GetAsync();
-
-                    exportFolder = moveLocation.FirstOrDefault(x => x.DisplayName == "Exported")!;
-                }
-                catch (Exception ex)
-                {
-                    WriteLogClass.WriteToLog(0, $"Exception at detination folder name 2nd if: {ex.Message}", 0);
-                }
-            }
-
-            if (!string.IsNullOrEmpty(mainFolderId) && !string.IsNullOrEmpty(subFolderId1) && !string.IsNullOrEmpty(subFolderId2))
-            {
-                try
-                {
-                    moveLocation = await graphClient.Users[$"{inEmail}"].MailFolders["Inbox"]
-                               .ChildFolders[$"{mainFolderId}"]
-                               .ChildFolders[$"{subFolderId1}"]
-                               .ChildFolders[$"{subFolderId2}"]
-                               .ChildFolders
-                               .Request()
-                               .GetAsync();
-
-                    exportFolder = moveLocation.FirstOrDefault(x => x.DisplayName == "Exported")!;
-                }
-                catch (Exception ex)
-                {
-                    WriteLogClass.WriteToLog(0, $"Exception at detination folder name 3rd if: {ex.Message}", 0);
-                }
-            }
-
-            if (await GraphHelperClass.MoveEmails(mainFolderId, subFolderId1, subFolderId2, messageId, exportFolder.Id, inEmail))
-            {
-                WriteLogClass.WriteToLog(1, $"Email {messageSubject} moved to export folder ...", 2);
-                return true;
-            }
-            else
-            {
-                WriteLogClass.WriteToLog(1, $"Email {messageSubject} not moved to export folder ...", 2);
-                return false;
-            }
-        }
+        }        
     }
 }
