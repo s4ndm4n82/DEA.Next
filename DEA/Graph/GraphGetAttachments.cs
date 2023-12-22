@@ -5,6 +5,8 @@ using GraphAttachmentFunctions;
 using WriteLog;
 using AppConfigReader;
 using ProcessStatusMessageSetter;
+using UserConfigSetterClass;
+using UserConfigRetriverClass;
 
 namespace GraphGetAttachments
 {
@@ -21,6 +23,8 @@ namespace GraphGetAttachments
         /// <returns></returns>
         public static async Task<int> GetEmailsAttacments([NotNull] GraphServiceClient graphClient, string clientEmail, string mainMailFolder, string subFolder1, string subFolder2, int customerId)
         {
+            UserConfigSetter.Emaildetails emailDetails = await UserConfigRetriver.RetriveEmailConfigById(customerId);
+
             // Parameters read from the config files.
             AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
             AppConfigReaderClass.Programsettings maxMalis = jsonData.ProgramSettings;
@@ -31,7 +35,15 @@ namespace GraphGetAttachments
 
             if (folderIds != null)
             {
-                WriteLogClass.WriteToLog(3, $"Starting attachment download process ....", 2);
+                // List of inbox sub folder names.
+                List<string> folderList = new() { emailDetails.MainInbox, emailDetails.SubInbox1, emailDetails.SubInbox2 };
+                // Remove the empty ones.
+                folderList.RemoveAll(string.IsNullOrEmpty);
+
+                if (folderList.Any())
+                {
+                    WriteLogClass.WriteToLog(3, $"Starting attachment download process from inbox {string.Join(" / ", folderList)} ....", 2);
+                }
 
                 // Initiate the email attachment download and send them to the web service. Should return a bool value.
                 result = await GraphAttachmentFunctionsClass.GetMessagesWithAttachments(graphClient

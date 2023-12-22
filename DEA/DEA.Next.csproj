@@ -39,6 +39,21 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Graph\ResourceFiles\EmailMessageBodyText.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>EmailMessageBodyText.resx</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Update="Graph\ResourceFiles\EmailMessageBodyText.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>EmailMessageBodyText.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
 		<None Update="Config\_appsettings.json.bkp">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>

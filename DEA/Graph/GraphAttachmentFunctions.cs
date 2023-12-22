@@ -1,9 +1,7 @@
 ﻿using Microsoft.Graph;
-using System.Diagnostics.CodeAnalysis;
 using FileNameCleanerClass;
 using WriteLog;
 using WriteNamesToLog;
-using GraphHelper;
 using GraphEmailFunctions;
 using GetMailFolderIds;
 using Directory = System.IO.Directory;
@@ -13,7 +11,6 @@ using UserConfigSetterClass;
 using GraphDownloadAttachmentFilesClass;
 using GraphMoveEmailsToExportClass;
 using GraphMoveEmailsToErrorFolderClass;
-using Renci.SshNet.Messages;
 using Message = Microsoft.Graph.Message;
 
 namespace GraphAttachmentFunctions
@@ -133,7 +130,7 @@ namespace GraphAttachmentFunctions
                     if (!forwardSuccess)
                     {
                         // Log the failure and return an error code
-                        WriteLogClass.WriteToLog(1, $"Failed to forward email {message.Subject}.", 2);
+                        WriteLogClass.WriteToLog(1, $"Failed to forward email {message.Subject}. Error: {forwardResult}", 2);
                         return 4; // Error code for failure
                     }
 
@@ -161,10 +158,7 @@ namespace GraphAttachmentFunctions
                         }
                     }
 
-
-                    // Log the problem and retuen 3.
-                    WriteLogClass.WriteToLog(1, $"No attachments. Email forwarded to {forwardResult} and moved to error folder.", 2);
-                    return 3; // Success code for no attachments
+                    return 3; // Error code for no attachments
                 }
                 catch (Exception ex)
                 {
@@ -217,7 +211,6 @@ namespace GraphAttachmentFunctions
                                                            int customerId)
         {
             int downloadCount = 0;
-            //UserConfigSetter.Customerdetail clientDeails = await UserConfigRetriver.RetriveUserConfigById(customerId);
             
             string recipientEmail = GraphDownloadAttachmentFiles.DetermineRecipientEmail(graphClient,
                                                                                          clientDeails,
@@ -228,7 +221,6 @@ namespace GraphAttachmentFunctions
                                                                                          inEmail);
 
             string downloadFolderPath = GraphDownloadAttachmentFiles.CreateDownloadPath(recipientEmail);
-            //IEnumerable<Attachment> attachmentList = GraphDownloadAttachmentFiles.FilterAttachments(inMessage.Attachments, clientDeails.DocumentDetails.DocumentExtensions);
 
             if (!attachmentList.Any())
             {

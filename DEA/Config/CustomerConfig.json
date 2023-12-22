@@ -52,11 +52,11 @@
       "TemplateKey": "",
       "Queue": "6",
       "ProjetID": "0c298408-76b9-4f4c-9941-edb101126329",
-      "MaxBatchSize": 2, // Number of files that can be in a download batch. Max file limit is 200.
+      "MaxBatchSize": 1, // Number of files that can be in a download batch. Max file limit is 200.
       "MainCustomer": "DigiAcc",
       "ClientName": "DigiAcc",
       "SendEmail": 1,
-      "ClientOrgNo": "",
+      "ClientOrgNo": "Testing Above setting",
       "ClientIdField": "InternalAccountingID",
       "FileDeliveryMethod": "email",
       "DomainDetails": {

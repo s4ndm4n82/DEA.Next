@@ -12,6 +12,17 @@ namespace GraphDownloadAttachmentFilesClass
 {
     internal class GraphDownloadAttachmentFiles
     {
+        /// <summary>
+        /// Extract the recipient email from the message.
+        /// </summary>
+        /// <param name="graphClient"></param>
+        /// <param name="clientDetails"></param>
+        /// <param name="mainFolderId"></param>
+        /// <param name="subFolderId1"></param>
+        /// <param name="subFolderId2"></param>
+        /// <param name="messageId"></param>
+        /// <param name="inEmail"></param>
+        /// <returns></returns>
         public static string DetermineRecipientEmail(GraphServiceClient graphClient,
                                                      UserConfigSetter.Customerdetail clientDetails,
                                                      string mainFolderId,
@@ -32,6 +43,11 @@ namespace GraphDownloadAttachmentFilesClass
             return string.Empty;
         }
 
+        /// <summary>
+        /// Creates the local download folder path.
+        /// </summary>
+        /// <param name="recipientEmail"></param>
+        /// <returns></returns>
         public static string CreateDownloadPath(string recipientEmail)
         {
             string attachmentsRoot = FolderFunctionsClass.CheckFolders("attachments");
@@ -39,6 +55,12 @@ namespace GraphDownloadAttachmentFilesClass
             return Path.Combine(attachmentsRoot, recipientEmail, uniqueFolder);
         }
 
+        /// <summary>
+        /// Filter the attachments accordinmg to the accepted extensions and files size.
+        /// </summary>
+        /// <param name="attachments"></param>
+        /// <param name="acceptedExtensions"></param>
+        /// <returns></returns>
         public static IEnumerable<Attachment> FilterAttachments(IEnumerable<Attachment> attachments, List<string> acceptedExtensions)
         {
             List<string> normalizedAcceptedExtensions = acceptedExtensions.Select(ext => ext.ToLower()).ToList();
@@ -48,6 +70,17 @@ namespace GraphDownloadAttachmentFilesClass
                                      || (Path.GetExtension(attachment.Name).ToLower() == ".pdf" && attachment.Size < 10240));
         }
 
+        /// <summary>
+        /// Fetch the attachment data to download.
+        /// </summary>
+        /// <param name="graphClient"></param>
+        /// <param name="inEmail"></param>
+        /// <param name="mainFolderId"></param>
+        /// <param name="subFolderId1"></param>
+        /// <param name="subFolderId2"></param>
+        /// <param name="messageId"></param>
+        /// <param name="attachmentId"></param>
+        /// <returns></returns>
         public static async Task<Attachment> FetchAttachmentData(GraphServiceClient graphClient,
                                                                  string inEmail,
                                                                  string mainFolderId,
@@ -77,6 +110,13 @@ namespace GraphDownloadAttachmentFilesClass
             return attachmentData;
         }
 
+        /// <summary>
+        /// Save the fetched attachment data as a file in to the local download folder.
+        /// </summary>
+        /// <param name="attachmentData"></param>
+        /// <param name="filePath"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
         public static async Task<bool> SaveAttachmentToFile(Attachment attachmentData, string filePath, string fileName)
         {
             if (!Directory.Exists(filePath))
