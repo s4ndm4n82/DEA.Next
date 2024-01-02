@@ -25,8 +25,10 @@ namespace Emailer
             emailMessage.Subject = emailSettings.EmailSettings.Subject;
             emailMessage.Body = emailBody;
 
-            SmtpClient smtpClient = new(emailSettings.ServerSettings.SmtpServer, emailSettings.ServerSettings.Port);
-            smtpClient.EnableSsl = false;
+            SmtpClient smtpClient = new(emailSettings.ServerSettings.SmtpServer, emailSettings.ServerSettings.Port)
+            {
+                EnableSsl = false
+            };
 
             try
             {

@@ -1,5 +1,5 @@
 ﻿using FolderFunctions;
-using UserConfigReader;
+using UserConfigSetterClass;
 using WriteLog;
 
 namespace HandleErrorFiles
@@ -17,7 +17,7 @@ namespace HandleErrorFiles
         /// <param name="customerId">Customer ID.</param>
         /// <param name="clientEmail">If user uses email to deliver files then need this to make the folder name.</param>
         /// <returns>True or false.</returns>
-        public static bool MoveFilesToErrorFolder(string downloadFolderPath,
+        public static async Task<bool> MoveFilesToErrorFolder(string downloadFolderPath,
                                                   IEnumerable<string> fileNames,
                                                   int? customerId,
                                                   string clientEmail)
@@ -25,8 +25,8 @@ namespace HandleErrorFiles
             try
             {
                 // Read the user config file.
-                UserConfigReaderClass.CustomerDetailsObject jsonDetails = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
-                UserConfigReaderClass.Customerdetail clientDetails = jsonDetails.CustomerDetails.FirstOrDefault(cid => cid.Id == customerId);
+                UserConfigSetterClass.UserConfigSetter.CustomerDetailsObject jsonDetails = await UserConfigSetterClass.UserConfigSetter.ReadUserDotConfigAsync<UserConfigSetterClass.UserConfigSetter.CustomerDetailsObject>();
+                UserConfigSetterClass.UserConfigSetter.Customerdetail clientDetails = jsonDetails.CustomerDetails.FirstOrDefault(cid => cid.Id == customerId);
 
                 // Source folder path.
                 string sourcePath = Path.GetDirectoryName(downloadFolderPath);

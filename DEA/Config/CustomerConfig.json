@@ -7,9 +7,12 @@
       "UserName": "dc_import",
       "TemplateKey": "",
       "Queue": "6",
-      "ProjetID": "690e35df-73b1-4802-46a5-08da8ffc4c42",
+      "ProjetID": "0c298408-76b9-4f4c-9941-edb101126329",
+      //"ProjetID": "690e35df-73b1-4802-46a5-08da8ffc4c42",
+      "MaxBatchSize": 2, // Number of files that can be in a download batch. Max file limit is 200.
       "MainCustomer": "Aksesspunkt",
       "ClientName": "Duett",
+      "SendEmail": 0, // If 1 then send email. If 0 then use configured org.
       "ClientOrgNo": "932971917",
       "ClientIdField": "Internal ID",
       "FileDeliveryMethod": "ftp",
@@ -23,7 +26,10 @@
         "FtpHostIp": "",
         "FtpUser": "testuser",
         "FtpPassword": "jackkills",
+        "FtpFolderLoop": 0, // If 1, then loop through folders. If 0, then only main folder.
         "FtpMainFolder": "/Aksesspunkt/Duett"
+        //"FtpMainFolder": "/Aksesspunkt",
+
       },
       "EmailDetails": {
         "EmailAddress": "",
@@ -42,12 +48,14 @@
       "id": 2,
       "CustomerStatus": 0,
       "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZGNfaW1wb3J0IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiaW1wb3J0QGRpZ2l0YWxjYXB0dXJlLm5vIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI1OGRiZTAzOC1mNGIwLTQzNjYtYjJiYi03ZTZiZjU1YzBiOGQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6ImM0YzQwYzk0LTdiMmEtNDI0ZS04MzVlLWVkODA5MmYyODE0YyIsImV4cCI6MTcxOTU2NDM5MywiaXNzIjoid3d3LmRpZ2l0YWxjYXB0dXJlLm5vIiwiYXVkIjoiaHR0cHM6Ly93d3cuZGlnaXRhbGNhcHR1cmUubm8vdHBzIn0.KKzq2ubLLYQA2GinbtYkBvikkQQQRKX2Qr3HGY2h5uc",
-      "UserName": "dc_importt",
+      "UserName": "dc_import",
       "TemplateKey": "",
       "Queue": "6",
       "ProjetID": "0c298408-76b9-4f4c-9941-edb101126329",
+      "MaxBatchSize": 2, // Number of files that can be in a download batch. Max file limit is 200.
       "MainCustomer": "DigiAcc",
       "ClientName": "DigiAcc",
+      "SendEmail": 1,
       "ClientOrgNo": "",
       "ClientIdField": "InternalAccountingID",
       "FileDeliveryMethod": "email",
@@ -61,18 +69,20 @@
         "FtpHostIp": "",
         "FtpUser": "",
         "FtpPassword": "",
+        "FtpFolderLoop": 0,
         "FtpMainFolder": ""
       },
       "EmailDetails": {
         "EmailAddress": "apptesting@efakturamottak.no",
-        "MainInbox": "Level 2",
-        "SubInbox1": "Sub 1",
-        "SubInbox2": ""
+        "EmailInboxPath": "/Level 2/Sub 1"
+        //"MainInbox": "Level 2",
+        //"SubInbox1": "Sub 1",
+        //"SubInbox2": ""
       },
       "DocumentDetails": {
         "DocumentType": "MULTI",
         "DocumentExtensions": [
-          ".pdf",
+          ".pDf",
           ".jpg",
           ".jpeg",
           ".tif"
@@ -87,8 +97,9 @@
       "TemplateKey": "",
       "Queue": "4",
       "ProjetID": "a6ce004d-a4db-4753-85c2-4f550e646801",
+      "MaxBatchSize": 2, // Number of files that can be in a download batch. Max file limit is 200.
       "MainCustomer": "Advania Norge",
-      "ClientName": "Kristiansand Bygg",
+      "ClientName": "Kristiansand Byggentrepenør AS",
       "ClientOrgNo": "993853623",
       "ClientIdField": "Customer Organization No",
       "FileDeliveryMethod": "email",
@@ -102,14 +113,13 @@
         "FtpHostIp": "",
         "FtpUser": "",
         "FtpPassword": "",
-        "FtpMainFolder": "",
-        "FtpSubFolder1": "",
-        "FtpSubFolder2": ""
+        "FtpFolderLoop": 0,
+        "FtpMainFolder": ""
       },
       "EmailDetails": {
         "EmailAddress": "atc@efakturamottak.no",
         "MainInbox": "Enkeltstående",
-        "SubInbox1": "Kristiansand Bygg",
+        "SubInbox1": "Kristiansand Byggentrepenør AS",
         "SubInbox2": ""
       },
       "DocumentDetails": {

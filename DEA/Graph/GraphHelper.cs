@@ -3,9 +3,10 @@ using Microsoft.Identity.Client;
 using System.Net.Http.Headers;
 using WriteLog;
 using GraphGetAttachments;
-using UserConfigReader;
+using UserConfigSetterClass;
 using Microsoft.IdentityModel.Tokens;
 using AppConfigReader;
+using UserConfigRetriverClass;
 
 namespace GraphHelper
 {
@@ -25,10 +26,9 @@ namespace GraphHelper
         public static async Task<int> InitializGetAttachment(int customerId)
         {
             int result = 0;
-            UserConfigReaderClass.CustomerDetailsObject jsonData = UserConfigReaderClass.ReadUserDotConfig<UserConfigReaderClass.CustomerDetailsObject>();
-            UserConfigReaderClass.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == customerId);
+            UserConfigSetter.Customerdetail clientDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
 
-            if(clientDetails != null)
+            if (clientDetails != null)
             {
                 try
                 {
@@ -81,7 +81,7 @@ namespace GraphHelper
         /// <summary>
         /// Initialize and returns the success message.
         /// </summary>
-        public class GraphApiInitializer
+        private class GraphApiInitializer
         {
             private readonly AppConfigReaderClass.AppSettingsRoot jsonData;
 
@@ -132,7 +132,7 @@ namespace GraphHelper
         }
 
         // Get the token from the Azure according to the default scopes set in the server.
-        public static async Task<string> GetAuthTokenWithOutUser(string clientId, string instanceId, string tenantId, string clientSecret, string[] scopes)
+        private static async Task<string> GetAuthTokenWithOutUser(string clientId, string instanceId, string tenantId, string clientSecret, string[] scopes)
         {
             string Authority = string.Concat(instanceId, tenantId);
 
