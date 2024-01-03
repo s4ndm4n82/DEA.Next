@@ -4,7 +4,7 @@ using WriteLog;
 
 namespace DEA.Next.Graph.GraphHelperClasses
 {
-    internal class CreatRequestBuilderClass
+    internal class CreateRequestBuilderClass
     {
         public static async Task<IMailFolderRequestBuilder> CreatRequestBuilder([NotNull] GraphServiceClient graphClient,
                                                                          string firstFolderId,
