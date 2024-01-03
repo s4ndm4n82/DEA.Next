@@ -18,22 +18,12 @@ namespace GraphMoveEmailsToErrorFolderClass
         /// <param name="DestiId"></param>
         /// <param name="_Email"></param>
         /// <returns></returns>
-        public static async Task<bool> MoveEmailsToErrorFolder([NotNull] GraphServiceClient graphClient,
-                                                               string firstFolderId,
-                                                               string secondFolderId,
-                                                               string thirdFolderId,
+        public static async Task<bool> MoveEmailsToErrorFolder(IMailFolderRequestBuilder requestBuilder,
                                                                string MsgId,
-                                                               string DestiId,
-                                                               string _Email)
+                                                               string DestiId)
         {
             try
             {
-                IMailFolderRequestBuilder requestBuilder = await CreatRequestBuilderClass.CreatRequestBuilder(graphClient,
-                                                                                                              firstFolderId,
-                                                                                                              secondFolderId,
-                                                                                                              thirdFolderId,
-                                                                                                              _Email);
-
                 Message returnResult = await requestBuilder
                                        .Messages[$"{MsgId}"]
                                        .Move(DestiId)

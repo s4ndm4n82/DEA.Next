@@ -21,10 +21,7 @@ namespace GraphEmailFunctions
         /// <param name="clientEmail"></param>
         /// <param name="atnStatus"></param>
         /// <returns></returns>
-        public static async Task<(bool, string)> EmailForwarder([NotNull] GraphServiceClient graphClient,
-                                                                string mainFolderId,
-                                                                string subFolderId1,
-                                                                string subFolderId2,
+        public static async Task<(bool, string)> EmailForwarder(IMailFolderRequestBuilder requestBuilder,
                                                                 string messageId,
                                                                 string clientEmail,
                                                                 int atnStatus)
@@ -32,7 +29,7 @@ namespace GraphEmailFunctions
             bool returnResult;
 
             // Check for null or whitespace/
-            if (string.IsNullOrEmpty(mainFolderId))
+            if (requestBuilder == null)
             {
                 return (false, "Main folder ID cannot be null or whitespace.");
             }
@@ -40,11 +37,7 @@ namespace GraphEmailFunctions
             try
             {
                 // Get message details
-                Message messageDetails = await GetEmailMessageDetails(graphClient,
-                                                                      clientEmail,
-                                                                      mainFolderId,
-                                                                      subFolderId1,
-                                                                      subFolderId2,
+                Message messageDetails = await GetEmailMessageDetails(requestBuilder,
                                                                       messageId);
                 // Return if message details is null
                 if (messageDetails == null)
@@ -64,10 +57,7 @@ namespace GraphEmailFunctions
                 }
 
                 // Forward the email
-                returnResult = await SendForwardEmail(graphClient,
-                                                      mainFolderId,
-                                                      subFolderId1,
-                                                      subFolderId2,
+                returnResult = await SendForwardEmail(requestBuilder,
                                                       fromName,
                                                       fromEmail,
                                                       replyEmail,
@@ -93,29 +83,9 @@ namespace GraphEmailFunctions
         /// <param name="subFolderId2"></param>
         /// <param name="messageId"></param>
         /// <returns>Returns all the email message details.</returns>
-        private static async Task<Message> GetEmailMessageDetails([NotNull] GraphServiceClient graphClient,
-                                                                  string clientEmail,
-                                                                  string mainFolderId,
-                                                                  string subFolderId1,
-                                                                  string subFolderId2,
+        private static async Task<Message> GetEmailMessageDetails(IMailFolderRequestBuilder requestBuilder,
                                                                   string messageId)
         {
-            List<string> subInboxFolders = new() { mainFolderId, subFolderId1, subFolderId2 };
-            subInboxFolders.RemoveAll(string.IsNullOrWhiteSpace); // Remove all empty strings
-
-            if (!subInboxFolders.Any())
-            {
-                WriteLogClass.WriteToLog(0, "Inbox folder list cannot be empty ....", 0);
-                return null;
-            }
-
-            IMailFolderRequestBuilder requestBuilder = graphClient.Users[$"{clientEmail}"].MailFolders["Inbox"];
-
-            foreach (string subInboxFolder in subInboxFolders)
-            {
-                requestBuilder = requestBuilder.ChildFolders[subInboxFolder];
-            }
-
             Message messagesDetails;
             try
             {
@@ -156,10 +126,7 @@ namespace GraphEmailFunctions
         /// <param name="messageId"></param>
         /// <param name="attachmentStatus"></param>
         /// <returns></returns>
-        private static async Task<bool> SendForwardEmail([NotNull] GraphServiceClient graphClient,
-                                                         string mainFolderId,
-                                                         string subFolderId1,
-                                                         string subFolderId2,
+        private static async Task<bool> SendForwardEmail(IMailFolderRequestBuilder requestBuilder,
                                                          string fromName,
                                                          string fromEmail,
                                                          string clientEmail,
@@ -180,12 +147,8 @@ namespace GraphEmailFunctions
             List<Recipient> recipients = GetRecipeintEmail(fromName, fromEmail);
 
             // Send the email
-            return await SendEmailAsync(graphClient,
-                                        mainFolderId,
-                                        subFolderId1,
-                                        subFolderId2,
+            return await SendEmailAsync(requestBuilder,
                                         recipients,
-                                        clientEmail,
                                         messageId,
                                         mailBody)
                          .ConfigureAwait(false);
@@ -265,31 +228,11 @@ namespace GraphEmailFunctions
         /// <param name="messageId"></param>
         /// <param name="mailBody"></param>
         /// <returns>Return tru or false.</returns>
-        private static async Task<bool> SendEmailAsync([NotNull] GraphServiceClient graphClient,
-                                                                        string mainFolderId,
-                                                                        string subFolderId1,
-                                                                        string subFolderId2,
+        private static async Task<bool> SendEmailAsync(IMailFolderRequestBuilder requestBuilder,
                                                                         List<Recipient> recipientEmail,
-                                                                        string clientEmail,
                                                                         string messageId,
                                                                         string mailBody)
         {
-            List<string> subInboxFolderIds = new() { mainFolderId, subFolderId1, subFolderId2 };
-            subInboxFolderIds.RemoveAll(string.IsNullOrWhiteSpace); // Remove all empty strings
-
-            if (!subInboxFolderIds.Any())
-            {
-                WriteLogClass.WriteToLog(0, "Inbox folder list cannot be empty ....", 0);
-                return false;
-            }
-
-            IMailFolderRequestBuilder requestBuilder = graphClient.Users[$"{clientEmail}"].MailFolders["Inbox"];
-
-            foreach (var folderId in subInboxFolderIds)
-            {
-                requestBuilder = requestBuilder.ChildFolders[folderId];
-            }
-
             try
             {
                 await requestBuilder

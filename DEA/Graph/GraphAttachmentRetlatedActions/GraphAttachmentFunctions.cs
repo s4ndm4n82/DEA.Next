@@ -108,10 +108,7 @@ namespace GraphAttachmentFunctions
                 try
                 {
                     // If there are no attachments, forward the email and return 3.
-                    (bool forwardSuccess, string forwardResult) = await GraphEmailFunctionsClass.EmailForwarder(graphClient,
-                                                                                                                mainFolderId,
-                                                                                                                subFolderId1,
-                                                                                                                subFolderId2,
+                    (bool forwardSuccess, string forwardResult) = await GraphEmailFunctionsClass.EmailForwarder(requestBuilder,
                                                                                                                 message.Id,
                                                                                                                 inEmail,
                                                                                                                 customerId);
@@ -140,13 +137,9 @@ namespace GraphAttachmentFunctions
                     if (destinationId != null)
                     {
                         // Move the email to the error folder. And returns a bool value.
-                        bool moveSuccess = await GraphMoveEmailsToErrorFolder.MoveEmailsToErrorFolder(graphClient,
-                                                                                                      mainFolderId,
-                                                                                                      subFolderId1,
-                                                                                                      subFolderId2,
+                        bool moveSuccess = await GraphMoveEmailsToErrorFolder.MoveEmailsToErrorFolder(requestBuilder,
                                                                                                       message.Id,
-                                                                                                      destinationId,
-                                                                                                      inEmail);
+                                                                                                      destinationId);
                         if (!moveSuccess)
                         {
                             // Log the failure and return an error code
