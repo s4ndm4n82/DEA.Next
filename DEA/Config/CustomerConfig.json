@@ -28,14 +28,13 @@
         "FtpPassword": "jackkills",
         "FtpFolderLoop": 0, // If 1, then loop through folders. If 0, then only main folder.
         "FtpMainFolder": "/Aksesspunkt/Duett"
-        //"FtpMainFolder": "/Aksesspunkt",
 
       },
       "EmailDetails": {
         "EmailAddress": "",
-        "MainInbox": "",
-        "SubInbox1": "",
-        "SubInbox2": ""
+        // You can configure the inbox path for the application to look for emails.
+        // Can go up to 3 levels. Ex: /Enkelt pående/Kristiansand Byggentrepenør AS or /Enkelt pående/Kristiansand Byggentrepenør AS/subInbox
+        "EmailInboxPath": ""
       },
       "DocumentDetails": {
         "DocumentType": "PDF",
@@ -74,10 +73,7 @@
       },
       "EmailDetails": {
         "EmailAddress": "apptesting@efakturamottak.no",
-        //"EmailInboxPath": "/Level 2/Sub 1"
-        "MainInbox": "Level 2",
-        "SubInbox1": "Sub 1",
-        "SubInbox2": ""
+        "EmailInboxPath": "/Level 2/Sub 1"
       },
       "DocumentDetails": {
         "DocumentType": "MULTI",
@@ -118,9 +114,7 @@
       },
       "EmailDetails": {
         "EmailAddress": "atc@efakturamottak.no",
-        "MainInbox": "Enkeltstående",
-        "SubInbox1": "Kristiansand Byggentrepenør AS",
-        "SubInbox2": ""
+        "EmailInboxPath": "/Enkelt pående/Kristiansand Byggentrepenør AS"
       },
       "DocumentDetails": {
         "DocumentType": "PDF",

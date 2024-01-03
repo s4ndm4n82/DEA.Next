@@ -21,9 +21,14 @@ namespace GraphGetAttachments
         /// <param name="subFolder1"></param>
         /// <param name="subFolder2"></param>
         /// <returns></returns>
-        public static async Task<int> GetEmailsAttacments([NotNull] GraphServiceClient graphClient, string clientEmail, string mainMailFolder, string subFolder1, string subFolder2, int customerId)
+        public static async Task<int> GetEmailsAttacments([NotNull] GraphServiceClient graphClient,
+                                                          string clientEmail,
+                                                          string mainMailFolder,
+                                                          string subFolder1,
+                                                          string subFolder2,
+                                                          int customerId)
         {
-            UserConfigSetter.Emaildetails emailDetails = await UserConfigRetriver.RetriveEmailConfigById(customerId);
+            //UserConfigSetter.Emaildetails emailDetails = await UserConfigRetriver.RetriveEmailConfigById(customerId);
 
             // Parameters read from the config files.
             AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
@@ -36,7 +41,7 @@ namespace GraphGetAttachments
             if (folderIds != null)
             {
                 // List of inbox sub folder names.
-                List<string> folderList = new() { emailDetails.MainInbox, emailDetails.SubInbox1, emailDetails.SubInbox2 };
+                List<string> folderList = new() { mainMailFolder, subFolder1, subFolder2 };
                 // Remove the empty ones.
                 folderList.RemoveAll(string.IsNullOrEmpty);
 
@@ -46,13 +51,13 @@ namespace GraphGetAttachments
                 }
 
                 // Initiate the email attachment download and send them to the web service. Should return a bool value.
-                result = await GraphAttachmentFunctionsClass.GetMessagesWithAttachments(graphClient
-                                                                                              , clientEmail
-                                                                                              , folderIds.ClientMainFolderId!
-                                                                                              , folderIds.ClientSubFolderId1!
-                                                                                              , folderIds.ClientSubFolderId2!
-                                                                                              , maxMalis.MaxEmails
-                                                                                              , customerId);
+                result = await GraphAttachmentFunctionsClass.GetMessagesWithAttachments(graphClient,
+                                                                                        clientEmail,
+                                                                                        folderIds.ClientMainFolderId,
+                                                                                        folderIds.ClientSubFolderId1,
+                                                                                        folderIds.ClientSubFolderId2,
+                                                                                        maxMalis.MaxEmails,
+                                                                                        customerId);
 
                 WriteLogClass.WriteToLog(ProcessStatusMessageSetterClass.SetMessageTypeOther(result), ProcessStatusMessageSetterClass.SetProcessStatusOther(result, "email"), 2);
             }

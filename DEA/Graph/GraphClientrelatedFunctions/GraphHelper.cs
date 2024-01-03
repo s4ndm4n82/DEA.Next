@@ -7,6 +7,7 @@ using UserConfigSetterClass;
 using Microsoft.IdentityModel.Tokens;
 using AppConfigReader;
 using UserConfigRetriverClass;
+using DEA.Next.Graph.GraphEmailInboxFunctions;
 
 namespace GraphHelper
 {
@@ -28,6 +29,11 @@ namespace GraphHelper
             int result = 0;
             UserConfigSetter.Customerdetail clientDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
 
+            GetInboxFolderNames getInboxFolderNames = new(clientDetails.EmailDetails.EmailInboxPath);
+            string mainInbox = getInboxFolderNames.GetNextInboxName();
+            string subInbox1 = getInboxFolderNames.GetNextInboxName();
+            string subInbox2 = getInboxFolderNames.GetNextInboxName();
+
             if (clientDetails != null)
             {
                 try
@@ -41,14 +47,17 @@ namespace GraphHelper
                 
             }
 
-            if (!clientDetails!.EmailDetails!.MainInbox.IsNullOrEmpty())
+            if (!mainInbox.IsNullOrEmpty())
             {
                 try
                 {
                     // Calls the function to read ATC emails.
-                    result = await GraphGetAttachmentsClass.GetEmailsAttacments(graphClient!, clientDetails.EmailDetails.EmailAddress!,
-                                                                                clientDetails.EmailDetails.MainInbox!, clientDetails.EmailDetails.SubInbox1!,
-                                                                                clientDetails.EmailDetails.SubInbox2!, customerId);
+                    result = await GraphGetAttachmentsClass.GetEmailsAttacments(graphClient,
+                                                                                clientDetails.EmailDetails.EmailAddress!,
+                                                                                mainInbox,
+                                                                                subInbox1,
+                                                                                subInbox2,
+                                                                                customerId);
                     return result;
                 }
                 catch (Exception ex)
