@@ -36,7 +36,7 @@ namespace GetMailFolderIds
             AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
             AppConfigReaderClass.Programsettings programSettings = jsonData.ProgramSettings;
 
-            GetMailFolderIdsClass.ClientFolderId folderId = new();
+            ClientFolderId folderId = new();
 
             if (!string.IsNullOrEmpty(clientMainFolderName))
             {

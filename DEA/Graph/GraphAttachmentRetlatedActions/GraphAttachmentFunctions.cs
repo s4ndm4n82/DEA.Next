@@ -12,6 +12,7 @@ using GraphDownloadAttachmentFilesClass;
 using GraphMoveEmailsToExportClass;
 using GraphMoveEmailsToErrorFolderClass;
 using Message = Microsoft.Graph.Message;
+using DEA.Next.Graph.GraphHelperClasses;
 
 namespace GraphAttachmentFunctions
 {
@@ -35,28 +36,13 @@ namespace GraphAttachmentFunctions
                                                                  int maxMails,
                                                                  int customerId)
         {
-            List<string> folderIds = new() { mainFolderId, subFolderId1, subFolderId2 };
-            folderIds.RemoveAll(string.IsNullOrEmpty); // Remove the empty once.
-
-            if (!folderIds.Any())
-            {
-                return 4;
-            }
-
-            IMailFolderRequestBuilder requestBuidler = graphClient.Users[$"{inEmail}"].MailFolders["Inbox"];
-
-            foreach (string folderId in folderIds)
-            {
-                // Change the request builder to the next folder. If it is the last folder, then we will get the messages from there.
-                requestBuidler = requestBuidler.ChildFolders[$"{folderId}"];
-            }
-
-            // Empty variable to store the messages.
+            IMailFolderRequestBuilder requestBuilder = await CreatRequestBuilderClass.CreatRequestBuilder(graphClient, mainFolderId, subFolderId1, subFolderId2, inEmail);
+            
             IMailFolderMessagesCollectionPage messages;
             try
             {
                 // Get the messages with attachments.
-                messages = await requestBuidler
+                messages = await requestBuilder
                                  .Messages
                                  .Request()
                                  .Expand("attachments")
@@ -86,7 +72,8 @@ namespace GraphAttachmentFunctions
                                                     mainFolderId,
                                                     subFolderId1,
                                                     subFolderId2,
-                                                    customerId));
+                                                    customerId,
+                                                    requestBuilder));
             }
 
             // Wait for all the tasks to complete.
@@ -110,7 +97,8 @@ namespace GraphAttachmentFunctions
                                                            string mainFolderId,
                                                            string subFolderId1,
                                                            string subFolderId2,
-                                                           int customerId)
+                                                           int customerId,
+                                                           IMailFolderRequestBuilder requestBuilder)
         {
             UserConfigSetter.Customerdetail clientDeails = await UserConfigRetriver.RetriveUserConfigById(customerId);
             IEnumerable<Attachment> attachmentList = GraphDownloadAttachmentFiles.FilterAttachments(message.Attachments, clientDeails.DocumentDetails.DocumentExtensions);
@@ -131,6 +119,15 @@ namespace GraphAttachmentFunctions
                     {
                         // Log the failure and return an error code
                         WriteLogClass.WriteToLog(1, $"Failed to forward email {message.Subject}. Error: {forwardResult}", 2);
+                        return 4; // Error code for failure
+                    }
+
+                    // Mark the email as not read.
+                    bool markSuccess = await MarkEmailsAsNotRead(requestBuilder, message.Id, inEmail);
+                    if (!markSuccess)
+                    {
+                        // Log the failure and return an error code
+                        WriteLogClass.WriteToLog(1, $"Failed to mark email {message.Id} as not read.", 2);
                         return 4; // Error code for failure
                     }
 
@@ -337,6 +334,30 @@ namespace GraphAttachmentFunctions
                 WriteLogClass.WriteToLog(0, $"Exception at StartAttachmentFilesUplaod: {ex.Message}", 0);
                 return -1;
             }
-        }        
+        }
+
+        private static async Task<bool> MarkEmailsAsNotRead(IMailFolderRequestBuilder requestBuilder,
+                                                    string messageId,
+                                                    string destinationId)
+        {
+            Message messageUpdateStatus = new()
+            {
+                IsRead = false // Set IsRead to false to mark the email as not read
+            };
+
+            try
+            {
+                var request = await requestBuilder
+                      .Messages[$"{messageId}"]
+                      .Request()
+                      .UpdateAsync(messageUpdateStatus);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(0, $"Exception at marking emails as not read: {ex.Message}", 0);
+                return false;
+            }
+        }
     }
 }
