@@ -33,7 +33,7 @@
       "EmailDetails": {
         "EmailAddress": "",
         // You can configure the inbox path for the application to look for emails.
-        // Can go up to 3 levels. Ex: /Enkelt pående/Kristiansand Byggentrepenør AS or /Enkelt pående/Kristiansand Byggentrepenør AS/subInbox
+        // Can go up to 3 levels. Ex: /Enkelt pående/Kristiansand Byggentrepenør AS or /Enkelt pående/Kristiansand Byggentrepenør AS/subInbox.
         "EmailInboxPath": ""
       },
       "DocumentDetails": {
