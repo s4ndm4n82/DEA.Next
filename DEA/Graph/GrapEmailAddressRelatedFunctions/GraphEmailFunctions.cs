@@ -1,6 +1,5 @@
 ﻿using DEA.Next.Graph.ResourceFiles;
 using Microsoft.Graph;
-using System.Diagnostics.CodeAnalysis;
 using WriteLog;
 
 namespace GraphEmailFunctions
@@ -60,7 +59,6 @@ namespace GraphEmailFunctions
                 returnResult = await SendForwardEmail(requestBuilder,
                                                       fromName,
                                                       fromEmail,
-                                                      replyEmail,
                                                       clientEmail,
                                                       messageId,
                                                       atnStatus);
@@ -129,7 +127,6 @@ namespace GraphEmailFunctions
         private static async Task<bool> SendForwardEmail(IMailFolderRequestBuilder requestBuilder,
                                                          string fromName,
                                                          string fromEmail,
-                                                         string clientEmail,
                                                          string recipientEmail,
                                                          string messageId,
                                                          int attachmentStatus)

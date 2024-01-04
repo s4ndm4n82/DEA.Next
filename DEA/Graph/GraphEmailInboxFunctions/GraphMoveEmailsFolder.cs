@@ -1,12 +1,9 @@
-﻿using DEA.Next.Graph.GraphHelperClasses;
-using Microsoft.Graph;
-using System.Configuration;
-using System.Diagnostics.CodeAnalysis;
+﻿using Microsoft.Graph;
 using WriteLog;
 
-namespace GraphMoveEmailsToErrorFolderClass
+namespace GraphMoveEmailsrClass
 {
-    internal class GraphMoveEmailsToErrorFolder
+    internal class GraphMoveEmailsFolder
     {
         /// <summary>
         /// Moves the email to Downloded folder.
@@ -18,9 +15,9 @@ namespace GraphMoveEmailsToErrorFolderClass
         /// <param name="DestiId"></param>
         /// <param name="_Email"></param>
         /// <returns></returns>
-        public static async Task<bool> MoveEmailsToErrorFolder(IMailFolderRequestBuilder requestBuilder,
-                                                               string MsgId,
-                                                               string DestiId)
+        public static async Task<bool> MoveEmailsToAnotherFolder(IMailFolderRequestBuilder requestBuilder,
+                                                                 string MsgId,
+                                                                 string DestiId)
         {
             try
             {

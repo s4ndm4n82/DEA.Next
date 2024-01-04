@@ -1,4 +1,4 @@
-﻿using GraphMoveEmailsToErrorFolderClass;
+﻿using GraphMoveEmailsrClass;
 using Microsoft.Graph;
 using WriteLog;
 
@@ -18,18 +18,23 @@ namespace GraphMoveEmailsToExportClass
         /// <param name="messageSubject"></param>
         /// <param name="inEmail"></param>
         /// <returns>A bool value (true or false)</returns>
-        public static async Task<bool> MoveEmailsToExport(GraphServiceClient graphClient,
-                                                          string mainFolderId,
-                                                          string subFolderId1,
-                                                          string subFolderId2,
+        public static async Task<bool> MoveEmailsToExport(IMailFolderRequestBuilder requestBuilder,                                                          
                                                           string messageId,
-                                                          string messageSubject,
-                                                          string inEmail)
+                                                          string messageSubject)
         {
-            IMailFolderChildFoldersCollectionPage moveLocation;
-            MailFolder exportFolder = null!;
+            if (requestBuilder == null)
+            {
+                WriteLogClass.WriteToLog(0, $"Request builder is null ...", 0);
+                return false;
+            }
 
-            if (!string.IsNullOrEmpty(mainFolderId) && string.IsNullOrEmpty(subFolderId1) && string.IsNullOrEmpty(subFolderId2))
+            IMailFolderChildFoldersCollectionPage emailMoveLocation = await requestBuilder
+                                                                            .ChildFolders
+                                                                            .Request()
+                                                                            .GetAsync();
+
+            string exportFolderId = emailMoveLocation.FirstOrDefault(fldr => fldr.DisplayName == "Exported").Id;
+            /*if (!string.IsNullOrEmpty(mainFolderId) && string.IsNullOrEmpty(subFolderId1) && string.IsNullOrEmpty(subFolderId2))
             {
                 try
                 {
@@ -84,15 +89,11 @@ namespace GraphMoveEmailsToExportClass
                 {
                     WriteLogClass.WriteToLog(0, $"Exception at detination folder name 3rd if: {ex.Message}", 0);
                 }
-            }
+            }*/
 
-            if (await GraphMoveEmailsToErrorFolder.MoveEmailsToErrorFolder(graphClient,
-                                                                           mainFolderId,
-                                                                           subFolderId1,
-                                                                           subFolderId2,
+            if (await GraphMoveEmailsFolder.MoveEmailsToAnotherFolder(requestBuilder,
                                                                            messageId,
-                                                                           exportFolder.Id,
-                                                                           inEmail))
+                                                                           exportFolderId))
             {
                 WriteLogClass.WriteToLog(1, $"Email {messageSubject} moved to export folder ...", 2);
                 return true;

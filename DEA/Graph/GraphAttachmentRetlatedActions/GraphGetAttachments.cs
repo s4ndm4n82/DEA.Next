@@ -7,6 +7,7 @@ using AppConfigReader;
 using ProcessStatusMessageSetter;
 using UserConfigSetterClass;
 using UserConfigRetriverClass;
+using DEA.Next.Graph.GraphHelperClasses;
 
 namespace GraphGetAttachments
 {
@@ -28,8 +29,6 @@ namespace GraphGetAttachments
                                                           string subFolder2,
                                                           int customerId)
         {
-            //UserConfigSetter.Emaildetails emailDetails = await UserConfigRetriver.RetriveEmailConfigById(customerId);
-
             // Parameters read from the config files.
             AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
             AppConfigReaderClass.Programsettings maxMalis = jsonData.ProgramSettings;
@@ -47,15 +46,24 @@ namespace GraphGetAttachments
 
                 if (folderList.Any())
                 {
-                    WriteLogClass.WriteToLog(3, $"Starting attachment download process from inbox {string.Join(" / ", folderList)} ....", 2);
+                    WriteLogClass.WriteToLog(3, $"Starting attachment download process from inbox {string.Join("/", folderList)} ....", 2);
+                }
+
+                IMailFolderRequestBuilder requestBuilder = await CreateRequestBuilderClass.CreatRequestBuilder(graphClient,
+                                                                                           folderIds.ClientMainFolderId,
+                                                                                           folderIds.ClientSubFolderId1,
+                                                                                           folderIds.ClientSubFolderId2,
+                                                                                           clientEmail);
+
+                if (requestBuilder == null)
+                {
+                    WriteLogClass.WriteToLog(0, $"Failed to create request builder ....", 0);
+                    return 4;
                 }
 
                 // Initiate the email attachment download and send them to the web service. Should return a bool value.
-                result = await GraphAttachmentFunctionsClass.GetMessagesWithAttachments(graphClient,
+                result = await GraphAttachmentFunctionsClass.GetMessagesWithAttachments(requestBuilder,
                                                                                         clientEmail,
-                                                                                        folderIds.ClientMainFolderId,
-                                                                                        folderIds.ClientSubFolderId1,
-                                                                                        folderIds.ClientSubFolderId2,
                                                                                         maxMalis.MaxEmails,
                                                                                         customerId);
 

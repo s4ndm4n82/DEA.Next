@@ -23,22 +23,14 @@ namespace GraphDownloadAttachmentFilesClass
         /// <param name="messageId"></param>
         /// <param name="inEmail"></param>
         /// <returns></returns>
-        public static string DetermineRecipientEmail(GraphServiceClient graphClient,
-                                                     UserConfigSetter.Customerdetail clientDetails,
-                                                     string mainFolderId,
-                                                     string subFolderId1,
-                                                     string subFolderId2,
-                                                     string messageId,
-                                                     string inEmail)
+        public static async Task<string> DetermineRecipientEmail(IMailFolderRequestBuilder requestBuilder,
+                                                           UserConfigSetter.Customerdetail clientDetails,                                                                    
+                                                                                    string messageId)
         {
             if (clientDetails.FileDeliveryMethod.ToLower() == "email")
             {
-                return GetRecipientEmailClass.GetRecipientEmail(graphClient,
-                                                                mainFolderId,
-                                                                subFolderId1,
-                                                                subFolderId2,
-                                                                messageId,
-                                                                inEmail);
+                return await GetRecipientEmailClass.GetRecipientEmail(requestBuilder,
+                                                                      messageId);
             }
             return string.Empty;
         }
@@ -81,30 +73,10 @@ namespace GraphDownloadAttachmentFilesClass
         /// <param name="messageId"></param>
         /// <param name="attachmentId"></param>
         /// <returns></returns>
-        public static async Task<Attachment> FetchAttachmentData(GraphServiceClient graphClient,
-                                                                 string inEmail,
-                                                                 string mainFolderId,
-                                                                 string subFolderId1,
-                                                                 string subFolderId2,
+        public static async Task<Attachment> FetchAttachmentData(IMailFolderRequestBuilder requestBuilder,
                                                                  string messageId,
                                                                  string attachmentId)
         {
-            List<string> folderIds = new() { mainFolderId, subFolderId1, subFolderId2 };
-            folderIds.RemoveAll(string.IsNullOrEmpty);
-
-            if (!folderIds.Any())
-            {
-                return null;
-            }
-
-            // Build the request path dynamically based on the provided folder IDs
-            IMailFolderRequestBuilder requestBuilder = graphClient.Users[inEmail].MailFolders["Inbox"];
-
-            foreach (var folderId in folderIds)
-            {
-                requestBuilder = requestBuilder.ChildFolders[folderId];
-            }
-
             // Fetch the attachment data
             var attachmentData = await requestBuilder.Messages[messageId].Attachments[attachmentId].Request().GetAsync();
             return attachmentData;
