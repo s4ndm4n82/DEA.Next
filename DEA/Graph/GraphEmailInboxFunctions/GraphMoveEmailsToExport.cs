@@ -35,6 +35,12 @@ namespace GraphMoveEmailsToExportClass
 
             string exportFolderId = emailMoveLocation.FirstOrDefault(fldr => fldr.DisplayName == "Exported").Id;
 
+            if (string.IsNullOrWhiteSpace(exportFolderId))
+            {
+                WriteLogClass.WriteToLog(0, $"Export folder not found ....", 0);
+                return false;
+            }
+
             if (await GraphMoveEmailsFolder.MoveEmailsToAnotherFolder(requestBuilder,
                                                                            messageId,
                                                                            exportFolderId))
