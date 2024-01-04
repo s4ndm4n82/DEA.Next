@@ -34,62 +34,6 @@ namespace GraphMoveEmailsToExportClass
                                                                             .GetAsync();
 
             string exportFolderId = emailMoveLocation.FirstOrDefault(fldr => fldr.DisplayName == "Exported").Id;
-            /*if (!string.IsNullOrEmpty(mainFolderId) && string.IsNullOrEmpty(subFolderId1) && string.IsNullOrEmpty(subFolderId2))
-            {
-                try
-                {
-                    moveLocation = await graphClient.Users[$"{inEmail}"].MailFolders["Inbox"]
-                               .ChildFolders[$"{mainFolderId}"]
-                               .ChildFolders
-                               .Request()
-                               .GetAsync();
-
-                    exportFolder = moveLocation.FirstOrDefault(x => x.DisplayName == "Exported")!;
-                }
-                catch (Exception ex)
-                {
-                    WriteLogClass.WriteToLog(0, $"Exception at detination folder name 1st if: {ex.Message}", 0);
-                }
-            }
-
-            if (!string.IsNullOrEmpty(mainFolderId) && !string.IsNullOrEmpty(subFolderId1) && string.IsNullOrEmpty(subFolderId2))
-            {
-                try
-                {
-                    moveLocation = await graphClient.Users[$"{inEmail}"].MailFolders["Inbox"]
-                               .ChildFolders[$"{mainFolderId}"]
-                               .ChildFolders[$"{subFolderId1}"]
-                               .ChildFolders
-                               .Request()
-                               .GetAsync();
-
-                    exportFolder = moveLocation.FirstOrDefault(x => x.DisplayName == "Exported")!;
-                }
-                catch (Exception ex)
-                {
-                    WriteLogClass.WriteToLog(0, $"Exception at detination folder name 2nd if: {ex.Message}", 0);
-                }
-            }
-
-            if (!string.IsNullOrEmpty(mainFolderId) && !string.IsNullOrEmpty(subFolderId1) && !string.IsNullOrEmpty(subFolderId2))
-            {
-                try
-                {
-                    moveLocation = await graphClient.Users[$"{inEmail}"].MailFolders["Inbox"]
-                               .ChildFolders[$"{mainFolderId}"]
-                               .ChildFolders[$"{subFolderId1}"]
-                               .ChildFolders[$"{subFolderId2}"]
-                               .ChildFolders
-                               .Request()
-                               .GetAsync();
-
-                    exportFolder = moveLocation.FirstOrDefault(x => x.DisplayName == "Exported")!;
-                }
-                catch (Exception ex)
-                {
-                    WriteLogClass.WriteToLog(0, $"Exception at detination folder name 3rd if: {ex.Message}", 0);
-                }
-            }*/
 
             if (await GraphMoveEmailsFolder.MoveEmailsToAnotherFolder(requestBuilder,
                                                                            messageId,
