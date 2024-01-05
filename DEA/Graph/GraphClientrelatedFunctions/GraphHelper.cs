@@ -52,7 +52,7 @@ namespace GraphHelper
                 try
                 {
                     // Calls the function to read ATC emails.
-                    result = await GraphGetAttachmentsClass.GetEmailsAttacments(graphClient,
+                    result = await GraphGetAttachmentsClass.StartAttacmentDownload(graphClient,
                                                                                 clientDetails.EmailDetails.EmailAddress!,
                                                                                 mainInbox,
                                                                                 subInbox1,

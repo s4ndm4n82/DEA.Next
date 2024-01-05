@@ -24,25 +24,29 @@ namespace GraphMoveEmailsToExportClass
         {
             try
             {
+                // Checking if the request builder is null.
                 if (requestBuilder == null)
                 {
                     WriteLogClass.WriteToLog(0, $"Request builder is null ...", 0);
                     return false;
                 }
 
+                // Getting the list of child folders.
                 IMailFolderChildFoldersCollectionPage emailMoveLocation = await requestBuilder
                                                                                 .ChildFolders
                                                                                 .Request()
                                                                                 .GetAsync();
-
+                // Get the ID of the export folder.
                 string exportFolderId = emailMoveLocation.FirstOrDefault(fldr => fldr.DisplayName == "Exported").Id;
 
+                // Checking if the export folder exists.
                 if (string.IsNullOrWhiteSpace(exportFolderId))
                 {
                     WriteLogClass.WriteToLog(0, $"Export folder not found ....", 0);
                     return false;
                 }
 
+                // Moving the email to the export folder.
                 if (await GraphMoveEmailsFolder.MoveEmailsToAnotherFolder(requestBuilder,
                                                                                messageId,
                                                                                exportFolderId))

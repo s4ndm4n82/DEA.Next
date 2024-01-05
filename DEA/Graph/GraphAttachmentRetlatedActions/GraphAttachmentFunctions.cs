@@ -12,7 +12,7 @@ using GraphDownloadAttachmentFilesClass;
 using GraphMoveEmailsToExportClass;
 using GraphMoveEmailsrClass;
 using Message = Microsoft.Graph.Message;
-using DEA.Next.Graph.GraphHelperClasses;
+using DEA.Next.Graph.GraphEmailActons;
 
 namespace GraphAttachmentFunctions
 {
@@ -83,9 +83,9 @@ namespace GraphAttachmentFunctions
         }
 
         private static async Task<int> ProcessMessageAsync(IMailFolderRequestBuilder requestBuilder,
-                                                                             Message message,
-                                                                              string inEmail,
-                                                                                 int customerId)
+                                                           Message message,
+                                                           string inEmail,
+                                                           int customerId)
         {
             UserConfigSetter.Customerdetail clientDeails = await UserConfigRetriver.RetriveUserConfigById(customerId);
             IEnumerable<Attachment> attachmentList = GraphDownloadAttachmentFiles.FilterAttachments(message.Attachments,
@@ -95,11 +95,17 @@ namespace GraphAttachmentFunctions
             {
                 try
                 {
+                    if (await CheckEmailChain.CheckEmailChainAsync(requestBuilder, message.Id, customerId))
+                    {
+                        WriteLogClass.WriteToLog(0, $"Email {message.Subject} has too many replies moved to deleted items ....", 0);
+                        return 3;
+                    }
+
                     // If there are no attachments, forward the email and return 3.
                     (bool forwardSuccess, string forwardResult) = await GraphEmailFunctionsClass.EmailForwarder(requestBuilder,
                                                                                                                 message.Id,
                                                                                                                 inEmail,
-                                                                                                                customerId);
+                                                                                                                message.Attachments.Count);
                     if (!forwardSuccess)
                     {
                         // Log the failure and return an error code
