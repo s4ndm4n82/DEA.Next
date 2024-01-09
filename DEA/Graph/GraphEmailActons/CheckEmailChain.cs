@@ -1,4 +1,5 @@
-﻿using Microsoft.Graph;
+﻿using GetMailFolderIds;
+using Microsoft.Graph;
 using WriteLog;
 
 namespace DEA.Next.Graph.GraphEmailActons
@@ -7,7 +8,7 @@ namespace DEA.Next.Graph.GraphEmailActons
     {
         public static async Task<bool> CheckEmailChainAsync(IMailFolderRequestBuilder requestBuilder,
                                                             string messageId,
-                                                            int customerId)
+                                                            string deletedItemsId)
         {
             Message message = await requestBuilder
                                 .Messages[$"{messageId}"]
@@ -22,14 +23,8 @@ namespace DEA.Next.Graph.GraphEmailActons
 
             string conversationId = message.ConversationId;           
             
-            if (!await GetConversationCountAsync(requestBuilder, conversationId))
+            if (!await GetConversationCountAsync(requestBuilder, conversationId, deletedItemsId))
             {
-                return false;
-            }
-
-            if (!await GraphDeleteMessages.GraphDeleteMessagesAsync(requestBuilder, conversationId))
-            {
-                WriteLogClass.WriteToLog(0, "Messages were not deleted ....", 0);
                 return false;
             }
 
@@ -37,21 +32,37 @@ namespace DEA.Next.Graph.GraphEmailActons
         }
 
         private static async Task<bool> GetConversationCountAsync(IMailFolderRequestBuilder requestBuilder,
-                                                                  string conversationId)
+                                                                  string conversationId,
+                                                                  string deletedItemsId)
         {
             IMailFolderMessagesCollectionPage messagesInConversation = await requestBuilder
                                                                              .Messages
                                                                              .Request()
                                                                              .Filter($"conversationId eq '{conversationId}'")
                                                                              .GetAsync();
+
+            string errorFolderId = await GetMailFolderIdsClass.GetErrorFolderId(requestBuilder);
+
+            IMailFolderMessagesCollectionPage conversationsInErrorFolder = await requestBuilder
+                                                                                 .ChildFolders[errorFolderId]
+                                                                                 .Messages
+                                                                                 .Request()
+                                                                                 .Filter($"conversationId eq '{conversationId}'")
+                                                                                 .GetAsync();
+
+            int totalMessagesInConversation = messagesInConversation.Count + conversationsInErrorFolder.Count;
+
+            IEnumerable<Message> allMessages = messagesInConversation.Concat(conversationsInErrorFolder);
+
             if (messagesInConversation == null)
             {
                 WriteLogClass.WriteToLog(0, "MessagesInConversation was not found ....", 0);
                 return false;
             }
 
-            if (messagesInConversation.Count > 2)
+            if (totalMessagesInConversation > 1)
             {
+                await GraphDeleteMessages.GraphMoveToDeletedItemsAsync(requestBuilder, deletedItemsId, allMessages);
                 return true;
             }
 

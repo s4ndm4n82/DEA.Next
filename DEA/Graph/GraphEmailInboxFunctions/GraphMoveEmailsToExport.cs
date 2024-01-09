@@ -1,4 +1,5 @@
-﻿using GraphMoveEmailsrClass;
+﻿using DEA.Next.HelperClasses.OtherFunctions;
+using GraphMoveEmailsrClass;
 using Microsoft.Graph;
 using WriteLog;
 
@@ -37,7 +38,7 @@ namespace GraphMoveEmailsToExportClass
                                                                                 .Request()
                                                                                 .GetAsync();
                 // Get the ID of the export folder.
-                string exportFolderId = emailMoveLocation.FirstOrDefault(fldr => fldr.DisplayName == "Exported").Id;
+                string exportFolderId = emailMoveLocation.FirstOrDefault(fldr => fldr.DisplayName == MagicWords.exported).Id;
 
                 // Checking if the export folder exists.
                 if (string.IsNullOrWhiteSpace(exportFolderId))

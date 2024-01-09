@@ -5,21 +5,27 @@ namespace DEA.Next.Graph.GraphEmailActons
 {
     internal class GraphDeleteMessages
     {
-        public static async Task<bool> GraphDeleteMessagesAsync(IMailFolderRequestBuilder requestBuilder,
-                                                                string conversationId)
-        {
-            IMailFolderMessagesCollectionPage messagesInConversation = await requestBuilder
-                                                                             .Messages
-                                                                             .Request()
-                                                                             .Filter($"conversationId eq '{conversationId}'")
-                                                                             .GetAsync();
+        public static async Task<bool> GraphMoveToDeletedItemsAsync(IMailFolderRequestBuilder requestBuilder,
+                                                                string deletedItemsId,
+                                                                IEnumerable<Message> allMessages)
+        {   
+            if (!allMessages.Any())
+            {
+                WriteLogClass.WriteToLog(0, "Conversation messages are empty ....", 0);
+                return false;
+            }
+
             bool result = true;
 
-            foreach (Message message in messagesInConversation)
+            foreach (Message message in allMessages)
             {
                 try
                 {
-                    await requestBuilder.Messages[message.Id].Request().DeleteAsync();
+                   await requestBuilder
+                         .Messages[message.Id]
+                         .Move(deletedItemsId)
+                         .Request()
+                         .PostAsync();
                 }
                 catch (Exception ex)
                 {

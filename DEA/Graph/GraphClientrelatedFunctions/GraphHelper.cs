@@ -53,11 +53,11 @@ namespace GraphHelper
                 {
                     // Calls the function to read ATC emails.
                     result = await GraphGetAttachmentsClass.StartAttacmentDownload(graphClient,
-                                                                                clientDetails.EmailDetails.EmailAddress!,
-                                                                                mainInbox,
-                                                                                subInbox1,
-                                                                                subInbox2,
-                                                                                customerId);
+                                                                                   clientDetails.EmailDetails.EmailAddress!,
+                                                                                   mainInbox,
+                                                                                   subInbox1,
+                                                                                   subInbox2,
+                                                                                   customerId);
                     return result;
                 }
                 catch (Exception ex)
@@ -103,9 +103,12 @@ namespace GraphHelper
             {
                 AppConfigReaderClass.Graphconfig graphSettings = jsonData.GraphConfig;
 
-                bool success = await InitializeGraphClient(graphSettings.ClientId, graphSettings.Instance,
-                                                           graphSettings.TenantId, graphSettings.GraphApiUrl,
-                                                           graphSettings.ClientSecret, graphSettings.Scopes);
+                bool success = await InitializeGraphClient(graphSettings.ClientId,
+                                                           graphSettings.Instance,
+                                                           graphSettings.TenantId,
+                                                           graphSettings.GraphApiUrl,
+                                                           graphSettings.ClientSecret,
+                                                           graphSettings.Scopes);
 
                 return success;
             }
