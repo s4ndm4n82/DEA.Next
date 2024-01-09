@@ -13,5 +13,9 @@
         public const string imported = "Imported";
         public const string error = "Error";
         public const string deleteditems = "Deleted Items";
+        public const string download = "Download";
+        public const string attachments = "Attachments";
+        public const string ftpfiles = "FTPFiles";
+        public const string logs = "Logs";
     }
 }
