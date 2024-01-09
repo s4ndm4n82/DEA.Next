@@ -1,4 +1,5 @@
-﻿using FluentFTP;
+﻿using DEA.Next.HelperClasses.OtherFunctions;
+using FluentFTP;
 using HandleErrorFiles;
 using WriteLog;
 using WriteNamesToLog;
@@ -15,19 +16,12 @@ namespace FolderCleaner
         /// <param name="customerID"></param>
         /// <param name="clientEmail"></param>
         /// <returns></returns>
-
-        private static class DeliveryType
-        {
-            public const string email = "email";
-            public const string ftp = "ftp";
-        }
-
         public static async Task<bool> GetFolders(string downloadFilePath, string[] jsonFileNames, int? customerID, string clientEmail, string deliveryType)
         {
             bool result = false;
             string localDownloadFilePath = downloadFilePath;
 
-            if (deliveryType == DeliveryType.email)
+            if (deliveryType == MagicWords.email)
             {
                 localDownloadFilePath = Path.GetDirectoryName(downloadFilePath);
             }
@@ -55,7 +49,7 @@ namespace FolderCleaner
             {
                 bool fileMoveResult = true; // Store the result of move files to error folder.
 
-                if (deliverType == DeliveryType.email)
+                if (deliverType == MagicWords.email)
                 {
                     if (!AttachmentFileDelete(downloadedFolderPath, jsonFileList))
                     {
