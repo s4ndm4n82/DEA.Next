@@ -85,16 +85,29 @@ namespace GraphAttachmentFunctions
             return flag;
         }
 
+        /// <summary>
+        /// Start the attachment processing and downloading.
+        /// </summary>
+        /// <param name="requestBuilder">Request built</param>
+        /// <param name="message">Email message</param>
+        /// <param name="inEmail">Clients email address.</param>
+        /// <param name="deletedItemsId">Deleted items folder ID</param>
+        /// <param name="customerId">Customer ID</param>
+        /// <returns>Returns the success or error code.</returns>
         private static async Task<int> ProcessMessageAsync(IMailFolderRequestBuilder requestBuilder,
                                                            Message message,
                                                            string inEmail,
                                                            string deletedItemsId,
                                                            int customerId)
         {
+            // Get client details.
             UserConfigSetter.Customerdetail clientDeails = await UserConfigRetriver.RetriveUserConfigById(customerId);
+
+            // Filter the attachments.
             IEnumerable<Attachment> attachmentList = GraphDownloadAttachmentFiles.FilterAttachments(message.Attachments,
                                                                                                     clientDeails.DocumentDetails.DocumentExtensions);
 
+            // If there are attachments.
             if (attachmentList.Any())
             {
                 try
@@ -114,9 +127,10 @@ namespace GraphAttachmentFunctions
                 }
             }
             else
-            {   
+            {
                 try
                 {
+                    // Check if the email has too many replies. If som email will be moved to deleted items.
                     if (await CheckEmailChain.CheckEmailChainAsync(requestBuilder, message.Id, deletedItemsId))
                     {
                         WriteLogClass.WriteToLog(0, $"Email {message.Subject} has too many replies moved to deleted items ....", 0);
