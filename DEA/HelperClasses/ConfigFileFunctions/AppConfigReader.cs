@@ -23,6 +23,8 @@ namespace AppConfigReader
             public int MaxErrorFolders { get; set; }
             public bool SendErrorEmail { get; set; }
             public bool CleanLogs { get; set; }
+            public string[] PublicDns { get; set; }
+            public string[] CheckUrls { get; set; }
         }
 
         public class Emailserversettings

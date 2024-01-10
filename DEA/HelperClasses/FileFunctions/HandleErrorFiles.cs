@@ -1,4 +1,6 @@
-﻿using FolderFunctions;
+﻿using DEA.Next.HelperClasses.OtherFunctions;
+using FolderFunctions;
+using UserConfigRetriverClass;
 using UserConfigSetterClass;
 using WriteLog;
 
@@ -7,7 +9,7 @@ namespace HandleErrorFiles
     internal class HandleErrorFilesClass
     {
         // Error Folder path.
-        public static readonly string ErrorFolderPath = FolderFunctionsClass.CheckFolders("error");
+        public static readonly string ErrorFolderPath = FolderFunctionsClass.CheckFolders(MagicWords.error);
 
         /// <summary>
         /// This is a bit different from MoveAllFilesToErrorFolder. This function moves each file to the error folder.
@@ -19,26 +21,27 @@ namespace HandleErrorFiles
         /// <returns>True or false.</returns>
         public static async Task<bool> MoveFilesToErrorFolder(string downloadFolderPath,
                                                   IEnumerable<string> fileNames,
-                                                  int? customerId,
+                                                  int customerId,
                                                   string clientEmail)
         {
             try
             {
                 // Read the user config file.
-                UserConfigSetterClass.UserConfigSetter.CustomerDetailsObject jsonDetails = await UserConfigSetterClass.UserConfigSetter.ReadUserDotConfigAsync<UserConfigSetterClass.UserConfigSetter.CustomerDetailsObject>();
-                UserConfigSetterClass.UserConfigSetter.Customerdetail clientDetails = jsonDetails.CustomerDetails.FirstOrDefault(cid => cid.Id == customerId);
+                UserConfigSetter.Customerdetail clientDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
 
                 // Source folder path.
                 string sourcePath = Path.GetDirectoryName(downloadFolderPath);
+                
                 // Source folder name.
                 string sourcFolderName = sourcePath.Split(Path.DirectorySeparatorChar).Last();
+                
                 // Destination folder name.
-                string destinationFolderName = clientDetails.FileDeliveryMethod.ToLower() == "email" ? string.Concat("ID_", customerId.ToString(), " ", "Email_", clientEmail)
+                string destinationFolderName = clientDetails.FileDeliveryMethod.ToLower() == MagicWords.email ? string.Concat("ID_", customerId.ToString(), " ", "Email_", clientEmail)
                                                                                             : string.Concat("ID_", customerId.ToString(), " ", "Org_", clientDetails.ClientOrgNo);
                 // Destination folder path.
                 string destinationFolderPath = Path.Combine(ErrorFolderPath, destinationFolderName, sourcFolderName);
+
                 // Create destination folder.
-                //Directory.CreateDirectory(!Directory.Exists(destinationFolderPath) ? destinationFolderPath : null);
                 if (!Directory.Exists(destinationFolderPath))
                 {
                     Directory.CreateDirectory(destinationFolderPath);
@@ -69,7 +72,7 @@ namespace HandleErrorFiles
                 {
                     string cleanFileName = fileName;
 
-                    if (deliveryType == DeliveryType.ftp)
+                    if (deliveryType == MagicWords.ftp)
                     {
                         cleanFileName = Path.GetFileName(fileName);
                     }
@@ -95,12 +98,6 @@ namespace HandleErrorFiles
                 WriteLogClass.WriteToLog(0, $"Exception at single file mover: {ex.Message}", 0);
                 return false;
             }
-        }
-
-        private static class DeliveryType
-        {
-            public const string email = "email";
-            public const string ftp = "ftp";
         }
     }
 }

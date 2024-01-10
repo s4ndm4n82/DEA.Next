@@ -76,7 +76,6 @@ namespace GraphAttachmentFunctions
             int[] errorCodes = { 5, 4, 3, 1 };
 
             // Get the first error code from the list.
-            //int flag = errorCodes.FirstOrDefault(code => results.Contains(code));
             int flag = errorCodes.LastOrDefault(code => results.Contains(code));
 
             // If there is no error code, then return 0.
