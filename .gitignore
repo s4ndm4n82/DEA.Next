@@ -370,3 +370,4 @@ FodyWeavers.xsd
 # Unwanted folers.
 SSH.NETHelpFile/
 MetadataSamples/
+/DEA/Config/CustomerConfig.json
