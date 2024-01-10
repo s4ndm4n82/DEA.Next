@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using WriteLog;
 
 namespace DisplayLogoClass
 {
@@ -11,6 +12,8 @@ namespace DisplayLogoClass
 
             ShowLogo(programName);
             ShowLogo(programVersion.ToString());
+
+            WriteLogClass.WriteToLog(1, $"{programName} .... v{programVersion} ....", 1);
         }
 
         private static void ShowLogo(string textToSet)

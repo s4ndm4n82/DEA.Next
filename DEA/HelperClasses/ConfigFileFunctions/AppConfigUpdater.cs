@@ -13,20 +13,20 @@ namespace AppConfigUpdater
                 AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
                 AppConfigReaderClass.Timingsettings timeSettings = jsonData.TimingSettings;
 
-                if (!string.IsNullOrEmpty(lastRunTime) && string.IsNullOrEmpty(lastRunDate))
-                {
-                    timeSettings.PreviousRunTime = lastRunTime;
-                }                
-
-                if (lastRunDate != timeSettings.PreviousRunDate && !string.IsNullOrEmpty(lastRunDate)  && string.IsNullOrEmpty(lastRunTime))
+                if (lastRunDate != timeSettings.PreviousRunDate && !string.IsNullOrEmpty(lastRunDate) && string.IsNullOrEmpty(lastRunTime))
                 {
                     timeSettings.PreviousRunDate = lastRunDate;
                 }
-                 
+
+                if (!string.IsNullOrEmpty(lastRunTime) && string.IsNullOrEmpty(lastRunDate))
+                {
+                    timeSettings.PreviousRunTime = lastRunTime;
+                }
+
                 string updatedJson = JsonConvert.SerializeObject(jsonData, Formatting.Indented);
 
                 File.WriteAllText(@".\Config\appsettings.json", updatedJson);
-                WriteLogClass.WriteToLog(1, "Config file updated ....", 1);
+                WriteLogClass.WriteToLog(1, "Config file updated ....\n", 1);
                 return true;
             }
             catch (Exception ex)

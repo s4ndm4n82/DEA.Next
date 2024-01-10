@@ -15,13 +15,15 @@ namespace VersionIncrementerClass
                 string appRootDirectory = workingDirectory.Split("\\bin")[0];
                 // Get the path to the AssemblyInfo.cs file
                 string assemplyInfoFilePath = Path.Combine(appRootDirectory, "Versioning", "AssemblyInfo.cs");
-                // Read the AssemblyInfo.cs file
-                string assemblyInfo = File.ReadAllText(assemplyInfoFilePath);
+
                 // Check if the file exists
                 if (!File.Exists(assemplyInfoFilePath))
                 {
                     return;
                 }
+
+                // Read the AssemblyInfo.cs file
+                string assemblyInfo = File.ReadAllText(assemplyInfoFilePath);
                 // Update the numbers
                 UpdateNumbers(assemblyInfo,
                              assemplyInfoFilePath,

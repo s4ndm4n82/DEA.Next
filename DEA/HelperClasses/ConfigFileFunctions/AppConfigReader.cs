@@ -56,8 +56,8 @@ namespace AppConfigReader
         {
             public int ErrorCheckInterval { get; set; }
             public int LogsDeleteAfter { get; set; }
-            public string PreviousRunTime { get; set; }
             public string PreviousRunDate { get; set; }
+            public string PreviousRunTime { get; set; }            
         }
 
         public class Graphconfig

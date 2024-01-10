@@ -50,9 +50,7 @@ namespace UserConfigSetterClass
         public class Emaildetails
         {
             public string EmailAddress { get; set; }
-            public string MainInbox { get; set; }
-            public string SubInbox1 { get; set; }
-            public string SubInbox2 { get; set; }
+            public string EmailInboxPath { get; set; }
         }
 
         public class Documentdetails

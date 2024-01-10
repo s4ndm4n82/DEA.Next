@@ -7,6 +7,7 @@ using UserConfigSetterClass;
 using Microsoft.IdentityModel.Tokens;
 using AppConfigReader;
 using UserConfigRetriverClass;
+using DEA.Next.Graph.GraphEmailInboxFunctions;
 
 namespace GraphHelper
 {
@@ -28,6 +29,11 @@ namespace GraphHelper
             int result = 0;
             UserConfigSetter.Customerdetail clientDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
 
+            GetInboxFolderNames getInboxFolderNames = new(clientDetails.EmailDetails.EmailInboxPath);
+            string mainInbox = getInboxFolderNames.GetNextInboxName();
+            string subInbox1 = getInboxFolderNames.GetNextInboxName();
+            string subInbox2 = getInboxFolderNames.GetNextInboxName();
+
             if (clientDetails != null)
             {
                 try
@@ -41,14 +47,17 @@ namespace GraphHelper
                 
             }
 
-            if (!clientDetails!.EmailDetails!.MainInbox.IsNullOrEmpty())
+            if (!mainInbox.IsNullOrEmpty())
             {
                 try
                 {
                     // Calls the function to read ATC emails.
-                    result = await GraphGetAttachmentsClass.GetEmailsAttacments(graphClient!, clientDetails.EmailDetails.EmailAddress!,
-                                                                                clientDetails.EmailDetails.MainInbox!, clientDetails.EmailDetails.SubInbox1!,
-                                                                                clientDetails.EmailDetails.SubInbox2!, customerId);
+                    result = await GraphGetAttachmentsClass.GetEmailsAttacments(graphClient,
+                                                                                clientDetails.EmailDetails.EmailAddress!,
+                                                                                mainInbox,
+                                                                                subInbox1,
+                                                                                subInbox2,
+                                                                                customerId);
                     return result;
                 }
                 catch (Exception ex)
@@ -179,62 +188,6 @@ namespace GraphHelper
                 numString = String.Concat(numString, rndNumber.Next(10).ToString());
             }
             return numString;
-        }
-
-        /// <summary>
-        /// Moves the email to Downloded folder.
-        /// </summary>
-        /// <param name="FirstFolderId"></param>
-        /// <param name="SecondFolderId"></param>
-        /// <param name="ThirdFolderId"></param>
-        /// <param name="MsgId"></param>
-        /// <param name="DestiId"></param>
-        /// <param name="_Email"></param>
-        /// <returns></returns>
-        public static async Task<bool> MoveEmails(string FirstFolderId, string SecondFolderId, string ThirdFolderId, string MsgId, string DestiId, string _Email)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(ThirdFolderId) && string.IsNullOrEmpty(SecondFolderId))
-                {
-                    //Graph api call to move the email message.
-                    await graphClient!.Users[$"{_Email}"].MailFolders["Inbox"]
-                        .ChildFolders[$"{FirstFolderId}"]
-                        .Messages[$"{MsgId}"]
-                        .Move(DestiId)
-                        .Request()
-                        .PostAsync();
-                }
-                else if (string.IsNullOrEmpty(ThirdFolderId))
-                {
-                    //Graph api call to move the email message.
-                    await graphClient!.Users[$"{_Email}"].MailFolders["Inbox"]
-                        .ChildFolders[$"{FirstFolderId}"]
-                        .ChildFolders[$"{SecondFolderId}"]
-                        .Messages[$"{MsgId}"]
-                        .Move(DestiId)
-                        .Request()
-                        .PostAsync();
-                }
-                else
-                {
-                    //Graph api call to move the email message.
-                    await graphClient!.Users[$"{_Email}"].MailFolders["Inbox"]
-                        .ChildFolders[$"{FirstFolderId}"]
-                        .ChildFolders[$"{SecondFolderId}"]
-                        .ChildFolders[$"{ThirdFolderId}"]
-                        .Messages[$"{MsgId}"]
-                        .Move(DestiId)
-                        .Request()
-                        .PostAsync();
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
-                WriteLogClass.WriteToLog(0, $"Exception at moving emails to folders: {ex.Message}", 0);
-                return false;
-            }
-        }
+        }        
     }
 }

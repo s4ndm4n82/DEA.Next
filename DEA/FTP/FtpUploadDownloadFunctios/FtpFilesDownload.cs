@@ -1,5 +1,4 @@
-﻿using AppConfigReader;
-using FluentFTP;
+﻿using FluentFTP;
 using GraphHelper;
 using UploadFtpFilesClass;
 using UserConfigRetriverClass;

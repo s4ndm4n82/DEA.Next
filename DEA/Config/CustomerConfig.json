@@ -2,7 +2,7 @@
   "CustomerDetails": [
     {
       "id": 1, // IMPORTANT. Hast add manually and increment by 1 each time
-      "CustomerStatus": 1, // Customer status. If active 1 if not 0.
+      "CustomerStatus": 0, // Customer status. If active 1 if not 0.
       "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZGNfaW1wb3J0IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiaW1wb3J0QGRpZ2l0YWxjYXB0dXJlLm5vIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI1OGRiZTAzOC1mNGIwLTQzNjYtYjJiYi03ZTZiZjU1YzBiOGQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6ImM0YzQwYzk0LTdiMmEtNDI0ZS04MzVlLWVkODA5MmYyODE0YyIsImV4cCI6MTcxOTU2NDM5MywiaXNzIjoid3d3LmRpZ2l0YWxjYXB0dXJlLm5vIiwiYXVkIjoiaHR0cHM6Ly93d3cuZGlnaXRhbGNhcHR1cmUubm8vdHBzIn0.KKzq2ubLLYQA2GinbtYkBvikkQQQRKX2Qr3HGY2h5uc",
       "UserName": "dc_import",
       "TemplateKey": "",
@@ -28,14 +28,13 @@
         "FtpPassword": "jackkills",
         "FtpFolderLoop": 0, // If 1, then loop through folders. If 0, then only main folder.
         "FtpMainFolder": "/Aksesspunkt/Duett"
-        //"FtpMainFolder": "/Aksesspunkt",
 
       },
       "EmailDetails": {
         "EmailAddress": "",
-        "MainInbox": "",
-        "SubInbox1": "",
-        "SubInbox2": ""
+        // You can configure the inbox path for the application to look for emails.
+        // Can go up to 3 levels. Ex: /Enkelt pående/Kristiansand Byggentrepenør AS or /Enkelt pående/Kristiansand Byggentrepenør AS/subInbox.
+        "EmailInboxPath": ""
       },
       "DocumentDetails": {
         "DocumentType": "PDF",
@@ -46,17 +45,17 @@
     },
     {
       "id": 2,
-      "CustomerStatus": 0,
+      "CustomerStatus": 1,
       "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZGNfaW1wb3J0IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiaW1wb3J0QGRpZ2l0YWxjYXB0dXJlLm5vIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI1OGRiZTAzOC1mNGIwLTQzNjYtYjJiYi03ZTZiZjU1YzBiOGQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6ImM0YzQwYzk0LTdiMmEtNDI0ZS04MzVlLWVkODA5MmYyODE0YyIsImV4cCI6MTcxOTU2NDM5MywiaXNzIjoid3d3LmRpZ2l0YWxjYXB0dXJlLm5vIiwiYXVkIjoiaHR0cHM6Ly93d3cuZGlnaXRhbGNhcHR1cmUubm8vdHBzIn0.KKzq2ubLLYQA2GinbtYkBvikkQQQRKX2Qr3HGY2h5uc",
       "UserName": "dc_import",
       "TemplateKey": "",
       "Queue": "6",
       "ProjetID": "0c298408-76b9-4f4c-9941-edb101126329",
-      "MaxBatchSize": 2, // Number of files that can be in a download batch. Max file limit is 200.
+      "MaxBatchSize": 1, // Number of files that can be in a download batch. Max file limit is 200.
       "MainCustomer": "DigiAcc",
       "ClientName": "DigiAcc",
       "SendEmail": 1,
-      "ClientOrgNo": "",
+      "ClientOrgNo": "Testing Above setting",
       "ClientIdField": "InternalAccountingID",
       "FileDeliveryMethod": "email",
       "DomainDetails": {
@@ -75,9 +74,6 @@
       "EmailDetails": {
         "EmailAddress": "apptesting@efakturamottak.no",
         "EmailInboxPath": "/Level 2/Sub 1"
-        //"MainInbox": "Level 2",
-        //"SubInbox1": "Sub 1",
-        //"SubInbox2": ""
       },
       "DocumentDetails": {
         "DocumentType": "MULTI",
@@ -118,9 +114,7 @@
       },
       "EmailDetails": {
         "EmailAddress": "atc@efakturamottak.no",
-        "MainInbox": "Enkeltstående",
-        "SubInbox1": "Kristiansand Byggentrepenør AS",
-        "SubInbox2": ""
+        "EmailInboxPath": "/Enkeltstående/Kristiansand Byggentrepenør AS"
       },
       "DocumentDetails": {
         "DocumentType": "PDF",
