@@ -367,6 +367,7 @@ FodyWeavers.xsd
 appsettings.*
 app.*
 CustomerConfig.*
+Customer.*
 
 # Unwanted folers.
 SSH.NETHelpFile/
