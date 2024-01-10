@@ -364,8 +364,8 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # Settings json
-appsettings.json
-CustomerConfig.json
+/DEA/Config/appsettings.json
+/DEA/Config/CustomerConfig.json
 
 # Unwanted folers.
 SSH.NETHelpFile/
