@@ -21,7 +21,7 @@ namespace HandleErrorFiles
         /// <returns>True or false.</returns>
         public static async Task<bool> MoveFilesToErrorFolder(string downloadFolderPath,
                                                   IEnumerable<string> fileNames,
-                                                  int customerId,
+                                                  int? customerId,
                                                   string clientEmail)
         {
             try

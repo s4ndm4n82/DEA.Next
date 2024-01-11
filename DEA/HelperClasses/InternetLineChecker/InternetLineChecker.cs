@@ -9,13 +9,20 @@ namespace DEA.Next.HelperClasses.InternetLineChecker
     {
         public static async Task<bool> InternetLineCheckerAsync()
         {
+            WriteLogClass.WriteToLog(1, "Checking for active internet connection .....", 1);
+
             AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
             IEnumerable<string> publicDns = jsonData.ProgramSettings.PublicDns;
             IEnumerable<string> checkUrls = jsonData.ProgramSettings.CheckUrls;
 
-            if (await GetIsInterfaceAvailableAsync())
+            if (!await GetIsInterfaceAvailableAsync())
             {
+                return false;
+            }
 
+            if (!await CheckInternetHttpRequestAsync(checkUrls))
+            {
+                return await CheckInternetPingAsync(publicDns);
             }
 
             return true;
