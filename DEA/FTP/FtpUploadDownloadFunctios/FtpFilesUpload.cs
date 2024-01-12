@@ -18,6 +18,7 @@ namespace UploadFtpFilesClass
                                                           string[] currentBatch,
                                                           string ftpHoldFolder,
                                                           string[] fileNames,
+                                                          string ftpFolderName,
                                                           int clientId)
         {
             string[] matchingFileNames = currentBatch
@@ -29,7 +30,13 @@ namespace UploadFtpFilesClass
                                          .ToArray();
 
             string[] localFiles = Directory.GetFiles(ftpHoldFolder, "*.*", SearchOption.TopDirectoryOnly);
-            return await FileFunctionsClass.SendToWebService(ftpConnect, ftpHoldFolder, clientId, matchingFileNames, localFiles, null!);
+            return await FileFunctionsClass.SendToWebService(ftpConnect,
+                                                             ftpHoldFolder,
+                                                             clientId,
+                                                             matchingFileNames,
+                                                             localFiles,
+                                                             ftpFolderName,
+                                                             null!);
         }
     }
 }

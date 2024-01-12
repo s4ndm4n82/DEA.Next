@@ -19,21 +19,28 @@ namespace FileFunctions
                                                         int customerId,
                                                         string[] ftpFileList,
                                                         string[] localFileList,
+                                                        string ftpFolderName,
                                                         string recipientEmail)
         {
             try
             {
                 WriteLogClass.WriteToLog(1, "Starting file upload process .... ", 4);
                 
-                /*string clientOrg = recipientEmail;
-                if (clientDetails.SendEmail == 0)
-                {
-                    clientOrg = clientDetails.ClientOrgNo;
-                }*/
-
                 UserConfigSetter.Customerdetail clientDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
 
-                string clientOrg = clientDetails.SendEmail == 0 ? clientDetails.ClientOrgNo : recipientEmail;
+                //string clientOrg = clientDetails.SendEmail == 0 ? clientDetails.ClientOrgNo : recipientEmail;
+
+                string clientOrg = clientDetails.ClientOrgNo;
+
+                if (clientDetails.FtpDetails.FtpFolderLoop == 1)
+                {
+                    clientOrg = ftpFolderName;
+                }
+
+                if (clientDetails.SendEmail == 1)
+                {
+                    clientOrg = recipientEmail;
+                }
 
                 // Loading the accepted extension list.
                 List<string> acceptedExtentions = clientDetails.DocumentDetails.DocumentExtensions

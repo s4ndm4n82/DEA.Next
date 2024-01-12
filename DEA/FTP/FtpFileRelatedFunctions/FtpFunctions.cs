@@ -7,6 +7,8 @@ using FolderFunctions;
 using ProcessStatusMessageSetter;
 using DownloadFtpFilesClass;
 using FtpLoopDownloadClass;
+using DEA.Next.HelperClasses.OtherFunctions;
+using UserConfigRetriverClass;
 
 namespace FtpFunctions
 {
@@ -36,22 +38,22 @@ namespace FtpFunctions
         {
             int downloadResult = 0; // Return value
             AsyncFtpClient ftpConnectToken = null;
-            UserConfigSetterClass.UserConfigSetter.Ftpdetails ftpDetails = await GetFtpDetails(clientId);
+            UserConfigSetter.Ftpdetails ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(clientId);
 
             string downloadFolder = Path.Combine(FolderFunctionsClass.CheckFolders("ftp")
                                                 , ftpDetails.FtpMainFolder.Trim('/').Replace('/', '\\'));
 
             // If the user FTP config type is FTP.
-            if (ftpDetails.FtpType == FtpNames.Ftp)
+            if (string.Equals(ftpDetails.FtpType, MagicWords.ftp, StringComparison.OrdinalIgnoreCase))
             {
                 ftpConnectToken = await ConnectFtpClass.ConnectFtp(ftpDetails.FtpHostName,
-                                                                                  ftpDetails.FtpHostIp,
-                                                                                  ftpDetails.FtpUser,
-                                                                                  ftpDetails.FtpPassword);
+                                                                   ftpDetails.FtpHostIp,
+                                                                   ftpDetails.FtpUser,
+                                                                   ftpDetails.FtpPassword);
             }
 
             // If the user FTP config type is FTPS.
-            if (ftpDetails.FtpType == FtpNames.Ftps)
+            if (string.Equals(ftpDetails.FtpType, MagicWords.ftps, StringComparison.OrdinalIgnoreCase))
             {
                 ftpConnectToken = await ConnectFtpsClass.ConnectFtps(ftpDetails.FtpHostName,
                                                                      ftpDetails.FtpHostIp,
@@ -76,17 +78,18 @@ namespace FtpFunctions
                     if (ftpDetails.FtpFolderLoop == 1)
                     {
                         downloadResult = await FtpLoopDownload.StartFtpLoopDownload(ftpConnectToken,
-                                                                              ftpDetails.FtpMainFolder,
-                                                                              downloadFolder,
-                                                                              clientId);
+                                                                                    ftpDetails.FtpMainFolder,
+                                                                                    downloadFolder,
+                                                                                    clientId);
                     }
 
                     if (ftpDetails.FtpFolderLoop == 0)
                     {
                         downloadResult = await FtpFilesDownload.DownloadFtpFilesFunction(ftpConnectToken,
-                                                                 ftpDetails.FtpMainFolder,
-                                                                 downloadFolder,
-                                                                 clientId);
+                                                                                         ftpDetails.FtpMainFolder,
+                                                                                         downloadFolder,
+                                                                                         string.Empty,
+                                                                                         clientId);
                     }                    
 
                     WriteLogClass.WriteToLog(ProcessStatusMessageSetterClass.SetMessageTypeOther(downloadResult),
@@ -98,22 +101,6 @@ namespace FtpFunctions
                     WriteLogClass.WriteToLog(0, $"Exception at FTP file download: {ex.Message}", 0);
                     return downloadResult;
                 }
-        }
-
-        private static async Task<UserConfigSetter.Ftpdetails> GetFtpDetails(int clientId)
-        {
-            UserConfigSetter.CustomerDetailsObject jsonDate = await UserConfigSetter.ReadUserDotConfigAsync<UserConfigSetter.CustomerDetailsObject>();
-            UserConfigSetter.Customerdetail customerDetails = jsonDate.CustomerDetails.FirstOrDefault(cid => cid.Id == clientId);
-            UserConfigSetter.Ftpdetails ftpDetails = customerDetails.FtpDetails;
-
-            return ftpDetails;
-        }
-
-        private static class FtpNames
-        {
-            public const string Ftps = "FTPS";
-            public const string Ftp = "FTP";
-            public const string Sftp = "SFTP";
         }
     }
 }

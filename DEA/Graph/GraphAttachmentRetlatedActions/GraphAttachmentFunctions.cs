@@ -303,6 +303,7 @@ namespace GraphAttachmentFunctions
                                                                                  customerId,
                                                                                  currentBatchFileNames,
                                                                                  null,
+                                                                                 string.Empty,
                                                                                  toEmail);
                     if (uploadResult != 1)
                     {
