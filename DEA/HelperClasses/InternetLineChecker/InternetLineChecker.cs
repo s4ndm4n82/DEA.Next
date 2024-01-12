@@ -7,6 +7,10 @@ namespace DEA.Next.HelperClasses.InternetLineChecker
 {
     internal class InternetLineChecker
     {
+        /// <summary>
+        /// Try to find if the internet connection is working or not.
+        /// </summary>
+        /// <returns></returns>
         public static async Task<bool> InternetLineCheckerAsync()
         {
             WriteLogClass.WriteToLog(1, "Checking for active internet connection .....", 1);
@@ -15,19 +19,55 @@ namespace DEA.Next.HelperClasses.InternetLineChecker
             IEnumerable<string> publicDns = jsonData.ProgramSettings.PublicDns;
             IEnumerable<string> checkUrls = jsonData.ProgramSettings.CheckUrls;
 
-            if (!await GetIsInterfaceAvailableAsync())
+            int maxRetry = jsonData.ProgramSettings.RetryLine;
+            int currentRetry = 0;
+
+            // Loops until the end of configured retrys.
+            while (currentRetry < maxRetry)
             {
-                return false;
+                currentRetry++;
+                // Check if the interface is up or not.
+                if (!await GetIsInterfaceAvailableAsync())
+                {
+                    WriteLogClass.WriteToLog(1, "Trying to reconnect ....", 1);
+                    if (currentRetry >= maxRetry)
+                    {                        
+                        return false;
+                    }
+
+                    // Wait 2 second before retrying.
+                    await Task.Delay(2000 * currentRetry);                    
+                    continue;
+                }
+
+                // If interface is up HTTP request is used.
+                if (!await CheckInternetHttpRequestAsync(checkUrls))
+                {
+                    // If the HTTP request fails, ping is used.
+                    if (!await CheckInternetPingAsync(publicDns))
+                    {
+                        currentRetry++;
+                        if (currentRetry >= maxRetry)
+                        {
+                            return false;
+                        }
+
+                        // Wait 2 second before retrying.
+                        await Task.Delay(2000 * currentRetry);
+                        continue;
+                    }
+                }
+
+                return true;
             }
 
-            if (!await CheckInternetHttpRequestAsync(checkUrls))
-            {
-                return await CheckInternetPingAsync(publicDns);
-            }
-
-            return true;
+            return false;
         }
 
+        /// <summary>
+        /// Use the built in .NET GetIsNetworkAvailable() function determine if the network interface is up or not.
+        /// </summary>
+        /// <returns>Return true if working.</returns>
         private static async Task<bool> GetIsInterfaceAvailableAsync()
         {
             try
@@ -41,6 +81,11 @@ namespace DEA.Next.HelperClasses.InternetLineChecker
             }
         }
 
+        /// <summary>
+        /// Use a HHTP web request to find if the internet connection is working or not.
+        /// </summary>
+        /// <param name="checkUrls">The list of urls to send the request to.</param>
+        /// <returns>Return true if woring.</returns>
         private static async Task<bool> CheckInternetHttpRequestAsync(IEnumerable<string> checkUrls)
         {
             foreach (string url in checkUrls)
@@ -67,6 +112,11 @@ namespace DEA.Next.HelperClasses.InternetLineChecker
             return false;
         }
 
+        /// <summary>
+        /// Use a ping to find if the internet connection is working or not.
+        /// </summary>
+        /// <param name="publicDns">The list of DNS addresses to ping.</param>
+        /// <returns>Return true if working</returns>
         private static async Task<bool> CheckInternetPingAsync(IEnumerable<string> publicDns)
         {
             foreach (string dns in publicDns)
