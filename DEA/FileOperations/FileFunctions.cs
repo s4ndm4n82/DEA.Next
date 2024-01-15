@@ -28,8 +28,6 @@ namespace FileFunctions
                 
                 UserConfigSetter.Customerdetail clientDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
 
-                //string clientOrg = clientDetails.SendEmail == 0 ? clientDetails.ClientOrgNo : recipientEmail;
-
                 string clientOrg = clientDetails.ClientOrgNo;
 
                 if (clientDetails.FtpDetails.FtpFolderLoop == 1)
@@ -43,7 +41,9 @@ namespace FileFunctions
                 }
 
                 // Loading the accepted extension list.
-                List<string> acceptedExtentions = clientDetails.DocumentDetails.DocumentExtensions
+                List<string> acceptedExtentions = clientDetails
+                                                  .DocumentDetails
+                                                  .DocumentExtensions
                                                   .Select(e => e.ToLower())
                                                   .ToList();
 
@@ -58,11 +58,6 @@ namespace FileFunctions
                     WriteLogClass.WriteToLog(1, "No matching files in the download list ....", 1);
                     return -1;
                 }
-
-                
-                // If recipientEmail not empty clientOrg = revipientEmail.
-                // If recipientEmail is empty clientOrg = clientDetails.ClientOrgNo
-                //string clientOrg = recipientEmail ?? clientDetails.ClientOrgNo ?? throw new Exception("ClientOrg is null.");
 
                 int returnResult = await MakeJsonRequest(ftpConnect,
                                           customerId,
