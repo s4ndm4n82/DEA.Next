@@ -77,7 +77,8 @@ namespace DownloadFtpFilesClass
                     
                     result = await FtpFilesUpload.FilesUploadFuntcion(ftpConnect,
                                                                       currentBatch.Select(r => r.RemotePath.ToString()).ToArray(),
-                                                                      downloaFolder, currentBatch.Select(s => s.Name.ToString()).ToArray(),
+                                                                      downloaFolder,
+                                                                      currentBatch.Select(s => s.Name.ToString()).ToArray(),
                                                                       ftpFolderName,
                                                                       clientID);
 

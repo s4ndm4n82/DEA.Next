@@ -1,5 +1,8 @@
-﻿using FileFunctions;
+﻿using DEA.Next.FileOperations.TpsFileFunctions;
+using FileFunctions;
 using FluentFTP;
+using UserConfigRetriverClass;
+using UserConfigSetterClass;
 
 namespace UploadFtpFilesClass
 {
@@ -21,6 +24,8 @@ namespace UploadFtpFilesClass
                                                           string ftpFolderName,
                                                           int clientId)
         {
+            UserConfigSetter.Customerdetail customerdetail = await UserConfigRetriver.RetriveUserConfigById(clientId);
+
             string[] matchingFileNames = currentBatch
                                          .Where(batchFile => fileNames
                                          .Any(fileName => Path.GetFileNameWithoutExtension(batchFile)
@@ -30,13 +35,24 @@ namespace UploadFtpFilesClass
                                          .ToArray();
 
             string[] localFiles = Directory.GetFiles(ftpHoldFolder, "*.*", SearchOption.TopDirectoryOnly);
-            return await FileFunctionsClass.SendToWebService(ftpConnect,
-                                                             ftpHoldFolder,
-                                                             clientId,
-                                                             matchingFileNames,
-                                                             localFiles,
-                                                             ftpFolderName,
-                                                             null!);
+
+            if (!string.IsNullOrWhiteSpace(customerdetail.ProjetID))
+            {
+                return await SendToWebServiceProject.SendToWebServiceProjectAsync(ftpConnect,
+                                                                  ftpHoldFolder,
+                                                                  clientId,
+                                                                  matchingFileNames,
+                                                                  localFiles,
+                                                                  ftpFolderName,
+                                                                  null!);
+            }
+
+            return await SendToWebServiceDataFile.SendToWebServiceDataFileAsync(ftpConnect,
+                                                                    clientId,
+                                                                    ftpHoldFolder,
+                                                                    ftpFolderName,
+                                                                    matchingFileNames,
+                                                                    localFiles);
         }
     }
 }
