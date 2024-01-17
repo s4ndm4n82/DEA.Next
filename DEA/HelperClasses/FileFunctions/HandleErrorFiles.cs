@@ -20,9 +20,9 @@ namespace HandleErrorFiles
         /// <param name="clientEmail">If user uses email to deliver files then need this to make the folder name.</param>
         /// <returns>True or false.</returns>
         public static async Task<bool> MoveFilesToErrorFolder(string downloadFolderPath,
-                                                  IEnumerable<string> fileNames,
-                                                  int? customerId,
-                                                  string clientEmail)
+                                                              IEnumerable<string> fileNames,
+                                                              int? customerId,
+                                                              string clientEmail)
         {
             try
             {

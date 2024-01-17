@@ -41,7 +41,7 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
 
                 if (serverResponse.StatusCode != HttpStatusCode.OK)
                 {
-                    return await TpsServerOnFaile.ServerOnFail(clientDetails.FileDeliveryMethod.ToLower(),
+                    return await TpsServerOnFaile.ServerOnFailProjectsAsync(clientDetails.FileDeliveryMethod.ToLower(),
                                                                fullFilePath,
                                                                customerId,
                                                                clientOrgNo,
@@ -52,7 +52,7 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
                                                                serverResponse.Content);
                 }
 
-                return await TpsServerOnSuccess.ServerOnSuccess(projectId,
+                return await TpsServerOnSuccess.ServerOnSuccessProjectAsync(projectId,
                                                                 queue,
                                                                 fileCount,
                                                                 clientDetails.FileDeliveryMethod.ToLower(),

@@ -20,8 +20,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
                                                               string[] filesToSend,
                                                               string[] ftpFileList,
                                                               string[] localFileList)
-        {
-            int returnResult = 0;
+        {   
             try
             {
                 // Creating the file list to be added to the Json request.
@@ -50,24 +49,22 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
 
                 string jsonResult = JsonConvert.SerializeObject(TpsJsonRequest, Formatting.Indented);
 
-                returnResult = await SendFilesToRestApiProject.SendFilesToRestProjectAsync(ftpConnect,
-                                                                        jsonResult,
-                                                                        filesToSend[0],
-                                                                        customerId,
-                                                                        customerProjectId,
-                                                                        customerQueue,
-                                                                        jsonFileList.Count,
-                                                                        ftpFileList,
-                                                                        localFileList,
-                                                                        jsonFileList.Select(f => f.Name).ToArray(),
-                                                                        clientOrgNo);
-
-                return returnResult;
+                return await SendFilesToRestApiProject.SendFilesToRestProjectAsync(ftpConnect,
+                                                                                   jsonResult,
+                                                                                   filesToSend[0],
+                                                                                   customerId,
+                                                                                   customerProjectId,
+                                                                                   customerQueue,
+                                                                                   jsonFileList.Count,
+                                                                                   ftpFileList,
+                                                                                   localFileList,
+                                                                                   jsonFileList.Select(f => f.Name).ToArray(),
+                                                                                   clientOrgNo);
             }
             catch (Exception ex)
             {
                 WriteLogClass.WriteToLog(0, $"Exception at Json serialization: {ex.Message}", 0);
-                return returnResult;
+                return 0;
             }
         }
     }

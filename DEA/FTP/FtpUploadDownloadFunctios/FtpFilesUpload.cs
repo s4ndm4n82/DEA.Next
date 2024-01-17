@@ -39,20 +39,20 @@ namespace UploadFtpFilesClass
             if (!string.IsNullOrWhiteSpace(customerdetail.ProjetID))
             {
                 return await SendToWebServiceProject.SendToWebServiceProjectAsync(ftpConnect,
-                                                                  ftpHoldFolder,
-                                                                  clientId,
-                                                                  matchingFileNames,
-                                                                  localFiles,
-                                                                  ftpFolderName,
-                                                                  null!);
+                                                                                  ftpHoldFolder,
+                                                                                  clientId,
+                                                                                  matchingFileNames,
+                                                                                  localFiles,
+                                                                                  ftpFolderName,
+                                                                                  null!);
             }
 
             return await SendToWebServiceDataFile.SendToWebServiceDataFileAsync(ftpConnect,
-                                                                    clientId,
-                                                                    ftpHoldFolder,
-                                                                    ftpFolderName,
-                                                                    matchingFileNames,
-                                                                    localFiles);
+                                                                                clientId,
+                                                                                ftpHoldFolder,
+                                                                                ftpFolderName,
+                                                                                matchingFileNames,
+                                                                                localFiles);
         }
     }
 }

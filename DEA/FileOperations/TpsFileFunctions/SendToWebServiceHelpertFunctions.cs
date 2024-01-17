@@ -3,7 +3,7 @@ using Directory = System.IO.Directory;
 
 namespace DEA.Next.FileOperations.TpsFileFunctions
 {
-    internal class SendToWebServiceProjectFunctions
+    internal class SendToWebServiceHelpertFunctions
     {
         public static string SetCustomerOrg(int ftpFolerLoop, int sendEmail, string customerOrg, string ftpFolderName, string recipientEmail)
         {

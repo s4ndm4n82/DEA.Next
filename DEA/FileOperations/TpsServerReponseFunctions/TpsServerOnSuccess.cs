@@ -8,18 +8,18 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
 {
     internal class TpsServerOnSuccess
     {
-        public static async Task<int> ServerOnSuccess(string projectId,
-                                                      string queue,
-                                                      int fileCount,
-                                                      string deliveryType,
-                                                      string fullFilePath,
-                                                      string downloadFolderPath,
-                                                      string[] jsonFileList,
-                                                      int customerId,
-                                                      string clientOrgNo,
-                                                      AsyncFtpClient ftpConnect,
-                                                      string[] ftpFileList,
-                                                      string[] localFileList)
+        public static async Task<int> ServerOnSuccessProjectAsync(string projectId,
+                                                                  string queue,
+                                                                  int fileCount,
+                                                                  string deliveryType,
+                                                                  string fullFilePath,
+                                                                  string downloadFolderPath,
+                                                                  string[] jsonFileList,
+                                                                  int customerId,
+                                                                  string clientOrgNo,
+                                                                  AsyncFtpClient ftpConnect,
+                                                                  string[] ftpFileList,
+                                                                  string[] localFileList)
         {
             try
             {
@@ -51,10 +51,40 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(1, $"Error in ServerOnSuccess: {ex.Message}", 1);
+                WriteLogClass.WriteToLog(0, $"Exception at ServerOnSuccess: {ex.Message}", 0);
                 return -1;
             }
+        }
 
+        public static async Task<int> ServerOnSuccessDataFileAsync(AsyncFtpClient ftpConnect,
+                                                                   int customerId,
+                                                                   string fileName,
+                                                                   string downloadFolderPath,
+                                                                   string[] ftpFileList,
+                                                                   string[] localFileList)
+        {
+            try
+            {
+                WriteLogClass.WriteToLog(1, $"uploaded data file: {fileName}", 1);
+
+                string[] jsonFileList = new string[] { fileName };
+
+                if (!await FolderCleanerClass.StartFtpFileDelete(ftpConnect, ftpFileList, localFileList))
+                {
+                    return -1;
+                }
+
+                if (!await FolderCleanerClass.GetFolders(downloadFolderPath, jsonFileList, customerId, null, MagicWords.ftp))
+                {
+                    return -1;
+                }
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(0, $"Exception at ServerOnSuccessDataFileAsync: {ex.Message}", 0);
+                return -1;
+            }
         }
     }
 }

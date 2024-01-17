@@ -9,15 +9,15 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
 {
     internal class TpsServerOnFaile
     {
-        public static async Task<int> ServerOnFail(string deliveryType,
-                                                   string fullFilePath,
-                                                   int customerId,
-                                                   string clientOrgNo,
-                                                   AsyncFtpClient ftpConnect,
-                                                   string[] ftpFileList,
-                                                   string[] localFileList,
-                                                   HttpStatusCode serverStatusCode,
-                                                   string serverResponseContent)
+        public static async Task<int> ServerOnFailProjectsAsync(string deliveryType,
+                                                                string fullFilePath,
+                                                                int customerId,
+                                                                string clientOrgNo,
+                                                                AsyncFtpClient ftpConnect,
+                                                                string[] ftpFileList,
+                                                                string[] localFileList,
+                                                                HttpStatusCode serverStatusCode,
+                                                                string serverResponseContent)
         {
             try
             {
@@ -25,7 +25,7 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
 
                 if (!await HandleErrorFilesClass.MoveFilesToErrorFolder(fullFilePath, ftpFileList, customerId, clientOrgNo))
                 {
-                    WriteLogClass.WriteToLog(1, "Moving files failed ....", 1);
+                    WriteLogClass.WriteToLog(0, "Moving files failed ....", 0);
                     return -1;
                 }
 
@@ -39,19 +39,61 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                 }
                 else if (deliveryType == MagicWords.ftp)
                 {
-                    if (await FolderCleanerClass.StartFtpFileDelete(ftpConnect, ftpFileList, localFileList))
+                    if (!await FolderCleanerClass.StartFtpFileDelete(ftpConnect, ftpFileList, localFileList))
                     {
-                        if (FolderCleanerClass.DeleteEmptyFolders(fullFilePath))
-                        {
-                            return 2;
-                        }
+                        WriteLogClass.WriteToLog(0, "Deleting files from FTP server failed ....", 0);
+                        return 0;
+                    }
+
+                    if (!FolderCleanerClass.DeleteEmptyFolders(fullFilePath))
+                    {
+                        WriteLogClass.WriteToLog(0, "Deleting empty folders failed ....", 0);
+                        return 0;
                     }
                 }
-                return 0; // Deafult return
+                return 2; // Deafult return
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(1, $"Error in ServerOnFail: {ex.Message}", 1);
+                WriteLogClass.WriteToLog(1, $"Exception at ServerOnFailProjectsAsync: {ex.Message}", 1);
+                return -1;
+            }
+        }
+
+        public static async Task<int> ServerOnFailDataFileAsync(AsyncFtpClient ftpConnect,
+                                                                int customerId,
+                                                                string downloadFilePath,
+                                                                string serverresponseContent,
+                                                                string[] ftpFileList,
+                                                                string[] localFileList,
+                                                                HttpStatusCode statusCode)
+        {
+            try
+            {
+                WriteLogClass.WriteToLog(0, $"Server status code: {statusCode}, Server Response Error: {serverresponseContent}", 0);
+
+                if (!await HandleErrorFilesClass.MoveFilesToErrorFolder(downloadFilePath, ftpFileList, customerId, string.Empty))
+                {
+                    WriteLogClass.WriteToLog(0, "Moving files failed ....", 0);
+                    return -1;
+                }
+
+                if (!await FolderCleanerClass.StartFtpFileDelete(ftpConnect, ftpFileList, localFileList))
+                {
+                    WriteLogClass.WriteToLog(0, "Deleting files from FTP server failed ....", 0);
+                    return 0;
+                }
+
+                if (!FolderCleanerClass.DeleteEmptyFolders(downloadFilePath))
+                {
+                    WriteLogClass.WriteToLog(0, "Deleting empty folders failed ....", 0);
+                    return 0;
+                }
+                return 2; // Default return
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(0, $"Exception at ServerOnFailDataFileAsync: {ex.Message}", 0);
                 return -1;
             }
         }

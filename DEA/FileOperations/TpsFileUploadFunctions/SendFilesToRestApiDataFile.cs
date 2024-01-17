@@ -9,12 +9,11 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
 {
     internal class SendFilesToRestApiDataFile
     {
-        public static async Task<int> SendFilesToRestProjectAsync(AsyncFtpClient ftpConnect,
+        public static async Task<int> SendFilesToRestDataFileAsync(AsyncFtpClient ftpConnect,
                                                                   int customerId,
-                                                                  string jsonResult,
-                                                                  string fullFilePath,
+                                                                  string jsonReuest,
+                                                                  string downloadFolderPath,
                                                                   string fileName,
-                                                                  string customerOrg,
                                                                   string[] ftpFileList,
                                                                   string[] localFileList)
         {
@@ -28,18 +27,27 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
                 RequestFormat = DataFormat.Json
             };
 
-            tpsRequest.AddBody(jsonResult);
+            tpsRequest.AddBody(jsonReuest);
             RestResponse serverResponse = await client.ExecuteAsync(tpsRequest); // Executes the request and send to the server.
-            string localFolderPath = Directory.GetParent(fullFilePath).FullName; // Gets the directory path of the file.
+            //string downloadFolderPath = Directory.GetParent(fullFilePath).FullName; // Gets the directory path of the file.
 
             if (serverResponse.StatusCode != HttpStatusCode.OK)
             {
-                return await TpsServerOnFaile.ServerOnFail(clientDetails.FileDeliveryMethod, localFolderPath, customerId, fileName, ftpConnect, ftpFileList, localFileList, serverResponse.StatusCode, serverResponse.Content);
+                return await TpsServerOnFaile.ServerOnFailDataFileAsync(ftpConnect,
+                                                                       customerId,
+                                                                       downloadFolderPath,
+                                                                       serverResponse.Content,
+                                                                       ftpFileList,
+                                                                       localFileList,
+                                                                       serverResponse.StatusCode);
             }
 
-            //return await TpsServerOnSuccess.ServerOnSuccess(null, null, ftpFileList.Count(), clientDetails.FileDeliveryMethod, fullFilePath, localFolderPath);
-
-            return 0;
+            return await TpsServerOnSuccess.ServerOnSuccessDataFileAsync(ftpConnect,
+                                                                         customerId,
+                                                                         fileName,
+                                                                         downloadFolderPath,
+                                                                         ftpFileList,
+                                                                         localFileList);
         }
 
     }

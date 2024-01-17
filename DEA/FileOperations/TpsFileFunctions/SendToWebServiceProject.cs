@@ -23,15 +23,15 @@ namespace FileFunctions
                 
                 UserConfigSetter.Customerdetail clientDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
 
-                string clientOrg = SendToWebServiceProjectFunctions.SetCustomerOrg(clientDetails.FtpDetails.FtpFolderLoop,
+                string clientOrg = SendToWebServiceHelpertFunctions.SetCustomerOrg(clientDetails.FtpDetails.FtpFolderLoop,
                                                                                    clientDetails.SendEmail,
                                                                                    clientDetails.ClientOrgNo,
                                                                                    ftpFolderName,
                                                                                    recipientEmail);
 
-                string[] downloadedFiles = SendToWebServiceProjectFunctions.MakeDownloadedFileList(clientDetails,
-                                                                                           filePath,
-                                                                                           ftpFileList);
+                string[] downloadedFiles = SendToWebServiceHelpertFunctions.MakeDownloadedFileList(clientDetails,
+                                                                                                   filePath,
+                                                                                                   ftpFileList);
 
                 if (!downloadedFiles.Any())
                 {
