@@ -6,19 +6,24 @@ using WriteLog;
 
 namespace DEA.Next.FileOperations.TpsFileFunctions
 {
+    /// <summary>
+    /// This function will start the data file upload process.
+    /// </summary>
     internal class SendToWebServiceDataFile
     {
         public static async Task<int> SendToWebServiceDataFileAsync(AsyncFtpClient ftpConnect,
                                                                     int customerId,
                                                                     string localFolderPath,
-                                                                    string ftpFolderName,
                                                                     string[] ftpFileList,
                                                                     string[] localFileList)
         {
             try
             {
+                WriteLogClass.WriteToLog(1, "Starting file upload process .... ", 4);
+
                 UserConfigSetter.Customerdetail customerDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
 
+                // Creat the local file list.
                 string[] downloadedFileList = SendToWebServiceHelpertFunctions.MakeDownloadedFileList(customerDetails,
                                                                                                       localFolderPath,
                                                                                                       ftpFileList);

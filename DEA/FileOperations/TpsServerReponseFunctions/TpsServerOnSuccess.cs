@@ -6,8 +6,27 @@ using WriteNamesToLog;
 
 namespace DEA.Next.FileOperations.TpsServerReponseFunctions
 {
+    /// <summary>
+    /// Handles the operations after a successful TPS server response.
+    /// </summary>
     internal class TpsServerOnSuccess
     {
+        /// <summary>
+        /// Normal project upload.
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="queue"></param>
+        /// <param name="fileCount"></param>
+        /// <param name="deliveryType"></param>
+        /// <param name="fullFilePath"></param>
+        /// <param name="downloadFolderPath"></param>
+        /// <param name="jsonFileList"></param>
+        /// <param name="customerId"></param>
+        /// <param name="clientOrgNo"></param>
+        /// <param name="ftpConnect"></param>
+        /// <param name="ftpFileList"></param>
+        /// <param name="localFileList"></param>
+        /// <returns></returns>
         public static async Task<int> ServerOnSuccessProjectAsync(string projectId,
                                                                   string queue,
                                                                   int fileCount,
@@ -56,6 +75,16 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
             }
         }
 
+        /// <summary>
+        /// Data file upload.
+        /// </summary>
+        /// <param name="ftpConnect"></param>
+        /// <param name="customerId"></param>
+        /// <param name="fileName"></param>
+        /// <param name="downloadFolderPath"></param>
+        /// <param name="ftpFileList"></param>
+        /// <param name="localFileList"></param>
+        /// <returns></returns>
         public static async Task<int> ServerOnSuccessDataFileAsync(AsyncFtpClient ftpConnect,
                                                                    int customerId,
                                                                    string fileName,
@@ -67,13 +96,16 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
             {
                 WriteLogClass.WriteToLog(1, $"uploaded data file: {fileName}", 1);
 
+                // Converts the filename to an array. Needed by the FolderCleanerClass.
                 string[] jsonFileList = new string[] { fileName };
 
+                // Remove the files from FTP server.
                 if (!await FolderCleanerClass.StartFtpFileDelete(ftpConnect, ftpFileList, localFileList))
                 {
                     return -1;
                 }
 
+                // Remove the files from the local folder.
                 if (!await FolderCleanerClass.GetFolders(downloadFolderPath, jsonFileList, customerId, null, MagicWords.ftp))
                 {
                     return -1;

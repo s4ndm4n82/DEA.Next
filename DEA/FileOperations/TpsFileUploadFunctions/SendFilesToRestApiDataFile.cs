@@ -7,6 +7,9 @@ using UserConfigSetterClass;
 
 namespace DEA.Next.FileOperations.TpsFileUploadFunctions
 {
+    /// <summary>
+    /// Send the created Json request to the TPS api and upload the file details.
+    /// </summary>
     internal class SendFilesToRestApiDataFile
     {
         public static async Task<int> SendFilesToRestDataFileAsync(AsyncFtpClient ftpConnect,
@@ -29,7 +32,6 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
 
             tpsRequest.AddBody(jsonReuest);
             RestResponse serverResponse = await client.ExecuteAsync(tpsRequest); // Executes the request and send to the server.
-            //string downloadFolderPath = Directory.GetParent(fullFilePath).FullName; // Gets the directory path of the file.
 
             if (serverResponse.StatusCode != HttpStatusCode.OK)
             {

@@ -23,12 +23,13 @@ namespace FileFunctions
                 
                 UserConfigSetter.Customerdetail clientDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
 
+                // Get the correct org number depending on what type of download method is used.
                 string clientOrg = SendToWebServiceHelpertFunctions.SetCustomerOrg(clientDetails.FtpDetails.FtpFolderLoop,
                                                                                    clientDetails.SendEmail,
                                                                                    clientDetails.ClientOrgNo,
                                                                                    ftpFolderName,
                                                                                    recipientEmail);
-
+                // Creats the file list of the downloaded files.
                 string[] downloadedFiles = SendToWebServiceHelpertFunctions.MakeDownloadedFileList(clientDetails,
                                                                                                    filePath,
                                                                                                    ftpFileList);
