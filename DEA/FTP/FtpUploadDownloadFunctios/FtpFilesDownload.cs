@@ -18,7 +18,11 @@ namespace DownloadFtpFilesClass
         /// <param name="downloadFolderPath">Local download folder path.</param>
         /// <param name="clientID">ID of the client take from the config file.</param>
         /// <returns></returns>
-        public static async Task<int> DownloadFtpFilesFunction(AsyncFtpClient ftpConnect, string ftpPath, string downloadFolderPath, int clientID)
+        public static async Task<int> DownloadFtpFilesFunction(AsyncFtpClient ftpConnect,
+                                                               string ftpPath,
+                                                               string downloadFolderPath,
+                                                               string ftpFolderName,
+                                                               int clientID)
         {
             // Return value.
             int result = -1;
@@ -43,10 +47,14 @@ namespace DownloadFtpFilesClass
                 }
 
                 // Download folder path.
-                string downloaFolder = Path.Combine(downloadFolderPath, GraphHelperClass.FolderNameRnd(10));
+                string downloaFolder = Path.Combine(downloadFolderPath,
+                                                    GraphHelperClass.FolderNameRnd(10));
 
                 // Starts the file download process.
-                List<FtpResult> downloadResult = await ftpConnect.DownloadFiles(downloaFolder, filesToDownload, FtpLocalExists.Resume, FtpVerify.Retry);
+                List<FtpResult> downloadResult = await ftpConnect.DownloadFiles(downloaFolder,
+                                                                                filesToDownload,
+                                                                                FtpLocalExists.Resume,
+                                                                                FtpVerify.Retry);
 
                 if (!downloadResult.Any())
                 {
@@ -67,7 +75,11 @@ namespace DownloadFtpFilesClass
                                                           .Skip(batchCurrentIndex)
                                                           .Take(batchSize);
                     
-                    result = await FtpFilesUpload.FilesUploadFuntcion(ftpConnect, currentBatch.Select(r => r.RemotePath.ToString()).ToArray(), downloaFolder, currentBatch.Select(s => s.Name.ToString()).ToArray(), clientID);
+                    result = await FtpFilesUpload.FilesUploadFuntcion(ftpConnect,
+                                                                      currentBatch.Select(r => r.RemotePath.ToString()).ToArray(),
+                                                                      downloaFolder, currentBatch.Select(s => s.Name.ToString()).ToArray(),
+                                                                      ftpFolderName,
+                                                                      clientID);
 
                     if (result == 3 || result == 4)
                     {

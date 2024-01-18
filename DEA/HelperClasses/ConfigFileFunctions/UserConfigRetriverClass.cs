@@ -4,14 +4,14 @@ namespace UserConfigRetriverClass
 {
     internal class UserConfigRetriver
     {
-        public static async Task<UserConfigSetter.Customerdetail> RetriveUserConfigById(int cid)
+        public static async Task<UserConfigSetter.Customerdetail> RetriveUserConfigById(int? cid)
         {
             if (cid == 0)
             {
                 throw new ArgumentException("Customer ID cannot be 0");
             }
 
-            UserConfigSetter.CustomerDetailsObject jsonData = await UserConfigSetter.ReadUserDotConfigAsync<UserConfigSetterClass.UserConfigSetter.CustomerDetailsObject>();
+            UserConfigSetter.CustomerDetailsObject jsonData = await UserConfigSetter.ReadUserDotConfigAsync<UserConfigSetter.CustomerDetailsObject>();
             UserConfigSetter.Customerdetail customerData = jsonData.CustomerDetails.FirstOrDefault(id => id.Id == cid);
 
             return customerData;
@@ -19,7 +19,7 @@ namespace UserConfigRetriverClass
 
         public static async Task<UserConfigSetter.Ftpdetails> RetriveFtpConfigById(int cid)
         {
-            UserConfigSetter.CustomerDetailsObject jsonData = await UserConfigSetterClass.UserConfigSetter.ReadUserDotConfigAsync<UserConfigSetter.CustomerDetailsObject>();
+            UserConfigSetter.CustomerDetailsObject jsonData = await UserConfigSetter.ReadUserDotConfigAsync<UserConfigSetter.CustomerDetailsObject>();
             UserConfigSetter.Customerdetail customerData = jsonData.CustomerDetails.FirstOrDefault(id => id.Id == cid);
             UserConfigSetter.Ftpdetails ftpData = customerData.FtpDetails;
 

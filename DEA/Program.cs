@@ -6,6 +6,7 @@ using ErrorFolderChecker;
 using DisplayLogoClass;
 using AppConfigReader;
 using VersionIncrementerClass;
+using DEA.Next.HelperClasses.InternetLineChecker;
 
 // DEA.Next
 // ~~~~~~~~
@@ -29,8 +30,19 @@ if (errorFolderItemCount > maxErrorFolders)
     RunTimedFunctionsClass.CallDeaTimedProcesses("deamailer");
     WriteLogClass.WriteToLog(2, $"Error folder contains {errorFolderItemCount} folders. Check and empty the error folder ....", 1);
 }
-// Start the download process
-WriteLogClass.WriteToLog(1, "Starting download process ....", 1);
-await ProcessStartupFunctionsClass.StartupProcess();
-// Start the timed processes deacleaner.
-RunTimedFunctionsClass.CallDeaTimedProcesses("deacleaner");
+
+if (await InternetLineChecker.InternetLineCheckerAsync())
+{
+    WriteLogClass.WriteToLog(1, "Working internet connection found ....", 1);
+    // Start the download process
+    WriteLogClass.WriteToLog(1, "Starting download process ....", 1);
+    await ProcessStartupFunctionsClass.StartupProcess();
+    // Start the timed processes deacleaner.
+    RunTimedFunctionsClass.CallDeaTimedProcesses("deacleaner");
+    Environment.Exit(0);
+}
+else
+{
+    WriteLogClass.WriteToLog(0, "No working internet connection. Exiting ....", 0);
+    Environment.Exit(0);
+}

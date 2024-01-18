@@ -15,17 +15,17 @@ namespace FtpLoopDownloadClass
         /// <param name="clientId">Clients ID retrived from the config file.</param>
         /// <returns>Returns the result as an integer.</returns>
         public static async Task<int> StartFtpLoopDownload(AsyncFtpClient ftpConnectToken,
-                                                   string ftpFolderPath,
-                                                   string downloadFolderPath,
-                                                   int clientId)
+                                                           string ftpFolderPath,
+                                                           string downloadFolderPath,
+                                                           int clientId)
         {
             try
             {
                 // Starts the file download process.
                 return await DownloadFolderInLoop(ftpConnectToken,
-                                              ftpFolderPath,
-                                              downloadFolderPath,
-                                              clientId);
+                                                  ftpFolderPath,
+                                                  downloadFolderPath,
+                                                  clientId);
             }
             catch (Exception ex)
             {
@@ -43,9 +43,9 @@ namespace FtpLoopDownloadClass
         /// <param name="clientId">Clients ID retrived from the config file.</param>
         /// <returns>Returns the result as an integer.</returns>
         public static async Task<int> DownloadFolderInLoop(AsyncFtpClient ftpConnectToken,
-                                                  string ftpFolderPath,
-                                                  string downloadFolderPath,
-                                                  int clientId)
+                                                           string ftpFolderPath,
+                                                           string downloadFolderPath,
+                                                           int clientId)
         {
             int result = -1;
             try
@@ -54,7 +54,7 @@ namespace FtpLoopDownloadClass
                 IEnumerable<FtpListItem> ftpFolderList = await ftpConnectToken.GetListing(ftpFolderPath);
 
                 // Gets the folders that have files in them.
-                List<string> ftpFoldersNotEmptyList = new();
+                List<string> ftpFolderPathNotEmptyList = new();
 
                 foreach (var folder in ftpFolderList.Where(fl => fl.Type == FtpObjectType.Directory))
                 {
@@ -62,23 +62,26 @@ namespace FtpLoopDownloadClass
 
                     if (folderContents.Any(item => item.Type == FtpObjectType.File))
                     {
-                        ftpFoldersNotEmptyList.Add(folder.FullName);
+                        ftpFolderPathNotEmptyList.Add(folder.FullName);
                     }
                 }
 
                 // If there are no folders with files in them then returns early terminating the execution.
-                if (!ftpFoldersNotEmptyList.Any())
+                if (!ftpFolderPathNotEmptyList.Any())
                 {
                     result = 4;
                 }
 
                 // Downloads the files in the folders that have files in them.
-                foreach (string ftpFolder in ftpFoldersNotEmptyList)
+                foreach (string ftpFolderPathNotEmpty in ftpFolderPathNotEmptyList)
                 {
-                    string downloadFolder = Path.Combine(downloadFolderPath, Path.GetFileName(ftpFolder));
+                    string downloadFolder = Path.Combine(downloadFolderPath, Path.GetFileName(ftpFolderPathNotEmpty));
+                    string ftpFolderName = Path.GetFileName(ftpFolderPathNotEmpty);
+
                     result = await FtpFilesDownload.DownloadFtpFilesFunction(ftpConnectToken,
-                                                                             ftpFolder,
+                                                                             ftpFolderPathNotEmpty,
                                                                              downloadFolder,
+                                                                             ftpFolderName,
                                                                              clientId);
                 }
                 

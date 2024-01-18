@@ -1,5 +1,4 @@
 ﻿using AppConfigReader;
-using DEA.Next.Graph.GraphHelperClasses;
 using Microsoft.Graph;
 using System.Diagnostics.CodeAnalysis;
 using WriteLog;
@@ -28,7 +27,11 @@ namespace GetMailFolderIds
         /// <param name="clientSubFolderName1"></param>
         /// <param name="clientSubfolderName2"></param>
         /// <returns></returns>
-        public static async Task<ClientFolderId> GetChlidFolderIds<T>([NotNull] GraphServiceClient graphClient, string clientEmail, string clientMainFolderName, string clientSubFolderName1, string clientSubfolderName2)
+        public static async Task<ClientFolderId> GetChlidFolderIds<T>([NotNull] GraphServiceClient graphClient,
+                                                                                string clientEmail,
+                                                                                string clientMainFolderName,
+                                                                                string clientSubFolderName1,
+                                                                                string clientSubfolderName2)
         {
             AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
             AppConfigReaderClass.Programsettings programSettings = jsonData.ProgramSettings;
@@ -42,9 +45,9 @@ namespace GetMailFolderIds
                 {
                     // Creating the main request builder.
                     IMailFolderRequestBuilder mainRequestBuilder = await GetRequestBuilderAsync(graphClient,
-                                                                        clientEmail,
-                                                                        null,
-                                                                        null);
+                                                                         clientEmail,
+                                                                         null,
+                                                                         null);
                     if (mainRequestBuilder != null)
                     {
                         // Creating the inbox id.
@@ -102,8 +105,8 @@ namespace GetMailFolderIds
                     {
                         // Getting the sub inbox id.
                         IMailFolderRequestBuilder subFolderBuilder2 = await GetChildFolderIdByName(subRequestBuilder2,
-                                                                           clientSubfolderName2,
-                                                                           programSettings.MaxSubEmailFolders);
+                                                                            clientSubfolderName2,
+                                                                            programSettings.MaxSubEmailFolders);
 
                         if (subFolderBuilder2 == null)
                         {
@@ -157,10 +160,11 @@ namespace GetMailFolderIds
         /// <param name="subFolderId1"></param>
         /// <returns>Request builder is returned.</returns>
         private static async Task<IMailFolderRequestBuilder> GetRequestBuilderAsync(GraphServiceClient graphClient,
-                                                                                                string inEmail,
-                                                                                                string mainFolderId,
-                                                                                                string subFolderId1)
+                                                                                    string inEmail,
+                                                                                    string mainFolderId,
+                                                                                    string subFolderId1)
         {
+            // TODO: Convert this to a foreach loop.
 
             try
             {
@@ -202,8 +206,8 @@ namespace GetMailFolderIds
         /// <param name="maxFoldersToLoad"></param>
         /// <returns>Return the child folder ID.</returns>
         private static async Task<IMailFolderRequestBuilder> GetChildFolderIdByName(IMailFolderRequestBuilder requestBuilder,
-                                                                                                       string childFolderName,
-                                                                                                       int maxFoldersToLoad)
+                                                                                    string childFolderName,
+                                                                                    int maxFoldersToLoad)
         {
             try
             {

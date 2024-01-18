@@ -6,6 +6,15 @@ namespace DEA.Next.Graph.GraphHelperClasses
 {
     internal class CreateRequestBuilderClass
     {
+        /// <summary>
+        /// Builds the folder request to access email inboxes.
+        /// </summary>
+        /// <param name="graphClient"></param>
+        /// <param name="firstFolderId"></param>
+        /// <param name="secondFolderId"></param>
+        /// <param name="thirdFolderId"></param>
+        /// <param name="emailId"></param>
+        /// <returns></returns>
         public static async Task<IMailFolderRequestBuilder> CreatRequestBuilder([NotNull] GraphServiceClient graphClient,
                                                                          string firstFolderId,
                                                                          string secondFolderId,
@@ -14,9 +23,13 @@ namespace DEA.Next.Graph.GraphHelperClasses
         {
             try
             {
+                // List of inbox names.
                 List<string> folderIdList = new() { firstFolderId, secondFolderId, thirdFolderId };
-                folderIdList.RemoveAll(string.IsNullOrEmpty); // Removes any empty variable.
+                
+                // Removes any empty variable.
+                folderIdList.RemoveAll(string.IsNullOrEmpty);
 
+                // Creates the request builder.
                 IMailFolderRequestBuilder requestBuilder = graphClient!.Users[$"{emailId}"].MailFolders["Inbox"];
 
                 foreach (string folderId in folderIdList)
