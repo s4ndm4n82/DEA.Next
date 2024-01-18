@@ -6,15 +6,16 @@ namespace ConnectFtp
 {
     internal class ConnectFtpClass
     {
-        public static async Task<AsyncFtpClient> ConnectFtp(string hostName, string hostIp, string userName,string userPassword)
+        public static async Task<AsyncFtpClient> ConnectFtp(string hostName, string hostIp, string userName, string userPassword)
         {
             CancellationToken closeToken = new();
 
             AsyncFtpClient ftpConnect = new()
             {
                 Host = hostName,
-                Credentials = new NetworkCredential(userName, userPassword)
+                Credentials = new NetworkCredential(userName, userPassword),
             };
+
             try
             {
                 await ftpConnect.Connect(closeToken);
@@ -49,7 +50,7 @@ namespace ConnectFtp
                 WriteLogClass.WriteToLog(0, $"Exception at FTP connection: {ex.Message}", 0);
                 ftpConnect = null;
             }
-            
+
             return ftpConnect;
         }
     }
