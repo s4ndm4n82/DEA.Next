@@ -22,7 +22,7 @@ namespace FolderCleaner
             public const string ftp = "ftp";
         }
 
-        public static bool GetFolders(string downloadFilePath, string[] jsonFileNames, int? customerID, string clientEmail, string deliveryType)
+        public static async Task<bool> GetFolders(string downloadFilePath, string[] jsonFileNames, int? customerID, string clientEmail, string deliveryType)
         {
             bool result = false;
             string localDownloadFilePath = downloadFilePath;
@@ -35,7 +35,7 @@ namespace FolderCleaner
             if (Directory.Exists(Path.GetDirectoryName(localDownloadFilePath)))
             {
                 WriteLogClass.WriteToLog(1, "Cleaning download folder ....", 1);
-                result = FolderCleaningProcess(localDownloadFilePath, jsonFileNames, customerID, clientEmail, deliveryType);
+                result = await FolderCleaningProcess(localDownloadFilePath, jsonFileNames, customerID, clientEmail, deliveryType);
             }
             return result;
         }
@@ -49,7 +49,7 @@ namespace FolderCleaner
         /// <param name="customerId"></param>
         /// <param name="clientEmail"></param>
         /// <returns></returns>
-        private static bool FolderCleaningProcess(string downloadedFolderPath, string[] jsonFileList, int? customerId, string clientEmail, string deliverType)
+        private static async Task<bool> FolderCleaningProcess(string downloadedFolderPath, string[] jsonFileList, int? customerId, string clientEmail, string deliverType)
         {   
             try
             {
@@ -74,7 +74,7 @@ namespace FolderCleaner
                 if (nameList.Any()) // If there are any unmatched files.
                 {
                     // Calls the MoveFilesToErrorFolder method to start moving the missed files.
-                    fileMoveResult = HandleErrorFilesClass.MoveFilesToErrorFolder(downloadedFolderPath,
+                    fileMoveResult =  await HandleErrorFilesClass.MoveFilesToErrorFolder(downloadedFolderPath,
                                                                                   nameList,
                                                                                   customerId,
                                                                                   clientEmail);
