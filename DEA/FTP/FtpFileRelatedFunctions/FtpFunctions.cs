@@ -46,19 +46,21 @@ namespace FtpFunctions
             // If the user FTP config type is FTP.
             if (string.Equals(ftpDetails.FtpType, MagicWords.ftp, StringComparison.OrdinalIgnoreCase))
             {
-                ftpConnectToken = await ConnectFtpClass.ConnectFtp(ftpDetails.FtpHostName,
-                                                                   ftpDetails.FtpHostIp,
+                ftpConnectToken = await ConnectFtpClass.ConnectFtp(ftpDetails.FtpProfile,
+                                                                   ftpDetails.FtpHostName,                                                                   
                                                                    ftpDetails.FtpUser,
-                                                                   ftpDetails.FtpPassword);
+                                                                   ftpDetails.FtpPassword,
+                                                                   ftpDetails.FtpPort);
             }
 
             // If the user FTP config type is FTPS.
             if (string.Equals(ftpDetails.FtpType, MagicWords.ftps, StringComparison.OrdinalIgnoreCase))
             {
-                ftpConnectToken = await ConnectFtpsClass.ConnectFtps(ftpDetails.FtpHostName,
-                                                                     ftpDetails.FtpHostIp,
+                ftpConnectToken = await ConnectFtpsClass.ConnectFtps(ftpDetails.FtpProfile,
+                                                                     ftpDetails.FtpHostName,
                                                                      ftpDetails.FtpUser,
-                                                                     ftpDetails.FtpPassword);
+                                                                     ftpDetails.FtpPassword,
+                                                                     ftpDetails.FtpPort);
             }
 
 

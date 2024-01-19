@@ -40,10 +40,11 @@ namespace UserConfigSetterClass
         public class Ftpdetails
         {
             public string FtpType { get; set; }
+            public string FtpProfile { get; set; }
             public string FtpHostName { get; set; }
-            public string FtpHostIp { get; set; }
             public string FtpUser { get; set; }
             public string FtpPassword { get; set; }
+            public int FtpPort { get; set; }
             public int FtpFolderLoop { get; set; }
             public string FtpMainFolder { get; set; }            
         }
