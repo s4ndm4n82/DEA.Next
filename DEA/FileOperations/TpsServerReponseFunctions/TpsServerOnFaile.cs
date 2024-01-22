@@ -62,7 +62,7 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                         return 0;
                     }
 
-                    if (!FolderCleanerClass.DeleteEmptyFolders(fullFilePath))
+                    if (!FolderCleanerClass.DeleteEmptyFolders(Path.GetDirectoryName(fullFilePath)))
                     {
                         WriteLogClass.WriteToLog(0, "Deleting empty folders failed ....", 0);
                         return 0;

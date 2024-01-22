@@ -44,7 +44,8 @@ namespace FolderFunctions
 
             if (!string.IsNullOrEmpty(folderSwitch))
             {
-                string folderName = folderNames.FirstOrDefault(fn => fn.ToLower().Contains(folderSwitch))!;
+                string folderName = folderNames.FirstOrDefault(fn =>
+                                               fn.IndexOf(folderSwitch, StringComparison.CurrentCultureIgnoreCase) != -1);
 
                 if (folderName != MagicWords.attachments && folderName != MagicWords.ftpfiles)
                 {

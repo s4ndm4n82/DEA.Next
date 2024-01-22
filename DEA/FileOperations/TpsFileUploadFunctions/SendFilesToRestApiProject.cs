@@ -42,28 +42,28 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
                 if (serverResponse.StatusCode != HttpStatusCode.OK)
                 {
                     return await TpsServerOnFaile.ServerOnFailProjectsAsync(clientDetails.FileDeliveryMethod.ToLower(),
-                                                               fullFilePath,
-                                                               customerId,
-                                                               clientOrgNo,
-                                                               ftpConnect,
-                                                               ftpFileList,
-                                                               localFileList,
-                                                               serverResponse.StatusCode,
-                                                               serverResponse.Content);
+                                                                            fullFilePath,
+                                                                            customerId,
+                                                                            clientOrgNo,
+                                                                            ftpConnect,
+                                                                            ftpFileList,
+                                                                            localFileList,
+                                                                            serverResponse.StatusCode,
+                                                                            serverResponse.Content);
                 }
 
                 return await TpsServerOnSuccess.ServerOnSuccessProjectAsync(projectId,
-                                                                queue,
-                                                                fileCount,
-                                                                clientDetails.FileDeliveryMethod.ToLower(),
-                                                                fullFilePath,
-                                                                dirPath,
-                                                                jsonFileList,
-                                                                customerId,
-                                                                clientOrgNo,
-                                                                ftpConnect,
-                                                                ftpFileList,
-                                                                localFileList);
+                                                                            queue,
+                                                                            fileCount,
+                                                                            clientDetails.FileDeliveryMethod.ToLower(),
+                                                                            fullFilePath,
+                                                                            dirPath,
+                                                                            jsonFileList,
+                                                                            customerId,
+                                                                            clientOrgNo,
+                                                                            ftpConnect,
+                                                                            ftpFileList,
+                                                                            localFileList);
             }
             catch (Exception ex)
             {

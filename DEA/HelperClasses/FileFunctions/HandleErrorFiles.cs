@@ -8,9 +8,6 @@ namespace HandleErrorFiles
 {
     internal class HandleErrorFilesClass
     {
-        // Error Folder path.
-        public static readonly string ErrorFolderPath = FolderFunctionsClass.CheckFolders(MagicWords.error);
-
         /// <summary>
         /// This is a bit different from MoveAllFilesToErrorFolder. This function moves each file to the error folder.
         /// </summary>
@@ -30,7 +27,12 @@ namespace HandleErrorFiles
                 UserConfigSetter.Customerdetail clientDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
 
                 // Source folder path.
-                string sourcePath = Path.GetDirectoryName(downloadFolderPath);
+                string sourcePath = downloadFolderPath;
+
+                if (!File.GetAttributes(downloadFolderPath).HasFlag(FileAttributes.Directory))
+                {
+                    sourcePath = Path.GetDirectoryName(downloadFolderPath);
+                }
                 
                 // Source folder name.
                 string sourcFolderName = sourcePath.Split(Path.DirectorySeparatorChar).Last();
@@ -39,7 +41,9 @@ namespace HandleErrorFiles
                 string destinationFolderName = clientDetails.FileDeliveryMethod.ToLower() == MagicWords.email ? string.Concat("ID_", customerId.ToString(), " ", "Email_", clientEmail)
                                                                                             : string.Concat("ID_", customerId.ToString(), " ", "Org_", clientDetails.ClientOrgNo);
                 // Destination folder path.
-                string destinationFolderPath = Path.Combine(ErrorFolderPath, destinationFolderName, sourcFolderName);
+                string destinationFolderPath = Path.Combine(FolderFunctionsClass.CheckFolders(MagicWords.error),
+                                                            destinationFolderName,
+                                                            sourcFolderName);
 
                 // Create destination folder.
                 if (!Directory.Exists(destinationFolderPath))
@@ -47,11 +51,14 @@ namespace HandleErrorFiles
                     Directory.CreateDirectory(destinationFolderPath);
                 }
                 // Move files.
-                return MoveEachFile(sourcePath, destinationFolderPath, fileNames, clientDetails.FileDeliveryMethod.ToLower());
+                return MoveEachFile(sourcePath,
+                                    destinationFolderPath,
+                                    fileNames,
+                                    clientDetails.FileDeliveryMethod.ToLower());
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(0, $"Exception at single file mover: {ex.Message}", 0);
+                WriteLogClass.WriteToLog(0, $"Exception at MoveFilesToErrorFolder: {ex.Message}", 0);
                 return false;
             }
         }
@@ -63,7 +70,10 @@ namespace HandleErrorFiles
         /// <param name="dstPath">Destination path.</param>
         /// <param name="fileNames">List of the file names.</param>
         /// <returns></returns>
-        private static bool MoveEachFile(string srcPath, string dstPath, IEnumerable<string> fileNames, string deliveryType)
+        private static bool MoveEachFile(string srcPath,
+                                         string dstPath,
+                                         IEnumerable<string> fileNames,
+                                         string deliveryType)
         {
             try
             {

@@ -47,7 +47,11 @@ namespace FolderCleaner
         /// <param name="customerId"></param>
         /// <param name="clientEmail"></param>
         /// <returns></returns>
-        private static async Task<bool> FolderCleaningProcess(string downloadedFolderPath, string[] jsonFileList, int? customerId, string clientEmail, string deliverType)
+        private static async Task<bool> FolderCleaningProcess(string downloadedFolderPath,
+                                                              string[] jsonFileList,
+                                                              int? customerId,
+                                                              string clientEmail,
+                                                              string deliverType)
         {   
             try
             {
@@ -104,7 +108,9 @@ namespace FolderCleaner
         /// <param name="ftpFileList">File list from the FTP server.</param>
         /// <param name="localFileList">File list from the local download folder.</param>
         /// <returns>The result of remove process or false.</returns>
-        public static async Task<bool> StartFtpFileDelete(AsyncFtpClient ftpConnect, IEnumerable<string> ftpFileList, string[] localFileList)
+        public static async Task<bool> StartFtpFileDelete(AsyncFtpClient ftpConnect,
+                                                          IEnumerable<string> ftpFileList,
+                                                          string[] localFileList)
         {
             try
             {
@@ -145,7 +151,8 @@ namespace FolderCleaner
         /// <param name="localFolderPath">Local download process path</param>
         /// <param name="remoteFileList">FTP files list.</param>
         /// <returns>Returns the unmatched file names list.</returns>
-        private static IEnumerable<string> CheckMissedFiles(string localFolderPath, IEnumerable<string> remoteFileList)
+        private static IEnumerable<string> CheckMissedFiles(string localFolderPath,
+                                                            IEnumerable<string> remoteFileList)
         {
             try
             {
@@ -177,7 +184,8 @@ namespace FolderCleaner
         /// <param name="ftpConnect">FTP connection token.</param>
         /// <param name="ftpFileName">FTP files list.</param>
         /// <returns>Return true or false.</returns>
-        private static async Task<bool> DeleteFtpFiles(AsyncFtpClient ftpConnect, string fileToDelete)
+        private static async Task<bool> DeleteFtpFiles(AsyncFtpClient ftpConnect,
+                                                       string fileToDelete)
         {
             try
             {
@@ -211,7 +219,8 @@ namespace FolderCleaner
         /// </summary>
         /// <param name="downloadFolderPath">Path of the local download folder.</param>
         /// <returns>Returns true or false.</returns>
-        private static bool DeleteFiles(string downloadFolderPath, string[] jsonFileList)
+        private static bool DeleteFiles(string downloadFolderPath,
+                                        string[] jsonFileList)
         {
             // Returns if the loacal directory is missing without executing the remove code.
             if (!Directory.Exists(downloadFolderPath))
@@ -250,31 +259,39 @@ namespace FolderCleaner
         /// <returns></returns>
         public static bool DeleteEmptyFolders(string downloadFolderPath)
         {
-            string fullPath = Path.GetFullPath(downloadFolderPath);
-            string basePath = Path.GetDirectoryName(fullPath);
-            
-            IEnumerable<string> directoryList = Directory.EnumerateDirectories(basePath, "*", SearchOption.AllDirectories);
-
-            IEnumerable<string> emptyFolderList = directoryList.Where(dirPath => !Directory.EnumerateFileSystemEntries(dirPath).Any());
-            bool result = true;
-
-            foreach (string emptyFolder in emptyFolderList)
+            try
             {
-                try
+                string basePath = Path.GetDirectoryName(downloadFolderPath);
+
+                IEnumerable<string> directoryList = Directory.EnumerateDirectories(basePath, "*", SearchOption.AllDirectories);
+
+                IEnumerable<string> emptyFolderList = directoryList.Where(dirPath => !Directory.EnumerateFileSystemEntries(dirPath).Any());
+                bool result = true;
+
+                foreach (string emptyFolder in emptyFolderList)
                 {
-                    // Delete the folders.
-                    Directory.Delete(emptyFolder);
+                    try
+                    {
+                        // Delete the folders.
+                        Directory.Delete(emptyFolder);
+                    }
+                    catch (Exception ex)
+                    {
+                        WriteLogClass.WriteToLog(0, $"Exception at folder delete: {ex.Message}", 0);
+                        result = false;
+                    }
                 }
-                catch (Exception ex)
-                {
-                    WriteLogClass.WriteToLog(0, $"Exception at folder delete: {ex.Message}", 0);
-                    result = false;
-                }
+                return result;
             }
-            return result;
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(0, $"Exception at DeleteEmptyFolders: {ex.Message}", 0);
+                return false;
+            }
         }
 
-        private static bool AttachmentFileDelete(string downloadFolerPath, string[] jsonFileList)
+        private static bool AttachmentFileDelete(string downloadFolerPath,
+                                                 string[] jsonFileList)
         {
             bool result = true;
             try
