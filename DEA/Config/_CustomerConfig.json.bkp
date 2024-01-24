@@ -2,37 +2,47 @@
   "CustomerDetails": [
     {
       "id": 1, // IMPORTANT. Hast add manually and increment by 1 each time
-      "CustomerStatus": 1, // Customer status. If active 1 if not 0.
-      "Token": "",
-      "UserName": "",
-      "TemplateKey": "",
-      "Queue": "",
-      "ProjetID": "",
-      "MainCustomer": "",
-      "ClientName": "",
-      "ClientOrgNo": "",
-      "ClientIdField": "",
-      "FileDeliveryMethod": "",
+      "CustomerStatus": 0, // Customer status. If active 1 if not 0.
+      "Token": "", // User token for API access.
+      "UserName": "", // User name. This need to be the same user name which you created the above Token for.
+      "TemplateKey": "", // This is known as key word. Used to apply a specific template.
+      "Queue": "", // Queue number.
+      "ProjetID": "", // Project ID that uses above queue number.
+      "DocumentId": "", // If the upload is just a data file then this is needed.
+      "MaxBatchSize": 2, // Number of files that can be in a download batch. Max file limit is 200.
+      "MainCustomer": "", // Main customer name. Ex: Aksesspunkt
+      "ClientName": "", // Client name. Ex: Duett
+      "SendEmail": 0, // If 1 then send email. If 0 then use configured org.
+      "ClientOrgNo": "", // Client organization number. Or any other vlaue that need to be set in the client ID field.
+      "ClientIdField": "", // Identification field uses the above "ClientOrgNo" value.
+      "FileDeliveryMethod": "ftp", // Can be FTP or email.
+      // API process url, used to upload file
       "DomainDetails": {
-        "MainDomain": "",
-        "TpsRequestUrl": ""
+        "MainDomain": "", // Main domain. Ex: https://capture.exacta.no/
+        "TpsRequestUrl": "" // Last part of the url Ex: tps_test_processing/Import?
       },
+      // If the file delivery type is FTP then this is used.
       "FtpDetails": {
-        "FtpType": "",
-        "FtpHostName": "",
-        "FtpHostIp": "",
-        "FtpUser": "",
-        "FtpPassword": "",
-        "FtpMainFolder": ""
+        "FtpType": "", // FTP type. Ex: ftp or ftps or ftps
+        "FtpHostName": "", // FTP server address.
+        "FtpHostIp": "", // FTP server IP.
+        "FtpUser": "", // FTP username.
+        "FtpPassword": "", // FTP password.
+        "FtpFolderLoop": 0, // If 1, then loop through folders. If 0, then only main folder.
+        "FtpMainFolder": "" // FTP folder path where the files going to be. Ex: /Aksesspunkt/Duett or /Aksesspunkt/Duet
+
       },
+      // If the file delivery type is email then this is used.
       "EmailDetails": {
-        "EmailAddress": "",
-        "MainInbox": "",
-        "SubInbox1": "",
-        "SubInbox2": ""
+        "EmailAddress": "", // Email address which receive the emails from the customer.
+        // You can configure the inbox path for the application to look for emails.
+        // Can go up to 3 levels. Ex: /Enkelt pående/Kristiansand Byggentrepenør AS or /Enkelt pående/Kristiansand Byggentrepenør AS/subInbox.
+        "EmailInboxPath": "" // Email inbox path. Ex: "/Enkeltstående/Kristiansand Byggentrepenør AS" or "/Direct"
       },
+      // Details of the submitted documents.
       "DocumentDetails": {
-        "DocumentType": "",
+        "DocumentType": "", // This can be pdf, csv, or multiple.
+        // Contains all the accpeted file extensions.
         "DocumentExtensions": [
           ""
         ]

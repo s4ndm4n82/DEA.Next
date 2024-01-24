@@ -16,7 +16,11 @@ namespace FolderCleaner
         /// <param name="customerID"></param>
         /// <param name="clientEmail"></param>
         /// <returns></returns>
-        public static async Task<bool> GetFolders(string downloadFilePath, string[] jsonFileNames, int? customerID, string clientEmail, string deliveryType)
+        public static async Task<bool> GetFolders(string downloadFilePath,
+                                                  string[] jsonFileNames,
+                                                  int? customerID,
+                                                  string clientEmail,
+                                                  string deliveryType)
         {
             bool result = false;
             string localDownloadFilePath = downloadFilePath;
@@ -141,7 +145,7 @@ namespace FolderCleaner
         /// <param name="localFolderPath">Local download process path</param>
         /// <param name="remoteFileList">FTP files list.</param>
         /// <returns>Returns the unmatched file names list.</returns>
-        public static IEnumerable<string> CheckMissedFiles(string localFolderPath, IEnumerable<string> remoteFileList)
+        private static IEnumerable<string> CheckMissedFiles(string localFolderPath, IEnumerable<string> remoteFileList)
         {
             try
             {

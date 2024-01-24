@@ -1,5 +1,8 @@
-﻿using FileFunctions;
+﻿using DEA.Next.FileOperations.TpsFileFunctions;
+using FileFunctions;
 using FluentFTP;
+using UserConfigRetriverClass;
+using UserConfigSetterClass;
 
 namespace UploadFtpFilesClass
 {
@@ -21,6 +24,9 @@ namespace UploadFtpFilesClass
                                                           string ftpFolderName,
                                                           int clientId)
         {
+            UserConfigSetter.Customerdetail customerdetail = await UserConfigRetriver.RetriveUserConfigById(clientId);
+
+            // Get the matching file names.
             string[] matchingFileNames = currentBatch
                                          .Where(batchFile => fileNames
                                          .Any(fileName => Path.GetFileNameWithoutExtension(batchFile)
@@ -29,14 +35,27 @@ namespace UploadFtpFilesClass
                                              StringComparison.OrdinalIgnoreCase)))
                                          .ToArray();
 
+            // Get the local files.
             string[] localFiles = Directory.GetFiles(ftpHoldFolder, "*.*", SearchOption.TopDirectoryOnly);
-            return await FileFunctionsClass.SendToWebService(ftpConnect,
-                                                             ftpHoldFolder,
-                                                             clientId,
-                                                             matchingFileNames,
-                                                             localFiles,
-                                                             ftpFolderName,
-                                                             null!);
+
+            // If the project ID is not empty, then send the files to the web service using normal upload.
+            if (!string.IsNullOrWhiteSpace(customerdetail.ProjetID))
+            {
+                return await SendToWebServiceProject.SendToWebServiceProjectAsync(ftpConnect,
+                                                                                  ftpHoldFolder,
+                                                                                  clientId,
+                                                                                  matchingFileNames,
+                                                                                  localFiles,
+                                                                                  ftpFolderName,
+                                                                                  null!);
+            }
+
+            // If the project ID is empty then it's a data file upload. Then this upload process will be used.
+            return await SendToWebServiceDataFile.SendToWebServiceDataFileAsync(ftpConnect,
+                                                                                clientId,
+                                                                                ftpHoldFolder,
+                                                                                matchingFileNames,
+                                                                                localFiles);
         }
     }
 }

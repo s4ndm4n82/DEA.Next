@@ -62,7 +62,7 @@ namespace DownloadFtpFilesClass
                     return 4;
                 }
 
-                WriteLogClass.WriteToLog(1, $"Downloaded file names: {WriteNamesToLogClass.GetFileNames(downloadResult.Select(f => f.Name.ToString()).ToArray())}", 2);
+                WriteLogClass.WriteToLog(1, $"Downloaded file names: {WriteNamesToLogClass.GetFileNames(downloadResult.Select(f => f.Name.ToString()).ToArray())}", 1);
 
                 // Starts the file download process.
                 int batchSize = jsonData.MaxBatchSize;
@@ -77,7 +77,8 @@ namespace DownloadFtpFilesClass
                     
                     result = await FtpFilesUpload.FilesUploadFuntcion(ftpConnect,
                                                                       currentBatch.Select(r => r.RemotePath.ToString()).ToArray(),
-                                                                      downloaFolder, currentBatch.Select(s => s.Name.ToString()).ToArray(),
+                                                                      downloaFolder,
+                                                                      currentBatch.Select(s => s.Name.ToString()).ToArray(),
                                                                       ftpFolderName,
                                                                       clientID);
 

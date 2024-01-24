@@ -19,6 +19,7 @@ namespace UserConfigSetterClass
             public string TemplateKey { get; set; }
             public string Queue { get; set; }
             public string ProjetID { get; set; }
+            public string DocumentId { get; set; }
             public int MaxBatchSize { get; set; }
             public string MainCustomer { get; set; }
             public string ClientName { get; set; }

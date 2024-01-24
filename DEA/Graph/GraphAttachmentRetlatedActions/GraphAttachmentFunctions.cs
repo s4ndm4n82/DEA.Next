@@ -298,7 +298,7 @@ namespace GraphAttachmentFunctions
                                                     .ToArray();
 
                     // Create a single task that uploads all fiels in the batch.
-                    int uploadResult = await FileFunctionsClass.SendToWebService(null,
+                    int uploadResult = await SendToWebServiceProject.SendToWebServiceProjectAsync(null,
                                                                                  downloadFolderPath,
                                                                                  customerId,
                                                                                  currentBatchFileNames,
