@@ -21,6 +21,7 @@ namespace UserConfigSetterClass
             public string ProjetID { get; set; }
             public string DocumentId { get; set; }
             public int MaxBatchSize { get; set; }
+            public int RenameFile { get; set; }
             public string MainCustomer { get; set; }
             public string ClientName { get; set; }
             public int SendEmail { get; set; }

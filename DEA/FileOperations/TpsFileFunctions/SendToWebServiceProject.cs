@@ -32,6 +32,7 @@ namespace FileFunctions
                 // Creats the file list of the downloaded files.
                 string[] downloadedFiles = SendToWebServiceHelpertFunctions.MakeDownloadedFileList(clientDetails,
                                                                                                    filePath,
+                                                                                                   clientOrg,
                                                                                                    ftpFileList);
 
                 if (!downloadedFiles.Any())

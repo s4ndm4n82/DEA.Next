@@ -42,7 +42,7 @@ namespace DownloadFtpFilesClass
                 // If there are no files to download then returns early terminating the execution.
                 if (!filesToDownload.Any())
                 {
-                    WriteLogClass.WriteToLog(0, "The filesToDownload list is empty ....", 0);
+                    WriteLogClass.WriteToLog(1, "The filesToDownload list is empty ....", 1);
                     return 4;
                 }
 
