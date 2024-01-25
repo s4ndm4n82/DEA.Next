@@ -1,4 +1,6 @@
 ﻿using UserConfigSetterClass;
+using WriteLog;
+using WriteNamesToLog;
 using Directory = System.IO.Directory;
 
 namespace DEA.Next.FileOperations.TpsFileFunctions
@@ -38,44 +40,46 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
                                               .Select(e => e.ToLower())
                                               .ToList();
 
+            // Creating the list of file in the local download folder.
+            string[] localFileNameList = Directory.EnumerateFiles(localFilePath, "*.*", SearchOption.TopDirectoryOnly)
+                                                                  .Where(f => acceptedExtentions.Contains(Path.GetExtension(f).ToLower()))
+                                                                  .Where(f => ftpFileList.Any(g => Path.GetFileNameWithoutExtension(f)
+                                                                  .Equals(Path.GetFileNameWithoutExtension(g), StringComparison.OrdinalIgnoreCase)))
+                                                                  .ToArray();
+
             if (clientDetails.RenameFile == 1)
             {
-                return RenameFileList(localFilePath, clientOrg, acceptedExtentions);               
+                return RenameFileList(localFilePath, clientOrg, localFileNameList);               
             }
 
-            // Creating the list of file in the local download folder.
-            return Directory.GetFiles(localFilePath, "*.*", SearchOption.TopDirectoryOnly)
-                                      .Where(f => acceptedExtentions.Contains(Path.GetExtension(f).ToLower()))
-                                      .Where(f => ftpFileList.Any(g => Path.GetFileNameWithoutExtension(f)
-                                      .Equals(Path.GetFileNameWithoutExtension(g), StringComparison.OrdinalIgnoreCase)))
-                                      .ToArray();
+            return localFileNameList;            
         }
 
-        private static string[] RenameFileList(string localFilePath,
-                                                    string clientOrg,
-                                                    List<string> acceptedExtentions)
+        private static string[] RenameFileList(string localFilePath, string clientOrg, string[] localFileList)
         {
-            string[] localFileList = Directory.GetFiles(localFilePath, "*.*", SearchOption.TopDirectoryOnly);
-            int loopCount = 0;
+            List<string> renamedFileList = new();
 
             foreach (string localFile in localFileList)
             {   
-                string newFileName = clientOrg + "_" + Path.GetFileNameWithoutExtension(localFile) + Path.GetExtension(localFile);
+                string newFileName = Path.Combine(localFilePath, clientOrg + "_" + Path.GetFileName(localFile));
 
                 if (!File.Exists(newFileName))
                 {
-                    File.Move(localFile, newFileName);
-                    loopCount++;
+                    try
+                    {
+                        File.Move(localFile, newFileName);
+                        renamedFileList.Add(newFileName);
+                    }
+                    catch (IOException ex)
+                    {
+                        WriteLogClass.WriteToLog(0, $"IO Exception at RenameFileList: {ex.Message}", 0);
+                    }
                 }
             }
 
-            if (loopCount == localFileList.Length)
-            {
-                return Directory.GetFiles(localFilePath, "*.*", SearchOption.TopDirectoryOnly)
-                      .Where(f => acceptedExtentions.Contains(Path.GetExtension(f).ToLower())).ToArray();
-            }
+            WriteLogClass.WriteToLog(1, $"Renamed files: {WriteNamesToLogClass.GetFileNames(renamedFileList.ToArray())}", 1);
 
-            return null;
+            return renamedFileList.ToArray();
         }
     }
 }

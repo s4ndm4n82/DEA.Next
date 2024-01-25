@@ -26,6 +26,7 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
                 // Creat the local file list.
                 string[] downloadedFileList = SendToWebServiceHelpertFunctions.MakeDownloadedFileList(customerDetails,
                                                                                                       localFolderPath,
+                                                                                                      string.Empty,
                                                                                                       ftpFileList);
 
                 if (!downloadedFileList.Any())
