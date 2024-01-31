@@ -2,6 +2,8 @@
 using FluentFTP;
 using Newtonsoft.Json;
 using TpsJsonProjectUploadString;
+using UserConfigRetriverClass;
+using UserConfigSetterClass;
 using WriteLog;
 
 namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
@@ -10,51 +12,40 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
     {
         public static async Task<int> MakeJsonRequestProjects(AsyncFtpClient ftpConnect,
                                                               int customerId,
-                                                              string customerToken,
-                                                              string customerUserName,
-                                                              string customerTemplateKey,
-                                                              string customerQueue,
-                                                              string customerProjectId,
                                                               string clientOrgNo,
-                                                              string clientIdField,
                                                               string[] filesToSend,
                                                               string[] ftpFileList,
                                                               string[] localFileList)
         {   
             try
             {
-                // Creating the file list to be added to the Json request.
-                List<TpsJsonProjectUploadStringClass.FileList> jsonFileList = new();
-                foreach (var file in filesToSend)
-                {
-                    jsonFileList.Add(new TpsJsonProjectUploadStringClass.FileList() { Name = Path.GetFileName(file), Data = Convert.ToBase64String(File.ReadAllBytes(file)) });
-                }
+                UserConfigSetter.Customerdetail customerDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
 
-                // Creating the field list to be added to the Json request.
-                List<TpsJsonProjectUploadStringClass.FieldList> idField = new()
-                {
-                    new TpsJsonProjectUploadStringClass.FieldList() { Name = clientIdField, Value = clientOrgNo }
-                };
+                // Create the file list to be added to the Json request.
+                List<TpsJsonProjectUploadStringClass.FileList> jsonFileList = MakeJsonRequestHelperClass.ReturnFileList(filesToSend);
 
+                // Create the field list to be added to the Json request.
+                List<TpsJsonProjectUploadStringClass.FieldList> idFields = MakeJsonRequestHelperClass.ReturnIdFieldList(customerId, clientOrgNo);
+
+                // Create the Json request.
                 TpsJsonProjectUploadStringClass.TpsJsonProjectUploadObject TpsJsonRequest = new()
                 {
-                    Token = customerToken,
-                    Username = customerUserName,
-                    TemplateKey = customerTemplateKey,
-                    Queue = customerQueue,
-                    ProjectID = customerProjectId,
-                    Fields = idField,
+                    Token = customerDetails.Token,
+                    Username = customerDetails.UserName,
+                    TemplateKey = customerDetails.TemplateKey,
+                    Queue = customerDetails.Queue,
+                    ProjectID = customerDetails.ProjetID,
+                    Fields = idFields,
                     Files = jsonFileList
                 };
 
+                // Assigning the Json request to a string. To be handed over to the rest api.
                 string jsonResult = JsonConvert.SerializeObject(TpsJsonRequest, Formatting.Indented);
 
                 return await SendFilesToRestApiProject.SendFilesToRestProjectAsync(ftpConnect,
                                                                                    jsonResult,
                                                                                    filesToSend[0],
                                                                                    customerId,
-                                                                                   customerProjectId,
-                                                                                   customerQueue,
                                                                                    jsonFileList.Count,
                                                                                    ftpFileList,
                                                                                    localFileList,

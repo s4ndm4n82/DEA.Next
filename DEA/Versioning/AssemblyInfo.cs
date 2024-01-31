@@ -9,6 +9,6 @@ using System.Reflection;
 [assembly: AssemblyTitle("DEA.Next")]
 
 // Version information for an assembly consists of the following four values:
-[assembly: AssemblyVersion("2.0.1.493")]
-[assembly: AssemblyFileVersion("2.0.1.493")]
-[assembly: AssemblyInformationalVersion("2.0.1.493")]
+[assembly: AssemblyVersion("2.0.1.513")]
+[assembly: AssemblyFileVersion("2.0.1.513")]
+[assembly: AssemblyInformationalVersion("2.0.1.513")]

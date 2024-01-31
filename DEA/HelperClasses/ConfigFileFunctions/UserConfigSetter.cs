@@ -27,6 +27,8 @@ namespace UserConfigSetterClass
             public int SendEmail { get; set; }
             public string ClientOrgNo { get; set; }
             public string ClientIdField { get; set; }
+            public string IdField2Value { get; set; }
+            public string ClientIdField2 { get; set; }
             public string FileDeliveryMethod { get; set; }
             public Domaindetails DomainDetails { get; set; }
             public Ftpdetails FtpDetails { get; set; }

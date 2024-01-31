@@ -14,8 +14,6 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
                                                                   string jsonResult,
                                                                   string fullFilePath,
                                                                   int customerId,
-                                                                  string projectId,
-                                                                  string queue,
                                                                   int fileCount,
                                                                   string[] ftpFileList,
                                                                   string[] localFileList,
@@ -24,11 +22,11 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
         {
             try
             {
-                UserConfigSetter.Customerdetail clientDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
+                UserConfigSetter.Customerdetail customerDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
 
                 // Creating rest api request.
-                RestClient client = new($"{clientDetails.DomainDetails.MainDomain}");
-                RestRequest tpsRequest = new($"{clientDetails.DomainDetails.TpsRequestUrl}")
+                RestClient client = new($"{customerDetails.DomainDetails.MainDomain}");
+                RestRequest tpsRequest = new($"{customerDetails.DomainDetails.TpsRequestUrl}")
                 {
                     Method = Method.Post,
                     RequestFormat = DataFormat.Json
@@ -41,7 +39,7 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
 
                 if (serverResponse.StatusCode != HttpStatusCode.OK)
                 {
-                    return await TpsServerOnFaile.ServerOnFailProjectsAsync(clientDetails.FileDeliveryMethod.ToLower(),
+                    return await TpsServerOnFaile.ServerOnFailProjectsAsync(customerDetails.FileDeliveryMethod.ToLower(),
                                                                             fullFilePath,
                                                                             customerId,
                                                                             clientOrgNo,
@@ -52,10 +50,10 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
                                                                             serverResponse.Content);
                 }
 
-                return await TpsServerOnSuccess.ServerOnSuccessProjectAsync(projectId,
-                                                                            queue,
+                return await TpsServerOnSuccess.ServerOnSuccessProjectAsync(customerDetails.ProjetID,
+                                                                            customerDetails.Queue,
                                                                             fileCount,
-                                                                            clientDetails.FileDeliveryMethod.ToLower(),
+                                                                            customerDetails.FileDeliveryMethod.ToLower(),
                                                                             fullFilePath,
                                                                             dirPath,
                                                                             jsonFileList,

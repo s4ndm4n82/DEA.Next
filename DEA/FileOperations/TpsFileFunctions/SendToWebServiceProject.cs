@@ -43,13 +43,7 @@ namespace FileFunctions
 
                 return await MakeJsonRequestProjectsFunction.MakeJsonRequestProjects(ftpConnect,
                                                                                      customerId,
-                                                                                     clientDetails.Token,
-                                                                                     clientDetails.UserName,
-                                                                                     clientDetails.TemplateKey,
-                                                                                     clientDetails.Queue,
-                                                                                     clientDetails.ProjetID,
                                                                                      clientOrg,
-                                                                                     clientDetails.ClientIdField,
                                                                                      downloadedFiles,
                                                                                      ftpFileList,
                                                                                      localFileList);
