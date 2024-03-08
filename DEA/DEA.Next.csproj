@@ -23,10 +23,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="FluentFTP" Version="49.0.1" />
+		<PackageReference Include="FluentFTP" Version="49.0.2" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Graph" Version="4.54.0" />
+		<PackageReference Include="Microsoft.VisualStudio.SlowCheetah" Version="4.0.50">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="RestSharp" Version="110.2.0" />
 		<PackageReference Include="Serilog" Version="3.1.1" />
@@ -54,6 +58,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Update="Config\CustomerConfig.Debug.json">
+		  <IsTransformFile>true</IsTransformFile>
+		  <DependentUpon>CustomerConfig.json</DependentUpon>
+		</None>
+		<None Update="Config\CustomerConfig.Release.json">
+		  <IsTransformFile>true</IsTransformFile>
+		  <DependentUpon>CustomerConfig.json</DependentUpon>
+		</None>
 		<None Update="Config\_appsettings.json.bkp">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
@@ -65,6 +77,7 @@
 		</None>
 		<None Update="Config\CustomerConfig.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<TransformOnBuild>true</TransformOnBuild>
 		</None>	
 	</ItemGroup>
 	

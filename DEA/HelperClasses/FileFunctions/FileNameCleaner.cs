@@ -9,11 +9,11 @@ namespace FileNameCleanerClass
         {
             try
             {
-                // Getting the file name and extention seperatly.
+                // Getting the file name and extension separately.
                 string attachmentExtension = Path.GetExtension(attachedFileName).ToLower(); // Extension only from the file name. And converts it to lower case.
                 string attachmentFileName = Path.GetFileNameWithoutExtension(attachedFileName); // File name only in order to clean it.
 
-                string cleanedFileName = attachedFileName.Length > 50 ? CleanFileName(TruncateFilename(attachmentFileName, 10)) : CleanFileName(attachmentFileName);
+                string cleanedFileName = attachedFileName.Length > 150 ? CleanFileName(TruncateFilename(attachmentFileName, 100)) : CleanFileName(attachmentFileName);
 
                 return Path.ChangeExtension(cleanedFileName, attachmentExtension);
             }
@@ -30,12 +30,12 @@ namespace FileNameCleanerClass
             {
                 // String variables to use with the RegEx.
                 string regexPattern = "[\\~#%&*{}/:;,.<>?|\\[\\]\"-]"; // RegEx will search for all these characters.
-                string regexReplaceCharacter = "_"; // Above all the characters will be replaces by this sharacter.
+                string regexReplaceCharacter = "_"; // Above all the characters will be replaces by this character.
 
                 // RegEx function.
                 Regex regexNameCleaner = new(regexPattern, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
-                // Rebuilding the clean full filename. The second regex replace gets reid of any aditional spaces if there's any.
+                // Rebuilding the clean full filename. The second regex replace gets rid of any additional spaces if there's any.
                 return Regex.Replace(regexNameCleaner.Replace(fileName, regexReplaceCharacter), @"[\s]+", "");
             }
             catch (Exception ex)

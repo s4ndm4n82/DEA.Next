@@ -1,2 +1,194 @@
 ﻿{
+  "CustomerDetails": [
+    {
+      "id": 1, // IMPORTANT. Hast add manually and increment by 1 each time
+      "CustomerStatus": 0, // Customer status. If active 1 if not 0.
+      //"Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZGNfaW1wb3J0IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiaW1wb3J0QGRpZ2l0YWxjYXB0dXJlLm5vIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI1OGRiZTAzOC1mNGIwLTQzNjYtYjJiYi03ZTZiZjU1YzBiOGQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6ImM0YzQwYzk0LTdiMmEtNDI0ZS04MzVlLWVkODA5MmYyODE0YyIsImV4cCI6MTczNzA5NDg1NCwiaXNzIjoid3d3LmVkZW50cmkuY29tIiwiYXVkIjoiaHR0cHM6Ly9jYXB0dXJlLmVkZW50cmkuY29tL3RwcyJ9.VhnBtHfGybZBVgk0IfRgOyPEzAsxj3WiUF3i4ZyIwWg",
+      //"UserName": "dc_import",
+      "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiaW1wb3J0X2VmYWN0byIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImltcG9ydEBlZmFjdG8uY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI3MmJlYzAyMy00NzJhLTQyNDEtOGRjZS00Njg4YWM0MGMzYTQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6Ijk0NGNmZDU2LTkxZDAtNGMzNC04ZWFjLWEwMmQzYzMzNDc0ZCIsImV4cCI6MTczNzA2NDgxOSwiaXNzIjoid3d3LmVkZW50cmkuY29tIiwiYXVkIjoiaHR0cHM6Ly9jYXB0dXJlLmVkZW50cmkuY29tL3RwcyJ9.hyEqvyl61MTnclxQh0lIixdYdrqX2RTnHBLme69OOoM",
+      "UserName": "import_efacto",
+      "TemplateKey": "",
+      //"Queue": "6",
+      "Queue": "3",
+      //"ProjetID": "0c298408-76b9-4f4c-9941-edb101126329",
+      "ProjetID": "9b83f71a-2371-434b-88ca-7afb4b63220f",
+      //"ProjetID": "690e35df-73b1-4802-46a5-08da8ffc4c42",
+      "DocumentId": "", // If the upload is just a data file then this is needed.
+      "MaxBatchSize": 2, // Number of files that can be in a download batch. Max file limit is 200.
+      "RenameFile": 0, // Add Org to the name in front of the filename. To activate use 1 else 0.
+      "MainCustomer": "Aksesspunkt",
+      "ClientName": "Duett",
+      "SendEmail": 0, // If 1 then send email. If 0 then use configured org. If "FtpFolderLoop" is 1 then use the folder name.
+      "ClientOrgNo": "932971917",
+      "ClientIdField": "Internal ID",
+      "IdField2Value": "", // If this value is set then "ClientIdField2" will use the set value as its value in the TPS. If its not set then "ClientOrg" will be used as the value.
+      "ClientIdField2": "Customer Organization No", // Don't set this if not going to be used.
+      "FileDeliveryMethod": "ftp",
+      "DomainDetails": {
+        "MainDomain": "https://capture.edentri.com/",
+        //"TpsRequestUrl": "tps_test_processing/Import?"
+        "TpsRequestUrl": "tps_processing2/Import?"
+      },
+      "FtpDetails": {
+        "FtpType": "FTP",
+        // The ftp profile name. Currently available profiles are profilepxe, profileepe, and profilefsv.
+        // profilepxe: Connection type PASVEX, Encryption None, ValidateAnyCertificate false.
+        // profileepe: Connection type AutoActive, Encryption Auto, ValidateAnyCertificate false. <-- Recommended.
+        // profilefsv: Connection type AutoPassive, Encryption Explicit, ValidateAnyCertificate true.
+        "FtpProfile": "profileepe",
+        "FtpHostName": "localhost",
+        "FtpUser": "testuser",
+        "FtpPassword": "jackkills",
+        "FtpPort": 21, // FTP connection port.
+        "FtpFolderLoop": 1, // If 1, then loop through folders. If 0, then only main folder or the mapped folder path.
+        "FtpMainFolder": "/Aksesspunkt"
+        //"FtpMainFolder": "/Aksesspunkt/Duett"
+
+      },
+      "EmailDetails": {
+        "EmailAddress": "",
+        // You can configure the inbox path for the application to look for emails.
+        // Can go up to 3 levels. Ex: /Enkelt pående/Kristiansand Byggentrepenør AS or /Enkelt pående/Kristiansand Byggentrepenør AS/subInbox.
+        "EmailInboxPath": ""
+      },
+      "DocumentDetails": {
+        "DocumentType": "PDF",
+        "DocumentExtensions": [
+          ".pdf"
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "CustomerStatus": 1,
+      "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZGNfaW1wb3J0IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiaW1wb3J0QGRpZ2l0YWxjYXB0dXJlLm5vIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI1OGRiZTAzOC1mNGIwLTQzNjYtYjJiYi03ZTZiZjU1YzBiOGQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6ImM0YzQwYzk0LTdiMmEtNDI0ZS04MzVlLWVkODA5MmYyODE0YyIsImV4cCI6MTczNzA5NDg1NCwiaXNzIjoid3d3LmVkZW50cmkuY29tIiwiYXVkIjoiaHR0cHM6Ly9jYXB0dXJlLmVkZW50cmkuY29tL3RwcyJ9.VhnBtHfGybZBVgk0IfRgOyPEzAsxj3WiUF3i4ZyIwWg",
+      "UserName": "dc_import",
+      "TemplateKey": "",
+      "Queue": "6",
+      "ProjetID": "0c298408-76b9-4f4c-9941-edb101126329",
+      "DocumentId": "",
+      "MaxBatchSize": 1, // Number of files that can be in a download batch. Max file limit is 200.
+      "MainCustomer": "DigiAcc",
+      "ClientName": "DigiAcc",
+      "SendEmail": 1,
+      "ClientOrgNo": "Testing Above setting",
+      "ClientIdField": "InternalAccountingID",
+      "FileDeliveryMethod": "email",
+      "DomainDetails": {
+        "MainDomain": "https://capture.edentri.com/",
+        "TpsRequestUrl": "tps_test_processing/Import?"
+      },
+      "FtpDetails": {
+        "FtpType": "",
+        "FtpHostName": "",
+        "FtpHostIp": "",
+        "FtpUser": "",
+        "FtpPassword": "",
+        "FtpFolderLoop": 0,
+        "FtpMainFolder": ""
+      },
+      "EmailDetails": {
+        "EmailAddress": "apptesting@efakturamottak.no",
+        "EmailInboxPath": "/Level 1"
+      },
+      "DocumentDetails": {
+        "DocumentType": "MULTI",
+        "DocumentExtensions": [
+          ".pDf",
+          ".jpg",
+          ".jpeg",
+          ".tif"
+        ]
+      }
+    },
+    {
+      "id": 3, // IMPORTANT. Hast add manually and increment by 1 each time
+      "CustomerStatus": 0, // Customer status. If active 1 if not 0.
+      "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZGNfaW1wb3J0IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiaW1wb3J0QGRpZ2l0YWxjYXB0dXJlLm5vIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI1OGRiZTAzOC1mNGIwLTQzNjYtYjJiYi03ZTZiZjU1YzBiOGQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6ImM0YzQwYzk0LTdiMmEtNDI0ZS04MzVlLWVkODA5MmYyODE0YyIsImV4cCI6MTczNzA5NDg1NCwiaXNzIjoid3d3LmVkZW50cmkuY29tIiwiYXVkIjoiaHR0cHM6Ly9jYXB0dXJlLmVkZW50cmkuY29tL3RwcyJ9.VhnBtHfGybZBVgk0IfRgOyPEzAsxj3WiUF3i4ZyIwWg",
+      "UserName": "dc_import",
+      "TemplateKey": "",
+      "Queue": "6",
+      "ProjetID": "0c298408-76b9-4f4c-9941-edb101126329",
+      "DocumentId": "",
+      "MaxBatchSize": 1, // Number of files that can be in a download batch. Max file limit is 200.
+      "MainCustomer": "Advania Norge",
+      "ClientName": "Kristiansand Byggentrepenør AS",
+      "ClientOrgNo": "993853623",
+      "ClientIdField": "Customer Organization No",
+      "FileDeliveryMethod": "email",
+      "DomainDetails": {
+        "MainDomain": "https://capture.edentri.com/",
+        "TpsRequestUrl": "tps_test_processing/Import?"
+      },
+      "FtpDetails": {
+        "FtpType": "",
+        "FtpHostName": "",
+        "FtpHostIp": "",
+        "FtpUser": "",
+        "FtpPassword": "",
+        "FtpFolderLoop": 0,
+        "FtpMainFolder": ""
+      },
+      "EmailDetails": {
+        "EmailAddress": "atc@efakturamottak.no",
+        "EmailInboxPath": "/Enkeltstående/Kristiansand Byggentrepenør AS"
+      },
+      "DocumentDetails": {
+        "DocumentType": "PDF",
+        "DocumentExtensions": [
+          ".pdf"
+        ]
+      }
+    },
+    {
+      "id": 4, // IMPORTANT. Hast add manually and increment by 1 each time
+      "CustomerStatus": 0, // Customer status. If active 1 if not 0.
+      "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZGNfaW1wb3J0IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiaW1wb3J0QGRpZ2l0YWxjYXB0dXJlLm5vIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI1OGRiZTAzOC1mNGIwLTQzNjYtYjJiYi03ZTZiZjU1YzBiOGQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6ImM0YzQwYzk0LTdiMmEtNDI0ZS04MzVlLWVkODA5MmYyODE0YyIsImV4cCI6MTczNzA5NDg1NCwiaXNzIjoid3d3LmVkZW50cmkuY29tIiwiYXVkIjoiaHR0cHM6Ly9jYXB0dXJlLmVkZW50cmkuY29tL3RwcyJ9.VhnBtHfGybZBVgk0IfRgOyPEzAsxj3WiUF3i4ZyIwWg",
+      "UserName": "dc_impor",
+      "TemplateKey": "",
+      "Queue": "",
+      "ProjetID": "",
+      "DocumentId": "298cc955-5a4d-480c-5a8d-08dba22ebdea",
+      "MaxBatchSize": 1, // Number of files that can be in a download batch. Max file limit is 200.
+      "MainCustomer": "",
+      "ClientName": "",
+      "SendEmail": 0, // If 1 then send email. If 0 then use configured org.
+      "ClientOrgNo": "123456789",
+      "ClientIdField": "",
+      "FileDeliveryMethod": "ftp",
+      "DomainDetails": {
+        "MainDomain": "https://capture.edentri.com/",
+        "TpsRequestUrl": "tps_test_processing/ImportExternalData?"
+      },
+      "FtpDetails": {
+        "FtpType": "FTP",
+        "FtpProfile": "profileepe",
+        "FtpHostName": "localhost",
+        "FtpUser": "testuser",
+        "FtpPassword": "jackkills",
+        //"FtpProfile": "profilepxe",
+        //"FtpHostName": "ftp.ramberg.no",
+        //"FtpHostIp": "",
+        //"FtpUser": "FTPNAVI",
+        //"FtpPassword": "nav2016",
+        "FtpPort": 21,
+        "FtpFolderLoop": 0, // If 1, then loop through folders. If 0, then only main folder.
+        "FtpMainFolder": "/Aksesspunkt/Duett"
+        //"FtpMainFolder": "/SYSPEDFX/NAVITRO/EDISE1K"
+
+      },
+      "EmailDetails": {
+        "EmailAddress": "",
+        // You can configure the inbox path for the application to look for emails.
+        // Can go up to 3 levels. Ex: /Enkelt pående/Kristiansand Byggentrepenør AS or /Enkelt pående/Kristiansand Byggentrepenør AS/subInbox.
+        "EmailInboxPath": ""
+      },
+      "DocumentDetails": {
+        "DocumentType": "CSV",
+        "DocumentExtensions": [
+          ".csv"
+        ]
+      }
+    }
+  ]
 }

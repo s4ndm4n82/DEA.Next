@@ -121,7 +121,7 @@ namespace GraphAttachmentFunctions
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(0, $"Exception at ProcessMessageAsync running attachment downloader: {ex.Message}", 0);
+                    WriteLogClass.WriteToLog(0, $"Exception at ProcessMessageAsync running attachment download: {ex.Message}", 0);
                     return 4;
                 }
             }
@@ -282,7 +282,7 @@ namespace GraphAttachmentFunctions
                     return -1;
                 }
 
-                int successfullUpload = 0; // Successfull upload count.
+                int successfullUpload = 0; // Successful upload count.
                 UserConfigSetter.Customerdetail batchSize = await UserConfigRetriver.RetriveUserConfigById(customerId);
                 int batchCurrentIndex = 0;
 

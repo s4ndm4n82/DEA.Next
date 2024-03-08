@@ -17,14 +17,14 @@ namespace FileRenamerClass
                 while (File.Exists(FullToDownloadFile)) // If file exists starts to rename from next file.
                 {
                     string NewFileName = string.Format("{0}({1})", FileNameOnly, Count++); // Makes the new file name.
-                    FullToDownloadFile = Path.Combine(FilePathOnly!, NewFileName + FileExtention); // Set tthe new path as the download file path.
+                    FullToDownloadFile = Path.Combine(FilePathOnly!, NewFileName + FileExtention); // Set the new path as the download file path.
                 }
 
                 return FullToDownloadFile;
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(0, $"Exception at file renamer: {ex.Message}", 0);
+                WriteLogClass.WriteToLog(0, $"Exception at file re-namer: {ex.Message}", 0);
                 return "";
             }
         }
