@@ -49,13 +49,21 @@ namespace UserConfigSetterClass
             public string FtpPassword { get; set; }
             public int FtpPort { get; set; }
             public int FtpFolderLoop { get; set; }
-            public string FtpMainFolder { get; set; }            
+            public string FtpMainFolder { get; set; }
         }
 
         public class Emaildetails
         {
             public string EmailAddress { get; set; }
             public string EmailInboxPath { get; set; }
+            public int EmailRead { get; set; }
+            public Emailfieldlist EmailFieldList { get; set; }
+        }
+
+        public class Emailfieldlist
+        {
+            public int FieldId { get; set; }
+            public string FieldName { get; set; }
         }
 
         public class Documentdetails

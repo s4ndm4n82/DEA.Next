@@ -131,7 +131,18 @@
       },
       "EmailDetails": {
         "EmailAddress": "atc@efakturamottak.no",
-        "EmailInboxPath": "/Enkeltstående/Kristiansand Byggentrepenør AS"
+        "EmailInboxPath": "/Enkeltstående/Kristiansand Byggentrepenør AS",
+        "EmailRead": 1,
+        "EmailFieldList": [
+          {
+            "FieldId": 1,
+            "FieldName": "Customer Organization No"
+          },
+          {
+            "FieldId": 2,
+            "FieldName": "Customer Name"
+          }
+        ]
       },
       "DocumentDetails": {
         "DocumentType": "PDF",

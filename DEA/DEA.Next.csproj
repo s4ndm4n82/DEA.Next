@@ -23,6 +23,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Graph\GraphClientrelatedFunctions\GraphHelper.cs~RFc0edc5.TMP" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="FluentFTP" Version="49.0.2" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />

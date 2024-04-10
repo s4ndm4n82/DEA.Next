@@ -29,7 +29,7 @@ namespace GraphGetAttachments
                                                                        string subFolder2,
                                                                        int customerId)
         {
-            // Parameters read from the config files.
+            // Parameters read from the application config files.
             AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
             AppConfigReaderClass.Programsettings maxMalis = jsonData.ProgramSettings;
 
@@ -78,7 +78,6 @@ namespace GraphGetAttachments
             catch (Exception ex)
             {
                 WriteLogClass.WriteToLog(0, $"Exception at start email attachment download: {ex.Message}", 0);
-                result = 0;
             }
             return result;
         }

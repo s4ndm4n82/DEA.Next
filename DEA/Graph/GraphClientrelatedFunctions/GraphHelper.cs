@@ -62,7 +62,7 @@ namespace GraphHelper
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(0, $"Exception at GraphHelper2Levels: {ex.Message}", 0);
+                    WriteLogClass.WriteToLog(0, $"Exception at ATC email read: {ex.Message}", 0);
                     return result;
                 }
             }
@@ -191,6 +191,6 @@ namespace GraphHelper
                 numString = String.Concat(numString, rndNumber.Next(10).ToString());
             }
             return numString;
-        }        
+        }
     }
 }
