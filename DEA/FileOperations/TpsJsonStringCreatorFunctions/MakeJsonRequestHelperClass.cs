@@ -1,4 +1,5 @@
-﻿using TpsJsonProjectUploadString;
+﻿using DEA.Next.FileOperations.TpsJsonStringClasses;
+using TpsJsonProjectUploadString;
 using UserConfigRetriverClass;
 using static UserConfigSetterClass.UserConfigSetter;
 
@@ -7,7 +8,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
     internal class MakeJsonRequestHelperClass
     {
         public static List<TpsJsonProjectUploadStringClass.FieldList> ReturnIdFieldList(int customerId,
-                                                                                       string clientOrgNo)
+                                                                                        string clientOrgNo)
         {
             Customerdetail customerDetails = UserConfigRetriver.RetriveUserConfigById(customerId).Result;
 
@@ -40,6 +41,21 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
             }
 
             return jsonFileList;
+        }
+
+        public static List<TpsJsonSendBodyTextClass.Emailfieldlist> ReturnEmailFieldList(int customerId, string bodyText)
+        {
+            Customerdetail customerDetails = UserConfigRetriver.RetriveUserConfigById(customerId).Result;
+            List<Emailfieldlist> emailFieldNames = customerDetails.EmailDetails.EmailFieldList.Where(fname => fname.FieldName != "FieldId").ToList();
+            List<TpsJsonSendBodyTextClass.Emailfieldlist> emailFieldList = new();
+
+            // Creating the list with the email body text.
+            foreach (Emailfieldlist emailFieldName in emailFieldNames)
+            {
+                emailFieldList.Add(new TpsJsonSendBodyTextClass.Emailfieldlist() { Name = emailFieldName.FieldName, Value = bodyText });
+            }
+
+            return emailFieldList;
         }
     }
 }

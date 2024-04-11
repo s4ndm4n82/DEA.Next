@@ -2,12 +2,12 @@
 using Microsoft.Identity.Client;
 using System.Net.Http.Headers;
 using WriteLog;
-using GraphGetAttachments;
 using UserConfigSetterClass;
 using Microsoft.IdentityModel.Tokens;
 using AppConfigReader;
 using UserConfigRetriverClass;
 using DEA.Next.Graph.GraphEmailInboxFunctions;
+using DEA.Next.Graph.GraphEmailActons;
 
 namespace GraphHelper
 {

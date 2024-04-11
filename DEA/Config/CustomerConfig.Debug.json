@@ -89,7 +89,22 @@
       },
       "EmailDetails": {
         "EmailAddress": "apptesting@efakturamottak.no",
-        "EmailInboxPath": "/Level 1"
+        "EmailInboxPath": "/Level 1",
+        "EmailRead": 1,
+        "EmailList": [
+          "sandaruwan.s@pro-account.lk",
+          "apptesting@efakturamottak.no"
+        ],
+        "EmailFieldList": [
+          {
+            "FieldId": 1,
+            "FieldName": "Customer Organization No"
+          },
+          {
+            "FieldId": 2,
+            "FieldName": "Customer Name"
+          }
+        ]
       },
       "DocumentDetails": {
         "DocumentType": "MULTI",

@@ -57,7 +57,8 @@ namespace UserConfigSetterClass
             public string EmailAddress { get; set; }
             public string EmailInboxPath { get; set; }
             public int EmailRead { get; set; }
-            public Emailfieldlist EmailFieldList { get; set; }
+            public List<string> EmailList { get; set; }
+            public List<Emailfieldlist> EmailFieldList { get; set; }
         }
 
         public class Emailfieldlist
@@ -76,7 +77,7 @@ namespace UserConfigSetterClass
         {
             try
             {
-                using StreamReader fileData = new StreamReader(userConfigFilePath);
+                using StreamReader fileData = new(userConfigFilePath);
                 string userConfigData = await fileData.ReadToEndAsync();
                 T jsonData = JsonConvert.DeserializeObject<T>(userConfigData);
 

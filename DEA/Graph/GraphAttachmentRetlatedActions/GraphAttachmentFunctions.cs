@@ -14,7 +14,7 @@ using GraphMoveEmailsrClass;
 using Message = Microsoft.Graph.Message;
 using DEA.Next.Graph.GraphEmailActons;
 
-namespace GraphAttachmentFunctions
+namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
 {
     internal class GraphAttachmentFunctionsClass
     {
@@ -33,7 +33,7 @@ namespace GraphAttachmentFunctions
                                                                  string deletedItemsId,
                                                                  int maxMails,
                                                                  int customerId)
-        {   
+        {
             IMailFolderMessagesCollectionPage messages;
             try
             {
@@ -129,7 +129,7 @@ namespace GraphAttachmentFunctions
             {
                 try
                 {
-                    // Check if the email has too many replies. If som email will be moved to deleted items.
+                    // Check if the email has too many replies. If so email will be moved to deleted items.
                     if (await CheckEmailChain.CheckEmailChainAsync(requestBuilder, message.Id, deletedItemsId))
                     {
                         WriteLogClass.WriteToLog(0, $"Email {message.Subject} has too many replies moved to deleted items ....", 0);

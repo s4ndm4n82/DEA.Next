@@ -1,15 +1,18 @@
 ﻿using Microsoft.Graph;
 using System.Diagnostics.CodeAnalysis;
 using GetMailFolderIds;
-using GraphAttachmentFunctions;
 using WriteLog;
 using AppConfigReader;
 using ProcessStatusMessageSetter;
 using DEA.Next.Graph.GraphHelperClasses;
 using DEA.Next.Graph.GraphEmailInboxFunctions;
 using DEA.Next.HelperClasses.OtherFunctions;
+using DEA.Next.Graph.GraphAttachmentRetlatedActions;
+using UserConfigSetterClass;
+using UserConfigRetriverClass;
+using DEA.Next.Graph.GraphEmailBodyRelatedActions;
 
-namespace GraphGetAttachments
+namespace DEA.Next.Graph.GraphEmailActons
 {
     internal class GraphGetAttachmentsClass
     {
@@ -31,7 +34,10 @@ namespace GraphGetAttachments
         {
             // Parameters read from the application config files.
             AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
-            AppConfigReaderClass.Programsettings maxMalis = jsonData.ProgramSettings;
+            AppConfigReaderClass.Programsettings maxMails = jsonData.ProgramSettings;
+
+            // Read from the client config file.
+            UserConfigSetter.Emaildetails emailDetails = await UserConfigRetriver.RetriveEmailConfigById(customerId);
 
             int result = 0;
             // Get the folder ID's after searching the folder names.
@@ -42,38 +48,48 @@ namespace GraphGetAttachments
                                                                                                                                   subFolder2);
             try
             {
-                if (folderIds != null)
+                if (folderIds == null)
                 {
-                    // Write the mail box path.
-                    WriteTheMailBoxPath(mainMailFolder, subFolder1, subFolder2);
-
-                    // Create the request builder.
-                    IMailFolderRequestBuilder requestBuilder = await CreateRequestBuilderClass.CreatRequestBuilder(graphClient,
-                                                                                                                   folderIds.ClientMainFolderId,
-                                                                                                                   folderIds.ClientSubFolderId1,
-                                                                                                                   folderIds.ClientSubFolderId2,
-                                                                                                                   clientEmail);
-
-                    string deletedItemsId = await GetDeletedItemsId.GetDeletedItemsIdAsync(graphClient, clientEmail);
-
-                    // Check if the request builder is null.
-                    if (requestBuilder == null)
-                    {
-                        WriteLogClass.WriteToLog(0, $"Failed to create request builder ....", 0);
-                        return 4;
-                    }
-
-                    // Initiate the email attachment download and send them to the web service. Should return a bool value.
-                    result = await GraphAttachmentFunctionsClass.GetMessagesWithAttachments(requestBuilder,
-                                                                                            clientEmail,
-                                                                                            deletedItemsId,
-                                                                                            maxMalis.MaxEmails,
-                                                                                            customerId);
-
-                    // Log the result.
-                    WriteLogClass.WriteToLog(ProcessStatusMessageSetterClass.SetMessageTypeOther(result),
-                                             ProcessStatusMessageSetterClass.SetProcessStatusOther(result, MagicWords.email), 2);
+                    WriteLogClass.WriteToLog(0, $"Folders were not found ....", 0);
+                    return 4;
                 }
+
+                // Write the mail box path.
+                WriteTheMailBoxPath(mainMailFolder, subFolder1, subFolder2);
+
+                // Create the request builder.
+                IMailFolderRequestBuilder requestBuilder = await CreateRequestBuilderClass.CreatRequestBuilder(graphClient,
+                                                                                                               folderIds.ClientMainFolderId,
+                                                                                                               folderIds.ClientSubFolderId1,
+                                                                                                               folderIds.ClientSubFolderId2,
+                                                                                                               clientEmail);
+
+                string deletedItemsId = await GetDeletedItemsId.GetDeletedItemsIdAsync(graphClient, clientEmail);
+
+                // Check if the request builder is null.
+                if (requestBuilder == null)
+                {
+                    WriteLogClass.WriteToLog(0, $"Failed to create request builder ....", 0);
+                    return 4;
+                }
+
+                // If the email body need to be read this will be used.
+                if (emailDetails.EmailRead == 1 && emailDetails.EmailList.Any())
+                {
+                    result = await GraphReadEmailBody.ReadEmailBodyAsync(requestBuilder, maxMails.MaxEmails, customerId);
+                    return result;
+                }
+
+                // Initiate the email attachment download and send them to the web service. Should return a bool value.
+                result = await GraphAttachmentFunctionsClass.GetMessagesWithAttachments(requestBuilder,
+                                                                                        clientEmail,
+                                                                                        deletedItemsId,
+                                                                                        maxMails.MaxEmails,
+                                                                                        customerId);
+
+                // Log the result.
+                WriteLogClass.WriteToLog(ProcessStatusMessageSetterClass.SetMessageTypeOther(result),
+                                         ProcessStatusMessageSetterClass.SetProcessStatusOther(result, MagicWords.email), 2);
             }
             catch (Exception ex)
             {
@@ -101,7 +117,7 @@ namespace GraphGetAttachments
             else
             {
                 WriteLogClass.WriteToLog(3, "Folder names are empty ....", 2);
-            }            
+            }
         }
     }
 }
