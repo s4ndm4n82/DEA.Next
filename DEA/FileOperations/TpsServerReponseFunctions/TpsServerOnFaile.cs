@@ -128,5 +128,21 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                 return -1;
             }
         }
+
+        /// <summary>
+        /// Handles the on fail for body text upload.
+        /// </summary>        
+        public static async Task<int> ServerOnFailBodyTextAsync(string serverResponseContent)
+        {
+            try
+            {
+                WriteLogClass.WriteToLog(0, $"Server Response Error: {serverResponseContent}", 0);
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog()
+            }
+        }
     }
 }
