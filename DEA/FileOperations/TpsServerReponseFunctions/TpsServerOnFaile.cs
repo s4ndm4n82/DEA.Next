@@ -1,7 +1,10 @@
 ﻿using DEA.Next.HelperClasses.OtherFunctions;
 using FluentFTP;
 using FolderCleaner;
+using GetMailFolderIds;
+using GraphMoveEmailsrClass;
 using HandleErrorFiles;
+using Microsoft.Graph;
 using System.Net;
 using WriteLog;
 
@@ -132,16 +135,30 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
         /// <summary>
         /// Handles the on fail for body text upload.
         /// </summary>        
-        public static async Task<int> ServerOnFailBodyTextAsync(string serverResponseContent)
+        public static async Task<int> ServerOnFailBodyTextAsync(IMailFolderRequestBuilder requestBuilder,
+                                                                string messageId,
+                                                                string serverResponseContent,
+                                                                HttpStatusCode serverStatusCode)
         {
+            string errorFolderId = await GetMailFolderIdsClass.GetErrorFolderId(requestBuilder);
+
             try
             {
-                WriteLogClass.WriteToLog(0, $"Server Response Error: {serverResponseContent}", 0);
-                return 0;
+                if (!await GraphMoveEmailsFolder.MoveEmailsToAnotherFolder(requestBuilder,
+                                                                           messageId,
+                                                                           errorFolderId))
+                {
+                    WriteLogClass.WriteToLog(0, "Moving email to error folder failed ....", 2);
+                    return 2;
+                }
+
+                WriteLogClass.WriteToLog(0, $"Sending to server failed. Email moved to error folder.\nCode:{serverStatusCode}\nStatus:{serverResponseContent}", 2);
+                return 2;
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog()
+                WriteLogClass.WriteToLog(0, $"Exception at ServerOnFailBodyTextAsync: {ex.Message}", 0);
+                return 2;
             }
         }
     }

@@ -1,4 +1,6 @@
-﻿using RestSharp;
+﻿using DEA.Next.FileOperations.TpsServerReponseFunctions;
+using Microsoft.Graph;
+using RestSharp;
 using System.Net;
 using UserConfigRetriverClass;
 using UserConfigSetterClass;
@@ -7,7 +9,10 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
 {
     internal class SendBodyTextToRestApi
     {
-        public static async Task<int> SendBodyTextToRestAsync(string jsonString,
+        public static async Task<int> SendBodyTextToRestAsync(IMailFolderRequestBuilder requestBuilder,
+                                                              string messageId,
+                                                              string messageSubject,
+                                                              string jsonString,
                                                               int clientId)
         {
             UserConfigSetter.Customerdetail customerDetails = await UserConfigRetriver.RetriveUserConfigById(clientId);
@@ -26,10 +31,15 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
 
             if (serverResponse.StatusCode != HttpStatusCode.OK)
             {
-
+                return await TpsServerOnFaile.ServerOnFailBodyTextAsync(requestBuilder,
+                                                                        messageId,
+                                                                        serverResponse.Content,
+                                                                        serverResponse.StatusCode);
             }
 
-            return 0;
+            return await TpsServerOnSuccess.ServerOnSuccessBodyTextAsync(requestBuilder,
+                                                                         messageId,
+                                                                         messageSubject);
         }
     }
 }

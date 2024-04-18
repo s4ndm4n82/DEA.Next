@@ -49,8 +49,8 @@ namespace GraphMoveEmailsToExportClass
 
                 // Moving the email to the export folder.
                 if (await GraphMoveEmailsFolder.MoveEmailsToAnotherFolder(requestBuilder,
-                                                                               messageId,
-                                                                               exportFolderId))
+                                                                          messageId,
+                                                                          exportFolderId))
                 {
                     WriteLogClass.WriteToLog(1, $"Email {messageSubject} moved to export folder ...", 2);
                     return true;

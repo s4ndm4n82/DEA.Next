@@ -25,6 +25,8 @@
       "ClientIdField2": "Customer Organization No", // Don't set this if not going to be used.
       "FileDeliveryMethod": "ftp",
       "DomainDetails": {
+        //"MainDomain": "https://process.edentri.com/",
+        //"TpsRequestUrl": "tps2/import?"
         "MainDomain": "https://capture.edentri.com/",
         //"TpsRequestUrl": "tps_test_processing/Import?"
         "TpsRequestUrl": "tps_processing2/Import?"

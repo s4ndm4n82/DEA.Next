@@ -76,8 +76,7 @@ namespace DEA.Next.Graph.GraphEmailActons
                 // If the email body need to be read this will be used.
                 if (emailDetails.EmailRead == 1 && emailDetails.EmailList.Any())
                 {
-                    result = await GraphReadEmailBody.ReadEmailBodyAsync(requestBuilder, maxMails.MaxEmails, customerId);
-                    return result;
+                    return await GraphReadEmailBody.ReadEmailBodyAsync(requestBuilder, maxMails.MaxEmails, customerId);
                 }
 
                 // Initiate the email attachment download and send them to the web service. Should return a bool value.

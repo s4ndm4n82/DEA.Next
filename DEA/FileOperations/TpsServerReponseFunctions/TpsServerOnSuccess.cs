@@ -1,6 +1,9 @@
 ﻿using DEA.Next.HelperClasses.OtherFunctions;
 using FluentFTP;
 using FolderCleaner;
+using GraphMoveEmailsToExportClass;
+using Microsoft.Graph;
+using System.Net;
 using WriteLog;
 using WriteNamesToLog;
 
@@ -118,5 +121,34 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                 return -1;
             }
         }
+
+        /// <summary>
+        /// Sending body text to TPS server success.
+        /// </summary>
+        /// 
+        public static async Task<int> ServerOnSuccessBodyTextAsync(IMailFolderRequestBuilder requestBuilder,
+                                                                   string messageId,
+                                                                   string messageSubject)
+        {
+            try
+            {
+                if (!await GraphMoveEmailsToExport.MoveEmailsToExport(requestBuilder,
+                                                                     messageId,
+                                                                     messageSubject))
+                {
+                    WriteLogClass.WriteToLog(0, $"Moving email {messageSubject} to export unsuccessful ....", 2);
+                    return 2;
+                }
+
+                WriteLogClass.WriteToLog(1, $"Body text sent to syste. Moved email {messageSubject} to export successfuly ....", 2);
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(0, $"Exception at ServerOnSuccessBodyTextAsync: {ex.Message}", 0);
+                return 2;
+            }
+        }
+
     }
 }

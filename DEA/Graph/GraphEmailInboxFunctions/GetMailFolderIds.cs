@@ -1,4 +1,5 @@
-﻿using AppConfigReader;
+﻿using DEA.Next.HelperClasses.OtherFunctions;
+using AppConfigReader;
 using Microsoft.Graph;
 using System.Diagnostics.CodeAnalysis;
 using WriteLog;
@@ -148,7 +149,7 @@ namespace GetMailFolderIds
                 return null;
             }
 
-            return errorFolderDetails.FirstOrDefault(efd => efd.DisplayName.ToLower() == "error")!.Id;
+            return errorFolderDetails.FirstOrDefault(efd => efd.DisplayName.ToLower() == MagicWords.error)!.Id;
         }
 
         /// <summary>
@@ -170,13 +171,13 @@ namespace GetMailFolderIds
             {
                 IMailFolderRequestBuilder returnBuilder = graphClient
                                                           .Users[$"{inEmail}"]
-                                                          .MailFolders["Inbox"];
+                                                          .MailFolders[$"{MagicWords.inbox}"];
 
                 if (!string.IsNullOrWhiteSpace(mainFolderId))
                 {
                     returnBuilder = graphClient
                                     .Users[$"{inEmail}"]
-                                    .MailFolders["Inbox"]
+                                    .MailFolders[$"{MagicWords.inbox}"]
                                     .ChildFolders[$"{mainFolderId}"];
                 }
 
@@ -184,7 +185,7 @@ namespace GetMailFolderIds
                 {
                     returnBuilder = graphClient
                                     .Users[$"{inEmail}"]
-                                    .MailFolders["Inbox"]
+                                    .MailFolders[$"{MagicWords.inbox}"]
                                     .ChildFolders[$"{mainFolderId}"]
                                     .ChildFolders[$"{subFolderId1}"];
                 }

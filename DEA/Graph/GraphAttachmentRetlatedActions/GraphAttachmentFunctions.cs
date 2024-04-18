@@ -163,13 +163,13 @@ namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
                     {
                         // Move the email to the error folder. And returns a bool value.
                         bool moveSuccess = await GraphMoveEmailsFolder.MoveEmailsToAnotherFolder(requestBuilder,
-                                                                                                      message.Id,
-                                                                                                      destinationId);
+                                                                                                 message.Id,
+                                                                                                 destinationId);
                         if (!moveSuccess)
                         {
                             // Log the failure and return an error code
                             WriteLogClass.WriteToLog(1, $"Failed to move email {message.Id} to error folder.", 2);
-                            return 4; // Error code for failure
+                            return 2; // Error code for failure
                         }
                     }
 
@@ -178,7 +178,7 @@ namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
                 catch (Exception ex)
                 {
                     WriteLogClass.WriteToLog(0, $"Exception at ProcessMessageAsync: {ex.Message}", 0);
-                    return 4;
+                    return 2;
                 }
             }
         }
@@ -249,7 +249,8 @@ namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
                                                                           inMessage.Id,
                                                                           inMessage.Subject))
                     {
-                        return 0;
+                        WriteLogClass.WriteToLog(0, $"Failed to move email {inMessage.Subject} to export folder ....", 2);
+                        return 2;
                     }
 
                     return await StartAttachmentFilesUplaod(downloadFolderPath, customerId, recipientEmail);
@@ -258,7 +259,7 @@ namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
             catch (Exception ex)
             {
                 WriteLogClass.WriteToLog(0, $"Exception at DownloadAttachments: {ex.Message}", 0);
-                return 0;
+                return 2;
             }
             return 0;
         }
@@ -323,7 +324,7 @@ namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
             catch (Exception ex)
             {
                 WriteLogClass.WriteToLog(0, $"Exception at StartAttachmentFilesUplaod: {ex.Message}", 0);
-                return -1;
+                return 2;
             }
         }
 
