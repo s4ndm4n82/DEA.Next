@@ -1,9 +1,12 @@
 ﻿using DEA.Next.HelperClasses.OtherFunctions;
 using FluentFTP;
 using FolderCleaner;
+using FtpFunctions;
 using GraphMoveEmailsToExportClass;
 using Microsoft.Graph;
 using System.Net;
+using UserConfigRetriverClass;
+using UserConfigSetterClass;
 using WriteLog;
 using WriteNamesToLog;
 
@@ -45,6 +48,8 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
         {
             try
             {
+                UserConfigSetter.Ftpdetails ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(customerId);
+
                 WriteLogClass.WriteToLog(1, $"Uploaded {fileCount} file to project {projectId} using queue {queue} ....", 4);
                 WriteLogClass.WriteToLog(1, $"Uploaded filenames: {WriteNamesToLogClass.GetFileNames(jsonFileList)}", 4);
 
@@ -56,7 +61,8 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                         return -1;
                     }
                 }
-                else if (deliveryType == MagicWords.ftp)
+                
+                if (deliveryType == MagicWords.ftp && ftpDetails.FtpMoveToSubFolder == 0)
                 {
                     if (!await FolderCleanerClass.StartFtpFileDelete(ftpConnect, ftpFileList, localFileList))
                     {
@@ -69,6 +75,21 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                         return -1;
                     }
                 }
+
+                if (deliveryType == MagicWords.ftp && ftpDetails.FtpMoveToSubFolder == 1)
+                {
+                    if (!await FtpFunctionsClass.MoveFtpFiles(ftpConnect, customerId, ftpFileList))
+                    {
+                        return -1;
+                    }
+
+                    // Deletes the file from local hold folder when sending is successful.
+                    if (!await FolderCleanerClass.GetFolders(downloadFolderPath, jsonFileList, customerId, null, MagicWords.ftp))
+                    {
+                        return -1;
+                    }
+                }
+
                 return 1;
             }
             catch (Exception ex)

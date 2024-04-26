@@ -22,7 +22,7 @@ namespace FtpFunctions
         public static async Task<int> GetFtpFiles(int customerId)
         {
             // Starts the file download process if the client details are not empty.
-            if (customerId != null)
+            if (customerId != default)
             {
                 return await InitiateFtpDownload(customerId);
             }
@@ -34,13 +34,13 @@ namespace FtpFunctions
         /// </summary>
         /// <param name="FtpClientDetails">All the client details from the config file.</param>
         /// <returns>Return true or false.</returns>
-        public static async Task<int> InitiateFtpDownload(int clientId)
+        private static async Task<int> InitiateFtpDownload(int clientId)
         {
             int downloadResult = 0; // Return value
-            AsyncFtpClient ftpConnectToken = null;
+            AsyncFtpClient? ftpConnectToken = null;
             UserConfigSetter.Ftpdetails ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(clientId);
 
-            string downloadFolder = Path.Combine(FolderFunctionsClass.CheckFolders("ftp")
+            string downloadFolder = Path.Combine(FolderFunctionsClass.CheckFolders(MagicWords.ftp)
                                                 , ftpDetails.FtpMainFolder.Trim('/').Replace('/', '\\'));
 
             // If the user FTP config type is FTP.
@@ -95,7 +95,7 @@ namespace FtpFunctions
                     }                    
 
                     WriteLogClass.WriteToLog(ProcessStatusMessageSetterClass.SetMessageTypeOther(downloadResult),
-                                             $"{ProcessStatusMessageSetterClass.SetProcessStatusOther(downloadResult, "ftp")}\n", 3);
+                                             $"{ProcessStatusMessageSetterClass.SetProcessStatusOther(downloadResult, MagicWords.ftp)}\n", 3);
                     return downloadResult;
                 }
                 catch (Exception ex)
@@ -103,6 +103,63 @@ namespace FtpFunctions
                     WriteLogClass.WriteToLog(0, $"Exception at FTP file download: {ex.Message}", 0);
                     return downloadResult;
                 }
+        }
+
+        public static async Task<bool> MoveFtpFiles(AsyncFtpClient ftpConnect,
+                                                    int clientId,
+                                                    IEnumerable<string> ftpFilesList)
+        {
+            UserConfigSetter.Ftpdetails ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(clientId);
+
+            try
+            {
+                if (!ftpFilesList.Any())
+                {
+                    WriteLogClass.WriteToLog(0, $"Ftp files list is empty ....", 1);
+                    return false;
+                }
+
+                if (ftpConnect == null)
+                {
+                    WriteLogClass.WriteToLog(0, $"Ftp connection is null ....", 1);
+                    return false;
+                }
+
+                int loopCount = 0;
+                string ftpSourcePath = ftpDetails.FtpMainFolder;
+                string ftpDestinationPath = string.Concat(ftpDetails.FtpMainFolder, "/", ftpDetails.FtpSubFolder);                
+
+                foreach (string ftpFile in ftpFilesList)
+                {
+                    if (!await ftpConnect.FileExists(ftpFile))
+                    {
+                        WriteLogClass.WriteToLog(1, $"File does not exist: {ftpFile} ....", 1);
+                        continue;
+                    }
+
+                    string ftpFileName = Path.GetFileName(ftpFile);
+                    string ftpFullDestiPath = string.Concat(ftpDestinationPath, "/", ftpFileName);
+
+                    WriteLogClass.WriteToLog(1, $"Moving file: {ftpFile} to {ftpFullDestiPath} ....", 1);
+                    await ftpConnect.MoveFile(ftpFile, ftpFullDestiPath);
+                    WriteLogClass.WriteToLog(1, $"File moved: {ftpFile} to {ftpFullDestiPath} ....", 1);
+                    loopCount++;
+                }
+
+                if (loopCount == ftpFilesList.Count())
+                {
+                    WriteLogClass.WriteToLog(1, $"Files moved to {ftpDestinationPath} successfully ....", 1);
+                    return true;
+                }
+
+                WriteLogClass.WriteToLog(1, $"Moving files to {ftpDestinationPath} unsuccessfull ....", 1);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(0, $"Exception at FTP file move: {ex.Message}", 0);
+                return false;
+            }
         }
     }
 }

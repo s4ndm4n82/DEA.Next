@@ -50,6 +50,8 @@ namespace UserConfigSetterClass
             public int FtpPort { get; set; }
             public int FtpFolderLoop { get; set; }
             public string FtpMainFolder { get; set; }
+            public int FtpMoveToSubFolder { get; set; }
+            public string FtpSubFolder { get; set; }
         }
 
         public class Emaildetails
