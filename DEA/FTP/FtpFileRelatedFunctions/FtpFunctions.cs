@@ -115,44 +115,42 @@ namespace FtpFunctions
             {
                 if (!ftpFilesList.Any())
                 {
-                    WriteLogClass.WriteToLog(0, $"Ftp files list is empty ....", 1);
+                    WriteLogClass.WriteToLog(0, $"Ftp files list is empty ....", 3);
                     return false;
                 }
 
                 if (ftpConnect == null)
                 {
-                    WriteLogClass.WriteToLog(0, $"Ftp connection is null ....", 1);
+                    WriteLogClass.WriteToLog(0, $"Ftp connection is null ....", 3);
                     return false;
                 }
 
                 int loopCount = 0;
-                string ftpSourcePath = ftpDetails.FtpMainFolder;
-                string ftpDestinationPath = string.Concat(ftpDetails.FtpMainFolder, "/", ftpDetails.FtpSubFolder);                
 
                 foreach (string ftpFile in ftpFilesList)
                 {
                     if (!await ftpConnect.FileExists(ftpFile))
                     {
-                        WriteLogClass.WriteToLog(1, $"File does not exist: {ftpFile} ....", 1);
+                        WriteLogClass.WriteToLog(0, $"Source file does not exist: {ftpFile} ....", 3);
                         continue;
                     }
 
                     string ftpFileName = Path.GetFileName(ftpFile);
-                    string ftpFullDestiPath = string.Concat(ftpDestinationPath, "/", ftpFileName);
+                    string ftpDestinationPath = string.Concat(ftpDetails.FtpSubFolder, "/", ftpFileName);
 
-                    WriteLogClass.WriteToLog(1, $"Moving file: {ftpFile} to {ftpFullDestiPath} ....", 1);
-                    await ftpConnect.MoveFile(ftpFile, ftpFullDestiPath);
-                    WriteLogClass.WriteToLog(1, $"File moved: {ftpFile} to {ftpFullDestiPath} ....", 1);
+                    WriteLogClass.WriteToLog(1, $"Moving file: {ftpFileName} to {ftpDestinationPath} ....", 3);
+                    await ftpConnect.MoveFile(ftpFile, ftpDestinationPath);
+                    WriteLogClass.WriteToLog(1, $"File moved: {ftpFileName} to {ftpDestinationPath} ....", 3);
                     loopCount++;
                 }
 
                 if (loopCount == ftpFilesList.Count())
                 {
-                    WriteLogClass.WriteToLog(1, $"Files moved to {ftpDestinationPath} successfully ....", 1);
+                    WriteLogClass.WriteToLog(1, $"Files moved to {ftpDetails.FtpSubFolder} successfully ....", 3);
                     return true;
                 }
 
-                WriteLogClass.WriteToLog(1, $"Moving files to {ftpDestinationPath} unsuccessfull ....", 1);
+                WriteLogClass.WriteToLog(0, $"Moving files to {ftpDetails.FtpSubFolder} unsuccessfull ....", 3);
                 return false;
             }
             catch (Exception ex)

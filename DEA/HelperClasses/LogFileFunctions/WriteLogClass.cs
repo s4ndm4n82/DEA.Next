@@ -2,6 +2,7 @@
 using Serilog.Core;
 using Serilog.Events;
 using FolderFunctions;
+using DEA.Next.HelperClasses.OtherFunctions;
 
 namespace WriteLog
 {
@@ -20,7 +21,7 @@ namespace WriteLog
                 // Log file name.
                 string LogFileName = "DEA_Logfile_" + DateTime.Now.ToString("dd_MM_yyyy") + ".txt";
                 // Path to the log file.
-                string LogFile = Path.Combine(FolderFunctionsClass.CheckFolders("logs"), LogFileName);
+                string LogFile = Path.Combine(FolderFunctionsClass.CheckFolders(MagicWords.logs), LogFileName);
                 // Log file entry type or message entry location type array.
                 string[] entryTypes = { "[ ERR ]", "[ PRG ]", "[ EML ]", "[ FTP ]", "[ RST ]", "[ GRP ]" };
                 // Log file entry type or message entry location type.

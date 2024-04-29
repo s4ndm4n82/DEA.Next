@@ -6,6 +6,8 @@ using GraphMoveEmailsrClass;
 using HandleErrorFiles;
 using Microsoft.Graph;
 using System.Net;
+using UserConfigRetriverClass;
+using UserConfigSetterClass;
 using WriteLog;
 
 namespace DEA.Next.FileOperations.TpsServerReponseFunctions
@@ -40,42 +42,64 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
         {
             try
             {
+                UserConfigSetter.Ftpdetails ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(customerId);
+
                 WriteLogClass.WriteToLog(0, $"Server status code: {serverStatusCode}, Server Response Error: {serverResponseContent}", 0);
 
                 // Moves the files to the error folder. Assumes the files was not uploaded.
-                if (!await HandleErrorFilesClass.MoveFilesToErrorFolder(fullFilePath, ftpFileList, customerId, clientOrgNo))
+                if (ftpDetails.FtpMoveToSubFolder == false && !await HandleErrorFilesClass.MoveFilesToErrorFolder(fullFilePath,
+                                                                                                                  ftpFileList,
+                                                                                                                  customerId,
+                                                                                                                  clientOrgNo))
                 {
-                    WriteLogClass.WriteToLog(0, "Moving files failed ....", 0);
+                    WriteLogClass.WriteToLog(0, "Moving files failed ....", 3);
+                    return -1;
+                }
+
+                if (ftpDetails.FtpMoveToSubFolder == true && !FolderCleanerClass.DeleteFiles(Path.GetDirectoryName(fullFilePath), ftpFileList))
+                {
+                    WriteLogClass.WriteToLog(0, "Deleting files failed ....", 3);
                     return -1;
                 }
 
                 // This will run if it's not FTP.
-                if (deliveryType == MagicWords.email)
+                if (deliveryType == MagicWords.email && await FolderCleanerClass.GetFolders(fullFilePath,
+                                                                                            ftpFileList,
+                                                                                            null,
+                                                                                            clientOrgNo,
+                                                                                            MagicWords.email))
                 {
-                    if (await FolderCleanerClass.GetFolders(fullFilePath, ftpFileList, null, clientOrgNo, MagicWords.email))
-                    {
-                        return 2;
-                    }
+                    return 0;
                 }
-                else if (deliveryType == MagicWords.ftp)
+                
+                if (deliveryType == MagicWords.ftp)
                 {
-                    if (!await FolderCleanerClass.StartFtpFileDelete(ftpConnect, ftpFileList, localFileList))
+                    if (ftpDetails.FtpMoveToSubFolder == false && !await FolderCleanerClass.StartFtpFileDelete(ftpConnect,
+                                                                                                               ftpFileList,
+                                                                                                               localFileList))
                     {
-                        WriteLogClass.WriteToLog(0, "Deleting files from FTP server failed ....", 0);
+                        WriteLogClass.WriteToLog(0, "Deleting files from FTP server failed ....", 3);
                         return 0;
                     }
 
-                    if (!FolderCleanerClass.DeleteEmptyFolders(Path.GetDirectoryName(fullFilePath)))
+                    if (ftpDetails.FtpMoveToSubFolder == false && !FolderCleanerClass.DeleteEmptyFolders(Path.GetDirectoryName(fullFilePath)))
                     {
-                        WriteLogClass.WriteToLog(0, "Deleting empty folders failed ....", 0);
+                        WriteLogClass.WriteToLog(0, "Deleting empty folders failed ....", 3);
                         return 0;
                     }
+
+                    /*if (ftpDetails.FtpMoveToSubFolder == true && !FolderCleanerClass.DeleteFolder(Path.GetDirectoryName(fullFilePath)))
+                    {
+                        WriteLogClass.WriteToLog(0, "Deleting folder failed ....", 3);
+                        return 0;
+                    }*/
                 }
+
                 return 2; // Deafult return
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(1, $"Exception at ServerOnFailProjectsAsync: {ex.Message}", 1);
+                WriteLogClass.WriteToLog(0, $"Exception at ServerOnFailProjectsAsync: {ex.Message}", 0);
                 return -1;
             }
         }
@@ -106,21 +130,21 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                 // Move the file to error folder. Assuming file was not uploaded.
                 if (!await HandleErrorFilesClass.MoveFilesToErrorFolder(downloadFilePath, ftpFileList, customerId, string.Empty))
                 {
-                    WriteLogClass.WriteToLog(0, "Moving files failed ....", 0);
+                    WriteLogClass.WriteToLog(0, "Moving files failed ....", 3);
                     return -1;
                 }
 
                 // Remove the files from FTP server.
                 if (!await FolderCleanerClass.StartFtpFileDelete(ftpConnect, ftpFileList, localFileList))
                 {
-                    WriteLogClass.WriteToLog(0, "Deleting files from FTP server failed ....", 0);
+                    WriteLogClass.WriteToLog(0, "Deleting files from FTP server failed ....", 3);
                     return 0;
                 }
 
                 // Remove the files from the local folder.
                 if (!FolderCleanerClass.DeleteEmptyFolders(downloadFilePath))
                 {
-                    WriteLogClass.WriteToLog(0, "Deleting empty folders failed ....", 0);
+                    WriteLogClass.WriteToLog(0, "Deleting empty folders failed ....", 3);
                     return 0;
                 }
                 return 2; // Default return

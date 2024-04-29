@@ -158,7 +158,6 @@ namespace FolderCleaner
             {
                 // Makes the downloaded files list from the folder path.
                 IEnumerable<string> downloadedFileList = Directory.EnumerateFiles(localFolderPath, "*.*");
-
                 // Creates file name only list from the json file list.
                 IEnumerable<string> jsonFileNames = remoteFileList.Select(jsonFilePath => Path.GetFileName(jsonFilePath));
                 // Creates file name only list from the downloaded file list.
@@ -219,7 +218,7 @@ namespace FolderCleaner
         /// </summary>
         /// <param name="downloadFolderPath">Path of the local download folder.</param>
         /// <returns>Returns true or false.</returns>
-        private static bool DeleteFiles(string downloadFolderPath,
+        public static bool DeleteFiles(string downloadFolderPath,
                                         string[] jsonFileList)
         {
             // Returns if the loacal directory is missing without executing the remove code.
@@ -230,9 +229,9 @@ namespace FolderCleaner
 
             // Makes the downloaded files list from the folder path.
             IEnumerable<string> downloadedFileNamesList = Directory.EnumerateFiles(downloadFolderPath, "*.*");
-
             IEnumerable<string> downloadedFileNames = downloadedFileNamesList.Select(downloadedFilePath => Path.GetFileName(downloadedFilePath));
-            IEnumerable<string> matchingFileNames = jsonFileList.Intersect(jsonFileList);
+            //IEnumerable<string> matchingFileNames = jsonFileList.Intersect(jsonFileList);
+            IEnumerable<string> matchingFileNames = jsonFileList.Intersect(downloadedFileNames);
             bool result = true; // Result of the foreach loop.
 
             // Delete files.
@@ -261,12 +260,16 @@ namespace FolderCleaner
         {
             try
             {
-                string basePath = Path.GetDirectoryName(downloadFolderPath);
-
-                IEnumerable<string> directoryList = Directory.EnumerateDirectories(basePath, "*", SearchOption.AllDirectories);
-
-                IEnumerable<string> emptyFolderList = directoryList.Where(dirPath => !Directory.EnumerateFileSystemEntries(dirPath).Any());
                 bool result = true;
+                string basePath = Path.GetDirectoryName(downloadFolderPath);
+                IEnumerable<string> directoryList = Directory.EnumerateDirectories(basePath, "*", SearchOption.AllDirectories);
+                IEnumerable<string> emptyFolderList = directoryList.Where(dirPath => !Directory.EnumerateFileSystemEntries(dirPath).Any());
+
+                if (!emptyFolderList.Any())
+                {
+                    WriteLogClass.WriteToLog(1, $"The download folder is empty: {downloadFolderPath}", 3);
+                    return false;
+                }
 
                 foreach (string emptyFolder in emptyFolderList)
                 {
@@ -277,7 +280,7 @@ namespace FolderCleaner
                     }
                     catch (Exception ex)
                     {
-                        WriteLogClass.WriteToLog(0, $"Exception at folder delete: {ex.Message}", 0);
+                        WriteLogClass.WriteToLog(0, $"Exception at DeleteEmptyFolders foreach: {ex.Message}", 1);
                         result = false;
                     }
                 }
@@ -286,6 +289,49 @@ namespace FolderCleaner
             catch (Exception ex)
             {
                 WriteLogClass.WriteToLog(0, $"Exception at DeleteEmptyFolders: {ex.Message}", 0);
+                return false;
+            }
+        }
+
+        public static bool DeleteFolder(string downloadFolderPath)
+        {
+            try
+            {
+                bool result = true;
+                string basePath = Path.GetDirectoryName(downloadFolderPath);
+                IEnumerable<string> directoryList = Directory.EnumerateDirectories(basePath, "*", SearchOption.AllDirectories);
+                IEnumerable<string> notEmptyDirectoryList = directoryList.Where(dirPath => Directory.EnumerateFileSystemEntries(dirPath).Any());
+
+                if (!notEmptyDirectoryList.Any())
+                {
+                    WriteLogClass.WriteToLog(0, $"The download folder is empty: {downloadFolderPath} ....", 3);
+                    return false;
+                }
+
+                foreach (string directory in notEmptyDirectoryList)
+                {
+                    try
+                    {
+                        if (!Directory.Exists(directory))
+                        {
+                            WriteLogClass.WriteToLog(1, $"Folder {directory} does not exist ....", 3);
+                            continue;
+                        }
+
+                        // Delete the folders.
+                        Directory.Delete(directory, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        WriteLogClass.WriteToLog(0, $"Exception at DeleteFolder foreach: {ex.Message}", 0);
+                        result = false;
+                    }
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(0, $"Exception at DeleteFolder: {ex.Message}", 0);
                 return false;
             }
         }

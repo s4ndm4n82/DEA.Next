@@ -62,23 +62,18 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                     }
                 }
                 
-                if (deliveryType == MagicWords.ftp && ftpDetails.FtpMoveToSubFolder == 0)
+                if (deliveryType == MagicWords.ftp)
                 {
-                    if (!await FolderCleanerClass.StartFtpFileDelete(ftpConnect, ftpFileList, localFileList))
+                    if (ftpDetails.FtpMoveToSubFolder == true && !await FtpFunctionsClass.MoveFtpFiles(ftpConnect,
+                                                                                                       customerId,
+                                                                                                       ftpFileList))
                     {
                         return -1;
                     }
 
-                    // Deletes the file from local hold folder when sending is successful.
-                    if (!await FolderCleanerClass.GetFolders(downloadFolderPath, jsonFileList, customerId, null, MagicWords.ftp))
-                    {
-                        return -1;
-                    }
-                }
-
-                if (deliveryType == MagicWords.ftp && ftpDetails.FtpMoveToSubFolder == 1)
-                {
-                    if (!await FtpFunctionsClass.MoveFtpFiles(ftpConnect, customerId, ftpFileList))
+                    if (ftpDetails.FtpMoveToSubFolder == false && !await FolderCleanerClass.StartFtpFileDelete(ftpConnect,
+                                                                                                               ftpFileList,
+                                                                                                               localFileList))
                     {
                         return -1;
                     }
