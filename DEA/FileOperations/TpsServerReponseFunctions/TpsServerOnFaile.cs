@@ -89,6 +89,7 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
 
                     // Cehcking the folder is empty or not.
                     IEnumerable<string> fileList = Directory.EnumerateFiles(Path.GetDirectoryName(fullFilePath), "*", SearchOption.AllDirectories);
+                    // Return if the folder is not empty.
                     if (fileList.Any())
                     {
                         return 0;

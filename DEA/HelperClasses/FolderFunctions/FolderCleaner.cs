@@ -87,6 +87,7 @@ namespace FolderCleaner
 
                 // Checking if the folder is not empty.
                 IEnumerable<string> fileList = Directory.EnumerateFiles(downloadedFolderPath, "*.*");
+                // Return false if the folder is not empty.
                 if (fileList.Any())
                 {
                     return false;
