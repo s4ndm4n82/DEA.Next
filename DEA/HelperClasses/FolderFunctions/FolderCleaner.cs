@@ -243,7 +243,7 @@ namespace FolderCleaner
             // Creates file name only list from the json file list.
             IEnumerable<string> jsonFileNames = containsPath ? jsonFileList.Select(jsonFilePath => Path.GetFileName(jsonFilePath)) : jsonFileList;
             // Makes the matching file names list.
-            //IEnumerable<string> matchingFileNames = jsonFileList.Intersect(jsonFileList);
+            //IEnumerable<string> matchingFileNames = jsonFileList.Intersect(jsonFileList); <-- remove this if not needed. Do this next release
             IEnumerable<string> matchingFileNames = jsonFileNames.Intersect(downloadedFileNames).Where(fileName => downloadedFileNames.Contains(fileName));
             // Result of the foreach loop.
             bool result = true;
@@ -275,8 +275,11 @@ namespace FolderCleaner
             try
             {
                 bool result = true;
+                // Get the download folder name.
                 string basePath = Path.GetDirectoryName(downloadFolderPath);
+                // List all the folder with in the local download folder.
                 IEnumerable<string> directoryList = Directory.EnumerateDirectories(basePath, "*", SearchOption.AllDirectories);
+                // List all the empty folders.
                 IEnumerable<string> emptyFolderList = directoryList.Where(dirPath => !Directory.EnumerateFileSystemEntries(dirPath).Any());
 
                 if (!emptyFolderList.Any())
@@ -296,6 +299,7 @@ namespace FolderCleaner
                             WriteLogClass.WriteToLog(1, "The download folder is not empty ....", 1);
                             continue;
                         }
+
                         // Delete the folders if empty.
                         Directory.Delete(emptyFolder);
                         WriteLogClass.WriteToLog(1, $"Local download folder {Path.GetFileName(emptyFolder)} deleted ....", 1);

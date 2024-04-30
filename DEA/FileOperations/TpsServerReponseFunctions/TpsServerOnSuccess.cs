@@ -68,19 +68,21 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                 
                 if (deliveryType == MagicWords.ftp)
                 {
-                    if (ftpDetails.FtpMoveToSubFolder == true && !await FtpFunctionsClass.MoveFtpFiles(ftpConnect,
-                                                                                                       customerId,
-                                                                                                       ftpFileList))
-                    {
-                        WriteLogClass.WriteToLog(0, "Moving files to FTP sub foler failed ....", 1);
-                        return -1;
-                    }
-
+                    // Removes the files from FTP server. If the files not needed to be moved to a FTP sub folder.
                     if (ftpDetails.FtpMoveToSubFolder == false && !await FolderCleanerClass.StartFtpFileDelete(ftpConnect,
                                                                                                                ftpFileList,
                                                                                                                localFileList))
                     {
                         WriteLogClass.WriteToLog(0, "Deleting files from FTP failed ....", 1);
+                        return -1;
+                    }
+
+                    // Moving files to another FTP sub folder.
+                    if (ftpDetails.FtpMoveToSubFolder == true && !await FtpFunctionsClass.MoveFtpFiles(ftpConnect,
+                                                                                                       customerId,
+                                                                                                       ftpFileList))
+                    {
+                        WriteLogClass.WriteToLog(0, "Moving files to FTP sub foler failed ....", 1);
                         return -1;
                     }
 

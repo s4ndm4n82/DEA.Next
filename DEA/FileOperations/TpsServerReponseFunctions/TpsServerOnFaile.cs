@@ -70,7 +70,8 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                 }
                 
                 if (deliveryType == MagicWords.ftp)
-                {   
+                {
+                    // Delete the files from FTP server.
                     if (ftpDetails.FtpMoveToSubFolder == false && !await FolderCleanerClass.StartFtpFileDelete(ftpConnect,
                                                                                                                ftpFileList,
                                                                                                                localFileList))
@@ -79,18 +80,21 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                         return 0;
                     }
 
+                    // Deleting the files from local.
                     if (ftpDetails.FtpMoveToSubFolder == true && !FolderCleanerClass.DeleteFiles(Path.GetDirectoryName(fullFilePath), ftpFileList))
                     {
                         WriteLogClass.WriteToLog(0, "Deleting files failed ....", 1);
                         return 0;
                     }
 
+                    // Cehcking the folder is empty or not.
                     IEnumerable<string> fileList = Directory.EnumerateFiles(Path.GetDirectoryName(fullFilePath), "*", SearchOption.AllDirectories);
                     if (fileList.Any())
                     {
                         return 0;
                     }
 
+                    // Deleting the empty folders.
                     if (!FolderCleanerClass.DeleteEmptyFolders(Path.GetDirectoryName(fullFilePath)))
                     {
                         WriteLogClass.WriteToLog(0, "Deleting empty folders failed ....", 1);

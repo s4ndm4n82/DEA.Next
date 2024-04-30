@@ -105,6 +105,13 @@ namespace FtpFunctions
                 }
         }
 
+        /// <summary>
+        /// Move the ftp files to another FTP sub folder if the setting is true.
+        /// </summary>
+        /// <param name="ftpConnect"></param>
+        /// <param name="clientId"></param>
+        /// <param name="ftpFilesList"></param>
+        /// <returns></returns>
         public static async Task<bool> MoveFtpFiles(AsyncFtpClient ftpConnect,
                                                     int clientId,
                                                     IEnumerable<string> ftpFilesList)
