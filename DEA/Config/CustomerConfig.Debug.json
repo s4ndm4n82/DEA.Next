@@ -8,8 +8,8 @@
       //"Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiaW1wb3J0X2VmYWN0byIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImltcG9ydEBlZmFjdG8uY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI3MmJlYzAyMy00NzJhLTQyNDEtOGRjZS00Njg4YWM0MGMzYTQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6Ijk0NGNmZDU2LTkxZDAtNGMzNC04ZWFjLWEwMmQzYzMzNDc0ZCIsImV4cCI6MTczNzA2NDgxOSwiaXNzIjoid3d3LmVkZW50cmkuY29tIiwiYXVkIjoiaHR0cHM6Ly9jYXB0dXJlLmVkZW50cmkuY29tL3RwcyJ9.hyEqvyl61MTnclxQh0lIixdYdrqX2RTnHBLme69OOoM",
       //"UserName": "import_efacto",
       "TemplateKey": "",
-      //"Queue": "6",
-      "Queue": "3",
+      "Queue": "6",
+      //"Queue": "3",
       "ProjetID": "0c298408-76b9-4f4c-9941-edb101126329",
       //"ProjetID": "9b83f71a-2371-434b-88ca-7afb4b63220f",
       //"ProjetID": "690e35df-73b1-4802-46a5-08da8ffc4c42",
@@ -44,7 +44,7 @@
         "FtpPort": 21, // FTP connection port.
         "FtpFolderLoop": 0, // If 1, then loop through folders. If 0, then only main folder or the mapped folder path.
         //"FtpMainFolder": "/Aksesspunkt",
-        "FtpMainFolder": "/Aksesspunkt/Duett",
+        "FtpMainFolder": "/Aksesspunkt/Duett", // Path to the main folder FTP folder.
         "FtpMoveToSubFolder": true, // If true, then move the file to a subfolder. If false, files will be removed from the FTP after upload."
         "FtpSubFolder": "/Aksesspunkt/Duett/Uploaded" // The subfolder path to move the files to.
       },
@@ -93,7 +93,7 @@
       "EmailDetails": {
         "EmailAddress": "apptesting@efakturamottak.no",
         "EmailInboxPath": "/Level 1",
-        "EmailRead": 1,
+        "EmailRead": 0,
         "EmailList": [
           "sandaruwan.s@pro-account.lk",
           "apptesting@efakturamottak.no"

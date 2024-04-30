@@ -9,6 +9,7 @@ using System.Net;
 using UserConfigRetriverClass;
 using UserConfigSetterClass;
 using WriteLog;
+using Directory = System.IO.Directory;
 
 namespace DEA.Next.FileOperations.TpsServerReponseFunctions
 {
@@ -42,6 +43,8 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
         {
             try
             {
+                int deleteResult = 2;
+
                 UserConfigSetter.Ftpdetails ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(customerId);
 
                 WriteLogClass.WriteToLog(0, $"Server status code: {serverStatusCode}, Server Response Error: {serverResponseContent}", 0);
@@ -54,13 +57,7 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                 {
                     WriteLogClass.WriteToLog(0, "Moving files failed ....", 3);
                     return -1;
-                }
-
-                if (ftpDetails.FtpMoveToSubFolder == true && !FolderCleanerClass.DeleteFiles(Path.GetDirectoryName(fullFilePath), ftpFileList))
-                {
-                    WriteLogClass.WriteToLog(0, "Deleting files failed ....", 3);
-                    return -1;
-                }
+                }                
 
                 // This will run if it's not FTP.
                 if (deliveryType == MagicWords.email && await FolderCleanerClass.GetFolders(fullFilePath,
@@ -73,29 +70,35 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                 }
                 
                 if (deliveryType == MagicWords.ftp)
-                {
+                {   
                     if (ftpDetails.FtpMoveToSubFolder == false && !await FolderCleanerClass.StartFtpFileDelete(ftpConnect,
                                                                                                                ftpFileList,
                                                                                                                localFileList))
                     {
-                        WriteLogClass.WriteToLog(0, "Deleting files from FTP server failed ....", 3);
+                        WriteLogClass.WriteToLog(0, "Deleting files from FTP server failed ....", 1);
                         return 0;
                     }
 
-                    if (ftpDetails.FtpMoveToSubFolder == false && !FolderCleanerClass.DeleteEmptyFolders(Path.GetDirectoryName(fullFilePath)))
+                    if (ftpDetails.FtpMoveToSubFolder == true && !FolderCleanerClass.DeleteFiles(Path.GetDirectoryName(fullFilePath), ftpFileList))
                     {
-                        WriteLogClass.WriteToLog(0, "Deleting empty folders failed ....", 3);
+                        WriteLogClass.WriteToLog(0, "Deleting files failed ....", 1);
                         return 0;
                     }
 
-                    /*if (ftpDetails.FtpMoveToSubFolder == true && !FolderCleanerClass.DeleteFolder(Path.GetDirectoryName(fullFilePath)))
+                    IEnumerable<string> fileList = Directory.EnumerateFiles(Path.GetDirectoryName(fullFilePath), "*", SearchOption.AllDirectories);
+                    if (fileList.Any())
                     {
-                        WriteLogClass.WriteToLog(0, "Deleting folder failed ....", 3);
                         return 0;
-                    }*/
+                    }
+
+                    if (!FolderCleanerClass.DeleteEmptyFolders(Path.GetDirectoryName(fullFilePath)))
+                    {
+                        WriteLogClass.WriteToLog(0, "Deleting empty folders failed ....", 1);
+                        return 0;
+                    }
                 }
 
-                return 2; // Deafult return
+                return ftpDetails.FtpMoveToSubFolder == true ? deleteResult = 6 : deleteResult;
             }
             catch (Exception ex)
             {

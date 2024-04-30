@@ -56,7 +56,11 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                 // This will run if it's not FTP.
                 if (deliveryType == MagicWords.email)
                 {
-                    if (!await FolderCleanerClass.GetFolders(fullFilePath, jsonFileList, null, clientOrgNo, MagicWords.email))
+                    if (!await FolderCleanerClass.GetFolders(fullFilePath,
+                                                             jsonFileList,
+                                                             null,
+                                                             clientOrgNo,
+                                                             MagicWords.email))
                     {
                         return -1;
                     }
@@ -68,6 +72,7 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                                                                                                        customerId,
                                                                                                        ftpFileList))
                     {
+                        WriteLogClass.WriteToLog(0, "Moving files to FTP sub foler failed ....", 1);
                         return -1;
                     }
 
@@ -75,11 +80,16 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                                                                                                                ftpFileList,
                                                                                                                localFileList))
                     {
+                        WriteLogClass.WriteToLog(0, "Deleting files from FTP failed ....", 1);
                         return -1;
                     }
 
                     // Deletes the file from local hold folder when sending is successful.
-                    if (!await FolderCleanerClass.GetFolders(downloadFolderPath, jsonFileList, customerId, null, MagicWords.ftp))
+                    if (!await FolderCleanerClass.GetFolders(downloadFolderPath,
+                                                             jsonFileList,
+                                                             customerId,
+                                                             null,
+                                                             MagicWords.ftp))
                     {
                         return -1;
                     }
@@ -113,7 +123,7 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
         {
             try
             {
-                WriteLogClass.WriteToLog(1, $"uploaded data file: {fileName}", 1);
+                WriteLogClass.WriteToLog(1, $"Uploaded data file: {fileName}", 1);
 
                 // Converts the filename to an array. Needed by the FolderCleanerClass.
                 string[] jsonFileList = new string[] { fileName };

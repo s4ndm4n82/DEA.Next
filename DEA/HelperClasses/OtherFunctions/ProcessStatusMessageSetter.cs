@@ -23,7 +23,8 @@ namespace ProcessStatusMessageSetter
         EmailUploadFailed,
         EmailDownloadFailed,
         Unsuccess,
-        TooManyReplies
+        TooManyReplies,
+        FtpSubUploadFailed
     }
 
     internal class ProcessStatusMessageSetterClass
@@ -123,6 +124,7 @@ namespace ProcessStatusMessageSetter
                 (3, MagicWords.email) => ProcessStatusOther.EmailDownloadFailed,
                 (4, MagicWords.ftp) or (4, MagicWords.email) => ProcessStatusOther.FolderEmpty,
                 (5, MagicWords.email) => ProcessStatusOther.TooManyReplies,
+                (6, MagicWords.ftp) => ProcessStatusOther.FtpSubUploadFailed,
                 _ => ProcessStatusOther.Unsuccess,
             };
         }
@@ -132,12 +134,13 @@ namespace ProcessStatusMessageSetter
             return processStatus switch
             {
                 ProcessStatusOther.Success => "Files sent to processing successfully .... ",
-                ProcessStatusOther.FtpUploadFailed => "Uploading files failed. File moved to error ....,",
+                ProcessStatusOther.FtpUploadFailed => "Uploading files failed. File moved to error folder ....,",
                 ProcessStatusOther.EmailUploadFailed => "Uploading file/s didn't complete successfully. Moved files to error folder ....",
                 ProcessStatusOther.FtpDownloadFailed => "File download failed ....",
                 ProcessStatusOther.EmailDownloadFailed => "No attachment or file type not supported. Email moved to error and forwarded to sender ....",
                 ProcessStatusOther.FolderEmpty => "Folder/Inbox empty ....",
                 ProcessStatusOther.TooManyReplies => "Too many replies. Email moved to deleted items ....",
+                ProcessStatusOther.FtpSubUploadFailed => "Uploading files failed. Local files removed ....",
                 _ => "Operation failed ....",
             };
         }

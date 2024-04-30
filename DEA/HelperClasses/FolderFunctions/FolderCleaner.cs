@@ -68,7 +68,7 @@ namespace FolderCleaner
                 // File delete files will be written to the log. And return false.
                 if (!DeleteFiles(downloadedFolderPath, jsonFileList))
                 {
-                    WriteLogClass.WriteToLog(0, "Delete files failed ....", 0);
+                    WriteLogClass.WriteToLog(0, "Deleting files failed ....", 1);
                     return false;
                 }
 
@@ -85,10 +85,17 @@ namespace FolderCleaner
                                                                : "Moving files was unsuccessful ...", 1);
                 }                
 
+                // Checking if the folder is not empty.
+                IEnumerable<string> fileList = Directory.EnumerateFiles(downloadedFolderPath, "*.*");
+                if (fileList.Any())
+                {
+                    return false;
+                }
+
                 // Folder delete failes will be written to the log. And return false.
                 if (!DeleteEmptyFolders(downloadedFolderPath))
                 {
-                    WriteLogClass.WriteToLog(0, "Delete empty folders failed ....", 0);
+                    WriteLogClass.WriteToLog(0, "Deletting empty folders failed ....", 1);
                     return false;
                 }
 
@@ -229,10 +236,17 @@ namespace FolderCleaner
 
             // Makes the downloaded files list from the folder path.
             IEnumerable<string> downloadedFileNamesList = Directory.EnumerateFiles(downloadFolderPath, "*.*");
+            // Creates file name only list from the downloaded file list.
             IEnumerable<string> downloadedFileNames = downloadedFileNamesList.Select(downloadedFilePath => Path.GetFileName(downloadedFilePath));
+            // Checking if the jsonFileList contains file names or file names with path.
+            bool containsPath = jsonFileList.Any(filePath => filePath.Contains('/') || filePath.Contains('\\'));
+            // Creates file name only list from the json file list.
+            IEnumerable<string> jsonFileNames = containsPath ? jsonFileList.Select(jsonFilePath => Path.GetFileName(jsonFilePath)) : jsonFileList;
+            // Makes the matching file names list.
             //IEnumerable<string> matchingFileNames = jsonFileList.Intersect(jsonFileList);
-            IEnumerable<string> matchingFileNames = jsonFileList.Intersect(downloadedFileNames);
-            bool result = true; // Result of the foreach loop.
+            IEnumerable<string> matchingFileNames = jsonFileNames.Intersect(downloadedFileNames).Where(fileName => downloadedFileNames.Contains(fileName));
+            // Result of the foreach loop.
+            bool result = true;
 
             // Delete files.
             foreach (string fileName in matchingFileNames)
@@ -267,7 +281,7 @@ namespace FolderCleaner
 
                 if (!emptyFolderList.Any())
                 {
-                    WriteLogClass.WriteToLog(1, $"The download folder is empty: {downloadFolderPath}", 3);
+                    WriteLogClass.WriteToLog(1, "No empty folders found ....", 1);
                     return false;
                 }
 
@@ -275,12 +289,20 @@ namespace FolderCleaner
                 {
                     try
                     {
-                        // Delete the folders.
+                        // Check if the folder is not empty.
+                        IEnumerable<string> fileList = Directory.EnumerateFiles(emptyFolder, "*.*");
+                        if (fileList.Any())
+                        {
+                            WriteLogClass.WriteToLog(1, "The download folder is not empty ....", 1);
+                            continue;
+                        }
+                        // Delete the folders if empty.
                         Directory.Delete(emptyFolder);
+                        WriteLogClass.WriteToLog(1, $"Local download folder {Path.GetFileName(emptyFolder)} deleted ....", 1);
                     }
                     catch (Exception ex)
                     {
-                        WriteLogClass.WriteToLog(0, $"Exception at DeleteEmptyFolders foreach: {ex.Message}", 1);
+                        WriteLogClass.WriteToLog(0, $"Exception at DeleteEmptyFolders foreach: {ex.Message}", 0);
                         result = false;
                     }
                 }

@@ -110,12 +110,12 @@ namespace DEA.Next.Graph.GraphEmailActons
 
                 if (folderList.Any())
                 {
-                    WriteLogClass.WriteToLog(3, $"Starting attachment download process from inbox /{string.Join("/", folderList)} ....", 2);
+                    WriteLogClass.WriteToLog(1, $"Starting attachment download process from inbox /{string.Join("/", folderList)} ....", 2);
                 }
             }
             else
             {
-                WriteLogClass.WriteToLog(3, "Folder names are empty ....", 2);
+                WriteLogClass.WriteToLog(1, "Folder names are empty ....", 2);
             }
         }
     }
