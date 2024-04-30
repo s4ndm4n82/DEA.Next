@@ -319,49 +319,6 @@ namespace FolderCleaner
             }
         }
 
-        public static bool DeleteFolder(string downloadFolderPath)
-        {
-            try
-            {
-                bool result = true;
-                string basePath = Path.GetDirectoryName(downloadFolderPath);
-                IEnumerable<string> directoryList = Directory.EnumerateDirectories(basePath, "*", SearchOption.AllDirectories);
-                IEnumerable<string> notEmptyDirectoryList = directoryList.Where(dirPath => Directory.EnumerateFileSystemEntries(dirPath).Any());
-
-                if (!notEmptyDirectoryList.Any())
-                {
-                    WriteLogClass.WriteToLog(0, $"The download folder is empty: {downloadFolderPath} ....", 3);
-                    return false;
-                }
-
-                foreach (string directory in notEmptyDirectoryList)
-                {
-                    try
-                    {
-                        if (!Directory.Exists(directory))
-                        {
-                            WriteLogClass.WriteToLog(1, $"Folder {directory} does not exist ....", 3);
-                            continue;
-                        }
-
-                        // Delete the folders.
-                        Directory.Delete(directory, true);
-                    }
-                    catch (Exception ex)
-                    {
-                        WriteLogClass.WriteToLog(0, $"Exception at DeleteFolder foreach: {ex.Message}", 0);
-                        result = false;
-                    }
-                }
-                return result;
-            }
-            catch (Exception ex)
-            {
-                WriteLogClass.WriteToLog(0, $"Exception at DeleteFolder: {ex.Message}", 0);
-                return false;
-            }
-        }
-
         private static bool AttachmentFileDelete(string downloadFolerPath,
                                                  string[] jsonFileList)
         {
