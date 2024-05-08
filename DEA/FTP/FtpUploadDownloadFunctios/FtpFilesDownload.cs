@@ -1,5 +1,8 @@
 ﻿using FluentFTP;
 using GraphHelper;
+using Renci.SshNet;
+using Renci.SshNet.Sftp;
+using System.Collections.Generic;
 using UploadFtpFilesClass;
 using UserConfigRetriverClass;
 using UserConfigSetterClass;
@@ -18,7 +21,8 @@ namespace DownloadFtpFilesClass
         /// <param name="downloadFolderPath">Local download folder path.</param>
         /// <param name="clientID">ID of the client take from the config file.</param>
         /// <returns></returns>
-        public static async Task<int> DownloadFtpFilesFunction(AsyncFtpClient ftpConnect,
+        public static async Task<int> DownloadFtpFilesFunction(AsyncFtpClient? ftpConnect,
+                                                               SftpClient? sftpConnect,
                                                                string ftpPath,
                                                                string downloadFolderPath,
                                                                string ftpFolderName,
@@ -31,8 +35,21 @@ namespace DownloadFtpFilesClass
             {
                 // Reads the appsettings.json file.
                 UserConfigSetter.Customerdetail jsonData = await UserConfigRetriver.RetriveUserConfigById(clientID);
+
+                IEnumerable<FtpListItem> ftpFileNameList = Enumerable.Empty<FtpListItem>();
                 // Gets the FTP file list.
-                IEnumerable<FtpListItem> ftpFileNameList = await ftpConnect.GetListing(ftpPath);
+                if (ftpConnect != null)
+                {
+                    ftpFileNameList = await ftpConnect.GetListing(ftpPath);
+                }
+
+                IAsyncEnumerable<ISftpFile> sftpFileNameList;
+                // Gets the SFTP file list.
+                if (sftpConnect != null)
+                {
+                    sftpFileNameList = sftpConnect.ListDirectoryAsync(ftpPath, CancellationToken.None);
+                }
+
                 // Gets the files to download.
                 IEnumerable<string> filesToDownload = ftpFileNameList
                                                       .Where(f => f.Type == FtpObjectType.File)
@@ -74,7 +91,7 @@ namespace DownloadFtpFilesClass
                     IEnumerable<FtpResult> currentBatch = downloadResult
                                                           .Skip(batchCurrentIndex)
                                                           .Take(batchSize);
-                    
+
                     result = await FtpFilesUpload.FilesUploadFuntcion(ftpConnect,
                                                                       currentBatch.Select(r => r.RemotePath.ToString()).ToArray(),
                                                                       downloaFolder,

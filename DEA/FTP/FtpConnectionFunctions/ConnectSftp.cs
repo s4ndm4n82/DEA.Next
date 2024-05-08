@@ -5,45 +5,41 @@ namespace ConnectSftp
 {
     internal class ConnectSftpClass
     {
-        public static SftpClient ConnectSftp(string hostName, string hostIp, string userName, string userPassword)
+        /// <summary>
+        /// Creates the sftp connection using Renci.sshnet.
+        /// </summary>
+        /// <param name="hostName"></param>
+        /// <param name="userName"></param>
+        /// <param name="userPassword"></param>
+        /// <param name="ftpPort"></param>
+        /// <returns>Connections string</returns>
+        public static async Task<SftpClient> ConnectSftp(string hostName,
+                                                         string userName,
+                                                         string userPassword,
+                                                         int ftpPort)
         {
-            // SFTP implimention will be holted until it's needed.
-            ConnectionInfo connInfo = new(hostName, userName, new PasswordAuthenticationMethod(userName, userPassword));
+            // Creating the SFTP connection string.
+            ConnectionInfo connInfo = new(hostName, ftpPort, userName, new PasswordAuthenticationMethod(userName, userPassword));
 
             SftpClient sftpConnect = new(connInfo);
 
             try
             {
-                sftpConnect.Connect();
+                // Getting the cancellation token.
+                CancellationToken cancellationToken = new();
+                
+                // Connecting to the SFTP server.
+                await sftpConnect.ConnectAsync(cancellationToken);
+                
                 WriteLogClass.WriteToLog(1, "SFTP Connection successful ....", 3);
+
+                return sftpConnect;
             }
             catch
             {
                 WriteLogClass.WriteToLog(1, "Trying to connect using alt method ....", 3);
-                sftpConnect = ConnectSftpAlt(hostIp, userName, userPassword);
-            }
-
-            return sftpConnect;
-        }
-
-        private static SftpClient ConnectSftpAlt(string _hostIp, string _userName, string _userPassword)
-        {
-            ConnectionInfo connInfoAlt = new(_hostIp, _userName, new PasswordAuthenticationMethod(_userName, _userPassword));
-
-            SftpClient sftpConnectAlt = new(connInfoAlt);
-
-            try
-            {
-                sftpConnectAlt.Connect();
-                WriteLogClass.WriteToLog(1, "SFTP Alt Connection successful....", 3);
-            }
-            catch (Exception ex)
-            {
-                WriteLogClass.WriteToLog(0, $"Exception at SFTP connection: {ex.Message}", 0);
                 return null;
             }
-
-            return sftpConnectAlt;
         }
     }
 }

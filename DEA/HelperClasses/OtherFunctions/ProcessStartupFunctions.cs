@@ -29,7 +29,7 @@ namespace ProcessSartupFunctions
 
             if (ftpClients.Any())
             {
-               ftpReturnCode = await StartFtpDownload(ftpClients);
+                ftpReturnCode = await StartFtpDownload(ftpClients);
             }
 
             if (emailClients.Any())
@@ -46,7 +46,7 @@ namespace ProcessSartupFunctions
 
             foreach (var ftpClient in ftpClients)
             {
-                if ((ftpClient.FtpDetails!.FtpType!.ToLower() == MagicWords.ftp || ftpClient.FtpDetails!.FtpType!.ToLower() == MagicWords.ftps) && ftpClient.CustomerStatus == 1)
+                /*if ((ftpClient.FtpDetails!.FtpType!.ToLower() == MagicWords.ftp || ftpClient.FtpDetails!.FtpType!.ToLower() == MagicWords.ftps) && ftpClient.CustomerStatus == 1)
                 {
                     ftpResult = await FtpFunctionsClass.GetFtpFiles(ftpClient.Id);
                 }
@@ -54,6 +54,10 @@ namespace ProcessSartupFunctions
                 {
                     // Awating to be implimented. Will be added when needed.
                     //SftpFunctionsClass.GetSftpFiles(ftpClient.id);
+                }*/
+                if (ftpClient.CustomerStatus == 1)
+                {
+                    ftpResult = await FtpFunctionsClass.GetFtpFiles(ftpClient.Id);
                 }
             }
 

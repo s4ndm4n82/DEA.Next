@@ -1,5 +1,6 @@
 ﻿using DownloadFtpFilesClass;
 using FluentFTP;
+using Renci.SshNet;
 using WriteLog;
 
 namespace FtpLoopDownloadClass
@@ -14,7 +15,8 @@ namespace FtpLoopDownloadClass
         /// <param name="downloadFolderPath">Local downnload folder path.</param>
         /// <param name="clientId">Clients ID retrived from the config file.</param>
         /// <returns>Returns the result as an integer.</returns>
-        public static async Task<int> StartFtpLoopDownload(AsyncFtpClient ftpConnectToken,
+        public static async Task<int> StartFtpLoopDownload(AsyncFtpClient? ftpConnectToken,
+                                                           SftpClient? sftpConnectToken,
                                                            string ftpFolderPath,
                                                            string downloadFolderPath,
                                                            int clientId)
@@ -79,12 +81,13 @@ namespace FtpLoopDownloadClass
                     string ftpFolderName = Path.GetFileName(ftpFolderPathNotEmpty);
 
                     result = await FtpFilesDownload.DownloadFtpFilesFunction(ftpConnectToken,
+                                                                             null,
                                                                              ftpFolderPathNotEmpty,
                                                                              downloadFolder,
                                                                              ftpFolderName,
                                                                              clientId);
                 }
-                
+
                 return result;
             }
             catch (Exception ex)

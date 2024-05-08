@@ -9,6 +9,9 @@ using DownloadFtpFilesClass;
 using FtpLoopDownloadClass;
 using DEA.Next.HelperClasses.OtherFunctions;
 using UserConfigRetriverClass;
+using Renci.SshNet;
+using ConnectSftp;
+using static UserConfigSetterClass.UserConfigSetter;
 
 namespace FtpFunctions
 {
@@ -33,12 +36,17 @@ namespace FtpFunctions
         /// Start the FTP file download process.
         /// </summary>
         /// <param name="FtpClientDetails">All the client details from the config file.</param>
-        /// <returns>Return true or false.</returns>
+        /// <returns>Return 1 or 0.</returns>
         private static async Task<int> InitiateFtpDownload(int clientId)
         {
-            int downloadResult = 0; // Return value
+            // Return result.
+            int downloadResult = 0;
+            // FTP connection token
             AsyncFtpClient? ftpConnectToken = null;
-            UserConfigSetter.Ftpdetails ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(clientId);
+            // SFTP connection token
+            SftpClient? sftpConnectToken = null;
+
+            Ftpdetails ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(clientId);
 
             string downloadFolder = Path.Combine(FolderFunctionsClass.CheckFolders(MagicWords.ftp)
                                                 , ftpDetails.FtpMainFolder.Trim('/').Replace('/', '\\'));
@@ -47,7 +55,7 @@ namespace FtpFunctions
             if (string.Equals(ftpDetails.FtpType, MagicWords.ftp, StringComparison.OrdinalIgnoreCase))
             {
                 ftpConnectToken = await ConnectFtpClass.ConnectFtp(ftpDetails.FtpProfile,
-                                                                   ftpDetails.FtpHostName,                                                                   
+                                                                   ftpDetails.FtpHostName,
                                                                    ftpDetails.FtpUser,
                                                                    ftpDetails.FtpPassword,
                                                                    ftpDetails.FtpPort);
@@ -63,46 +71,124 @@ namespace FtpFunctions
                                                                      ftpDetails.FtpPort);
             }
 
-
-            // If the connection token equals null then returns early terminating the execution.
-            if (ftpConnectToken == null)
+            // the user FTP config type is SFTP
+            if (string.Equals(ftpDetails.FtpType, MagicWords.sftp, StringComparison.OrdinalIgnoreCase))
             {
-                WriteLogClass.WriteToLog(1, "Connection to FTP server failed ....", 3);
-                return 0;
+                sftpConnectToken = await ConnectSftpClass.ConnectSftp(ftpDetails.FtpHostName,
+                                                                      ftpDetails.FtpUser,
+                                                                      ftpDetails.FtpPassword,
+                                                                      ftpDetails.FtpPort);
             }
 
-            // Starts the file download process
-            using (ftpConnectToken)
-                try
+            // Starts the file download from FTP or FTPS server.
+            if (ftpConnectToken != null)
+            {
+                downloadResult = await InitiateFtpDownload(ftpConnectToken, downloadFolder, clientId);
+            }
+
+            // Starts the file download from SFTP server.
+            if (sftpConnectToken != null)
+            {
+                downloadResult = await InitiateSftpDownload(sftpConnectToken, downloadFolder, clientId);
+            }
+
+            // If the connection token equals null then returns early terminating the execution.
+            if (ftpConnectToken == null || sftpConnectToken == null)
+            {
+                WriteLogClass.WriteToLog(1, "Connection to FTP server failed ....", 3);
+            }
+
+            return downloadResult;
+        }
+
+        private static async Task<int> InitiateFtpDownload(AsyncFtpClient? ftpConnectToken,
+                                                           string downloadFolder, int clientId)
+        {
+            // Return result.
+            int downloadResult = 0;
+            // Get the FTP details from the config file.
+            Ftpdetails ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(clientId);
+
+            try
+            {
+                using (ftpConnectToken)
                 {
                     WriteLogClass.WriteToLog(1, $"Starting file download from {ftpDetails.FtpMainFolder} ....", 3);
 
                     if (ftpDetails.FtpFolderLoop == 1)
                     {
                         downloadResult = await FtpLoopDownload.StartFtpLoopDownload(ftpConnectToken,
+                                                                                    null,
                                                                                     ftpDetails.FtpMainFolder,
                                                                                     downloadFolder,
-                                                                                    clientId);
+                        clientId);
                     }
 
                     if (ftpDetails.FtpFolderLoop == 0)
                     {
                         downloadResult = await FtpFilesDownload.DownloadFtpFilesFunction(ftpConnectToken,
+                                                                                         null,
                                                                                          ftpDetails.FtpMainFolder,
                                                                                          downloadFolder,
                                                                                          string.Empty,
                                                                                          clientId);
-                    }                    
+                    }
 
                     WriteLogClass.WriteToLog(ProcessStatusMessageSetterClass.SetMessageTypeOther(downloadResult),
                                              $"{ProcessStatusMessageSetterClass.SetProcessStatusOther(downloadResult, MagicWords.ftp)}\n", 3);
                     return downloadResult;
                 }
-                catch (Exception ex)
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(0, $"Exception at FTP file download: {ex.Message}", 0);
+                return downloadResult;
+            }
+        }
+
+        private static async Task<int> InitiateSftpDownload(SftpClient? sftpConnectToken,
+                                                            string downloadFolder,
+                                                            int clientId)
+        {
+            // Return result.
+            int downloadResult = 0;
+            // Get the FTP details from the config file.
+            Ftpdetails ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(clientId);
+            try
+            {
+                using (sftpConnectToken)
                 {
-                    WriteLogClass.WriteToLog(0, $"Exception at FTP file download: {ex.Message}", 0);
+                    WriteLogClass.WriteToLog(1, $"Starting file download from {ftpDetails.FtpMainFolder} ....", 3);
+
+                    if (ftpDetails.FtpFolderLoop == 1)
+                    {
+                        downloadResult = await FtpLoopDownload.StartFtpLoopDownload(null,
+                                                                                    sftpConnectToken,
+                                                                                    ftpDetails.FtpMainFolder,
+                                                                                    downloadFolder,
+                        clientId);
+                    }
+
+                    if (ftpDetails.FtpFolderLoop == 0)
+                    {
+                        downloadResult = await FtpFilesDownload.DownloadFtpFilesFunction(null,
+                                                                                         sftpConnectToken,
+                                                                                         ftpDetails.FtpMainFolder,
+                                                                                         downloadFolder,
+                                                                                         string.Empty,
+                                                                                         clientId);
+                    }
+
+                    WriteLogClass.WriteToLog(ProcessStatusMessageSetterClass.SetMessageTypeOther(downloadResult),
+                                             $"{ProcessStatusMessageSetterClass.SetProcessStatusOther(downloadResult, MagicWords.ftp)}\n", 3);
                     return downloadResult;
                 }
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(0, $"Exception at SFTP file download: {ex.Message}", 0);
+                return downloadResult;
+            }
         }
 
         /// <summary>
