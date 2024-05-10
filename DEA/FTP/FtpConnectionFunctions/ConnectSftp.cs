@@ -27,12 +27,14 @@ namespace ConnectSftp
             {
                 // Getting the cancellation token.
                 CancellationToken cancellationToken = new();
-                
+
                 // Connecting to the SFTP server.
                 await sftpConnect.ConnectAsync(cancellationToken);
-                
+
+                // Write to log if the connection was successful.
                 WriteLogClass.WriteToLog(1, "SFTP Connection successful ....", 3);
 
+                // Returning the SFTP connection.
                 return sftpConnect;
             }
             catch

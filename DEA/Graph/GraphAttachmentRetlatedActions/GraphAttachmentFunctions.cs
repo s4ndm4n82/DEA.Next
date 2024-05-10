@@ -300,12 +300,13 @@ namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
 
                     // Create a single task that uploads all fiels in the batch.
                     int uploadResult = await SendToWebServiceProject.SendToWebServiceProjectAsync(null,
-                                                                                 downloadFolderPath,
-                                                                                 customerId,
-                                                                                 currentBatchFileNames,
-                                                                                 null,
-                                                                                 string.Empty,
-                                                                                 toEmail);
+                                                                                                  null,
+                                                                                                  downloadFolderPath,
+                                                                                                  customerId,
+                                                                                                  currentBatchFileNames,
+                                                                                                  null,
+                                                                                                  string.Empty,
+                                                                                                  toEmail);
                     if (uploadResult != 1)
                     {
                         WriteLogClass.WriteToLog(0, $"Upload failed with result: {uploadResult}", 0);

@@ -4,12 +4,14 @@ using UserConfigSetterClass;
 using UserConfigRetriverClass;
 using DEA.Next.FileOperations.TpsJsonStringCreatorFunctions;
 using DEA.Next.FileOperations.TpsFileFunctions;
+using Renci.SshNet;
 
 namespace FileFunctions
 {
     internal class SendToWebServiceProject
     {
         public static async Task<int> SendToWebServiceProjectAsync(AsyncFtpClient ftpConnect,
+                                                                   SftpClient sftpConnect,
                                                                    string filePath,
                                                                    int customerId,
                                                                    string[] ftpFileList,
@@ -20,7 +22,7 @@ namespace FileFunctions
             try
             {
                 WriteLogClass.WriteToLog(1, "Starting file upload process .... ", 4);
-                
+
                 UserConfigSetter.Customerdetail clientDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
 
                 // Get the correct org number depending on what type of download method is used.
@@ -42,6 +44,7 @@ namespace FileFunctions
                 }
 
                 return await MakeJsonRequestProjectsFunction.MakeJsonRequestProjects(ftpConnect,
+                                                                                     sftpConnect,
                                                                                      customerId,
                                                                                      clientOrg,
                                                                                      downloadedFiles,
@@ -50,7 +53,7 @@ namespace FileFunctions
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(1, $"Exception at SendToWebService: {ex.Message}", 1);
+                WriteLogClass.WriteToLog(0, $"Exception at SendToWebService: {ex.Message}", 0);
                 return -1;
             }
         }

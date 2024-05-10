@@ -1,6 +1,7 @@
 ﻿using DEA.Next.FileOperations.TpsFileUploadFunctions;
 using FluentFTP;
 using Newtonsoft.Json;
+using Renci.SshNet;
 using TpsJsonProjectUploadString;
 using UserConfigRetriverClass;
 using UserConfigSetterClass;
@@ -11,12 +12,13 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
     internal class MakeJsonRequestProjectsFunction
     {
         public static async Task<int> MakeJsonRequestProjects(AsyncFtpClient ftpConnect,
+                                                              SftpClient sftpConnect,
                                                               int customerId,
                                                               string clientOrgNo,
                                                               string[] filesToSend,
                                                               string[] ftpFileList,
                                                               string[] localFileList)
-        {   
+        {
             try
             {
                 UserConfigSetter.Customerdetail customerDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
@@ -42,7 +44,9 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
                 // Assigning the Json request to a string. To be handed over to the rest api.
                 string jsonResult = JsonConvert.SerializeObject(TpsJsonRequest, Formatting.Indented);
 
+                // Send the Json request to the rest api.
                 return await SendFilesToRestApiProject.SendFilesToRestProjectAsync(ftpConnect,
+                                                                                   sftpConnect,
                                                                                    jsonResult,
                                                                                    filesToSend[0],
                                                                                    customerId,

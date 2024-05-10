@@ -1,5 +1,6 @@
 ﻿using DEA.Next.FileOperations.TpsServerReponseFunctions;
 using FluentFTP;
+using Renci.SshNet;
 using RestSharp;
 using System.Net;
 using UserConfigRetriverClass;
@@ -11,6 +12,7 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
     internal class SendFilesToRestApiProject
     {
         public static async Task<int> SendFilesToRestProjectAsync(AsyncFtpClient ftpConnect,
+                                                                  SftpClient sftpConnect,
                                                                   string jsonResult,
                                                                   string fullFilePath,
                                                                   int customerId,
@@ -60,6 +62,7 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
                                                                             customerId,
                                                                             clientOrgNo,
                                                                             ftpConnect,
+                                                                            sftpConnect,
                                                                             ftpFileList,
                                                                             localFileList);
             }

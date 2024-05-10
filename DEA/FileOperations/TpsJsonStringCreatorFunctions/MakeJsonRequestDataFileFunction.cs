@@ -2,6 +2,7 @@
 using DEA.Next.FileOperations.TpsJsonStringClasses;
 using FluentFTP;
 using Newtonsoft.Json;
+using Renci.SshNet;
 using UserConfigRetriverClass;
 using UserConfigSetterClass;
 using WriteLog;
@@ -23,7 +24,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
             try
             {
                 UserConfigSetter.Customerdetail customerDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
-                
+
                 // Get the filename.
                 string fileName = Path.GetFileName(fileToSend.FirstOrDefault());
 

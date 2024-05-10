@@ -4,6 +4,7 @@ using FolderCleaner;
 using FtpFunctions;
 using GraphMoveEmailsToExportClass;
 using Microsoft.Graph;
+using Renci.SshNet;
 using System.Net;
 using UserConfigRetriverClass;
 using UserConfigSetterClass;
@@ -43,6 +44,7 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                                                                   int customerId,
                                                                   string clientOrgNo,
                                                                   AsyncFtpClient ftpConnect,
+                                                                  SftpClient sftpConnect,
                                                                   string[] ftpFileList,
                                                                   string[] localFileList)
         {
@@ -65,11 +67,12 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                         return -1;
                     }
                 }
-                
+
                 if (deliveryType == MagicWords.ftp)
                 {
                     // Removes the files from FTP server. If the files not needed to be moved to a FTP sub folder.
                     if (ftpDetails.FtpMoveToSubFolder == false && !await FolderCleanerClass.StartFtpFileDelete(ftpConnect,
+                                                                                                               sftpConnect,
                                                                                                                ftpFileList,
                                                                                                                localFileList))
                     {
@@ -131,13 +134,20 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                 string[] jsonFileList = new string[] { fileName };
 
                 // Remove the files from FTP server.
-                if (!await FolderCleanerClass.StartFtpFileDelete(ftpConnect, ftpFileList, localFileList))
+                if (!await FolderCleanerClass.StartFtpFileDelete(ftpConnect,
+                                                                 null,
+                                                                 ftpFileList,
+                                                                 localFileList))
                 {
                     return -1;
                 }
 
                 // Remove the files from the local folder.
-                if (!await FolderCleanerClass.GetFolders(downloadFolderPath, jsonFileList, customerId, null, MagicWords.ftp))
+                if (!await FolderCleanerClass.GetFolders(downloadFolderPath,
+                                                         jsonFileList,
+                                                         customerId,
+                                                         null,
+                                                         MagicWords.ftp))
                 {
                     return -1;
                 }

@@ -1,6 +1,7 @@
 ﻿using DEA.Next.FileOperations.TpsFileFunctions;
 using FileFunctions;
 using FluentFTP;
+using Renci.SshNet;
 using UserConfigRetriverClass;
 using UserConfigSetterClass;
 
@@ -17,7 +18,8 @@ namespace UploadFtpFilesClass
         /// <param name="clientId">Client ID.</param>
         /// <param name="downloadResult"></param>
         /// <returns></returns>
-        public static async Task<int> FilesUploadFuntcion(AsyncFtpClient ftpConnect,
+        public static async Task<int> FilesUploadFuntcion(AsyncFtpClient? ftpConnect,
+                                                          SftpClient? sftpConnect,
                                                           string[] currentBatch,
                                                           string ftpHoldFolder,
                                                           string[] fileNames,
@@ -42,6 +44,7 @@ namespace UploadFtpFilesClass
             if (!string.IsNullOrWhiteSpace(customerdetail.ProjetID))
             {
                 return await SendToWebServiceProject.SendToWebServiceProjectAsync(ftpConnect,
+                                                                                  sftpConnect,
                                                                                   ftpHoldFolder,
                                                                                   clientId,
                                                                                   matchingFileNames,

@@ -1,6 +1,7 @@
 ﻿using DEA.Next.HelperClasses.OtherFunctions;
 using FluentFTP;
 using HandleErrorFiles;
+using Renci.SshNet;
 using WriteLog;
 using WriteNamesToLog;
 
@@ -52,7 +53,7 @@ namespace FolderCleaner
                                                               int? customerId,
                                                               string clientEmail,
                                                               string deliverType)
-        {   
+        {
             try
             {
                 bool fileMoveResult = true; // Store the result of move files to error folder.
@@ -76,14 +77,14 @@ namespace FolderCleaner
                 if (nameList.Any()) // If there are any unmatched files.
                 {
                     // Calls the MoveFilesToErrorFolder method to start moving the missed files.
-                    fileMoveResult =  await HandleErrorFilesClass.MoveFilesToErrorFolder(downloadedFolderPath,
+                    fileMoveResult = await HandleErrorFilesClass.MoveFilesToErrorFolder(downloadedFolderPath,
                                                                                   nameList,
                                                                                   customerId,
                                                                                   clientEmail);
                     // Writes the result to the log.
                     WriteLogClass.WriteToLog(1, fileMoveResult ? $"Moved files {WriteNamesToLogClass.WriteMissedFilenames(nameList)}"
                                                                : "Moving files was unsuccessful ...", 1);
-                }                
+                }
 
                 // Checking if the folder is not empty.
                 IEnumerable<string> fileList = Directory.EnumerateFiles(downloadedFolderPath, "*.*");
@@ -116,20 +117,21 @@ namespace FolderCleaner
         /// <param name="ftpFileList">File list from the FTP server.</param>
         /// <param name="localFileList">File list from the local download folder.</param>
         /// <returns>The result of remove process or false.</returns>
-        public static async Task<bool> StartFtpFileDelete(AsyncFtpClient ftpConnect,
+        public static async Task<bool> StartFtpFileDelete(AsyncFtpClient? ftpConnect,
+                                                          SftpClient? sftpConnect,
                                                           IEnumerable<string> ftpFileList,
                                                           string[] localFileList)
         {
             try
             {
+                // Get the FTP path from the first FTP file.
+                string ftpPath = GetFtpPath(ftpFileList.FirstOrDefault());
                 // Local file name list.
                 IEnumerable<string> localFileNames = localFileList.Select(localFilePath => Path.GetFileName(localFilePath));
                 // FTP file name list.
                 IEnumerable<string> ftpFileNames = ftpFileList.Select(ftpFilePath => Path.GetFileName(ftpFilePath));
                 // Matching file names.
                 IEnumerable<string> matchingFileNames = localFileNames.Intersect(ftpFileNames);
-                // Get the FTP path from the first FTP file.
-                string ftpPath = GetFtpPath(ftpFileList.FirstOrDefault());                
                 // Result of the foreach loop.
                 bool result = false;
 
@@ -139,10 +141,22 @@ namespace FolderCleaner
                     return result;
                 }
 
-                // Delete FTP files.
-                foreach (string matchingFileName in matchingFileNames)
+                if (ftpConnect != null)
                 {
-                    result = await DeleteFtpFiles(ftpConnect, string.Concat(ftpPath, matchingFileName));
+                    // Delete FTP files.
+                    foreach (string matchingFileName in matchingFileNames)
+                    {
+                        result = await DeleteFtpFiles(ftpConnect, string.Concat(ftpPath, matchingFileName));
+                    }
+                }
+
+                if (sftpConnect != null)
+                {
+                    // Delete SFTP files.
+                    foreach (string matchingFileName in matchingFileNames)
+                    {
+                        result = await DeleteSftpFiles(sftpConnect, string.Concat(ftpPath, matchingFileName));
+                    }
                 }
                 return result;
             }
@@ -206,6 +220,22 @@ namespace FolderCleaner
                 return false;
             }
 
+        }
+
+        private static async Task<bool> DeleteSftpFiles(SftpClient sftpConnect,
+                                                        string fileToDelete)
+        {
+            try
+            {
+                // Delete the SFTP file.
+                await sftpConnect.DeleteFileAsync(fileToDelete, CancellationToken.None);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(0, $"Exception at SFTP file deletetion: {ex.Message}, file name {fileToDelete}.", 0);
+                return false;
+            }
         }
 
         /// <summary>

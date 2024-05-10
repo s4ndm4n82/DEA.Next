@@ -57,7 +57,7 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                 {
                     WriteLogClass.WriteToLog(0, "Moving files failed ....", 3);
                     return -1;
-                }                
+                }
 
                 // This will run if it's not FTP.
                 if (deliveryType == MagicWords.email && await FolderCleanerClass.GetFolders(fullFilePath,
@@ -68,11 +68,12 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                 {
                     return 0;
                 }
-                
+
                 if (deliveryType == MagicWords.ftp)
                 {
                     // Delete the files from FTP server.
                     if (ftpDetails.FtpMoveToSubFolder == false && !await FolderCleanerClass.StartFtpFileDelete(ftpConnect,
+                                                                                                               null,
                                                                                                                ftpFileList,
                                                                                                                localFileList))
                     {
@@ -143,7 +144,10 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                 }
 
                 // Remove the files from FTP server.
-                if (!await FolderCleanerClass.StartFtpFileDelete(ftpConnect, ftpFileList, localFileList))
+                if (!await FolderCleanerClass.StartFtpFileDelete(ftpConnect,
+                                                                 null,
+                                                                 ftpFileList,
+                                                                 localFileList))
                 {
                     WriteLogClass.WriteToLog(0, "Deleting files from FTP server failed ....", 3);
                     return 0;
