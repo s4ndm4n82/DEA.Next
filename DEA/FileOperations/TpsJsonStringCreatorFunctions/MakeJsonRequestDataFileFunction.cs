@@ -15,6 +15,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
     internal class MakeJsonRequestDataFileFunction
     {
         public static async Task<int> MakeJsonRequestDataFileAsync(AsyncFtpClient ftpConnect,
+                                                                   SftpClient sftpConnect,
                                                                    int customerId,
                                                                    string localFilePath,
                                                                    string[] fileToSend,
@@ -43,6 +44,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
                 string jsonRequest = JsonConvert.SerializeObject(TpsJsonRequest, Formatting.Indented);
 
                 return await SendFilesToRestApiDataFile.SendFilesToRestDataFileAsync(ftpConnect,
+                                                                                     sftpConnect,
                                                                                      customerId,
                                                                                      jsonRequest,
                                                                                      localFilePath,

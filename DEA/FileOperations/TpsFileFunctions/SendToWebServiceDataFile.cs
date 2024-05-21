@@ -13,6 +13,7 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
     internal class SendToWebServiceDataFile
     {
         public static async Task<int> SendToWebServiceDataFileAsync(AsyncFtpClient ftpConnect,
+                                                                    SftpClient sftpConnect,
                                                                     int customerId,
                                                                     string localFolderPath,
                                                                     string[] ftpFileList,
@@ -37,6 +38,7 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
                 }
 
                 return await MakeJsonRequestDataFileFunction.MakeJsonRequestDataFileAsync(ftpConnect,
+                                                                                          sftpConnect,
                                                                                           customerId,
                                                                                           localFolderPath,
                                                                                           downloadedFileList,

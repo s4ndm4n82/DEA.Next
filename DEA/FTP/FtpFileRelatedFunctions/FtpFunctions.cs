@@ -166,7 +166,7 @@ namespace FtpFunctions
                                                                                     sftpConnectToken,
                                                                                     ftpDetails.FtpMainFolder,
                                                                                     downloadFolder,
-                        clientId);
+                                                                                    clientId);
                     }
 
                     if (ftpDetails.FtpFolderLoop == 0)
@@ -199,10 +199,11 @@ namespace FtpFunctions
         /// <param name="ftpFilesList"></param>
         /// <returns></returns>
         public static async Task<bool> MoveFtpFiles(AsyncFtpClient ftpConnect,
+                                                    SftpClient sftpConnect,
                                                     int clientId,
                                                     IEnumerable<string> ftpFilesList)
         {
-            UserConfigSetter.Ftpdetails ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(clientId);
+            Ftpdetails ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(clientId);
 
             try
             {
@@ -212,38 +213,17 @@ namespace FtpFunctions
                     return false;
                 }
 
-                if (ftpConnect == null)
+                if (ftpConnect != null)
                 {
-                    WriteLogClass.WriteToLog(0, $"Ftp connection is null ....", 3);
-                    return false;
+                    return await MoveFtpFiles(ftpConnect, ftpDetails, ftpFilesList);
                 }
 
-                int loopCount = 0;
-
-                foreach (string ftpFile in ftpFilesList)
+                if (sftpConnect != null)
                 {
-                    if (!await ftpConnect.FileExists(ftpFile))
-                    {
-                        WriteLogClass.WriteToLog(0, $"Source file does not exist: {ftpFile} ....", 3);
-                        continue;
-                    }
-
-                    string ftpFileName = Path.GetFileName(ftpFile);
-                    string ftpDestinationPath = string.Concat(ftpDetails.FtpSubFolder, "/", ftpFileName);
-
-                    WriteLogClass.WriteToLog(1, $"Moving file: {ftpFileName} to {ftpDestinationPath} ....", 3);
-                    await ftpConnect.MoveFile(ftpFile, ftpDestinationPath);
-                    WriteLogClass.WriteToLog(1, $"File moved: {ftpFileName} to {ftpDestinationPath} ....", 3);
-                    loopCount++;
+                    return await MoveSftpFiles(sftpConnect, ftpDetails, ftpFilesList);
                 }
 
-                if (loopCount == ftpFilesList.Count())
-                {
-                    WriteLogClass.WriteToLog(1, $"Files moved to {ftpDetails.FtpSubFolder} successfully ....", 3);
-                    return true;
-                }
-
-                WriteLogClass.WriteToLog(0, $"Moving files to {ftpDetails.FtpSubFolder} unsuccessfull ....", 3);
+                WriteLogClass.WriteToLog(0, $"Moving FTP files failes ....", 3);
                 return false;
             }
             catch (Exception ex)
@@ -251,6 +231,103 @@ namespace FtpFunctions
                 WriteLogClass.WriteToLog(0, $"Exception at FTP file move: {ex.Message}", 0);
                 return false;
             }
+        }
+
+        private static async Task<bool> MoveFtpFiles(AsyncFtpClient ftpConnect,
+                                                     Ftpdetails ftpDetails,
+                                                     IEnumerable<string> ftpFilesList)
+        {
+            if (ftpConnect == null)
+            {
+                WriteLogClass.WriteToLog(0, $"Ftp connection is null ....", 3);
+                return false;
+            }
+
+            int loopCount = 0;
+
+            foreach (string ftpFile in ftpFilesList)
+            {
+                if (!await ftpConnect.FileExists(ftpFile))
+                {
+                    WriteLogClass.WriteToLog(0, $"Source file does not exist: {ftpFile} ....", 3);
+                    continue;
+                }
+
+                string ftpFileName = Path.GetFileName(ftpFile);
+                string ftpDestinationPath = string.Concat(ftpDetails.FtpSubFolder, "/", ftpFileName);
+                try
+                {
+                    WriteLogClass.WriteToLog(1, $"Moving file: {ftpFileName} to {ftpDestinationPath} ....", 3);
+                    await ftpConnect.MoveFile(ftpFile, ftpDestinationPath);
+                    WriteLogClass.WriteToLog(1, $"File moved: {ftpFileName} to {ftpDestinationPath} ....", 3);
+                    loopCount++;
+                }
+                catch (Exception ex)
+                {
+                    WriteLogClass.WriteToLog(0, $"Failed to move file: {ftpFileName} to {ftpDestinationPath}. Exception: {ex.Message}", 3);
+                }
+            }
+
+            if (loopCount == ftpFilesList.Count())
+            {
+                WriteLogClass.WriteToLog(1, $"Files moved to {ftpDetails.FtpSubFolder} successfully ....", 3);
+                return true;
+            }
+
+            WriteLogClass.WriteToLog(0, $"Moving files to {ftpDetails.FtpSubFolder} unsuccessfull ....", 3);
+            return false;
+        }
+
+        private static async Task<bool> MoveSftpFiles(SftpClient sftpConnect,
+                                                     Ftpdetails ftpDetails,
+                                                     IEnumerable<string> sftpFilesList)
+        {
+            if (sftpConnect == null)
+            {
+                WriteLogClass.WriteToLog(0, $"SFTP connection is null ....", 3);
+                return false;
+            }
+
+            int loopCount = 0;
+
+            foreach (string sftpFile in sftpFilesList)
+            {
+                if (!sftpConnect.Exists(sftpFile))
+                {
+                    WriteLogClass.WriteToLog(0, $"Source file does not exist: {sftpFile} ....", 3);
+                    continue;
+                }
+
+                string sftpFileName = Path.GetFileName(sftpFile);
+                string sftpDestinationPath = string.Concat(ftpDetails.FtpSubFolder, "/", sftpFileName);
+
+                try
+                {
+                    WriteLogClass.WriteToLog(1, $"Moving file: {sftpFileName} to {sftpDestinationPath} ....", 3);
+                    await sftpConnect.RenameFileAsync(sftpFile, sftpDestinationPath, CancellationToken.None);
+
+                    if (sftpConnect.Exists(sftpFile))
+                    {
+                        await sftpConnect.DeleteFileAsync(sftpFile, CancellationToken.None);
+                    }
+
+                    WriteLogClass.WriteToLog(1, $"File moved: {sftpFileName} to {sftpDestinationPath} ....", 3);
+                    loopCount++;
+                }
+                catch (Exception ex)
+                {
+                    WriteLogClass.WriteToLog(0, $"Failed to move file: {sftpFileName} to {sftpDestinationPath}. Exception: {ex.Message}", 3);
+                }
+            }
+
+            if (loopCount == sftpFilesList.Count())
+            {
+                WriteLogClass.WriteToLog(1, $"Files moved to {ftpDetails.FtpSubFolder} successfully ....", 3);
+                return true;
+            }
+
+            WriteLogClass.WriteToLog(0, $"Moving files to {ftpDetails.FtpSubFolder} unsuccessfull ....", 3);
+            return false;
         }
     }
 }

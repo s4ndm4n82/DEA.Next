@@ -55,6 +55,7 @@ namespace UploadFtpFilesClass
 
             // If the project ID is empty then it's a data file upload. Then this upload process will be used.
             return await SendToWebServiceDataFile.SendToWebServiceDataFileAsync(ftpConnect,
+                                                                                sftpConnect,
                                                                                 clientId,
                                                                                 ftpHoldFolder,
                                                                                 matchingFileNames,

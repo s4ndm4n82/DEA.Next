@@ -5,6 +5,7 @@ using GetMailFolderIds;
 using GraphMoveEmailsrClass;
 using HandleErrorFiles;
 using Microsoft.Graph;
+using Renci.SshNet;
 using System.Net;
 using UserConfigRetriverClass;
 using UserConfigSetterClass;
@@ -36,6 +37,7 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                                                                 int customerId,
                                                                 string clientOrgNo,
                                                                 AsyncFtpClient ftpConnect,
+                                                                SftpClient sftpConnect,
                                                                 string[] ftpFileList,
                                                                 string[] localFileList,
                                                                 HttpStatusCode serverStatusCode,
@@ -73,7 +75,7 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                 {
                     // Delete the files from FTP server.
                     if (ftpDetails.FtpMoveToSubFolder == false && !await FolderCleanerClass.StartFtpFileDelete(ftpConnect,
-                                                                                                               null,
+                                                                                                               sftpConnect,
                                                                                                                ftpFileList,
                                                                                                                localFileList))
                     {
@@ -125,6 +127,7 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
         /// <param name="statusCode"></param>
         /// <returns></returns>
         public static async Task<int> ServerOnFailDataFileAsync(AsyncFtpClient ftpConnect,
+                                                                SftpClient sftpConnect,
                                                                 int customerId,
                                                                 string downloadFilePath,
                                                                 string serverresponseContent,
@@ -145,7 +148,7 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
 
                 // Remove the files from FTP server.
                 if (!await FolderCleanerClass.StartFtpFileDelete(ftpConnect,
-                                                                 null,
+                                                                 sftpConnect,
                                                                  ftpFileList,
                                                                  localFileList))
                 {

@@ -82,10 +82,11 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
 
                     // Moving files to another FTP sub folder.
                     if (ftpDetails.FtpMoveToSubFolder == true && !await FtpFunctionsClass.MoveFtpFiles(ftpConnect,
+                                                                                                       sftpConnect,
                                                                                                        customerId,
                                                                                                        ftpFileList))
                     {
-                        WriteLogClass.WriteToLog(0, "Moving files to FTP sub foler failed ....", 1);
+                        WriteLogClass.WriteToLog(0, "Moving files to FTP sub folder failed ....", 1);
                         return -1;
                     }
 
@@ -120,6 +121,7 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
         /// <param name="localFileList"></param>
         /// <returns></returns>
         public static async Task<int> ServerOnSuccessDataFileAsync(AsyncFtpClient ftpConnect,
+                                                                   SftpClient sftpConnect,
                                                                    int customerId,
                                                                    string fileName,
                                                                    string downloadFolderPath,
@@ -135,7 +137,7 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
 
                 // Remove the files from FTP server.
                 if (!await FolderCleanerClass.StartFtpFileDelete(ftpConnect,
-                                                                 null,
+                                                                 sftpConnect,
                                                                  ftpFileList,
                                                                  localFileList))
                 {

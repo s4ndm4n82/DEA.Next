@@ -14,6 +14,7 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
     internal class SendFilesToRestApiDataFile
     {
         public static async Task<int> SendFilesToRestDataFileAsync(AsyncFtpClient ftpConnect,
+                                                                   SftpClient sftpConnect,
                                                                    int customerId,
                                                                    string jsonReuest,
                                                                    string downloadFolderPath,
@@ -37,15 +38,17 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
             if (serverResponse.StatusCode != HttpStatusCode.OK)
             {
                 return await TpsServerOnFaile.ServerOnFailDataFileAsync(ftpConnect,
-                                                                       customerId,
-                                                                       downloadFolderPath,
-                                                                       serverResponse.Content,
-                                                                       ftpFileList,
-                                                                       localFileList,
-                                                                       serverResponse.StatusCode);
+                                                                        sftpConnect,
+                                                                        customerId,
+                                                                        downloadFolderPath,
+                                                                        serverResponse.Content,
+                                                                        ftpFileList,
+                                                                        localFileList,
+                                                                        serverResponse.StatusCode);
             }
 
             return await TpsServerOnSuccess.ServerOnSuccessDataFileAsync(ftpConnect,
+                                                                         sftpConnect,
                                                                          customerId,
                                                                          fileName,
                                                                          downloadFolderPath,

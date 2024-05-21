@@ -46,6 +46,7 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
                                                                             customerId,
                                                                             clientOrgNo,
                                                                             ftpConnect,
+                                                                            sftpConnect,
                                                                             ftpFileList,
                                                                             localFileList,
                                                                             serverResponse.StatusCode,
