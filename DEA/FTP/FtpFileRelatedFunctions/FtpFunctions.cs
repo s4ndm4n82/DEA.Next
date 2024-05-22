@@ -233,6 +233,13 @@ namespace FtpFunctions
             }
         }
 
+        /// <summary>
+        /// Move the ftp files to another FTP sub folder if the setting is true.
+        /// </summary>
+        /// <param name="ftpConnect"></param>
+        /// <param name="ftpDetails"></param>
+        /// <param name="ftpFilesList"></param>
+        /// <returns></returns>
         private static async Task<bool> MoveFtpFiles(AsyncFtpClient ftpConnect,
                                                      Ftpdetails ftpDetails,
                                                      IEnumerable<string> ftpFilesList)
@@ -254,11 +261,25 @@ namespace FtpFunctions
                 }
 
                 string ftpFileName = Path.GetFileName(ftpFile);
-                string ftpDestinationPath = string.Concat(ftpDetails.FtpSubFolder, "/", ftpFileName);
+                string ftpDestinationPath = ftpDetails.FtpSubFolder;
+
+                if (ftpDetails.FtpFolderLoop == 1 && ftpDetails.FtpMoveToSubFolder)
+                {
+                    string loopFolderName = Path.GetFileName(Path.GetDirectoryName(ftpFile));
+                    ftpDestinationPath = string.Concat(ftpDetails.FtpSubFolder, "/", loopFolderName);
+                }
+
                 try
                 {
                     WriteLogClass.WriteToLog(1, $"Moving file: {ftpFileName} to {ftpDestinationPath} ....", 3);
-                    await ftpConnect.MoveFile(ftpFile, ftpDestinationPath);
+
+                    if (!await ftpConnect.DirectoryExists(ftpDestinationPath))
+                    {
+                        await ftpConnect.CreateDirectory(ftpDestinationPath);
+                    }
+
+                    await ftpConnect.MoveFile(ftpFile, string.Concat(ftpDestinationPath, "/", ftpFileName));
+
                     WriteLogClass.WriteToLog(1, $"File moved: {ftpFileName} to {ftpDestinationPath} ....", 3);
                     loopCount++;
                 }
@@ -270,7 +291,6 @@ namespace FtpFunctions
 
             if (loopCount == ftpFilesList.Count())
             {
-                WriteLogClass.WriteToLog(1, $"Files moved to {ftpDetails.FtpSubFolder} successfully ....", 3);
                 return true;
             }
 
@@ -278,6 +298,13 @@ namespace FtpFunctions
             return false;
         }
 
+        /// <summary>
+        /// Move the sftp files to another SFTP sub folder if the setting is true.
+        /// </summary>
+        /// <param name="sftpConnect"></param>
+        /// <param name="ftpDetails"></param>
+        /// <param name="sftpFilesList"></param>
+        /// <returns></returns>
         private static async Task<bool> MoveSftpFiles(SftpClient sftpConnect,
                                                      Ftpdetails ftpDetails,
                                                      IEnumerable<string> sftpFilesList)
@@ -299,12 +326,25 @@ namespace FtpFunctions
                 }
 
                 string sftpFileName = Path.GetFileName(sftpFile);
-                string sftpDestinationPath = string.Concat(ftpDetails.FtpSubFolder, "/", sftpFileName);
+                string sftpDestinationPath = ftpDetails.FtpSubFolder;
+
+                if (ftpDetails.FtpFolderLoop == 1 && ftpDetails.FtpMoveToSubFolder)
+                {
+                    string loopFolderName = Path.GetFileName(Path.GetDirectoryName(sftpFile));
+                    sftpDestinationPath = string.Concat(ftpDetails.FtpSubFolder, "/", loopFolderName);
+                }
 
                 try
                 {
                     WriteLogClass.WriteToLog(1, $"Moving file: {sftpFileName} to {sftpDestinationPath} ....", 3);
-                    await sftpConnect.RenameFileAsync(sftpFile, sftpDestinationPath, CancellationToken.None);
+
+
+                    if (!sftpConnect.Exists(sftpDestinationPath))
+                    {
+                        sftpConnect.CreateDirectory(sftpDestinationPath);
+                    }
+
+                    await sftpConnect.RenameFileAsync(sftpFile, string.Concat(sftpDestinationPath, "/", sftpFileName), CancellationToken.None);
 
                     if (sftpConnect.Exists(sftpFile))
                     {
@@ -322,7 +362,6 @@ namespace FtpFunctions
 
             if (loopCount == sftpFilesList.Count())
             {
-                WriteLogClass.WriteToLog(1, $"Files moved to {ftpDetails.FtpSubFolder} successfully ....", 3);
                 return true;
             }
 

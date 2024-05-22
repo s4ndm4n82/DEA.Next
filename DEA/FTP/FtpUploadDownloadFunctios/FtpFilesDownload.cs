@@ -59,9 +59,9 @@ namespace DownloadFtpFilesClass
                     downloadResult = await CreateSftpFileList(sftpConnect, ftpPath, downloaFolder, allowedFileExtensions);
                 }
 
-                if (downloadResult == null)
+                if (downloadResult.Count == 0)
                 {
-                    WriteLogClass.WriteToLog(0, "The downloadResult list is empty ....", 0);
+                    WriteLogClass.WriteToLog(1, "The downloadResult list is empty ....", 3);
                     return 4;
                 }
 

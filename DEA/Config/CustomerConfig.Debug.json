@@ -43,10 +43,11 @@
         "FtpPassword": "jackkills",
         "FtpPort": 21, // FTP connection port.
         "FtpFolderLoop": 0, // If 1, then loop through folders. If 0, then only main folder or the mapped folder path.
-        //"FtpMainFolder": "/Aksesspunkt",
-        "FtpMainFolder": "/Aksesspunkt/Duett", // Path to the main folder FTP folder.
+        "FtpMainFolder": "/Aksesspunkt",
+        "FtpMainFolder": "/Duett", // Path to the main folder FTP folder.
         "FtpMoveToSubFolder": true, // If true, then move the file to a subfolder. If false, files will be removed from the FTP after upload."
-        "FtpSubFolder": "/Aksesspunkt/Duett/Uploaded" // The subfolder path to move the files to.
+        "FtpSubFolder": "/Duett/Uploaded", // The subfolder path to move the files to.
+        //"FtpSubFolder": "/Aksesspunkt/Uploaded" // The subfolder path to move the files to.
       },
       "EmailDetails": {
         "EmailAddress": "",
@@ -93,7 +94,7 @@
       "EmailDetails": {
         "EmailAddress": "apptesting@efakturamottak.no",
         "EmailInboxPath": "/Level 1",
-        "EmailRead": 0,
+        //"EmailRead": 0,
         "EmailList": [
           "sandaruwan.s@pro-account.lk",
           "apptesting@efakturamottak.no"
@@ -263,12 +264,12 @@
         "FtpPassword": "jackkills",
         "FtpPort": 22, // FTP connection port.
         "FtpFolderLoop": 0, // If 1, then loop through folders. If 0, then only main folder or the mapped folder path.
-        "FtpMainFolder": "/Aksesspunkt/Duett",
-        //"FtpMainFolder": "/Duett", // Path to the main folder FTP folder.
+        //"FtpMainFolder": "/Aksesspunkt/Duett",
+        "FtpMainFolder": "/Duett", // Path to the main folder FTP folder.
         //"FtpMainFolder": "/LoopDownload",
-        "FtpMoveToSubFolder": true, // If true, then move the file to a subfolder. If false, files will be removed from the FTP after upload."
-        "FtpSubFolder": "/Aksesspunkt/Duett/Uploaded" // The subfolder path to move the files to.
-        //"FtpSubFolder": "/Duett/Uploaded"
+        "FtpMoveToSubFolder": false, // If true, then move the file to a subfolder. If false, files will be removed from the FTP after upload."
+        "FtpSubFolder": "/Duett/Uploaded" // The subfolder path to move the files to.
+        //"FtpSubFolder": "/LoopDownload/Uploaded"
       },
       "EmailDetails": {
         "EmailAddress": "",

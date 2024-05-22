@@ -90,7 +90,7 @@ namespace GetMailFolderIds
 
                         // Setting the sub inbox id.
                         folderIds.ClientSubFolderId1 = subFolderBuilder1.Request().Select("id").GetAsync().Result.Id;
-                    }                    
+                    }
                 }
 
                 // Getting the last sub inboxe ID.
@@ -125,7 +125,7 @@ namespace GetMailFolderIds
             {
                 WriteLogClass.WriteToLog(0, $"Exception at getting folder id's: {ex.Message}", 0);
                 return null;
-            }            
+            }
         }
 
         /// <summary>
@@ -142,14 +142,22 @@ namespace GetMailFolderIds
             IMailFolderChildFoldersCollectionPage errorFolderDetails = await requestBuilder
                                                                              .ChildFolders
                                                                              .Request()
-                                                                             .GetAsync(); 
+                                                                             .GetAsync();
             if (errorFolderDetails == null)
             {
                 WriteLogClass.WriteToLog(0, $"Error folder details is null ....", 0);
                 return null;
             }
 
-            return errorFolderDetails.FirstOrDefault(efd => efd.DisplayName.ToLower() == MagicWords.error)!.Id;
+
+            string errorFolderId = errorFolderDetails.FirstOrDefault(efd => efd.DisplayName.Equals(MagicWords.error, StringComparison.OrdinalIgnoreCase)).Id;
+
+            if (!string.IsNullOrWhiteSpace(errorFolderId))
+            {
+                return errorFolderId;
+            }
+
+            return null;
         }
 
         /// <summary>

@@ -46,15 +46,6 @@ namespace ProcessSartupFunctions
 
             foreach (var ftpClient in ftpClients)
             {
-                /*if ((ftpClient.FtpDetails!.FtpType!.ToLower() == MagicWords.ftp || ftpClient.FtpDetails!.FtpType!.ToLower() == MagicWords.ftps) && ftpClient.CustomerStatus == 1)
-                {
-                    ftpResult = await FtpFunctionsClass.GetFtpFiles(ftpClient.Id);
-                }
-                else
-                {
-                    // Awating to be implimented. Will be added when needed.
-                    //SftpFunctionsClass.GetSftpFiles(ftpClient.id);
-                }*/
                 if (ftpClient.CustomerStatus == 1)
                 {
                     ftpResult = await FtpFunctionsClass.GetFtpFiles(ftpClient.Id);

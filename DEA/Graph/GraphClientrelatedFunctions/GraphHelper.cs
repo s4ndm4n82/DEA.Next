@@ -44,7 +44,7 @@ namespace GraphHelper
                 {
                     WriteLogClass.WriteToLog(0, $"Exception at graph API call: {ex.Message}", 0);
                 }
-                
+
             }
 
             if (!mainInbox.IsNullOrEmpty())
@@ -96,7 +96,7 @@ namespace GraphHelper
 
             public GraphApiInitializer()
             {
-                jsonData = AppConfigReaderClass.ReadAppDotConfig();                
+                jsonData = AppConfigReaderClass.ReadAppDotConfig();
             }
 
             public async Task<bool> GraphInitialize()
@@ -124,7 +124,12 @@ namespace GraphHelper
         /// <param name="clientSecret"></param>
         /// <param name="scopes"></param>
         /// <returns></returns>        
-        public static Task<bool> InitializeGraphClient(string clientId, string instanceId, string tenantId, string graphUrl, string clientSecret, string[] scopes)
+        public static Task<bool> InitializeGraphClient(string clientId,
+                                                       string instanceId,
+                                                       string tenantId,
+                                                       string graphUrl,
+                                                       string clientSecret,
+                                                       string[] scopes)
         {
             try
             {
