@@ -2,7 +2,6 @@
 using ConnectFtp;
 using ConnectFtps;
 using FluentFTP;
-using UserConfigSetterClass;
 using FolderFunctions;
 using ProcessStatusMessageSetter;
 using DownloadFtpFilesClass;
@@ -93,9 +92,14 @@ namespace FtpFunctions
             }
 
             // If the connection token equals null then returns early terminating the execution.
-            if (ftpConnectToken == null || sftpConnectToken == null)
+            if (ftpConnectToken == null && (ftpDetails.FtpType == MagicWords.ftp || ftpDetails.FtpType == MagicWords.ftps))
             {
                 WriteLogClass.WriteToLog(1, "Connection to FTP server failed ....", 3);
+            }
+
+            if (sftpConnectToken == null && ftpDetails.FtpType == MagicWords.sftp)
+            {
+                WriteLogClass.WriteToLog(1, "Connection to SFTP server failed ....", 3);
             }
 
             return downloadResult;
