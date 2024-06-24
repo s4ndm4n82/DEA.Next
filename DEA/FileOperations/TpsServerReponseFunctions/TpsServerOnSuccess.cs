@@ -81,7 +81,7 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                     }
 
                     // Moving files to another FTP sub folder.
-                    if (ftpDetails.FtpMoveToSubFolder == true && !await FtpFunctionsClass.MoveFtpFiles(ftpConnect,
+                    if (ftpDetails.FtpMoveToSubFolder == true && !await FtpFunctionsClass.MoveFtpFilesToSubFolder(ftpConnect,
                                                                                                        sftpConnect,
                                                                                                        customerId,
                                                                                                        ftpFileList))

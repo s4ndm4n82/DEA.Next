@@ -202,10 +202,10 @@ namespace FtpFunctions
         /// <param name="clientId"></param>
         /// <param name="ftpFilesList"></param>
         /// <returns></returns>
-        public static async Task<bool> MoveFtpFiles(AsyncFtpClient ftpConnect,
-                                                    SftpClient sftpConnect,
-                                                    int clientId,
-                                                    IEnumerable<string> ftpFilesList)
+        public static async Task<bool> MoveFtpFilesToSubFolder(AsyncFtpClient ftpConnect,
+                                                               SftpClient sftpConnect,
+                                                               int clientId,
+                                                               IEnumerable<string> ftpFilesList)
         {
             Ftpdetails ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(clientId);
 

@@ -23,7 +23,10 @@
       "ClientIdField": "Internal ID",
       "IdField2Value": "", // If this value is set then "ClientIdField2" will use the set value as its value in the TPS. If its not set then "ClientOrg" will be used as the value.
       "ClientIdField2": "Customer Organization No", // Don't set this if not going to be used.
-      "FileDeliveryMethod": "ftp",
+      "FileDeliveryMethod": "ftp", //Specify this. If delivered via FTP then use FTP. If via email, use EMAIL.
+      "ReadTheContent": true, // If true then read the file. If false then just send to process.
+      "SetDelimiter": ";", // If the file is a CSV then this will be used.
+      "NumberOfLinesToRead": 10, // When reading from a CSV we can set the number of lines to read at once.
       "DomainDetails": {
         "MainDomain": "https://process.edentri.com/",
         "TpsRequestUrl": "tps_test/import?"
@@ -44,9 +47,9 @@
         "FtpPort": 21, // FTP connection port.
         "FtpFolderLoop": 0, // If 1, then loop through folders. If 0, then only main folder or the mapped folder path.
         "FtpMainFolder": "/Aksesspunkt",
-        "FtpMainFolder": "/Duett", // Path to the main folder FTP folder.
-        "FtpMoveToSubFolder": true, // If true, then move the file to a subfolder. If false, files will be removed from the FTP after upload."
-        "FtpSubFolder": "/Duett/Uploaded", // The subfolder path to move the files to.
+        //"FtpMainFolder": "/Duett", // Path to the main folder FTP folder.
+        "FtpMoveToSubFolder": false, // If true, then move the file to a subfolder. If false, files will be removed from the FTP after upload."
+        "FtpSubFolder": "/Duett/Uploaded" // The subfolder path to move the files to.
         //"FtpSubFolder": "/Aksesspunkt/Uploaded" // The subfolder path to move the files to.
       },
       "EmailDetails": {
@@ -58,7 +61,8 @@
       "DocumentDetails": {
         "DocumentType": "PDF",
         "DocumentExtensions": [
-          ".pdf"
+          ".pdf",
+          ".csv"
         ]
       }
     },
@@ -77,10 +81,11 @@
       "SendEmail": 1,
       "ClientOrgNo": "Testing Above setting",
       "ClientIdField": "InternalAccountingID",
-      "FileDeliveryMethod": "email",
+      "FileDeliveryMethod": "email", //Specify this. If delivered via FTP then use FTP. If via email, use EMAIL.
+      "ReadTheFile": 1, // If 1 then read the file content. If 0 then process the file.
       "DomainDetails": {
-        "MainDomain": "https://capture.edentri.com/",
-        "TpsRequestUrl": "tps_test_processing/Import?"
+        "MainDomain": "https://process.edentri.com/",
+        "TpsRequestUrl": "tps_test/import?"
       },
       "FtpDetails": {
         "FtpType": "",
@@ -134,7 +139,8 @@
       "ClientName": "Kristiansand Byggentrepenør AS",
       "ClientOrgNo": "993853623",
       "ClientIdField": "Customer Organization No",
-      "FileDeliveryMethod": "email",
+      "FileDeliveryMethod": "email", //Specify this. If delivered via FTP then use FTP. If via email, use EMAIL.
+      "ReadTheFile": 1, // If 1 then read the file content. If 0 then process the file.
       "DomainDetails": {
         "MainDomain": "https://capture.edentri.com/",
         "TpsRequestUrl": "tps_test_processing/Import?"
@@ -185,7 +191,8 @@
       "SendEmail": 0, // If 1 then send email. If 0 then use configured org.
       "ClientOrgNo": "123456789",
       "ClientIdField": "",
-      "FileDeliveryMethod": "ftp",
+      "FileDeliveryMethod": "ftp", //Specify this. If delivered via FTP then use FTP. If via email, use EMAIL.
+      "ReadTheFile": 1, // If 1 then read the file content. If 0 then process the file.
       "DomainDetails": {
         "MainDomain": "https://capture.edentri.com/",
         "TpsRequestUrl": "tps_test_processing/ImportExternalData?"
@@ -244,7 +251,8 @@
       "ClientIdField": "Internal ID",
       "IdField2Value": "", // If this value is set then "ClientIdField2" will use the set value as its value in the TPS. If its not set then "ClientOrg" will be used as the value.
       "ClientIdField2": "Customer Organization No", // Don't set this if not going to be used.
-      "FileDeliveryMethod": "ftp",
+      "FileDeliveryMethod": "ftp", //Specify this. If delivered via FTP then use FTP. If via email, use EMAIL.
+      "ReadTheFile": 1, // If 1 then read the file content. If 0 then process the file.
       "DomainDetails": {
         "MainDomain": "https://process.edentri.com/",
         "TpsRequestUrl": "tps_test/import?"

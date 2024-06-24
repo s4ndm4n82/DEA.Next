@@ -1,4 +1,5 @@
-﻿using FluentFTP;
+﻿using DEA.Next.HelperClasses.FileFunctions;
+using FluentFTP;
 using GraphHelper;
 using Renci.SshNet;
 using Renci.SshNet.Async;
@@ -44,60 +45,106 @@ namespace DownloadFtpFilesClass
                 List<string> allowedFileExtensions = jsonData.DocumentDetails.DocumentExtensions;
 
                 // Download folder path.
-                string downloaFolder = Path.Combine(downloadFolderPath, GraphHelperClass.FolderNameRnd(10));
+                string downloadFolder = Path.Combine(downloadFolderPath, GraphHelperClass.FolderNameRnd(10));
 
-                List<FtpFileInfo> downloadResult = new();
+                List<FtpFileInfo> downloadFilesList = new();
+
                 // Gets the FTP file list.
                 if (ftpConnect != null)
                 {
-                    downloadResult = await CreateFtpFileList(ftpConnect, ftpPath, downloaFolder, allowedFileExtensions);
+                    downloadFilesList = await CreateFtpFileList(ftpConnect, ftpPath, downloadFolder, allowedFileExtensions);
                 }
 
                 // Gets the SFTP file list.
                 if (sftpConnect != null)
                 {
-                    downloadResult = await CreateSftpFileList(sftpConnect, ftpPath, downloaFolder, allowedFileExtensions);
+                    downloadFilesList = await CreateSftpFileList(sftpConnect, ftpPath, downloadFolder, allowedFileExtensions);
                 }
 
-                if (downloadResult.Count == 0)
+                if (downloadFilesList.Count == 0)
                 {
                     WriteLogClass.WriteToLog(1, "The downloadResult list is empty ....", 3);
                     return 4;
                 }
 
-                WriteLogClass.WriteToLog(1, $"Downloaded file names: {WriteNamesToLogClass.GetFileNames(downloadResult.Select(f => f.FileName.ToString()).ToArray())}", 1);
+                if (downloadFilesList.Count > 0 && jsonData.ReadTheContent)
+                {
+                    await ReadFileContent.StartReadingFileContent(downloadFolder, downloadFilesList, clientID);
+                }
+
+                WriteLogClass.WriteToLog(1, $"Downloaded file names: {WriteNamesToLogClass.GetFileNames(downloadFilesList.Select(f => f.FileName.ToString()).ToArray())}", 1);
 
                 // Starts the file download process.
-                int batchSize = jsonData.MaxBatchSize;
-                int batchCurrentIndex = 0;
+                return await UploadFiles(ftpConnect,
+                                         sftpConnect,
+                                         downloadFilesList,
+                                         jsonData.MaxBatchSize,
+                                         downloadFolder,
+                                         ftpFolderName,
+                                         clientID);
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(0, $"Exception at file download: {ex.Message}", 0);
+                return result;
+            }
+        }
 
-                while (batchCurrentIndex < downloadResult.Count) // Loop until all the files are downloaded.
+        /// <summary>
+        /// Uploads files to the TPS system in batches.
+        /// </summary>
+        /// <param name="ftpConnect">FTP connection token.</param>
+        /// <param name="sftpConnect">SFTP connection token.</param>
+        /// <param name="downloadFilesList">List of files to upload.</param>
+        /// <param name="batchSize">Number of files to upload in each batch.</param>
+        /// <param name="downloadFolder">Local download folder path.</param>
+        /// <param name="ftpFolderName">Name of the FTP folder.</param>
+        /// <param name="clientID">ID of the client for configuration.</param>
+        /// <returns>Result code indicating the status of the upload process.</returns>
+        private static async Task<int> UploadFiles(AsyncFtpClient ftpConnect,
+                                                   SftpClient sftpConnect,
+                                                   List<FtpFileInfo> downloadFilesList,
+                                                   int batchSize,
+                                                   string downloadFolder,
+                                                   string ftpFolderName,
+                                                   int clientID)
+        {
+            int result = -1;
+
+            try
+            {
+                for (int batchCurrentIndex = 0; batchCurrentIndex < downloadFilesList.Count; batchCurrentIndex += batchSize)
                 {
-                    // Gets the current batch of files.
-                    IEnumerable<FtpFileInfo> currentBatch = downloadResult
-                                                            .Skip(batchCurrentIndex)
-                                                            .Take(batchSize);
+                    // Get the current batch of files to upload.
+                    IEnumerable<FtpFileInfo> currentBatch = downloadFilesList
+                        .Skip(batchCurrentIndex)
+                        .Take(batchSize);
 
+                    // Extract remote file paths and file names from the current batch.
+                    var remoteFilePaths = currentBatch.Select(r => r.RemoteFilePath.ToString()).ToArray();
+                    var fileNames = currentBatch.Select(s => s.FileName.ToString()).ToArray();
+
+                    // Upload the current batch of files.
                     result = await FtpFilesUpload.FilesUploadFuntcion(ftpConnect,
-                                                                      sftpConnect,
-                                                                      currentBatch.Select(r => r.RemoteFilePath.ToString()).ToArray(),
-                                                                      downloaFolder,
-                                                                      currentBatch.Select(s => s.FileName.ToString()).ToArray(),
-                                                                      ftpFolderName,
-                                                                      clientID);
+                        sftpConnect,
+                        remoteFilePaths,
+                        downloadFolder,
+                        fileNames,
+                        ftpFolderName,
+                        clientID);
 
                     if (result == 3 || result == 4)
                     {
                         return result;
                     }
-
-                    batchCurrentIndex += batchSize;
                 }
+
                 return result;
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(0, $"Exception at file download: {ex.Message}", 0);
+                // Log any exceptions that occur during file upload.
+                WriteLogClass.WriteToLog(0, $"Exception at file upload: {ex.Message}", 0);
                 return result;
             }
         }

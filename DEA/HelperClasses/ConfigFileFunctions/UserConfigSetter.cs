@@ -30,6 +30,9 @@ namespace UserConfigSetterClass
             public string IdField2Value { get; set; }
             public string ClientIdField2 { get; set; }
             public string FileDeliveryMethod { get; set; }
+            public bool ReadTheContent { get; set; }
+            public string SetDelimiter { get; set; }
+            public int NumberOfLinesToRead { get; set; }
             public Domaindetails DomainDetails { get; set; }
             public Ftpdetails FtpDetails { get; set; }
             public Emaildetails EmailDetails { get; set; }
