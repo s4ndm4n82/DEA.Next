@@ -24,15 +24,20 @@
       "IdField2Value": "", // If this value is set then "ClientIdField2" will use the set value as its value in the TPS. If its not set then "ClientOrg" will be used as the value.
       "ClientIdField2": "Customer Organization No", // Don't set this if not going to be used.
       "FileDeliveryMethod": "ftp", //Specify this. If delivered via FTP then use FTP. If via email, use EMAIL.
-      "ReadTheContent": true, // If true then read the file. If false then just send to process.
-      "SetDelimiter": ";", // If the file is a CSV then this will be used.
-      "NumberOfLinesToRead": 10, // When reading from a CSV we can set the number of lines to read at once.
       "DomainDetails": {
         "MainDomain": "https://process.edentri.com/",
         "TpsRequestUrl": "tps_test/import?"
         //"MainDomain": "https://capture.edentri.com/",
         //"TpsRequestUrl": "tps_test_processing/Import?"
         //"TpsRequestUrl": "tps_processing2/Import?"
+      },
+      "ReadContentSettings": {
+        "ReadTheContent": true, // If true then read the file. If false then just send to process.
+        "MakeUploadFile": true, // If true then creats the upload file. If not it just sends data to process.
+        "FileExtension": "pdf", // If you want another file extension then set this.
+        "SetDelimiter": ",", // If the file is a CSV then this will be used.
+        "NumberOfLinesToRead": 10, // When reading from a CSV we can set the number of lines to read at once.
+        "NumberOfLinesPerPage": 5 // Number of lines to be included in the ouput file.
       },
       "FtpDetails": {
         "FtpType": "FTP",
@@ -59,7 +64,7 @@
         "EmailInboxPath": ""
       },
       "DocumentDetails": {
-        "DocumentType": "PDF",
+        "DocumentType": "CSV",
         "DocumentExtensions": [
           ".pdf",
           ".csv"

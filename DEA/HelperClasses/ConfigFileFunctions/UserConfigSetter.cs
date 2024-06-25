@@ -34,6 +34,7 @@ namespace UserConfigSetterClass
             public string SetDelimiter { get; set; }
             public int NumberOfLinesToRead { get; set; }
             public Domaindetails DomainDetails { get; set; }
+            public Readcontentsettings ReadContentSettings { get; set; }
             public Ftpdetails FtpDetails { get; set; }
             public Emaildetails EmailDetails { get; set; }
             public Documentdetails DocumentDetails { get; set; }
@@ -42,6 +43,15 @@ namespace UserConfigSetterClass
         {
             public string MainDomain { get; set; }
             public string TpsRequestUrl { get; set; }
+        }
+        public class Readcontentsettings
+        {
+            public bool ReadTheContent { get; set; }
+            public bool MakeUploadFile { get; set; }
+            public string FileExtension { get; set; } = "pdf";
+            public string SetDelimiter { get; set; } = ";";
+            public int NumberOfLinesToRead { get; set; }
+            public int NumberOfLinesPerPage { get; set; }
         }
         public class Ftpdetails
         {

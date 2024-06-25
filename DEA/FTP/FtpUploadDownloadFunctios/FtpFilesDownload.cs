@@ -67,9 +67,9 @@ namespace DownloadFtpFilesClass
                     return 4;
                 }
 
-                if (downloadFilesList.Count > 0 && jsonData.ReadTheContent)
+                if (downloadFilesList.Count > 0 && jsonData.ReadContentSettings.ReadTheContent)
                 {
-                    await ReadFileContent.StartReadingFileContent(downloadFolder, downloadFilesList, clientID);
+                    return await ReadFileContent.StartReadingFileContent(downloadFolder, downloadFilesList, clientID);
                 }
 
                 WriteLogClass.WriteToLog(1, $"Downloaded file names: {WriteNamesToLogClass.GetFileNames(downloadFilesList.Select(f => f.FileName.ToString()).ToArray())}", 1);

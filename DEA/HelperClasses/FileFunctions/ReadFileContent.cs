@@ -19,7 +19,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 string filePathToRead = Path.Combine(filePath, fileName.FileName);
                 using TextFieldParser fileParser = new(filePathToRead);
                 fileParser.TextFieldType = FieldType.Delimited;
-                fileParser.SetDelimiters(jsonData.SetDelimiter);
+                fileParser.SetDelimiters(jsonData.ReadContentSettings.SetDelimiter);
                 fileParser.TrimWhiteSpace = true;
 
                 string[] headerFields = fileParser.ReadFields() ?? Array.Empty<string>();
@@ -40,23 +40,15 @@ namespace DEA.Next.HelperClasses.FileFunctions
                     data.Add(dataRow);
                     lineCount++;
 
-                    if (lineCount == jsonData.NumberOfLinesToRead)
+                    if (lineCount == jsonData.ReadContentSettings.NumberOfLinesToRead)
                     {
-                        DislplayData(data);
+                        await CreatePdfFile.StartCreatePdfFile(data, filePath, fileName.FileName, clientId);
                         data.Clear();
                         lineCount = 0;
                     }
                 }
             }
             return -1;
-        }
-
-        private static void DislplayData(List<Dictionary<string, string>> data)
-        {
-            foreach (var item in data)
-            {
-                Console.WriteLine(item);
-            }
         }
     }
 }
