@@ -1,9 +1,9 @@
-﻿using PdfSharp.Pdf;
-using PdfSharp.Drawing;
+﻿using MigraDoc.DocumentObjectModel;
+using MigraDoc.DocumentObjectModel.Tables;
+using MigraDoc.Rendering;
+using PdfSharp.Pdf;
 using UserConfigRetriverClass;
 using UserConfigSetterClass;
-using PdfSharp.UniversalAccessibility.Drawing;
-using Azure;
 using WriteLog;
 
 namespace DEA.Next.HelperClasses.FileFunctions
@@ -30,74 +30,62 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 return false;
             }
 
-            await CreatingTheFile(data, outputPath);
+            CreatingTheFile(data, outputPath);
 
             return false;
         }
 
-        private static async Task<bool> CreatingTheFile(List<Dictionary<string, string>> data, string outputPath)
+        private static bool CreatingTheFile(List<Dictionary<string, string>> data, string outputPath)
         {
             try
             {
-                // Creating the new PDF file
-                PdfDocument document = new();
+                Document document = new();
+                var section = document.AddSection();
 
-                // Adding a new page
-                PdfPage newPage = document.AddPage();
+                section.PageSetup.PageWidth = Unit.FromPoint(1754);
+                section.PageSetup.PageHeight = Unit.FromPoint(1240);
+                section.PageSetup.Orientation = Orientation.Landscape;
+                section.VerticalAlignment = VerticalAlignment.Center;
 
-                // Getting the graphics from the page
-                XGraphics gfx = XGraphics.FromPdfPage(newPage);
+                var table = section.AddTable();
+                table.Borders.Visible = true;
 
-                // Creating the pdf font
-                XFont headerFont = new("Aria", 10, XFontStyleEx.Bold);
-                XFont lineFont = new("Aria", 8, XFontStyleEx.Regular);
-
-                // Define page dimensions
-                double pageWidth = newPage.Width.Point;
-                double pageHeight = newPage.Height.Point;
-
-                // Define table dimensions
-                double tableWidth = 11 * 100;
-                double tableHeight = data.Count * 20;
-
-                // Calculate the starting position for the table to center it vertically
-                double tableXPosition = (pageWidth - tableWidth) / 2;
-                double tableYPosition = (pageHeight - tableHeight) / 2;
-
-                // Defaning column width and row height
-                double columnWidth = 100;
-                double rowHeight = 20;
-
-                // Darwing the table headers
-                foreach (string header in data[0].Keys)
+                foreach (var header in data[0].Keys)
                 {
-                    gfx.DrawString(header, headerFont, XBrushes.Black, tableXPosition, tableYPosition);
-                    tableXPosition += columnWidth;
+                    table.AddColumn(Unit.FromPoint(100));
                 }
 
-                tableWidth += rowHeight;
+                var headerRow = table.AddRow();
 
-                // Drawing the table lines
-                foreach (var row in data)
+                for (int i = 0; i < data[0].Keys.Count; i++)
                 {
-                    tableXPosition = (pageWidth - tableWidth) / 2;
-                    foreach (string value in row.Values)
-                    {
-                        gfx.DrawString(value, lineFont, XBrushes.Black, tableXPosition, tableYPosition);
+                    headerRow.Cells[i].AddParagraph(data[0].Keys.ElementAt(i));
+                }
 
-                        // Drawing the veritical lines
-                        gfx.DrawLine(XPens.Black, tableXPosition, tableYPosition, tableXPosition, tableYPosition + rowHeight);
-                        tableYPosition += rowHeight;
+                for (int i = 0; i < data.Count; i++)
+                {
+                    var row = table.AddRow();
+                    for (int j = 0; j < data[i].Count; j++)
+                    {
+                        row.Cells[j].AddParagraph(data[i].ElementAt(j).Value);
                     }
                 }
+
+                // Save the document to a PDF file
+                PdfDocumentRenderer renderer = new()
+                {
+                    Document = document
+                };
+                renderer.RenderDocument();
+                renderer.PdfDocument.Save(outputPath);
+
+                return true;
             }
             catch (Exception ex)
             {
                 WriteLogClass.WriteToLog(0, $"Exception at creating the pdf file: {ex.Message}", 0);
                 return false;
             }
-
-            return false;
         }
 
         private static string MakeOutPutFileName(string mainFileName, string outputFileExrention)
