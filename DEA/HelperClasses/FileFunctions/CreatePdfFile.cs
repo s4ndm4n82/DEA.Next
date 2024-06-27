@@ -1,7 +1,6 @@
 ﻿using MigraDoc.DocumentObjectModel;
 using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.Rendering;
-using PdfSharp.Pdf;
 using UserConfigRetriverClass;
 using UserConfigSetterClass;
 using WriteLog;
@@ -30,12 +29,12 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 return false;
             }
 
-            CreatingTheFile(data, outputPath);
+            CreatingTheFile(data, outputPath, jsonData.ReadContentSettings.NumberOfLinesPerPage);
 
             return false;
         }
 
-        private static bool CreatingTheFile(List<Dictionary<string, string>> data, string outputPath)
+        private static bool CreatingTheFile(List<Dictionary<string, string>> data, string outputPath, int numberOfRows)
         {
             try
             {
@@ -45,10 +44,13 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 section.PageSetup.PageWidth = Unit.FromPoint(1754);
                 section.PageSetup.PageHeight = Unit.FromPoint(1240);
                 section.PageSetup.Orientation = Orientation.Landscape;
-                section.VerticalAlignment = VerticalAlignment.Center;
+
+                section.AddParagraph().Format.SpaceAfter = Unit.FromPoint(220);
 
                 var table = section.AddTable();
                 table.Borders.Visible = true;
+                table.Rows.VerticalAlignment = VerticalAlignment.Center;
+                table.Rows.Alignment = RowAlignment.Center;
 
                 foreach (var header in data[0].Keys)
                 {
@@ -56,12 +58,14 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 }
 
                 var headerRow = table.AddRow();
+                headerRow.VerticalAlignment = VerticalAlignment.Center;
 
                 for (int i = 0; i < data[0].Keys.Count; i++)
                 {
                     headerRow.Cells[i].AddParagraph(data[0].Keys.ElementAt(i));
                 }
 
+                int currentRowIndex = 0;
                 for (int i = 0; i < data.Count; i++)
                 {
                     var row = table.AddRow();
@@ -69,8 +73,16 @@ namespace DEA.Next.HelperClasses.FileFunctions
                     {
                         row.Cells[j].AddParagraph(data[i].ElementAt(j).Value);
                     }
-                }
 
+                    /*currentRowIndex++;
+
+                    if (currentRowIndex > numberOfRows)
+                    {
+                        section.AddParagraph("EOL");
+                        currentRowIndex = 0;
+                    }*/
+                }
+                section.AddParagraph().Format.SpaceAfter = Unit.FromCentimeter(220);
                 // Save the document to a PDF file
                 PdfDocumentRenderer renderer = new()
                 {

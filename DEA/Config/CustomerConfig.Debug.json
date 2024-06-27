@@ -36,8 +36,8 @@
         "MakeUploadFile": true, // If true then creats the upload file. If not it just sends data to process.
         "FileExtension": "pdf", // If you want another file extension then set this.
         "SetDelimiter": ",", // If the file is a CSV then this will be used.
-        "NumberOfLinesToRead": 10, // When reading from a CSV we can set the number of lines to read at once.
-        "NumberOfLinesPerPage": 5 // Number of lines to be included in the ouput file.
+        "NumberOfLinesToRead": 100, // When reading from a CSV we can set the number of lines to read at once.
+        "NumberOfLinesPerPage": 50 // Number of lines to be included in the ouput file.
       },
       "FtpDetails": {
         "FtpType": "FTP",

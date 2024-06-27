@@ -40,9 +40,21 @@ namespace DEA.Next.HelperClasses.FileFunctions
                     data.Add(dataRow);
                     lineCount++;
 
-                    if (lineCount == jsonData.ReadContentSettings.NumberOfLinesToRead)
+                    if (data.Count < jsonData.ReadContentSettings.NumberOfLinesToRead || lineCount >= jsonData.ReadContentSettings.NumberOfLinesToRead)
                     {
-                        await CreatePdfFile.StartCreatePdfFile(data, filePath, fileName.FileName, clientId);
+                        // If there are fewer lines read than the specified number or lineCount exceeds the specified number, process the available data
+
+                        if (data.Count < jsonData.ReadContentSettings.NumberOfLinesToRead)
+                        {
+                            await CreatePdfFile.StartCreatePdfFile(data, filePath, fileName.FileName, clientId);
+                        }
+                        else
+                        {
+                            int remainingLines = data.Count - jsonData.ReadContentSettings.NumberOfLinesToRead;
+                            var remainingData = data.Skip(jsonData.ReadContentSettings.NumberOfLinesToRead).ToList();
+                            await CreatePdfFile.StartCreatePdfFile(remainingData, filePath, fileName.FileName, clientId);
+                        }
+
                         data.Clear();
                         lineCount = 0;
                     }
