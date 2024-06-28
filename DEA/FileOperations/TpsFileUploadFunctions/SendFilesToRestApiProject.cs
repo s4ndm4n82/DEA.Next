@@ -37,7 +37,10 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
                 tpsRequest.AddBody(jsonResult);
 
                 RestResponse serverResponse = await client.ExecuteAsync(tpsRequest); // Executes the request and send to the server.
-                string dirPath = Directory.GetParent(fullFilePath).FullName; // Gets the directory path of the file.
+
+                // Gets the directory path of the file.
+                var parentDirectory = Directory.GetParent(fullFilePath);
+                var dirPath = parentDirectory != null ? parentDirectory.FullName : string.Empty;
 
                 if (serverResponse.StatusCode != HttpStatusCode.OK)
                 {
@@ -50,7 +53,7 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
                                                                             ftpFileList,
                                                                             localFileList,
                                                                             serverResponse.StatusCode,
-                                                                            serverResponse.Content);
+                                                                            serverResponse.Content ?? "No content found");
                 }
 
                 return await TpsServerOnSuccess.ServerOnSuccessProjectAsync(customerDetails.ProjetID,

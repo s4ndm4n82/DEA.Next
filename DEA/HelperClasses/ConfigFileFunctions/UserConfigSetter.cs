@@ -51,7 +51,6 @@ namespace UserConfigSetterClass
             public string FileExtension { get; set; } = "pdf";
             public string SetDelimiter { get; set; } = ";";
             public int NumberOfLinesToRead { get; set; }
-            public int NumberOfLinesPerPage { get; set; }
         }
         public class Ftpdetails
         {

@@ -1,6 +1,6 @@
 ﻿using MigraDoc.DocumentObjectModel;
-using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.Rendering;
+using System.Text;
 using UserConfigRetriverClass;
 using UserConfigSetterClass;
 using WriteLog;
@@ -9,10 +9,18 @@ namespace DEA.Next.HelperClasses.FileFunctions
 {
     internal class CreatePdfFile
     {
+        /// <summary>
+        /// Start the process of creating a PDF file.
+        /// </summary>
+        /// <param name="data">List of dictionaries containing data for the PDF file.</param>
+        /// <param name="downloadFilePath">The path where the PDF file will be downloaded.</param>
+        /// <param name="mainFileName">The main file name of the PDF file.</param>
+        /// <param name="clientId">The client ID for retrieving user configuration.</param>
+        /// <returns>True if the PDF file creation process is successful, false otherwise.</returns>
         public static async Task<bool> StartCreatePdfFile(List<Dictionary<string, string>> data,
-                                                         string downloadFilePath,
-                                                         string mainFileName,
-                                                         int clientId)
+                                                           string downloadFilePath,
+                                                           string mainFileName,
+                                                           int clientId)
         {
             // Read the user config file.
             UserConfigSetter.Customerdetail jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
@@ -29,43 +37,78 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 return false;
             }
 
-            CreatingTheFile(data, outputPath, jsonData.ReadContentSettings.NumberOfLinesPerPage);
-
-            return false;
+            return CreatingTheFile(data, outputPath, mainFileName);
         }
 
-        private static bool CreatingTheFile(List<Dictionary<string, string>> data, string outputPath, int numberOfRows)
+        /// <summary>
+        /// Creates a PDF file from the provided data and saves it to the specified output path.
+        /// </summary>
+        /// <param name="data">The list of dictionaries containing the data to be included in the PDF.</param>
+        /// <param name="outputPath">The path where the generated PDF file will be saved.</param>
+        /// <param name="numberOfRows">The number of rows to include in the PDF table.</param>
+        /// <returns>True if the PDF file was created and saved successfully, false otherwise.</returns>
+        private static bool CreatingTheFile(List<Dictionary<string, string>> data,
+                                            string outputPath,
+                                            string csvFileName)
         {
             try
             {
+                // Create a new Document
                 Document document = new();
+
+                // Add a new section to the document
                 var section = document.AddSection();
 
+                // Set page width, height, and orientation
                 section.PageSetup.PageWidth = Unit.FromPoint(1754);
                 section.PageSetup.PageHeight = Unit.FromPoint(1240);
                 section.PageSetup.Orientation = Orientation.Landscape;
 
-                section.AddParagraph().Format.SpaceAfter = Unit.FromPoint(220);
+                // Add header
+                Paragraph pageHeader = section.Headers.Primary.AddParagraph();
+                pageHeader.Format.Alignment = ParagraphAlignment.Right;
+                pageHeader.Format.Font.Bold = true;
+                pageHeader.Format.Font.Size = 8;
+                pageHeader.AddText("Page ");
+                pageHeader.AddPageField();
+                pageHeader.AddLineBreak();
 
+                // Add empty space before the text and table
+                section.AddParagraph().Format.SpaceAfter = Unit.FromPoint(100);
+
+                // Add text before the table
+                section.AddParagraph($"Generated Date: {DateTime.Now:yyyy-MM-dd}");
+                section.AddParagraph($"Generated Time: {DateTime.Now:HH:mm:ss}");
+                section.AddParagraph($"File Name: {Path.GetFileNameWithoutExtension(csvFileName)}");
+                section.AddParagraph($"Set ID: {MakeSetID()}");
+
+                // Add empty space before the table
+                section.AddParagraph().Format.SpaceAfter = Unit.FromPoint(10);
+
+                // Add a table to the section
                 var table = section.AddTable();
                 table.Borders.Visible = true;
-                table.Rows.VerticalAlignment = VerticalAlignment.Center;
-                table.Rows.Alignment = RowAlignment.Center;
 
+                // Add columns to the table based on keys in the first data row
                 foreach (var header in data[0].Keys)
                 {
                     table.AddColumn(Unit.FromPoint(100));
                 }
 
+                // Add header row to the table
                 var headerRow = table.AddRow();
-                headerRow.VerticalAlignment = VerticalAlignment.Center;
+                headerRow.Format.Alignment = ParagraphAlignment.Center;
+                headerRow.Format.Font.Bold = true;
+                headerRow.Format.Font.Size = 12;
+                headerRow.HeadingFormat = true;
 
+                // Populate the header row cells with the key values
                 for (int i = 0; i < data[0].Keys.Count; i++)
                 {
                     headerRow.Cells[i].AddParagraph(data[0].Keys.ElementAt(i));
                 }
 
-                int currentRowIndex = 0;
+                // Populate the table with data rows
                 for (int i = 0; i < data.Count; i++)
                 {
                     var row = table.AddRow();
@@ -73,16 +116,18 @@ namespace DEA.Next.HelperClasses.FileFunctions
                     {
                         row.Cells[j].AddParagraph(data[i].ElementAt(j).Value);
                     }
-
-                    /*currentRowIndex++;
-
-                    if (currentRowIndex > numberOfRows)
-                    {
-                        section.AddParagraph("EOL");
-                        currentRowIndex = 0;
-                    }*/
                 }
-                section.AddParagraph().Format.SpaceAfter = Unit.FromCentimeter(220);
+
+                // Add footer
+                Paragraph footer = section.Footers.Primary.AddParagraph();
+                footer.AddText("Created by DEA.NEXT upload system");
+                footer.Format.Font.Size = 8;
+                footer.Format.Alignment = ParagraphAlignment.Right;
+                footer.Format.Font.Bold = true;
+                footer.Format.Font.Color = Colors.DarkGray;
+                footer.Format.Borders.Top = new Border { Color = Colors.Black, Style = BorderStyle.Single, Width = Unit.FromPoint(0.5) };
+
+
                 // Save the document to a PDF file
                 PdfDocumentRenderer renderer = new()
                 {
@@ -91,6 +136,13 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 renderer.RenderDocument();
                 renderer.PdfDocument.Save(outputPath);
 
+                if (File.Exists(outputPath))
+                {
+                    WriteLogClass.WriteToLog(1, "Pdf file created successfully.", 1);
+                    return true;
+                }
+
+                WriteLogClass.WriteToLog(0, "Pdf file not created successfully.", 0);
                 return true;
             }
             catch (Exception ex)
@@ -100,6 +152,12 @@ namespace DEA.Next.HelperClasses.FileFunctions
             }
         }
 
+        /// <summary>
+        /// This function generates an output file name based on the main file name and output file extension.
+        /// </summary>
+        /// <param name="mainFileName">The name of the main file.</param>
+        /// <param name="outputFileExrention">The extension of the output file.</param>
+        /// <returns>The generated output file name.</returns>
         private static string MakeOutPutFileName(string mainFileName, string outputFileExrention)
         {
             // Get current date and time
@@ -109,8 +167,31 @@ namespace DEA.Next.HelperClasses.FileFunctions
             // Main file name
             string mainFilnameOnly = Path.GetFileNameWithoutExtension(mainFileName);
 
-            // Creating the outout filename
-            return string.Concat(mainFilnameOnly, "_", dateTimeString, ".", outputFileExrention.ToLower()).Replace(" ", "");
+            // Creating the output filename
+            return string.Concat(mainFilnameOnly, "_", dateTimeString, ".", outputFileExrention.ToLower()).Replace(" ", "_");
+        }
+
+        /// <summary>
+        /// Generates a unique Set ID based on the current date and random characters.
+        /// </summary>
+        /// <returns>The generated Set ID string.</returns>
+        private static string MakeSetID()
+        {
+            // Get the current date and time
+            DateTime now = DateTime.Now;
+            string nowString = now.ToString("yyyyMMddHHmmss");
+
+            // Generate random characters
+            Random random = new();
+            StringBuilder builtString = new(4);
+
+            for (int i = 0; i < 4; i++)
+            {
+                char randomChar = (char)random.Next(65, 91); // Random ASCII characters from A to Z
+                builtString.Append(randomChar);
+            }
+
+            return string.Concat(nowString, builtString.ToString());
         }
     }
 }
