@@ -19,7 +19,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
                                                                int clientId)
         {
             UserConfigSetter.Customerdetail jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
-            int batchSize = jsonData.ReadContentSettings.NumberOfLinesToRead;
+            var batchSize = jsonData.ReadContentSettings.NumberOfLinesToRead;
 
             try
             {
@@ -31,11 +31,21 @@ namespace DEA.Next.HelperClasses.FileFunctions
 
                     if (data.Count == 0)
                     {
-                        WriteLogClass.WriteToLog(0, "No data to create the pdf file.", 1);
+                        WriteLogClass.WriteToLog(0, "No data to create the pdf file ....", 1);
                         return -1;
                     }
 
-                    await ProcessDataInBatches(data, batchSize, filePath, fileName.FileName, clientId);
+                    if (!await ProcessDataInBatches(data,
+                                                    batchSize,
+                                                    filePath,
+                                                    fileName.FileName,
+                                                    clientId))
+                    {
+                        WriteLogClass.WriteToLog(0, "Batch file creation failed ....", 1);
+                        return -1;
+                    }
+
+                    //await StartSendingFilesToTPS(filePath, fileName.FileName, clientId);
 
                     // TODO 1: Add code to upload the generated PDF files and the line data to TPS.
                     // TODO 2: Add code to delete the generated PDF files.
@@ -113,13 +123,14 @@ namespace DEA.Next.HelperClasses.FileFunctions
         /// <param name="filePath">The path where the PDF files will be stored.</param>
         /// <param name="fileName">The name of the file to be created.</param>
         /// <param name="clientId">The client ID for retrieving user configuration.</param>
-        private static async Task ProcessDataInBatches(List<Dictionary<string, string>> data,
+        private static async Task<bool> ProcessDataInBatches(List<Dictionary<string, string>> data,
                                                         int batchSize,
                                                         string filePath,
                                                         string fileName,
                                                         int clientId)
         {
-            int loopCount = 0;
+            var loopCount = 0;
+            var allBatchesSuccessful = true;
             try
             {
                 // Process data in batches
@@ -128,7 +139,13 @@ namespace DEA.Next.HelperClasses.FileFunctions
                     var batchData = data.Skip(loopCount).Take(batchSize).ToList();
 
                     // Start creating PDF files for the batch data
-                    await CreatePdfFile.StartCreatePdfFile(batchData, filePath, fileName, clientId);
+                    var batchSuccessful = await CreatePdfFile.StartCreatePdfFile(batchData, filePath, fileName, clientId);
+
+                    if (!batchSuccessful)
+                    {
+                        allBatchesSuccessful = false;
+                        break;
+                    }
 
                     loopCount += batchSize;
                 }
@@ -137,7 +154,10 @@ namespace DEA.Next.HelperClasses.FileFunctions
             {
                 // Log any exceptions that occur during batch processing
                 WriteLogClass.WriteToLog(0, $"Exception at process data in batch: {ex.Message}", 0);
+                allBatchesSuccessful = false;
             }
+
+            return allBatchesSuccessful;
         }
     }
 }

@@ -33,6 +33,8 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
                                                       string clientOrg,
                                                       string[] ftpFileList)
         {
+            var localFileNameList = Array.Empty<string>();
+
             // Loading the accepted extension list.
             List<string> acceptedExtentions = clientDetails
                                               .DocumentDetails
@@ -40,19 +42,31 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
                                               .Select(e => e.ToLower())
                                               .ToList();
 
-            // Creating the list of file in the local download folder.
-            string[] localFileNameList = Directory.EnumerateFiles(localFilePath, "*.*", SearchOption.TopDirectoryOnly)
-                                                                  .Where(f => acceptedExtentions.Contains(Path.GetExtension(f).ToLower()))
-                                                                  .Where(f => ftpFileList.Any(g => Path.GetFileNameWithoutExtension(f)
-                                                                  .Equals(Path.GetFileNameWithoutExtension(g), StringComparison.OrdinalIgnoreCase)))
-                                                                  .ToArray();
+            if (ftpFileList.Any())
+            {
+                // Creating the list of file in the local download folder.
+                localFileNameList = Directory.EnumerateFiles(localFilePath, "*.*", SearchOption.TopDirectoryOnly)
+                                                                      .Where(f => acceptedExtentions.Contains(Path.GetExtension(f).ToLower()))
+                                                                      .Where(f => ftpFileList.Any(g => Path.GetFileNameWithoutExtension(f)
+                                                                      .Equals(Path.GetFileNameWithoutExtension(g), StringComparison.OrdinalIgnoreCase)))
+                                                                      .ToArray();
+            }
+
+            if (!ftpFileList.Any())
+            {
+                // Creating the list of file in the local download folder.
+                localFileNameList = Directory.EnumerateFiles(localFilePath, "*.*", SearchOption.TopDirectoryOnly)
+                                                                      .Where(f => acceptedExtentions.Contains(Path.GetExtension(f).ToLower()))
+                                                                      .ToArray();
+            }
+
 
             if (clientDetails.RenameFile == 1)
             {
-                return RenameFileList(localFilePath, clientOrg, localFileNameList);               
+                return RenameFileList(localFilePath, clientOrg, localFileNameList);
             }
 
-            return localFileNameList;            
+            return localFileNameList;
         }
 
         private static string[] RenameFileList(string localFilePath, string clientOrg, string[] localFileList)
@@ -60,7 +74,7 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
             List<string> renamedFileList = new();
 
             foreach (string localFile in localFileList)
-            {   
+            {
                 string newFileName = Path.Combine(localFilePath, clientOrg + "_" + Path.GetFileName(localFile));
 
                 if (!File.Exists(newFileName))

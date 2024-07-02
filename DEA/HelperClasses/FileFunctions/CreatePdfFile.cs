@@ -46,6 +46,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
         /// <param name="data">The list of dictionaries containing the data to be included in the PDF.</param>
         /// <param name="outputPath">The path where the generated PDF file will be saved.</param>
         /// <param name="numberOfRows">The number of rows to include in the PDF table.</param>
+        /// <param name="csvFileName">Name of the original CSV file.</param>
         /// <returns>True if the PDF file was created and saved successfully, false otherwise.</returns>
         private static bool CreatingTheFile(List<Dictionary<string, string>> data,
                                             string outputPath,

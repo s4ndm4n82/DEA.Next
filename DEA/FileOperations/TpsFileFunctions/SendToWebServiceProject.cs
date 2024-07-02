@@ -1,10 +1,15 @@
-﻿using WriteLog;
-using FluentFTP;
-using UserConfigSetterClass;
-using UserConfigRetriverClass;
-using DEA.Next.FileOperations.TpsJsonStringCreatorFunctions;
+﻿using ConnectFtp;
+using ConnectFtps;
+using ConnectSftp;
 using DEA.Next.FileOperations.TpsFileFunctions;
+using DEA.Next.FileOperations.TpsJsonStringCreatorFunctions;
+using DEA.Next.HelperClasses.OtherFunctions;
+using FluentFTP;
 using Renci.SshNet;
+using UserConfigRetriverClass;
+using UserConfigSetterClass;
+using WriteLog;
+using static UserConfigSetterClass.UserConfigSetter;
 
 namespace FileFunctions
 {
@@ -19,6 +24,8 @@ namespace FileFunctions
                                                                    string ftpFolderName,
                                                                    string recipientEmail)
         {
+            Ftpdetails ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(customerId);
+
             try
             {
                 WriteLogClass.WriteToLog(1, "Starting file upload process .... ", 4);
@@ -31,16 +38,44 @@ namespace FileFunctions
                                                                                    clientDetails.ClientOrgNo,
                                                                                    ftpFolderName,
                                                                                    recipientEmail);
-                // Creats the file list of the downloaded files.
+                // Creates the file list of the downloaded files.
                 string[] downloadedFiles = SendToWebServiceHelpertFunctions.MakeDownloadedFileList(clientDetails,
                                                                                                    filePath,
                                                                                                    clientOrg,
                                                                                                    ftpFileList);
-
                 if (!downloadedFiles.Any())
                 {
                     WriteLogClass.WriteToLog(1, "No matching files in the download list ....", 1);
                     return -1;
+                }
+
+                if (!ftpConnect.IsConnected &&
+                    string.Equals(ftpDetails.FtpType, MagicWords.ftp, StringComparison.OrdinalIgnoreCase))
+                {
+                    ftpConnect = await ConnectFtpClass.ConnectFtp(ftpDetails.FtpProfile,
+                                                                  ftpDetails.FtpHostName,
+                                                                  ftpDetails.FtpUser,
+                                                                  ftpDetails.FtpPassword,
+                                                                  ftpDetails.FtpPort);
+                }
+
+                if (!ftpConnect.IsConnected &&
+                    string.Equals(ftpDetails.FtpType, MagicWords.ftp, StringComparison.OrdinalIgnoreCase))
+                {
+                    ftpConnect = await ConnectFtpsClass.ConnectFtps(ftpDetails.FtpProfile,
+                                                                     ftpDetails.FtpHostName,
+                                                                     ftpDetails.FtpUser,
+                                                                     ftpDetails.FtpPassword,
+                                                                     ftpDetails.FtpPort);
+                }
+
+                if (!sftpConnect.IsConnected &&
+                    string.Equals(ftpDetails.FtpType, MagicWords.sftp, StringComparison.OrdinalIgnoreCase))
+                {
+                    sftpConnect = await ConnectSftpClass.ConnectSftp(ftpDetails.FtpHostName,
+                                                                      ftpDetails.FtpUser,
+                                                                      ftpDetails.FtpPassword,
+                                                                      ftpDetails.FtpPort);
                 }
 
                 return await MakeJsonRequestProjectsFunction.MakeJsonRequestProjects(ftpConnect,
