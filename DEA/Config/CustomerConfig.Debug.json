@@ -65,8 +65,7 @@
       "DocumentDetails": {
         "DocumentType": "CSV",
         "DocumentExtensions": [
-          ".pdf",
-          ".csv"
+          ".pdf"
         ]
       }
     },

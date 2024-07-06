@@ -2,6 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using WriteLog;
 using UserConfigSetterClass;
+using UserConfigRetriverClass;
 using Emailer;
 
 namespace CreatEmail

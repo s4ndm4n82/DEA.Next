@@ -1,4 +1,5 @@
-﻿using UserConfigRetriverClass;
+﻿using DEA.Next.FileOperations.TpsFileFunctions;
+using UserConfigRetriverClass;
 using UserConfigSetterClass;
 using WriteLog;
 using static DownloadFtpFilesClass.FtpFilesDownload;
@@ -18,16 +19,16 @@ namespace DEA.Next.HelperClasses.FileFunctions
                                                                List<FtpFileInfo> downloadFileList,
                                                                int clientId)
         {
-            UserConfigSetter.Customerdetail jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
+            var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
             var batchSize = jsonData.ReadContentSettings.NumberOfLinesToRead;
 
             try
             {
-                foreach (FtpFileInfo fileName in downloadFileList)
+                foreach (var fileName in downloadFileList)
                 {
-                    List<Dictionary<string, string>> data = await ReadFileData(filePath,
-                                                                               fileName.FileName,
-                                                                               jsonData);
+                    var data = await ReadFileData(filePath,
+                                                                  fileName.FileName,
+                                                                  jsonData);
 
                     if (data.Count == 0)
                     {
@@ -36,16 +37,18 @@ namespace DEA.Next.HelperClasses.FileFunctions
                     }
 
                     if (!await ProcessDataInBatches(data,
-                                                    batchSize,
-                                                    filePath,
-                                                    fileName.FileName,
-                                                    clientId))
+                            batchSize,
+                            filePath,
+                            fileName.FileName,
+                            clientId))
                     {
                         WriteLogClass.WriteToLog(0, "Batch file creation failed ....", 1);
-                        return -1;
+                        return -1;    
                     }
-
-                    //await StartSendingFilesToTPS(filePath, fileName.FileName, clientId);
+                    
+                    await SendToWebServiceWithLines.SendToWebServiceWithLinesAsync(fileName.FileName,
+                        filePath,
+                        clientId);
 
                     // TODO 1: Add code to upload the generated PDF files and the line data to TPS.
                     // TODO 2: Add code to delete the generated PDF files.

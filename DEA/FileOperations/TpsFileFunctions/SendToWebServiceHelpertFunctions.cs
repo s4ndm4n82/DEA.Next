@@ -7,7 +7,7 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
 {
     internal class SendToWebServiceHelpertFunctions
     {
-        public static string SetCustomerOrg(int ftpFolerLoop,
+        public static string SetCustomerOrg(int ftpFolderLoop,
                                             int sendEmail,
                                             string customerOrg,
                                             string ftpFolderName,
@@ -15,7 +15,7 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
         {
             string clientOrg = customerOrg;
 
-            if (ftpFolerLoop == 1)
+            if (ftpFolderLoop == 1)
             {
                 clientOrg = ftpFolderName;
             }
@@ -33,42 +33,30 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
                                                       string clientOrg,
                                                       string[] ftpFileList)
         {
-            var localFileNameList = Array.Empty<string>();
-
             // Loading the accepted extension list.
-            List<string> acceptedExtentions = clientDetails
+            var acceptedExtentions = clientDetails
                                               .DocumentDetails
                                               .DocumentExtensions
                                               .Select(e => e.ToLower())
                                               .ToList();
-
-            if (ftpFileList.Any())
-            {
-                // Creating the list of file in the local download folder.
-                localFileNameList = Directory.EnumerateFiles(localFilePath, "*.*", SearchOption.TopDirectoryOnly)
-                                                                      .Where(f => acceptedExtentions.Contains(Path.GetExtension(f).ToLower()))
-                                                                      .Where(f => ftpFileList.Any(g => Path.GetFileNameWithoutExtension(f)
-                                                                      .Equals(Path.GetFileNameWithoutExtension(g), StringComparison.OrdinalIgnoreCase)))
-                                                                      .ToArray();
-            }
-
-            if (!ftpFileList.Any())
-            {
-                // Creating the list of file in the local download folder.
-                localFileNameList = Directory.EnumerateFiles(localFilePath, "*.*", SearchOption.TopDirectoryOnly)
-                                                                      .Where(f => acceptedExtentions.Contains(Path.GetExtension(f).ToLower()))
-                                                                      .ToArray();
-            }
-
-
-            if (clientDetails.RenameFile == 1)
-            {
-                return RenameFileList(localFilePath, clientOrg, localFileNameList);
-            }
-
-            return localFileNameList;
+            // Creating the list of file in the local download folder.
+            var localFileNameList = Directory.EnumerateFiles(localFilePath, "*.*", SearchOption.TopDirectoryOnly)
+                .Where(f => acceptedExtentions.Contains(Path.GetExtension(f).ToLower()))
+                .Where(f => ftpFileList.Any(g => Path.GetFileNameWithoutExtension(f)
+                    .Equals(Path.GetFileNameWithoutExtension(g), StringComparison.OrdinalIgnoreCase)))
+                .ToArray();
+            
+            return clientDetails.RenameFile == 1 ? RenameFileList(localFilePath, clientOrg, localFileNameList) : localFileNameList;
         }
 
+        public static string[] MakeLocalFileList(string localFilePath, List<string> acceptedExtensions)
+        {   
+            // Creating the list of file in the local download folder.
+            return Directory.EnumerateFiles(localFilePath, "*.*", SearchOption.TopDirectoryOnly)
+                .Where(f => acceptedExtensions.Contains(Path.GetExtension(f).ToLower()))
+                .ToArray();
+        }
+        
         private static string[] RenameFileList(string localFilePath, string clientOrg, string[] localFileList)
         {
             List<string> renamedFileList = new();
