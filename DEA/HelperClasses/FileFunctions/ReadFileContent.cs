@@ -1,4 +1,5 @@
-﻿using DEA.Next.FileOperations.TpsFileFunctions;
+﻿using System.Text;
+using DEA.Next.FileOperations.TpsFileFunctions;
 using UserConfigRetriverClass;
 using UserConfigSetterClass;
 using WriteLog;
@@ -26,6 +27,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
             {
                 foreach (var fileName in downloadFileList)
                 {
+                    var setId = MakeSetId();
                     var data = await ReadFileData(filePath,
                                                                   fileName.FileName,
                                                                   jsonData);
@@ -40,6 +42,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
                             batchSize,
                             filePath,
                             fileName.FileName,
+                            setId,
                             clientId))
                     {
                         WriteLogClass.WriteToLog(0, "Batch file creation failed ....", 1);
@@ -48,6 +51,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
                     
                     await SendToWebServiceWithLines.SendToWebServiceWithLinesAsync(fileName.FileName,
                         filePath,
+                        setId,
                         clientId);
 
                     // TODO 1: Add code to upload the generated PDF files and the line data to TPS.
@@ -125,15 +129,18 @@ namespace DEA.Next.HelperClasses.FileFunctions
         /// <param name="batchSize">The size of each batch to be processed.</param>
         /// <param name="filePath">The path where the PDF files will be stored.</param>
         /// <param name="fileName">The name of the file to be created.</param>
+        /// <param name="setId">The set ID of the PDF file.</param>
         /// <param name="clientId">The client ID for retrieving user configuration.</param>
         private static async Task<bool> ProcessDataInBatches(List<Dictionary<string, string>> data,
                                                         int batchSize,
                                                         string filePath,
                                                         string fileName,
+                                                        string setId,
                                                         int clientId)
         {
             var loopCount = 0;
             var allBatchesSuccessful = true;
+            
             try
             {
                 // Process data in batches
@@ -142,7 +149,11 @@ namespace DEA.Next.HelperClasses.FileFunctions
                     var batchData = data.Skip(loopCount).Take(batchSize).ToList();
 
                     // Start creating PDF files for the batch data
-                    var batchSuccessful = await CreatePdfFile.StartCreatePdfFile(batchData, filePath, fileName, clientId);
+                    var batchSuccessful = await CreatePdfFile.StartCreatePdfFile(batchData,
+                        filePath,
+                        fileName,
+                        setId,
+                        clientId);
 
                     if (!batchSuccessful)
                     {
@@ -161,6 +172,29 @@ namespace DEA.Next.HelperClasses.FileFunctions
             }
 
             return allBatchesSuccessful;
+        }
+        
+        /// <summary>
+        /// Generates a unique Set ID based on the current date and random characters.
+        /// </summary>
+        /// <returns>The generated Set ID string.</returns>
+        private static string MakeSetId()
+        {
+            // Get the current date and time
+            var now = DateTime.Now;
+            var nowString = now.ToString("yyyyMMddHHmm");
+
+            // Generate random characters
+            Random random = new();
+            StringBuilder builtString = new(4);
+
+            for (var i = 0; i < 4; i++)
+            {
+                var randomChar = (char)random.Next(65, 91); // Random ASCII characters from A to Z
+                builtString.Append(randomChar);
+            }
+
+            return string.Concat(nowString, builtString.ToString());
         }
     }
 }

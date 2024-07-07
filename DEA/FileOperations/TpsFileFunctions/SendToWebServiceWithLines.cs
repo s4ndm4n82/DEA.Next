@@ -8,10 +8,11 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
     {
         public static async Task<int> SendToWebServiceWithLinesAsync(string mainFileName,
                                                                      string localFilePath,
+                                                                     string setId,
                                                                      int clientId)
         {
             var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
-            var acceptedExtensions = jsonData.DocumentDetails.DocumentExtensions;
+            var acceptedExtensions = string.Concat(".", jsonData.ReadContentSettings.OutputFileExtension);
             
             // Create the file list of the downloaded files.
             var localFileList = SendToWebServiceHelpertFunctions.MakeLocalFileList(localFilePath,
@@ -20,6 +21,7 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
             if (localFileList.Any())
             {
                 return await MakeJsonRequestLinesFunction.MakeJsonRequestLines(mainFileName,
+                    setId,
                     clientId,
                     localFileList);
             }

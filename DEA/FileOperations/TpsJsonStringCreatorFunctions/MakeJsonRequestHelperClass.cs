@@ -31,6 +31,21 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
             return idField;
         }
 
+        public static List<TpsJsonLinesUploadString.Fields> ReturnIdFieldListLines(string mainFileName,
+            string setId,
+            int clientId)
+        {
+            var jsonData = UserConfigRetriver.RetriveUserConfigById(clientId).Result;
+
+            List<TpsJsonLinesUploadString.Fields> mainField = new()
+            {
+                new TpsJsonLinesUploadString.Fields() { Name = jsonData.ClientIdField, Value = mainFileName},
+                new TpsJsonLinesUploadString.Fields() { Name = jsonData.ClientIdField2, Value = setId}
+            };
+            
+            return mainField;
+        }
+
         public static List<TpsJsonProjectUploadStringClass.FileList> ReturnFileList(string[] filesToSend)
         {
             // Creating the file list to be added to the Json request.

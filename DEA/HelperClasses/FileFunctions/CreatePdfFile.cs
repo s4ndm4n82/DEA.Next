@@ -1,8 +1,6 @@
 ﻿using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
-using System.Text;
 using UserConfigRetriverClass;
-using UserConfigSetterClass;
 using WriteLog;
 
 namespace DEA.Next.HelperClasses.FileFunctions
@@ -15,29 +13,29 @@ namespace DEA.Next.HelperClasses.FileFunctions
         /// <param name="data">List of dictionaries containing data for the PDF file.</param>
         /// <param name="downloadFilePath">The path where the PDF file will be downloaded.</param>
         /// <param name="mainFileName">The main file name of the PDF file.</param>
+        /// <param name="setId">The set ID of the PDF file.</param>
         /// <param name="clientId">The client ID for retrieving user configuration.</param>
         /// <returns>True if the PDF file creation process is successful, false otherwise.</returns>
         public static async Task<bool> StartCreatePdfFile(List<Dictionary<string, string>> data,
                                                            string downloadFilePath,
                                                            string mainFileName,
+                                                           string setId,
                                                            int clientId)
         {
             // Read the user config file.
-            UserConfigSetter.Customerdetail jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
+            var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
 
             // Get the output filename
-            string outputFileName = MakeOutPutFileName(mainFileName, jsonData.ReadContentSettings.FileExtension);
+            var outputFileName = MakeOutPutFileName(mainFileName, jsonData.ReadContentSettings.OutputFileExtension);
 
             // Get the output path.
-            string outputPath = Path.Combine(downloadFilePath, outputFileName);
+            var outputPath = Path.Combine(downloadFilePath, outputFileName);
 
-            if (data.Count == 0)
-            {
-                WriteLogClass.WriteToLog(1, "No data to create the pdf file.", 1);
-                return false;
-            }
+            if (data.Any()) return CreatingTheFile(data, outputPath, mainFileName, setId);
+            
+            WriteLogClass.WriteToLog(1, "No data to create the pdf file.", 1);
+            return false;
 
-            return CreatingTheFile(data, outputPath, mainFileName);
         }
 
         /// <summary>
@@ -50,7 +48,8 @@ namespace DEA.Next.HelperClasses.FileFunctions
         /// <returns>True if the PDF file was created and saved successfully, false otherwise.</returns>
         private static bool CreatingTheFile(List<Dictionary<string, string>> data,
                                             string outputPath,
-                                            string csvFileName)
+                                            string csvFileName,
+                                            string setId)
         {
             try
             {
@@ -66,7 +65,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 section.PageSetup.Orientation = Orientation.Landscape;
 
                 // Add header
-                Paragraph pageHeader = section.Headers.Primary.AddParagraph();
+                var pageHeader = section.Headers.Primary.AddParagraph();
                 pageHeader.Format.Alignment = ParagraphAlignment.Right;
                 pageHeader.Format.Font.Bold = true;
                 pageHeader.Format.Font.Size = 8;
@@ -81,7 +80,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 section.AddParagraph($"Generated Date: {DateTime.Now:yyyy-MM-dd}");
                 section.AddParagraph($"Generated Time: {DateTime.Now:HH:mm:ss}");
                 section.AddParagraph($"File Name: {Path.GetFileNameWithoutExtension(csvFileName)}");
-                section.AddParagraph($"Set ID: {MakeSetID()}");
+                section.AddParagraph($"Set ID: {setId}");
 
                 // Add empty space before the table
                 section.AddParagraph().Format.SpaceAfter = Unit.FromPoint(10);
@@ -104,23 +103,23 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 headerRow.HeadingFormat = true;
 
                 // Populate the header row cells with the key values
-                for (int i = 0; i < data[0].Keys.Count; i++)
+                for (var i = 0; i < data[0].Keys.Count; i++)
                 {
                     headerRow.Cells[i].AddParagraph(data[0].Keys.ElementAt(i));
                 }
 
                 // Populate the table with data rows
-                for (int i = 0; i < data.Count; i++)
+                foreach (var t in data)
                 {
                     var row = table.AddRow();
-                    for (int j = 0; j < data[i].Count; j++)
+                    for (var j = 0; j < t.Count; j++)
                     {
-                        row.Cells[j].AddParagraph(data[i].ElementAt(j).Value);
+                        row.Cells[j].AddParagraph(t.ElementAt(j).Value);
                     }
                 }
 
                 // Add footer
-                Paragraph footer = section.Footers.Primary.AddParagraph();
+                var footer = section.Footers.Primary.AddParagraph();
                 footer.AddText("Created by DEA.NEXT upload system");
                 footer.Format.Font.Size = 8;
                 footer.Format.Alignment = ParagraphAlignment.Right;
@@ -157,42 +156,19 @@ namespace DEA.Next.HelperClasses.FileFunctions
         /// This function generates an output file name based on the main file name and output file extension.
         /// </summary>
         /// <param name="mainFileName">The name of the main file.</param>
-        /// <param name="outputFileExrention">The extension of the output file.</param>
+        /// <param name="outputFileExtension">The extension of the output file.</param>
         /// <returns>The generated output file name.</returns>
-        private static string MakeOutPutFileName(string mainFileName, string outputFileExrention)
+        private static string MakeOutPutFileName(string mainFileName, string outputFileExtension)
         {
             // Get current date and time
-            DateTime now = DateTime.Now;
-            string dateTimeString = now.ToString("yyyyMMdd_HHmmss");
+            var now = DateTime.Now;
+            var dateTimeString = now.ToString("yyyyMMdd_HHmmss");
 
             // Main file name
-            string mainFilnameOnly = Path.GetFileNameWithoutExtension(mainFileName);
+            var mainFilnameOnly = Path.GetFileNameWithoutExtension(mainFileName);
 
             // Creating the output filename
-            return string.Concat(mainFilnameOnly, "_", dateTimeString, ".", outputFileExrention.ToLower()).Replace(" ", "_");
-        }
-
-        /// <summary>
-        /// Generates a unique Set ID based on the current date and random characters.
-        /// </summary>
-        /// <returns>The generated Set ID string.</returns>
-        private static string MakeSetID()
-        {
-            // Get the current date and time
-            DateTime now = DateTime.Now;
-            string nowString = now.ToString("yyyyMMddHHmmss");
-
-            // Generate random characters
-            Random random = new();
-            StringBuilder builtString = new(4);
-
-            for (int i = 0; i < 4; i++)
-            {
-                char randomChar = (char)random.Next(65, 91); // Random ASCII characters from A to Z
-                builtString.Append(randomChar);
-            }
-
-            return string.Concat(nowString, builtString.ToString());
+            return string.Concat(mainFilnameOnly, "_", dateTimeString, ".", outputFileExtension.ToLower()).Replace(" ", "_");
         }
     }
 }

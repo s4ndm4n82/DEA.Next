@@ -49,7 +49,7 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
             return clientDetails.RenameFile == 1 ? RenameFileList(localFilePath, clientOrg, localFileNameList) : localFileNameList;
         }
 
-        public static string[] MakeLocalFileList(string localFilePath, List<string> acceptedExtensions)
+        public static string[] MakeLocalFileList(string localFilePath, string acceptedExtensions)
         {   
             // Creating the list of file in the local download folder.
             return Directory.EnumerateFiles(localFilePath, "*.*", SearchOption.TopDirectoryOnly)

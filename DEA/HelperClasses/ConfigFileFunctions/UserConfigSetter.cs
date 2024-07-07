@@ -48,7 +48,7 @@ namespace UserConfigSetterClass
         {
             public bool ReadTheContent { get; set; }
             public bool MakeUploadFile { get; set; }
-            public string FileExtension { get; set; } = "pdf";
+            public string OutputFileExtension { get; set; } = "pdf";
             public string SetDelimiter { get; set; } = ";";
             public int NumberOfLinesToRead { get; set; }
         }

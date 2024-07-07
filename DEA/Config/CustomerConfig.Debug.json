@@ -34,7 +34,7 @@
       "ReadContentSettings": {
         "ReadTheContent": true, // If true then read the file. If false then just send to process.
         "MakeUploadFile": true, // If true then creates the upload file. If not it just sends data to process.
-        "FileExtension": "pdf", // If you want another file extension then set this.
+        "OutputFileExtension": "pdf", // If you want another file extension then set this.
         "SetDelimiter": ",", // If the file is a CSV then this will be used.
         "NumberOfLinesToRead": 100 // When reading from a CSV we can set the number of lines to read at once.
       },
@@ -65,7 +65,8 @@
       "DocumentDetails": {
         "DocumentType": "CSV",
         "DocumentExtensions": [
-          ".pdf"
+          ".pdf",
+          ".csv"
         ]
       }
     },
