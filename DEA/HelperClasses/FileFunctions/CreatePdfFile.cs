@@ -1,4 +1,5 @@
-﻿using MigraDoc.DocumentObjectModel;
+﻿using DEA.Next.FileOperations.TpsFileFunctions;
+using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
 using UserConfigRetriverClass;
 using WriteLog;
@@ -31,7 +32,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
             // Get the output path.
             var outputPath = Path.Combine(downloadFilePath, outputFileName);
 
-            if (data.Any()) return CreatingTheFile(data, outputPath, mainFileName, setId);
+            if (data.Any()) return await CreatingTheFile(data, outputPath, mainFileName, setId, clientId);
             
             WriteLogClass.WriteToLog(1, "No data to create the pdf file.", 1);
             return false;
@@ -43,13 +44,15 @@ namespace DEA.Next.HelperClasses.FileFunctions
         /// </summary>
         /// <param name="data">The list of dictionaries containing the data to be included in the PDF.</param>
         /// <param name="outputPath">The path where the generated PDF file will be saved.</param>
-        /// <param name="numberOfRows">The number of rows to include in the PDF table.</param>
-        /// <param name="csvFileName">Name of the original CSV file.</param>
+        /// <param name="mainFileName">Name of the original CSV file.</param>
+        /// <param name="setId">The set ID of the PDF file.</param>
+        /// <param name="clientId">The client ID for retrieving user configuration.</param>
         /// <returns>True if the PDF file was created and saved successfully, false otherwise.</returns>
-        private static bool CreatingTheFile(List<Dictionary<string, string>> data,
+        private static async Task<bool> CreatingTheFile(List<Dictionary<string, string>> data,
                                             string outputPath,
-                                            string csvFileName,
-                                            string setId)
+                                            string mainFileName,
+                                            string setId,
+                                            int clientId)
         {
             try
             {
@@ -79,7 +82,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 // Add text before the table
                 section.AddParagraph($"Generated Date: {DateTime.Now:yyyy-MM-dd}");
                 section.AddParagraph($"Generated Time: {DateTime.Now:HH:mm:ss}");
-                section.AddParagraph($"File Name: {Path.GetFileNameWithoutExtension(csvFileName)}");
+                section.AddParagraph($"File Name: {Path.GetFileNameWithoutExtension(mainFileName)}");
                 section.AddParagraph($"Set ID: {setId}");
 
                 // Add empty space before the table
@@ -138,7 +141,11 @@ namespace DEA.Next.HelperClasses.FileFunctions
 
                 if (File.Exists(outputPath))
                 {
-                    WriteLogClass.WriteToLog(1, "Pdf file created successfully.", 1);
+                    WriteLogClass.WriteToLog(1, "Pdf file created successfully ....", 1);
+                    await SendToWebServiceWithLines.SendToWebServiceWithLinesAsync(mainFileName,
+                        outputPath,
+                        setId,
+                        clientId);
                     return true;
                 }
 

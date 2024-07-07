@@ -57,6 +57,20 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
 
             return jsonFileList;
         }
+        
+        public static List<TpsJsonLinesUploadString.Files> ReturnFilesListLines(string fileToSend)
+        {
+            List<TpsJsonLinesUploadString.Files> jsonFileList = new()
+            {
+                new TpsJsonLinesUploadString.Files()
+                {
+                    Name = Path.GetFileName(fileToSend),
+                    Data = Convert.ToBase64String(File.ReadAllBytes(fileToSend))
+                }
+            };
+
+            return jsonFileList;
+        }
 
         public static List<TpsJsonSendBodyTextClass.Emailfieldlist> ReturnEmailFieldList(int customerId, string bodyText)
         {

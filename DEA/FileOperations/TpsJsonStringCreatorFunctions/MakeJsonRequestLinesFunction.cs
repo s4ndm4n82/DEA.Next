@@ -18,7 +18,10 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
                     setId,
                     clientId);
                 
-                var fileList = MakeJsonRequestHelperClass.ReturnFileList(localFileList);
+                foreach (var localFile in localFileList)
+                {
+                    var fileList = MakeJsonRequestHelperClass.ReturnFilesListLines(localFile);
+                }
             }
             catch (Exception ex)
             {

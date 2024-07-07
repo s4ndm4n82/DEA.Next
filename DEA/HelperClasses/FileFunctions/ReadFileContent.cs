@@ -38,21 +38,18 @@ namespace DEA.Next.HelperClasses.FileFunctions
                         return -1;
                     }
 
-                    if (!await ProcessDataInBatches(data,
+                    if (await ProcessDataInBatches(data,
                             batchSize,
                             filePath,
                             fileName.FileName,
                             setId,
                             clientId))
                     {
-                        WriteLogClass.WriteToLog(0, "Batch file creation failed ....", 1);
-                        return -1;    
+                        continue;
                     }
                     
-                    await SendToWebServiceWithLines.SendToWebServiceWithLinesAsync(fileName.FileName,
-                        filePath,
-                        setId,
-                        clientId);
+                    WriteLogClass.WriteToLog(0, "Batch file creation failed ....", 1);
+                    return -1;
 
                     // TODO 1: Add code to upload the generated PDF files and the line data to TPS.
                     // TODO 2: Add code to delete the generated PDF files.
