@@ -31,21 +31,6 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
             return idField;
         }
 
-        public static List<TpsJsonLinesUploadString.Fields> ReturnIdFieldListLines(string mainFileName,
-            string setId,
-            int clientId)
-        {
-            var jsonData = UserConfigRetriver.RetriveUserConfigById(clientId).Result;
-
-            List<TpsJsonLinesUploadString.Fields> mainField = new()
-            {
-                new TpsJsonLinesUploadString.Fields() { Name = jsonData.ClientIdField, Value = mainFileName},
-                new TpsJsonLinesUploadString.Fields() { Name = jsonData.ClientIdField2, Value = setId}
-            };
-            
-            return mainField;
-        }
-
         public static List<TpsJsonProjectUploadStringClass.FileList> ReturnFileList(string[] filesToSend)
         {
             // Creating the file list to be added to the Json request.
@@ -54,20 +39,6 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
             {
                 jsonFileList.Add(new TpsJsonProjectUploadStringClass.FileList() { Name = Path.GetFileName(file), Data = Convert.ToBase64String(File.ReadAllBytes(file)) });
             }
-
-            return jsonFileList;
-        }
-        
-        public static List<TpsJsonLinesUploadString.Files> ReturnFilesListLines(string fileToSend)
-        {
-            List<TpsJsonLinesUploadString.Files> jsonFileList = new()
-            {
-                new TpsJsonLinesUploadString.Files()
-                {
-                    Name = Path.GetFileName(fileToSend),
-                    Data = Convert.ToBase64String(File.ReadAllBytes(fileToSend))
-                }
-            };
 
             return jsonFileList;
         }
@@ -85,6 +56,68 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
             }
 
             return emailFieldList;
+        }
+        
+        public static TpsJsonLinesUploadString.Fields[] ReturnIdFieldListLines(string mainFileName,
+            string setId,
+            int clientId)
+        {
+            var jsonData = UserConfigRetriver.RetriveUserConfigById(clientId).Result;
+
+            var mainField = new[]
+            {
+                new TpsJsonLinesUploadString.Fields() { Name = jsonData.ClientIdField, Value = mainFileName },
+                new TpsJsonLinesUploadString.Fields() { Name = jsonData.ClientIdField2, Value = setId }
+            };
+            
+            return mainField;
+        }
+        
+        public static TpsJsonLinesUploadString.Files[] ReturnFilesListLines(string fileToSend)
+        {
+            var jsonFileList = new[]
+            {
+                new TpsJsonLinesUploadString.Files()
+                {
+                    Name = Path.GetFileName(fileToSend),
+                    Data = Convert.ToBase64String(File.ReadAllBytes(fileToSend))
+                }
+            };
+
+            return jsonFileList;
+        }
+
+        public static TpsJsonLinesUploadString.Tables[] ReturnTableListLines(List<Dictionary<string, string>> data)
+        {
+            var tableList = new TpsJsonLinesUploadString.Tables[data.Count];
+
+            var index = 0;
+            foreach (var rowData in data)
+            {
+                TpsJsonLinesUploadString.Table table = new()
+                {
+                    Rows = Array.Empty<TpsJsonLinesUploadString.Row>()
+                };
+
+                foreach (var fieldData in rowData)
+                {
+                    TpsJsonLinesUploadString.Fields1 fields1 = new()
+                    {
+                        Field = new TpsJsonLinesUploadString.Field()
+                        {
+                            Name = fieldData.Key,
+                            Value = fieldData.Value
+                        }
+                    };
+
+                    table.Rows = table.Rows.Concat(new TpsJsonLinesUploadString.Row[] { new TpsJsonLinesUploadString.Row() { Fields = new TpsJsonLinesUploadString.Fields1[] { fields1 } } }).ToArray();
+                }
+
+                tableList[index] = new TpsJsonLinesUploadString.Tables() { Table = table };
+                index++;
+            }
+
+            return tableList;
         }
     }
 }

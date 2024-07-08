@@ -50,11 +50,17 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
         }
 
         public static string[] MakeLocalFileList(string localFilePath, string acceptedExtensions)
-        {   
+        {
+            var localPath = Path.GetDirectoryName(localFilePath);
+            
             // Creating the list of file in the local download folder.
-            return Directory.EnumerateFiles(localFilePath, "*.*", SearchOption.TopDirectoryOnly)
-                .Where(f => acceptedExtensions.Contains(Path.GetExtension(f).ToLower()))
-                .ToArray();
+            if (localPath != null)
+                return Directory.EnumerateFiles(localPath, "*.*", SearchOption.TopDirectoryOnly)
+                    .Where(f => acceptedExtensions.Contains(Path.GetExtension(f).ToLower()))
+                    .ToArray();
+            
+            WriteLogClass.WriteToLog(0, "Local file path is empty ....", 1);
+            return Array.Empty<string>();
         }
         
         private static string[] RenameFileList(string localFilePath, string clientOrg, string[] localFileList)

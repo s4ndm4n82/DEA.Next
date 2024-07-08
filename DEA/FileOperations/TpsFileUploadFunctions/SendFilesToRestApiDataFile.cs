@@ -1,4 +1,4 @@
-﻿using DEA.Next.FileOperations.TpsServerReponseFunctions;
+﻿using DEA.Next.FileOperations.TpsServerResponseFunctions;
 using FluentFTP;
 using Renci.SshNet;
 using RestSharp;

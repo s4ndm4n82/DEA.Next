@@ -11,7 +11,7 @@ using UserConfigSetterClass;
 using WriteLog;
 using WriteNamesToLog;
 
-namespace DEA.Next.FileOperations.TpsServerReponseFunctions
+namespace DEA.Next.FileOperations.TpsServerResponseFunctions
 {
     /// <summary>
     /// Handles the operations after a successful TPS server response.
@@ -133,7 +133,7 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                 WriteLogClass.WriteToLog(1, $"Uploaded data file: {fileName}", 1);
 
                 // Converts the filename to an array. Needed by the FolderCleanerClass.
-                string[] jsonFileList = new string[] { fileName };
+                var jsonFileList = new string[] { fileName };
 
                 // Remove the files from FTP server.
                 if (!await FolderCleanerClass.StartFtpFileDelete(ftpConnect,
@@ -189,6 +189,5 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                 return 2;
             }
         }
-
     }
 }

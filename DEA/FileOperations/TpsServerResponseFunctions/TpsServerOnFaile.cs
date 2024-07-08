@@ -12,7 +12,7 @@ using UserConfigSetterClass;
 using WriteLog;
 using Directory = System.IO.Directory;
 
-namespace DEA.Next.FileOperations.TpsServerReponseFunctions
+namespace DEA.Next.FileOperations.TpsServerResponseFunctions
 {
     /// <summary>
     /// Handles the operations after a failed TPS server response.

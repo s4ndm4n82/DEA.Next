@@ -27,7 +27,7 @@ public class TpsJsonLinesUploadString
     
     public class Table
     {
-        public Rows[] Rows { get; set; }
+        public Row[] Rows { get; set; }
     }
     
     public class Rows

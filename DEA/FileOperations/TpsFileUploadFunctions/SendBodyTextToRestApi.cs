@@ -1,4 +1,4 @@
-﻿using DEA.Next.FileOperations.TpsServerReponseFunctions;
+﻿using DEA.Next.FileOperations.TpsServerResponseFunctions;
 using Microsoft.Graph;
 using RestSharp;
 using System.Net;
