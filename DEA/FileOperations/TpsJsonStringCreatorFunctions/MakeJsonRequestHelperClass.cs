@@ -94,26 +94,22 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
             var index = 0;
             foreach (var rowData in data)
             {
-                TpsJsonLinesUploadString.Table table = new()
+                TpsJsonLinesUploadString.Rows rows = new()
                 {
-                    Rows = Array.Empty<TpsJsonLinesUploadString.Row>()
+                    Fields = Array.Empty<TpsJsonLinesUploadString.Fields1>()
                 };
 
                 foreach (var fieldData in rowData)
                 {
                     TpsJsonLinesUploadString.Fields1 fields1 = new()
                     {
-                        Field = new TpsJsonLinesUploadString.Field()
-                        {
-                            Name = fieldData.Key,
-                            Value = fieldData.Value
-                        }
+                        Name = fieldData.Key,
+                        Value = fieldData.Value
                     };
-
-                    table.Rows = table.Rows.Concat(new TpsJsonLinesUploadString.Row[] { new TpsJsonLinesUploadString.Row() { Fields = new TpsJsonLinesUploadString.Fields1[] { fields1 } } }).ToArray();
+                    rows.Fields = rows.Fields.Concat(new TpsJsonLinesUploadString.Fields1[] { fields1 }).ToArray();
                 }
 
-                tableList[index] = new TpsJsonLinesUploadString.Tables() { Table = table };
+                tableList[index] = new TpsJsonLinesUploadString.Tables() { Rows = new TpsJsonLinesUploadString.Rows[] { rows } };
                 index++;
             }
 

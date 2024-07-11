@@ -1,0 +1,33 @@
+{
+  "Token": "",
+  "Username": "",
+  "TemplateKey": "",
+  "Queue": "",
+  "ProjectID": "",
+  "Fields": [
+    {
+      "Name": "",
+      "Value": ""
+    }
+  ],
+  "Tables": [
+    {
+      "Rows": [
+        {
+          "Fields": [
+            {
+              "Name": "",
+              "Value": ""
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "Files": [
+    {
+      "Name": "",
+      "Data": ""
+    }
+  ]
+}
