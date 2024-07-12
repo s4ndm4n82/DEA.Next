@@ -11,8 +11,8 @@ public class TpsServerOnSuccessLines
     {
         try
         {
-            WriteLogClass.WriteToLog(1, $"Uploaded files to TPS: {WriteNamesToLogClass.GetFileNames(localFileList)}",
-                1);
+            WriteLogClass.WriteToLog(1, 
+                $"Uploaded files to TPS: {WriteNamesToLogClass.GetFileNames(localFileList)}", 1);
         }
         catch (Exception ex)
         {
