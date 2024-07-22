@@ -142,16 +142,16 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 if (File.Exists(outputPath))
                 {
                     WriteLogClass.WriteToLog(1, "Pdf file created successfully ....", 1);
-                    await SendToWebServiceWithLines.SendToWebServiceWithLinesAsync(data,
+                    /*await SendToWebServiceWithLines.SendToWebServiceWithLinesAsync(data,
                         mainFileName,
                         outputPath,
                         setId,
-                        clientId);
+                        clientId);*/
                     return true;
                 }
 
                 WriteLogClass.WriteToLog(0, "Pdf file not created successfully.", 0);
-                return true;
+                return false;
             }
             catch (Exception ex)
             {

@@ -82,7 +82,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 return await Task.Run(() =>
                 {
                     // Combine the filePath and fileName to get the full path to read the file.
-                    string filePathToRead = Path.Combine(filePath, fileName);
+                    var filePathToRead = Path.Combine(filePath, fileName);
 
                     // Open the file stream and reader to read the file.
                     using FileStream fileStream = new(filePathToRead, FileMode.Open, FileAccess.Read);
@@ -90,17 +90,17 @@ namespace DEA.Next.HelperClasses.FileFunctions
 
                     List<Dictionary<string, string>> data = new();
                     // Split the header fields based on the delimiter provided in the user configuration.
-                    string[] headerFields = reader.ReadLine()?.Split(jsonData.ReadContentSettings.SetDelimiter) ?? Array.Empty<string>();
+                    var headerFields = reader.ReadLine()?.Split(jsonData.ReadContentSettings.SetDelimiter) ?? Array.Empty<string>();
 
                     while (!reader.EndOfStream)
                     {
                         // Split each line of data based on the delimiter.
-                        string[] lineItems = reader.ReadLine()?.Split(jsonData.ReadContentSettings.SetDelimiter) ?? Array.Empty<string>();
+                        var lineItems = reader.ReadLine()?.Split(jsonData.ReadContentSettings.SetDelimiter) ?? Array.Empty<string>();
 
                         Dictionary<string, string> dataRow = new();
 
                         // Map each header field to its corresponding data item in the row.
-                        for (int i = 0; i < headerFields.Length; i++)
+                        for (var i = 0; i < headerFields.Length; i++)
                         {
                             dataRow.Add(headerFields[i], lineItems[i]);
                         }

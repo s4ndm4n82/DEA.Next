@@ -20,16 +20,17 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
                     Method = Method.Post,
                     RequestFormat = DataFormat.Json
                 };
+
+                request.AddBody(jsonResult);
                 
                 var serverResponse = await client.ExecuteAsync(request);
 
-                if (!serverResponse.IsSuccessful)
-                {
-                    WriteLogClass.WriteToLog(0, $"Server status code: {serverResponse.StatusCode}," +
-                                                $"content: {serverResponse.Content}", 0);
-                }
+                if (serverResponse.IsSuccessful) return serverResponse.IsSuccessful;
                 
-                return serverResponse.IsSuccessful;
+                WriteLogClass.WriteToLog(0, $"Server status code: {serverResponse.StatusCode}," +
+                                            $"content: {serverResponse.Content}", 0);
+                return false;
+
             }
             catch (Exception ex)
             {
