@@ -4,7 +4,7 @@ using WriteLog;
 
 namespace DEA.Next.FileOperations.TpsFileFunctions
 {
-    internal class SendToWebServiceWithLines
+    internal static class SendToWebServiceWithLines
     {
         public static async Task<int> SendToWebServiceWithLinesAsync(List<Dictionary<string, string>> data,
             string mainFileName,
@@ -18,16 +18,16 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
                 var acceptedExtensions = string.Concat(".", jsonData.ReadContentSettings.OutputFileExtension);
             
                 // Create the file list of the downloaded files.
-                var localFileList = SendToWebServiceHelpertFunctions.MakeLocalFileList(localFilePath,
-                    acceptedExtensions);
+                /*var localFileList = SendToWebServiceHelpertFunctions.MakeLocalFileList(localFilePath,
+                    acceptedExtensions);*/
 
-                if (localFileList.Any())
+                if (File.Exists(localFilePath) && data.Any())
                 {
                     return await MakeJsonRequestLinesFunction.MakeJsonRequestLines(data,
                         mainFileName,
+                        localFilePath,
                         setId,
-                        clientId,
-                        localFileList);
+                        clientId);
                 }
             
                 WriteLogClass.WriteToLog(0, "No files to upload to TPS.", 1);

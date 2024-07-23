@@ -89,29 +89,31 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
 
         public static TpsJsonLinesUploadString.Tables[] ReturnTableListLines(List<Dictionary<string, string>> data)
         {
-            var tableList = new TpsJsonLinesUploadString.Tables[data.Count];
+            var tableList = new TpsJsonLinesUploadString.Tables[1];
 
-            var index = 0;
+            var rowsList = new List<TpsJsonLinesUploadString.Rows>();
+            
             foreach (var rowData in data)
             {
                 TpsJsonLinesUploadString.Rows rows = new()
                 {
-                    Fields = Array.Empty<TpsJsonLinesUploadString.Fields1>()
+                    Fields = new TpsJsonLinesUploadString.Fields1[rowData.Count]
                 };
 
-                foreach (var fieldData in rowData)
+                var fieldsIndex = 0;
+                foreach (var fields1 in rowData.Select(fieldData => new TpsJsonLinesUploadString.Fields1()
+                         {
+                             Name = fieldData.Key,
+                             Value = fieldData.Value
+                         }))
                 {
-                    TpsJsonLinesUploadString.Fields1 fields1 = new()
-                    {
-                        Name = fieldData.Key,
-                        Value = fieldData.Value
-                    };
-                    rows.Fields = rows.Fields.Concat(new TpsJsonLinesUploadString.Fields1[] { fields1 }).ToArray();
+                    rows.Fields[fieldsIndex] = fields1;
+                    fieldsIndex++;
                 }
-
-                tableList[index] = new TpsJsonLinesUploadString.Tables() { Rows = new TpsJsonLinesUploadString.Rows[] { rows } };
-                index++;
+                
+                rowsList.Add(rows);
             }
+            tableList[0] = new TpsJsonLinesUploadString.Tables() { Rows = rowsList.ToArray() };
 
             return tableList;
         }

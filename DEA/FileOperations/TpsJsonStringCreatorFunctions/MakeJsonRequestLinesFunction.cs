@@ -8,13 +8,13 @@ using WriteLog;
 
 namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
 {
-    internal class MakeJsonRequestLinesFunction
+    internal static class MakeJsonRequestLinesFunction
     {
         public static async Task<int> MakeJsonRequestLines(List<Dictionary<string, string>> data,
             string mainFileName,
+            string localFilePath,
             string setId,
-            int clientId,
-            string[] localFileList)
+            int clientId)
         {
             try
             {
@@ -23,25 +23,22 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
                 var fieldsList = MakeJsonRequestHelperClass.ReturnIdFieldListLines(mainFileName,
                     setId,
                     clientId);
+                
+                var jsonRequest = await CreatTheJsonRequestLines(localFilePath,
+                    jsonData,
+                    data,
+                    fieldsList);
+                
+                var result = await SendFilesToApiLines.SendFilesToApiLinesAsync(jsonRequest,
+                    localFilePath,
+                    clientId);
 
-                var allRessultsTrue = true;
-                foreach (var localFile in localFileList)
-                {
-                   var jsonRequest = await CreatTheJsonRequestLines(localFile, jsonData, data, fieldsList);
-                   var result = await SendFilestoApiLines.SendFilesToApiLinesAsync(jsonRequest, clientId);
-
-                   if (result) continue;
-                   allRessultsTrue = false;
-                   break;
-
-                }
-
-                if (allRessultsTrue)
-                {
-                    var folderPath = Path.GetDirectoryName(localFileList[0]);
-                    if (folderPath != null)
-                        return await TpsServerOnSuccessLines.ServerOnSuccessLinesAsync(folderPath, localFileList);
-                }
+                if (!result) return await TapsServerOnFailLines.ServerOnFailLinesAsync(localFilePath,
+                    setId,
+                    clientId);
+                
+                if (File.Exists(localFilePath))
+                    return await TpsServerOnSuccessLines.ServerOnSuccessLinesAsync(localFilePath);
             }
             catch (Exception ex)
             {

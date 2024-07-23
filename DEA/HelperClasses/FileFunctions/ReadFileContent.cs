@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using DEA.Next.FileOperations.TpsFileFunctions;
 using UserConfigRetriverClass;
 using UserConfigSetterClass;
 using WriteLog;
@@ -50,10 +49,6 @@ namespace DEA.Next.HelperClasses.FileFunctions
                     
                     WriteLogClass.WriteToLog(0, "Batch file creation failed ....", 1);
                     return -1;
-
-                    // TODO 1: Add code to upload the generated PDF files and the line data to TPS.
-                    // TODO 2: Add code to delete the generated PDF files.
-                    // TODO 3: Add code to delete the downloaded files.
                 }
                 return 1;
             }

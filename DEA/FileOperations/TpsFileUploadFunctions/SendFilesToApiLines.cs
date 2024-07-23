@@ -1,14 +1,15 @@
-﻿using System.Net;
+﻿using DEA.Next.HelperClasses.FolderFunctions;
 using RestSharp;
 using UserConfigRetriverClass;
-using UserConfigSetterClass;
 using WriteLog;
 
 namespace DEA.Next.FileOperations.TpsFileUploadFunctions
 {
-    internal class SendFilestoApiLines
+    internal static class SendFilesToApiLines
     {
-        public static async Task<bool> SendFilesToApiLinesAsync(string jsonResult, int clientId)
+        public static async Task<bool> SendFilesToApiLinesAsync(string jsonResult,
+            string localFile,
+            int clientId)
         {
             var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
             

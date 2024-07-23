@@ -67,21 +67,20 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
         {
             List<string> renamedFileList = new();
 
-            foreach (string localFile in localFileList)
+            foreach (var localFile in localFileList)
             {
-                string newFileName = Path.Combine(localFilePath, clientOrg + "_" + Path.GetFileName(localFile));
+                var newFileName = Path.Combine(localFilePath, clientOrg + "_" + Path.GetFileName(localFile));
 
-                if (!File.Exists(newFileName))
+                if (File.Exists(newFileName)) continue;
+                
+                try
                 {
-                    try
-                    {
-                        File.Move(localFile, newFileName);
-                        renamedFileList.Add(newFileName);
-                    }
-                    catch (IOException ex)
-                    {
-                        WriteLogClass.WriteToLog(0, $"IO Exception at RenameFileList: {ex.Message}", 0);
-                    }
+                    File.Move(localFile, newFileName);
+                    renamedFileList.Add(newFileName);
+                }
+                catch (IOException ex)
+                {
+                    WriteLogClass.WriteToLog(0, $"IO Exception at RenameFileList: {ex.Message}", 0);
                 }
             }
 
