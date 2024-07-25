@@ -40,12 +40,13 @@ namespace DownloadFtpFilesClass
             try
             {
                 // Reads the appsettings.json file.
-                UserConfigSetter.Customerdetail jsonData = await UserConfigRetriver.RetriveUserConfigById(clientID);
-                // Allowed file extentions
-                List<string> allowedFileExtensions = jsonData.DocumentDetails.DocumentExtensions;
+                var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientID);
+                
+                // Allowed file extensions
+                var allowedFileExtensions = jsonData.DocumentDetails.DocumentExtensions;
 
                 // Download folder path.
-                string downloadFolder = Path.Combine(downloadFolderPath, GraphHelperClass.FolderNameRnd(10));
+                var downloadFolder = Path.Combine(downloadFolderPath, GraphHelperClass.FolderNameRnd(10));
 
                 List<FtpFileInfo> downloadFilesList = new();
 
@@ -61,27 +62,25 @@ namespace DownloadFtpFilesClass
                     downloadFilesList = await CreateSftpFileList(sftpConnect, ftpPath, downloadFolder, allowedFileExtensions);
                 }
 
-                if (downloadFilesList.Count == 0)
+                switch (downloadFilesList.Count)
                 {
-                    WriteLogClass.WriteToLog(1, "The downloadResult list is empty ....", 3);
-                    return 4;
+                    case 0:
+                        WriteLogClass.WriteToLog(1, "The downloadResult list is empty ....", 3);
+                        return 4;
+                    case > 0 when jsonData.ReadContentSettings.ReadTheContent:
+                        return await ReadFileContent.StartReadingFileContent(downloadFolder, downloadFilesList, clientID);
+                    default:
+                        WriteLogClass.WriteToLog(1, $"Downloaded file names: {WriteNamesToLogClass.GetFileNames(downloadFilesList.Select(f => f.FileName.ToString()).ToArray())}", 1);
+
+                        // Starts the file download process.
+                        return await UploadFiles(ftpConnect,
+                            sftpConnect,
+                            downloadFilesList,
+                            jsonData.MaxBatchSize,
+                            downloadFolder,
+                            ftpFolderName,
+                            clientID);
                 }
-
-                if (downloadFilesList.Count > 0 && jsonData.ReadContentSettings.ReadTheContent)
-                {
-                    return await ReadFileContent.StartReadingFileContent(downloadFolder, downloadFilesList, clientID);
-                }
-
-                WriteLogClass.WriteToLog(1, $"Downloaded file names: {WriteNamesToLogClass.GetFileNames(downloadFilesList.Select(f => f.FileName.ToString()).ToArray())}", 1);
-
-                // Starts the file download process.
-                return await UploadFiles(ftpConnect,
-                                         sftpConnect,
-                                         downloadFilesList,
-                                         jsonData.MaxBatchSize,
-                                         downloadFolder,
-                                         ftpFolderName,
-                                         clientID);
             }
             catch (Exception ex)
             {
@@ -113,10 +112,10 @@ namespace DownloadFtpFilesClass
 
             try
             {
-                for (int batchCurrentIndex = 0; batchCurrentIndex < downloadFilesList.Count; batchCurrentIndex += batchSize)
+                for (var batchCurrentIndex = 0; batchCurrentIndex < downloadFilesList.Count; batchCurrentIndex += batchSize)
                 {
                     // Get the current batch of files to upload.
-                    IEnumerable<FtpFileInfo> currentBatch = downloadFilesList
+                    var currentBatch = downloadFilesList
                         .Skip(batchCurrentIndex)
                         .Take(batchSize);
 

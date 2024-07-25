@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Microsoft.Graph;
 using UserConfigRetriverClass;
 using UserConfigSetterClass;
 using WriteLog;
@@ -6,7 +7,7 @@ using static DownloadFtpFilesClass.FtpFilesDownload;
 
 namespace DEA.Next.HelperClasses.FileFunctions
 {
-    internal class ReadFileContent
+    internal static class ReadFileContent
     {
         /// <summary>
         /// Starts reading the content of the file based on the specified parameters.
@@ -27,9 +28,22 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 foreach (var fileName in downloadFileList)
                 {
                     var setId = MakeSetId();
+                    
+                    var fileB2BTrue = 
+                        fileName.FileName.
+                            Contains(jsonData.ReadContentSettings.ReadByLineTrigger,
+                                StringComparison.OrdinalIgnoreCase) ? true : false;
+                    
+                    if (fileB2BTrue)
+                    {
+                        var lineData = await ReadFileDataByLine(filePath,
+                            fileName.FileName,
+                            jsonData);
+                    }
+                    
                     var data = await ReadFileData(filePath,
-                                                                  fileName.FileName,
-                                                                  jsonData);
+                        fileName.FileName,
+                        jsonData);
 
                     if (data.Count == 0)
                     {
@@ -59,6 +73,34 @@ namespace DEA.Next.HelperClasses.FileFunctions
             }
         }
 
+        private static async Task<List<string>> ReadFileDataByLine(string filePath,
+            string fileName,
+            UserConfigSetter.Customerdetail jsonData)
+        {
+            try
+            {
+                return await Task.Run(() =>
+                {
+                    // Combine the filePath and fileName to get the full path to read the file.
+                    var filePathToRead = Path.Combine(filePath, fileName);
+
+                    using var reader = new StreamReader(filePathToRead, Encoding.UTF8);
+                    string line;
+                    var lineData = new List<string>();
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        lineData.Add(line);
+                    }
+                    return lineData;
+                });
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(0, $"Exception at reading file content: {ex.Message}", 0);
+            }
+            return new List<string> { string.Empty };
+        }
+
         /// <summary>
         /// Reads data from a file located at the specified filePath and fileName.
         /// Parses the data based on the delimiter provided in the user configuration.
@@ -69,8 +111,8 @@ namespace DEA.Next.HelperClasses.FileFunctions
         /// <param name="jsonData">User configuration data containing parsing settings.</param>
         /// <returns>A task representing the asynchronous operation that returns a list of dictionaries.</returns>
         private static async Task<List<Dictionary<string, string>>> ReadFileData(string filePath,
-                                                                                 string fileName,
-                                                                                 UserConfigSetter.Customerdetail jsonData)
+            string fileName,
+            UserConfigSetter.Customerdetail jsonData)
         {
             try
             {

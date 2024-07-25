@@ -15,13 +15,10 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
             try
             {
                 var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
+                var fileExtension = Path.GetExtension(localFilePath);
                 var acceptedExtensions = string.Concat(".", jsonData.ReadContentSettings.OutputFileExtension);
-            
-                // Create the file list of the downloaded files.
-                /*var localFileList = SendToWebServiceHelpertFunctions.MakeLocalFileList(localFilePath,
-                    acceptedExtensions);*/
 
-                if (File.Exists(localFilePath) && data.Any())
+                if (fileExtension == acceptedExtensions && data.Any())
                 {
                     return await MakeJsonRequestLinesFunction.MakeJsonRequestLines(data,
                         mainFileName,

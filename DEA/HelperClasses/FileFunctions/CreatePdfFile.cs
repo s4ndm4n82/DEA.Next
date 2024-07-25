@@ -32,7 +32,8 @@ namespace DEA.Next.HelperClasses.FileFunctions
             // Get the output path.
             var outputPath = Path.Combine(downloadFilePath, outputFileName);
 
-            if (data.Any()) return await CreatingTheFile(data, outputPath, mainFileName, setId, clientId);
+            if (data.Any() && jsonData.ReadContentSettings.MakeUploadFile)
+                return await CreatingTheFile(data, outputPath, mainFileName, setId, clientId);
             
             WriteLogClass.WriteToLog(1, "No data to create the pdf file.", 1);
             return false;

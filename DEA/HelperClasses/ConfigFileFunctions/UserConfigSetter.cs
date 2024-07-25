@@ -47,6 +47,8 @@ namespace UserConfigSetterClass
         public class Readcontentsettings
         {
             public bool ReadTheContent { get; set; }
+            public bool ReadByLine { get; set; }
+            public string ReadByLineTrigger { get; set; } = string.Empty;
             public bool MakeUploadFile { get; set; }
             public string OutputFileExtension { get; set; } = "pdf";
             public string SetDelimiter { get; set; } = ";";
