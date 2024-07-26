@@ -29,18 +29,6 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 {
                     var setId = MakeSetId();
                     
-                    var fileB2BTrue = 
-                        fileName.FileName.
-                            Contains(jsonData.ReadContentSettings.ReadByLineTrigger,
-                                StringComparison.OrdinalIgnoreCase) ? true : false;
-                    
-                    if (fileB2BTrue)
-                    {
-                        var lineData = await ReadFileDataByLine(filePath,
-                            fileName.FileName,
-                            jsonData);
-                    }
-                    
                     var data = await ReadFileData(filePath,
                         fileName.FileName,
                         jsonData);
@@ -71,34 +59,6 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 WriteLogClass.WriteToLog(0, $"Exception at reading file content: {ex.Message}", 0);
                 return -1;
             }
-        }
-
-        private static async Task<List<string>> ReadFileDataByLine(string filePath,
-            string fileName,
-            UserConfigSetter.Customerdetail jsonData)
-        {
-            try
-            {
-                return await Task.Run(() =>
-                {
-                    // Combine the filePath and fileName to get the full path to read the file.
-                    var filePathToRead = Path.Combine(filePath, fileName);
-
-                    using var reader = new StreamReader(filePathToRead, Encoding.UTF8);
-                    string line;
-                    var lineData = new List<string>();
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        lineData.Add(line);
-                    }
-                    return lineData;
-                });
-            }
-            catch (Exception ex)
-            {
-                WriteLogClass.WriteToLog(0, $"Exception at reading file content: {ex.Message}", 0);
-            }
-            return new List<string> { string.Empty };
         }
 
         /// <summary>
@@ -166,11 +126,11 @@ namespace DEA.Next.HelperClasses.FileFunctions
         /// <param name="setId">The set ID of the PDF file.</param>
         /// <param name="clientId">The client ID for retrieving user configuration.</param>
         private static async Task<bool> ProcessDataInBatches(List<Dictionary<string, string>> data,
-                                                        int batchSize,
-                                                        string filePath,
-                                                        string fileName,
-                                                        string setId,
-                                                        int clientId)
+            int batchSize,
+            string filePath,
+            string fileName,
+            string setId,
+            int clientId)
         {
             var loopCount = 0;
             var allBatchesSuccessful = true;
