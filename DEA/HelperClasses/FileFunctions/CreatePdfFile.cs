@@ -17,7 +17,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
         /// <param name="setId">The set ID of the PDF file.</param>
         /// <param name="clientId">The client ID for retrieving user configuration.</param>
         /// <returns>True if the PDF file creation process is successful, false otherwise.</returns>
-        public static async Task<bool> StartCreatePdfFile(List<Dictionary<string, string>> data,
+        public static async Task<bool> StartCreatePdfFile(List<Dictionary<string, string>>? data,
                                                            string downloadFilePath,
                                                            string mainFileName,
                                                            string setId,
@@ -46,7 +46,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
 
         }
 
-        private static async Task<bool> CreatPdfBatchByLine(List<Dictionary<string, string>> data,
+        private static async Task<bool> CreatPdfBatchByLine(List<Dictionary<string, string>>? data,
             string outputPath,
             string mainFileName,
             string setId,
@@ -54,24 +54,45 @@ namespace DEA.Next.HelperClasses.FileFunctions
         {
             try
             {
+                const int margin = 10;
                 var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
-                var delimiter = jsonData.ReadContentSettings.SetDelimiter;
-                
-                var fieldNamesList = data[0].Keys.ToList();
-                var fieldNames = fieldNamesList[0].Split(delimiter);
-
-                for (var i = 1; i < data.Count; i++)
+                var mainFieldList = jsonData.ReadContentSettings.MainFieldNameList;
+                var outputFileExtension =
+                    string.Concat('.', jsonData.ReadContentSettings.OutputFileExtension);
+                var pdfMainFieldList = new string[]
                 {
-                    var values = data[i].Values.ToList();
-                    var valuesList = values[0].Split(';');
-                    var invNum = valuesList[2];
-                    var invWaterAccount = valuesList[3];
-                    var invDate = valuesList[4];
-                    var newInvoiceNumber = string.Concat(invNum, "-", invWaterAccount, "-", invDate);
+                    "Generated Date", "Generated Time", "File Name", "Set Id"
+                };
+                var pdfMainFieldListValues = new string[]
+                {
+                    DateTime.Now.ToString("yyyy-MM-dd"), DateTime.Now.ToString("HH:mm:ss"),
+                    Path.GetFileNameWithoutExtension(mainFileName), setId
+                };
+                var i = 1;
+
+                foreach (var dictionary in data.Skip(0))
+                {
+                    var values = dictionary.Values.ToList();
+                    var invNum = values[2];
+                    var invWaterAccount = values[3];
+                    var invDate = values[4];
+                    var newInvoiceNumber = string.Concat(invNum, "+", invWaterAccount, "+", invDate);
                     
                     // Create a new Document
                     Document document = new();
-                
+                    
+                    // Add a default style to the document main fields
+                    var mainFieldStyle = document.Styles.AddStyle("MainFieldStyle", "Normal");
+                    mainFieldStyle.Font.Size = Unit.FromPoint(16);
+                    mainFieldStyle.Font.Bold = true;
+                    mainFieldStyle.Font.Name = "Times New Roman";
+                    
+                    // Add a default style to the document values
+                    var valuesStyle = document.Styles.AddStyle("ValuesStyle", "Normal");
+                    valuesStyle.Font.Size = Unit.FromPoint(16);
+                    valuesStyle.Font.Bold = false;
+                    valuesStyle.Font.Name = "Times New Roman";
+
                     // Add a section to the document
                     var section = document.AddSection();
                 
@@ -84,7 +105,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
                     var pageHeader = section.Headers.Primary.AddParagraph();
                     pageHeader.Format.Alignment = ParagraphAlignment.Right;
                     pageHeader.Format.Font.Bold = true;
-                    pageHeader.Format.Font.Size = 8;
+                    pageHeader.Format.Font.Size = Unit.FromPoint(8);
                     pageHeader.AddText("Page ");
                     pageHeader.AddPageField();
                     pageHeader.AddLineBreak();
@@ -93,20 +114,32 @@ namespace DEA.Next.HelperClasses.FileFunctions
                     section.AddParagraph().Format.SpaceAfter = Unit.FromPoint(100);
 
                     // Add text before the table
-                    section.AddParagraph($"Generated Date: {DateTime.Now:yyyy-MM-dd}");
-                    section.AddParagraph($"Generated Time: {DateTime.Now:HH:mm:ss}");
-                    section.AddParagraph($"File Name: {Path.GetFileNameWithoutExtension(mainFileName)}");
-                    section.AddParagraph($"Set ID: {setId}");
-                    section.AddParagraph($"Invoice Number: {newInvoiceNumber}");
-                    section.AddParagraph().Format.SpaceAfter = Unit.FromPoint(100);
-
-                    for (var j = 0; j < valuesList.Length; j++)
+                    foreach (var (fieldName, fieldValue) in pdfMainFieldList.Zip(pdfMainFieldListValues, Tuple.Create))
                     {
-                        var fieldName = fieldNames[j];
-                        var fieldValue = valuesList[j];
-                        
-                        var concatenatedValue = $"{fieldName}: {fieldValue}";
-                        section.AddParagraph(concatenatedValue);
+                        var paragraph = section.AddParagraph();
+                        paragraph.AddFormattedText(fieldName + ": ", mainFieldStyle.Name);
+                        paragraph.AddTab();
+                        paragraph.AddFormattedText(fieldValue, valuesStyle.Name);
+                        paragraph.AddLineBreak();
+                        section.AddParagraph().Format.SpaceAfter = Unit.FromPoint(margin);
+                    }
+                    
+                    const string newInvoiceFieldName = "New Invoice Number";
+                    var invoiceParagraph = section.AddParagraph();
+                    invoiceParagraph.AddFormattedText(newInvoiceFieldName + ": ", mainFieldStyle.Name);
+                    invoiceParagraph.AddTab();
+                    invoiceParagraph.AddFormattedText(newInvoiceNumber, valuesStyle.Name);
+                    invoiceParagraph.AddLineBreak();
+                    section.AddParagraph().Format.SpaceAfter = Unit.FromPoint(margin);
+                    
+                    foreach (var (fieldName, fieldValue) in mainFieldList.Zip(values, (name, value) => (name, value)))
+                    {
+                        var paragraph = section.AddParagraph();
+                        paragraph.AddFormattedText(fieldName + ": ", mainFieldStyle.Name);
+                        paragraph.AddTab();
+                        paragraph.AddFormattedText(fieldValue, valuesStyle.Name);
+                        paragraph.AddLineBreak();
+                        section.AddParagraph().Format.SpaceAfter = Unit.FromPoint(margin);
                     }
                     
                     // Add footer
@@ -128,7 +161,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
                         return false;
                     }
                     
-                    var newFileName = string.Concat(Path.GetFileNameWithoutExtension(outputPath), "_", i, ".pdf");
+                    var newFileName = string.Concat(Path.GetFileNameWithoutExtension(outputPath), "_", i, outputFileExtension);
                     var newOutputPath = Path.Combine(directoryPath, newFileName);
                     
                     PdfDocumentRenderer renderer = new()
@@ -137,28 +170,19 @@ namespace DEA.Next.HelperClasses.FileFunctions
                     };
                     renderer.RenderDocument();
                     renderer.PdfDocument.Save(newOutputPath);
+                    i++;
 
-                    if (File.Exists(newOutputPath))
-                    {
-                        WriteLogClass.WriteToLog(1, "Pdf file created successfully ....", 1);
-                        var result = await SendToWebServiceWithLines.SendToWebServiceWithLinesAsync(data,
-                            mainFileName,
-                            outputPath,
-                            setId,
-                            clientId);
-
-                        return result switch
-                        {
-                            -1 => false,
-                            0 => false,
-                            _ => true
-                        };
-                    }
-                    
-                    WriteLogClass.WriteToLog(0, "Pdf file creation unsuccessful ....", 0);
-                    return false;
+                    if (!File.Exists(newOutputPath)) continue;
+                    WriteLogClass.WriteToLog(1, "Pdf file created successfully ....", 1);
+                    var result = await SendToWebServiceWithLines.SendToWebServiceWithLinesAsync(null,
+                        values,
+                        mainFieldList,
+                        null,
+                        mainFileName,
+                        newOutputPath,
+                        setId,
+                        clientId);
                 }
-               
             }
             catch (Exception e)
             {
@@ -178,7 +202,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
         /// <param name="setId">The set ID of the PDF file.</param>
         /// <param name="clientId">The client ID for retrieving user configuration.</param>
         /// <returns>True if the PDF file was created and saved successfully, false otherwise.</returns>
-        private static async Task<bool> CreatPdfBatch(List<Dictionary<string, string>> data,
+        private static async Task<bool> CreatPdfBatch(List<Dictionary<string, string>>? data,
             string outputPath,
             string mainFileName,
             string setId,
@@ -273,6 +297,9 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 {
                     WriteLogClass.WriteToLog(1, "Pdf file created successfully ....", 1);
                     var result = await SendToWebServiceWithLines.SendToWebServiceWithLinesAsync(data,
+                        null,
+                        null,
+                        null,
                         mainFileName,
                         outputPath,
                         setId,

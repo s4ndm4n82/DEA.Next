@@ -51,8 +51,9 @@ namespace UserConfigSetterClass
             public string ReadByLineTrigger { get; set; } = string.Empty;
             public bool MakeUploadFile { get; set; }
             public string OutputFileExtension { get; set; } = "pdf";
-            public string SetDelimiter { get; set; } = ";";
+            public string SetDelimiter { get; set; } = string.Empty;
             public int NumberOfLinesToRead { get; set; }
+            public string[]? MainFieldNameList { get; set; }
         }
         public class Ftpdetails
         {

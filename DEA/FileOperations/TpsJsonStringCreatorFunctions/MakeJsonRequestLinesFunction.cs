@@ -10,7 +10,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
 {
     internal static class MakeJsonRequestLinesFunction
     {
-        public static async Task<int> MakeJsonRequestLines(List<Dictionary<string, string>> data,
+        public static async Task<int> MakeJsonRequestBatch(List<Dictionary<string, string>>? data,
             string mainFileName,
             string localFilePath,
             string setId,
@@ -50,7 +50,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
 
         private static async Task<string> CreatTheJsonRequestLines(string localFile,
             UserConfigSetter.Customerdetail jsonData,
-            List<Dictionary<string, string>> data,
+            List<Dictionary<string, string>>? data,
             TpsJsonLinesUploadString.Fields[] fieldsList)
         {
             try

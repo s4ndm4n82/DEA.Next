@@ -325,8 +325,21 @@
         "ReadByLineTrigger": "b2b", // If ReadByLine is true then the file name is checked to trigger the read by line function.
         "MakeUploadFile": true, // If true then creates the upload file. If not it just sends data to process.
         "OutputFileExtension": "pdf", // If you want another file extension then set this.
-        "SetDelimiter": ",", // If the file is a CSV then this will be used.
-        "NumberOfLinesToRead": 100 // When reading from a CSV we can set the number of lines to read at once.
+        "SetDelimiter": ";", // If the file is a CSV then this will be used.
+        "NumberOfLinesToRead": 100, // When reading from a CSV we can set the number of lines to read at once.
+        "MainFieldNameList": [
+          "Invoice Category",
+          "Invoice Type Code",
+          "Invoice number",
+          "Water Account No.",
+          "Invoice Date",
+          "Total Excluding Tax",
+          "Total Including Tax",
+          "Total Payable Amount",
+          "Rounding Amount",
+          "Buyer TIN",
+          "Buyer Registration"
+        ]
       },
       "FtpDetails": {
         "FtpType": "FTP",

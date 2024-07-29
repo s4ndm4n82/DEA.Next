@@ -87,7 +87,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
             return jsonFileList;
         }
 
-        public static TpsJsonLinesUploadString.Tables[] ReturnTableListLines(List<Dictionary<string, string>> data)
+        public static TpsJsonLinesUploadString.Tables[] ReturnTableListLines(List<Dictionary<string, string>>? data)
         {
             var tableList = new TpsJsonLinesUploadString.Tables[1];
 

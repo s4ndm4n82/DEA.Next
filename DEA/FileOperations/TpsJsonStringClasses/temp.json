@@ -31,3 +31,80 @@
     }
   ]
 }
+
+public class RootObject
+{
+    public CustomerDetails[] CustomerDetails { get; set; }
+}
+
+public class CustomerDetails
+{
+    public int id { get; set; }
+    public int CustomerStatus { get; set; }
+    public string Token { get; set; }
+    public string UserName { get; set; }
+    public string TemplateKey { get; set; }
+    public string Queue { get; set; }
+    public string ProjetID { get; set; }
+    public string DocumentId { get; set; }
+    public int MaxBatchSize { get; set; }
+    public int RenameFile { get; set; }
+    public string MainCustomer { get; set; }
+    public string ClientName { get; set; }
+    public int SendEmail { get; set; }
+    public string ClientOrgNo { get; set; }
+    public string ClientIdField { get; set; }
+    public string IdField2Value { get; set; }
+    public string ClientIdField2 { get; set; }
+    public string FileDeliveryMethod { get; set; }
+    public DomainDetails DomainDetails { get; set; }
+    public ReadContentSettings ReadContentSettings { get; set; }
+    public FtpDetails FtpDetails { get; set; }
+    public EmailDetails EmailDetails { get; set; }
+    public DocumentDetails DocumentDetails { get; set; }
+}
+
+public class DomainDetails
+{
+    public string MainDomain { get; set; }
+    public string TpsRequestUrl { get; set; }
+}
+
+public class ReadContentSettings
+{
+    public bool ReadTheContent { get; set; }
+    public bool ReadByLine { get; set; }
+    public string ReadByLineTrigger { get; set; }
+    public bool MakeUploadFile { get; set; }
+    public string OutputFileExtension { get; set; }
+    public string SetDelimiter { get; set; }
+    public int NumberOfLinesToRead { get; set; }
+    public string[] FieldNameList { get; set; }
+}
+
+public class FtpDetails
+{
+    public string FtpType { get; set; }
+    public string FtpProfile { get; set; }
+    public string FtpHostName { get; set; }
+    public string FtpUser { get; set; }
+    public string FtpPassword { get; set; }
+    public int FtpPort { get; set; }
+    public int FtpFolderLoop { get; set; }
+    public string FtpMainFolder { get; set; }
+    public bool FtpMoveToSubFolder { get; set; }
+    public string FtpSubFolder { get; set; }
+}
+
+public class EmailDetails
+{
+    public string EmailAddress { get; set; }
+    public string EmailInboxPath { get; set; }
+}
+
+public class DocumentDetails
+{
+    public string DocumentType { get; set; }
+    public string[] DocumentExtensions { get; set; }
+}
+
