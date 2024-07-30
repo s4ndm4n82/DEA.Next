@@ -1,44 +1,44 @@
 namespace DEA.Next.FileOperations.TpsJsonStringClasses;
 
-public class TpsJsonLinesUploadString
+public abstract class TpsJsonLinesUploadString
 {
     public class TpsJsonLinesUploadObject
     {
-        public string Token { get; set; }
-        public string Username { get; set; }
-        public string TemplateKey { get; set; }
-        public string Queue { get; set; }
-        public string ProjectID { get; set; }
-        public Fields[] Fields { get; set; }
-        public Tables[] Tables { get; set; }
-        public Files[] Files { get; set; }
+        public string Token { get; set; } = string.Empty;
+        public string Username { get; set; } = string.Empty;
+        public string TemplateKey { get; set; } = string.Empty;
+        public string Queue { get; set; } = string.Empty;
+        public string ProjectId { get; set; } = string.Empty;
+        public Fields[] FieldsList { get; set; } = Array.Empty<Fields>();
+        public Tables[] TablesList { get; set; } = Array.Empty<Tables>();
+        public Files[] FilesList { get; set; } = Array.Empty<Files>();
     }
 
     public class Fields
     {
-        public string Name { get; set; }
-        public string Value { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Value { get; set; } = string.Empty;
     }
 
     public class Tables
     {
-        public Rows[] Rows { get; set; }
+        public Rows[] TableRows { get; set; } = Array.Empty<Rows>();
     }
 
     public class Rows
     {
-        public Fields1[] Fields { get; set; }
+        public Fields1[] FieldsList { get; init; } = Array.Empty<Fields1>();
     }
 
     public class Fields1
     {
-        public string Name { get; set; }
-        public string Value { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Value { get; set; } = string.Empty;
     }
 
     public class Files
     {
-        public string Name { get; set; }
-        public string Data { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Data { get; set; } = string.Empty;
     }
 }

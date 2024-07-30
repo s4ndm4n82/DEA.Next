@@ -1,6 +1,7 @@
 ﻿using DEA.Next.FileOperations.TpsJsonStringClasses;
 using TpsJsonProjectUploadString;
 using UserConfigRetriverClass;
+using WriteLog;
 using static UserConfigSetterClass.UserConfigSetter;
 
 namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
@@ -58,7 +59,8 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
             return emailFieldList;
         }
         
-        public static TpsJsonLinesUploadString.Fields[] ReturnIdFieldListLines(string mainFileName,
+        // CSV file read processed as batches
+        public static TpsJsonLinesUploadString.Fields[] ReturnIdFieldListBatch(string mainFileName,
             string setId,
             int clientId)
         {
@@ -73,7 +75,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
             return mainField;
         }
         
-        public static TpsJsonLinesUploadString.Files[] ReturnFilesListLines(string fileToSend)
+        public static TpsJsonLinesUploadString.Files[] ReturnFilesListBatch(string fileToSend)
         {
             var jsonFileList = new[]
             {
@@ -87,7 +89,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
             return jsonFileList;
         }
 
-        public static TpsJsonLinesUploadString.Tables[] ReturnTableListLines(List<Dictionary<string, string>>? data)
+        public static TpsJsonLinesUploadString.Tables[] ReturnTableListBatch(List<Dictionary<string, string>>? data)
         {
             var tableList = new TpsJsonLinesUploadString.Tables[1];
 
@@ -97,7 +99,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
             {
                 TpsJsonLinesUploadString.Rows rows = new()
                 {
-                    Fields = new TpsJsonLinesUploadString.Fields1[rowData.Count]
+                    FieldsList = new TpsJsonLinesUploadString.Fields1[rowData.Count]
                 };
 
                 var fieldsIndex = 0;
@@ -107,15 +109,46 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
                              Value = fieldData.Value
                          }))
                 {
-                    rows.Fields[fieldsIndex] = fields1;
+                    rows.FieldsList[fieldsIndex] = fields1;
                     fieldsIndex++;
                 }
                 
                 rowsList.Add(rows);
             }
-            tableList[0] = new TpsJsonLinesUploadString.Tables() { Rows = rowsList.ToArray() };
+            tableList[0] = new TpsJsonLinesUploadString.Tables() { TableRows = rowsList.ToArray() };
 
             return tableList;
+        }
+        
+        // CSV file read processed as lines
+        public static TpsJsonLinesUploadString.Fields[] ReturnIdFieldListLines(List<string> valueList,
+            string newInvoiceNumber,
+            string mainFileName,
+            string setId,
+            int clientId)
+        {
+            var jsonData = UserConfigRetriver.RetriveUserConfigById(clientId).Result;
+            var mainFieldNameList = jsonData.ReadContentSettings.MainFieldNameList;
+
+            if (mainFieldNameList == null)
+            {
+                WriteLogClass.WriteToLog(1, "Main field name list is empty ....", 0);
+                return Array.Empty<TpsJsonLinesUploadString.Fields>();
+            }
+
+            var mainField = new List<TpsJsonLinesUploadString.Fields>
+            {
+                new() { Name = jsonData.ClientIdField, Value = setId },
+                new() { Name = jsonData.ClientIdField2, Value = mainFileName },
+                new() { Name = mainFieldNameList[2], Value = newInvoiceNumber }
+            };
+
+            foreach (var (fieldName, fieldValue) in mainFieldNameList.Zip(valueList, (name, value) => (name, value)))
+            {
+                mainField.Add(new TpsJsonLinesUploadString.Fields() { Name = fieldName, Value = fieldValue });
+            }
+            
+            return mainField.ToArray();
         }
     }
 }

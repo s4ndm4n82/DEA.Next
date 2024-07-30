@@ -3,14 +3,14 @@ using WriteLog;
 
 namespace UserConfigSetterClass
 {
-    public class UserConfigSetter
+    public abstract class UserConfigSetter
     {
-        public class CustomerDetailsObject
+        public abstract class CustomerDetailsObject
         {
             public Customerdetail[]? CustomerDetails { get; set; }
         }
 
-        public class Customerdetail
+        public abstract class Customerdetail
         {
             public int Id { get; set; }
             public int CustomerStatus { get; set; }
@@ -39,12 +39,12 @@ namespace UserConfigSetterClass
             public Emaildetails EmailDetails { get; set; }
             public Documentdetails DocumentDetails { get; set; }
         }
-        public class Domaindetails
+        public abstract class Domaindetails
         {
             public string MainDomain { get; set; }
             public string TpsRequestUrl { get; set; }
         }
-        public class Readcontentsettings
+        public abstract class Readcontentsettings
         {
             public bool ReadTheContent { get; set; }
             public bool ReadByLine { get; set; }
@@ -53,9 +53,10 @@ namespace UserConfigSetterClass
             public string OutputFileExtension { get; set; } = "pdf";
             public string SetDelimiter { get; set; } = string.Empty;
             public int NumberOfLinesToRead { get; set; }
-            public string[]? MainFieldNameList { get; set; }
+            public string[] MainFieldNameList { get; set; } = Array.Empty<string>();
+            public string[] MainFieldToSkip { get; set; } = Array.Empty<string>();
         }
-        public class Ftpdetails
+        public abstract class Ftpdetails
         {
             public string FtpType { get; set; }
             public string FtpProfile { get; set; }
@@ -69,7 +70,7 @@ namespace UserConfigSetterClass
             public string FtpSubFolder { get; set; }
         }
 
-        public class Emaildetails
+        public abstract class Emaildetails
         {
             public string EmailAddress { get; set; }
             public string EmailInboxPath { get; set; }
@@ -78,13 +79,13 @@ namespace UserConfigSetterClass
             public List<Emailfieldlist> EmailFieldList { get; set; }
         }
 
-        public class Emailfieldlist
+        public abstract class Emailfieldlist
         {
             public int FieldId { get; set; }
             public string FieldName { get; set; }
         }
 
-        public class Documentdetails
+        public abstract class Documentdetails
         {
             public string DocumentType { get; set; }
             public List<string> DocumentExtensions { get; set; }

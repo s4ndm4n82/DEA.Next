@@ -20,11 +20,11 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
             {
                 var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
 
-                var fieldsList = MakeJsonRequestHelperClass.ReturnIdFieldListLines(mainFileName,
+                var fieldsList = MakeJsonRequestHelperClass.ReturnIdFieldListBatch(mainFileName,
                     setId,
                     clientId);
                 
-                var jsonRequest = await CreatTheJsonRequestLines(localFilePath,
+                var jsonRequest = await CreatTheJsonRequestBatch(localFilePath,
                     jsonData,
                     data,
                     fieldsList);
@@ -48,15 +48,15 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
             return -1;
         }
 
-        private static async Task<string> CreatTheJsonRequestLines(string localFile,
+        private static async Task<string> CreatTheJsonRequestBatch(string localFile,
             UserConfigSetter.Customerdetail jsonData,
             List<Dictionary<string, string>>? data,
             TpsJsonLinesUploadString.Fields[] fieldsList)
         {
             try
             {
-                var localFileList = await Task.Run(() => MakeJsonRequestHelperClass.ReturnFilesListLines(localFile));
-                var tablesList = await Task.Run(() => MakeJsonRequestHelperClass.ReturnTableListLines(data));
+                var localFileList = await Task.Run(() => MakeJsonRequestHelperClass.ReturnFilesListBatch(localFile));
+                var tablesList = await Task.Run(() => MakeJsonRequestHelperClass.ReturnTableListBatch(data));
 
                 var tpsJsonRequest = new TpsJsonLinesUploadString.TpsJsonLinesUploadObject
                 {
@@ -64,10 +64,10 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
                     Username = jsonData.UserName,
                     TemplateKey = jsonData.TemplateKey,
                     Queue = jsonData.Queue,
-                    ProjectID = jsonData.ProjetID,
-                    Fields = fieldsList,
-                    Tables = tablesList, 
-                    Files = localFileList
+                    ProjectId = jsonData.ProjetID,
+                    FieldsList = fieldsList,
+                    TablesList = tablesList, 
+                    FilesList = localFileList
                 };
                 
                 var jsonResult = JsonConvert.SerializeObject(tpsJsonRequest, Formatting.Indented);
@@ -77,7 +77,60 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
             catch (Exception e)
             {
                 WriteLogClass.WriteToLog(0, $"Exception at lines Json serialization: {e.Message}", 0);
-                throw;
+                return string.Empty;
+            }
+        }
+
+        public static async Task<int> MakeJsonRequestByLine(List<string> valuesList,
+            string newInvoiceNumber,
+            string mainFileName,
+            string localFilePath,
+            string setId,
+            int clientId)
+        {
+            var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
+            
+            var fieldsList = MakeJsonRequestHelperClass.ReturnIdFieldListLines(valuesList,
+                newInvoiceNumber,
+                mainFileName,
+                setId,
+                clientId);
+            
+            var jsonRequest = await CreatTheJsonRequestLines(localFilePath,
+                jsonData,
+                fieldsList);
+            
+            return -1;
+        }
+        
+        private static async Task<string> CreatTheJsonRequestLines(string localFile,
+            UserConfigSetter.Customerdetail jsonData,
+            TpsJsonLinesUploadString.Fields[] fieldList)
+        {
+            try
+            {
+                var localFileList = await Task.Run(() => MakeJsonRequestHelperClass.ReturnFilesListBatch(localFile));
+                
+                var tpsJsonRequest = new TpsJsonLinesUploadString.TpsJsonLinesUploadObject
+                {
+                    Token = jsonData.Token,
+                    Username = jsonData.UserName,
+                    TemplateKey = jsonData.TemplateKey,
+                    Queue = jsonData.Queue,
+                    ProjectId = jsonData.ProjetID,
+                    FieldsList = fieldList,
+                    TablesList = Array.Empty<TpsJsonLinesUploadString.Tables>(), 
+                    FilesList = localFileList
+                };
+                
+                var jsonResult = JsonConvert.SerializeObject(tpsJsonRequest, Formatting.Indented);
+                
+                return jsonResult;
+            }
+            catch (Exception e)
+            {
+                WriteLogClass.WriteToLog(0, $"Exception at lines Json serialization: {e.Message}", 0);
+                return string.Empty;
             }
         }
     }

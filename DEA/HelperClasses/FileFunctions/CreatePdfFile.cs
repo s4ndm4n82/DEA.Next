@@ -69,6 +69,12 @@ namespace DEA.Next.HelperClasses.FileFunctions
                     Path.GetFileNameWithoutExtension(mainFileName), setId
                 };
                 var i = 1;
+                
+                if (data is null || !data.Any())
+                {
+                    WriteLogClass.WriteToLog(0, "No data to create the pdf file ....", 1);
+                    return false;
+                }
 
                 foreach (var dictionary in data.Skip(0))
                 {
@@ -174,10 +180,9 @@ namespace DEA.Next.HelperClasses.FileFunctions
 
                     if (!File.Exists(newOutputPath)) continue;
                     WriteLogClass.WriteToLog(1, "Pdf file created successfully ....", 1);
-                    var result = await SendToWebServiceWithLines.SendToWebServiceWithLinesAsync(null,
+                    var result = await SendToWebServiceWithLines.SendToWebServiceAsync(null,
                         values,
-                        mainFieldList,
-                        null,
+                        newInvoiceNumber,
                         mainFileName,
                         newOutputPath,
                         setId,
@@ -296,10 +301,9 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 if (File.Exists(outputPath))
                 {
                     WriteLogClass.WriteToLog(1, "Pdf file created successfully ....", 1);
-                    var result = await SendToWebServiceWithLines.SendToWebServiceWithLinesAsync(data,
+                    var result = await SendToWebServiceWithLines.SendToWebServiceAsync(data,
                         null,
-                        null,
-                        null,
+                        newInvoiceNumber: null,
                         mainFileName,
                         outputPath,
                         setId,

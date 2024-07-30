@@ -329,7 +329,7 @@
         "NumberOfLinesToRead": 100, // When reading from a CSV we can set the number of lines to read at once.
         "MainFieldNameList": [
           "Invoice Category",
-          "Invoice Type Code",
+          "Invoice Type",
           "Invoice number",
           "Water Account No.",
           "Invoice Date",
@@ -339,6 +339,12 @@
           "Rounding Amount",
           "Buyer TIN",
           "Buyer Registration"
+        ],
+        "MainFieldToSkip": [
+          "Invoice Category",
+          "Invoice number",
+          "Water Account No.",
+          "Invoice Date"
         ]
       },
       "FtpDetails": {

@@ -80,6 +80,7 @@ public class ReadContentSettings
     public string SetDelimiter { get; set; }
     public int NumberOfLinesToRead { get; set; }
     public string[] FieldNameList { get; set; }
+    public string[] MainFieldToSkip { get; set; }
 }
 
 public class FtpDetails
@@ -107,4 +108,6 @@ public class DocumentDetails
     public string DocumentType { get; set; }
     public string[] DocumentExtensions { get; set; }
 }
+
+
 
