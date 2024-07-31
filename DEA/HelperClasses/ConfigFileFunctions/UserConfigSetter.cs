@@ -3,14 +3,14 @@ using WriteLog;
 
 namespace UserConfigSetterClass
 {
-    public abstract class UserConfigSetter
+    public class UserConfigSetter
     {
-        public abstract class CustomerDetailsObject
+        public class CustomerDetailsObject
         {
             public Customerdetail[]? CustomerDetails { get; set; }
         }
 
-        public abstract class Customerdetail
+        public class Customerdetail
         {
             public int Id { get; set; }
             public int CustomerStatus { get; set; }
@@ -39,15 +39,14 @@ namespace UserConfigSetterClass
             public Emaildetails EmailDetails { get; set; }
             public Documentdetails DocumentDetails { get; set; }
         }
-        public abstract class Domaindetails
+        public class Domaindetails
         {
             public string MainDomain { get; set; }
             public string TpsRequestUrl { get; set; }
         }
-        public abstract class Readcontentsettings
+        public class Readcontentsettings
         {
             public bool ReadTheContent { get; set; }
-            public bool ReadByLine { get; set; }
             public string ReadByLineTrigger { get; set; } = string.Empty;
             public bool MakeUploadFile { get; set; }
             public string OutputFileExtension { get; set; } = "pdf";
@@ -56,7 +55,7 @@ namespace UserConfigSetterClass
             public string[] MainFieldNameList { get; set; } = Array.Empty<string>();
             public string[] MainFieldToSkip { get; set; } = Array.Empty<string>();
         }
-        public abstract class Ftpdetails
+        public class Ftpdetails
         {
             public string FtpType { get; set; }
             public string FtpProfile { get; set; }
@@ -70,7 +69,7 @@ namespace UserConfigSetterClass
             public string FtpSubFolder { get; set; }
         }
 
-        public abstract class Emaildetails
+        public class Emaildetails
         {
             public string EmailAddress { get; set; }
             public string EmailInboxPath { get; set; }
@@ -79,13 +78,13 @@ namespace UserConfigSetterClass
             public List<Emailfieldlist> EmailFieldList { get; set; }
         }
 
-        public abstract class Emailfieldlist
+        public class Emailfieldlist
         {
             public int FieldId { get; set; }
             public string FieldName { get; set; }
         }
 
-        public abstract class Documentdetails
+        public class Documentdetails
         {
             public string DocumentType { get; set; }
             public List<string> DocumentExtensions { get; set; }
@@ -96,10 +95,10 @@ namespace UserConfigSetterClass
             try
             {
                 using StreamReader fileData = new(userConfigFilePath);
-                string userConfigData = await fileData.ReadToEndAsync();
-                T jsonData = JsonConvert.DeserializeObject<T>(userConfigData);
+                var userConfigData = await fileData.ReadToEndAsync();
+                var jsonData = JsonConvert.DeserializeObject<T>(userConfigData);
 
-                return jsonData;
+                return jsonData ?? throw new InvalidOperationException("Failed to deserialize JSON");
             }
             catch (IOException ioEx)
             {

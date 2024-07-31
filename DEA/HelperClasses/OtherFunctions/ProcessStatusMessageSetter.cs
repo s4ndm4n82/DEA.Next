@@ -133,7 +133,7 @@ namespace ProcessStatusMessageSetter
         {
             return processStatus switch
             {
-                ProcessStatusOther.Success => "FilesList sent to processing successfully .... ",
+                ProcessStatusOther.Success => "Files sent to processing successfully .... ",
                 ProcessStatusOther.FtpUploadFailed => "Uploading files failed. File moved to error folder ....,",
                 ProcessStatusOther.EmailUploadFailed => "Uploading file/s didn't complete successfully. Moved files to error folder ....",
                 ProcessStatusOther.FtpDownloadFailed => "File download failed ....",

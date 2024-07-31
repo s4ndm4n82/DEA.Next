@@ -35,10 +35,10 @@ namespace DEA.Next.HelperClasses.FileFunctions
             var fileB2BTrue = mainFileName
                 .Contains(jsonData.ReadContentSettings.ReadByLineTrigger, StringComparison.OrdinalIgnoreCase);
 
-            if (data.Any() && jsonData.ReadContentSettings is { MakeUploadFile: true, ReadByLine: false })
+            if (data != null && jsonData.ReadContentSettings is { MakeUploadFile: true } && !fileB2BTrue)
                 return await CreatPdfBatch(data, outputPath, mainFileName, setId, clientId);
             
-            if (data.Any() && jsonData.ReadContentSettings is { MakeUploadFile: true, ReadByLine: true } && fileB2BTrue)
+            if (data != null && jsonData.ReadContentSettings is { MakeUploadFile: true } && fileB2BTrue)
                 return await CreatPdfBatchByLine(data, outputPath, mainFileName, setId, clientId);
             
             WriteLogClass.WriteToLog(1, "No data to create the pdf file.", 1);
@@ -215,6 +215,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
         {
             try
             {
+                // TODO: This need to be looped till the end of data
                 // Create a new Document
                 Document document = new();
 

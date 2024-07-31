@@ -7,7 +7,7 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
 {
     internal static class SendFilesToApiLines
     {
-        public static async Task<bool> SendFilesToApiLinesAsync(string jsonResult,
+        public static async Task<bool> SendFilesToApiAsync(string jsonResult,
             string localFile,
             int clientId)
         {

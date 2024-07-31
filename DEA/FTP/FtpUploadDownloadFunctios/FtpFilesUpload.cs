@@ -13,7 +13,7 @@ namespace UploadFtpFilesClass
         /// File download function. This will be parsing the files to the FTP client and downloading them the the local folder.
         /// </summary>
         /// <param name="ftpConnect">FTP connection token.</param>
-        /// <param name="currentBatch">FilesList downloaded from the server.</param>
+        /// <param name="currentBatch">Files downloaded from the server.</param>
         /// <param name="ftpHoldFolder">Local download folder.</param>
         /// <param name="clientId">Client ID.</param>
         /// <param name="downloadResult"></param>

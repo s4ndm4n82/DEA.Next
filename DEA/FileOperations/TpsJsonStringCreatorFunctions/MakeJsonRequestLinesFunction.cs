@@ -29,7 +29,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
                     data,
                     fieldsList);
                 
-                var result = await SendFilesToApiLines.SendFilesToApiLinesAsync(jsonRequest,
+                var result = await SendFilesToApiLines.SendFilesToApiAsync(jsonRequest,
                     localFilePath,
                     clientId);
 
@@ -65,9 +65,9 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
                     TemplateKey = jsonData.TemplateKey,
                     Queue = jsonData.Queue,
                     ProjectId = jsonData.ProjetID,
-                    FieldsList = fieldsList,
-                    TablesList = tablesList, 
-                    FilesList = localFileList
+                    Fields = fieldsList,
+                    Tables = tablesList, 
+                    Files = localFileList
                 };
                 
                 var jsonResult = JsonConvert.SerializeObject(tpsJsonRequest, Formatting.Indented);
@@ -100,6 +100,17 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
                 jsonData,
                 fieldsList);
             
+            var result = await SendFilesToApiLines.SendFilesToApiAsync(jsonRequest,
+                localFilePath,
+                clientId);
+            
+            if (!result) return await TapsServerOnFailLines.ServerOnFailLinesAsync(localFilePath,
+                setId,
+                clientId);
+            
+            /*if (File.Exists(localFilePath))
+                return await TpsServerOnSuccessLines.ServerOnSuccessLinesAsync(localFilePath);*/
+            
             return -1;
         }
         
@@ -118,9 +129,9 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
                     TemplateKey = jsonData.TemplateKey,
                     Queue = jsonData.Queue,
                     ProjectId = jsonData.ProjetID,
-                    FieldsList = fieldList,
-                    TablesList = Array.Empty<TpsJsonLinesUploadString.Tables>(), 
-                    FilesList = localFileList
+                    Fields = fieldList,
+                    Tables = Array.Empty<TpsJsonLinesUploadString.Tables>(), 
+                    Files = localFileList
                 };
                 
                 var jsonResult = JsonConvert.SerializeObject(tpsJsonRequest, Formatting.Indented);

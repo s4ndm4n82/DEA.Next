@@ -29,7 +29,7 @@ namespace LogFileCleaner
                     loopCounter++;
                 }
 
-                string logEntry = fileCount == loopCounter ? $"Deleted {fileCount} log files from log folder ...." : $"FilesList not deleted .... operation stopped ....";
+                string logEntry = fileCount == loopCounter ? $"Deleted {fileCount} log files from log folder ...." : $"Files not deleted .... operation stopped ....";
                 int logType = fileCount == loopCounter ? 1 : 0;
 
                 WriteLogClass.WriteToLog(logType, logEntry, 1);

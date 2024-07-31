@@ -22,9 +22,7 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
                 var trigger = mainFileName
                     .Contains(jsonData.ReadContentSettings.ReadByLineTrigger, StringComparison.OrdinalIgnoreCase);
 
-                if (jsonData.ReadContentSettings.ReadByLine
-                    && trigger
-                    && valuesList!= null)
+                if (trigger && valuesList!= null)
                     return await SendToWebServiceAsLine(valuesList,
                         newInvoiceNumber,
                         mainFileName,
@@ -99,7 +97,7 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
                        clientId);
                 }
                 
-                WriteLogClass.WriteToLog(0, "No files to upload to TPS.", 1);
+                WriteLogClass.WriteToLog(0, "No files to upload to TPS ....", 1);
             }
             catch (Exception e)
             {

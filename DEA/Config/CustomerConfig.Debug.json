@@ -321,7 +321,6 @@
       },
       "ReadContentSettings": {
         "ReadTheContent": true, // If true then read the file. If false then just send to process.
-        "ReadByLine": true, // If true then read by line. If false then read by batch.
         "ReadByLineTrigger": "b2b", // If ReadByLine is true then the file name is checked to trigger the read by line function.
         "MakeUploadFile": true, // If true then creates the upload file. If not it just sends data to process.
         "OutputFileExtension": "pdf", // If you want another file extension then set this.

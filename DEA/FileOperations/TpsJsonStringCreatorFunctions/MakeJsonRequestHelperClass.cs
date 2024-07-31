@@ -99,7 +99,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
             {
                 TpsJsonLinesUploadString.Rows rows = new()
                 {
-                    FieldsList = new TpsJsonLinesUploadString.Fields1[rowData.Count]
+                    Fields = new TpsJsonLinesUploadString.Fields1[rowData.Count]
                 };
 
                 var fieldsIndex = 0;
@@ -109,13 +109,13 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
                              Value = fieldData.Value
                          }))
                 {
-                    rows.FieldsList[fieldsIndex] = fields1;
+                    rows.Fields[fieldsIndex] = fields1;
                     fieldsIndex++;
                 }
                 
                 rowsList.Add(rows);
             }
-            tableList[0] = new TpsJsonLinesUploadString.Tables() { TableRows = rowsList.ToArray() };
+            tableList[0] = new TpsJsonLinesUploadString.Tables() { Rows = rowsList.ToArray() };
 
             return tableList;
         }
@@ -129,12 +129,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
         {
             var jsonData = UserConfigRetriver.RetriveUserConfigById(clientId).Result;
             var mainFieldNameList = jsonData.ReadContentSettings.MainFieldNameList;
-
-            if (mainFieldNameList == null)
-            {
-                WriteLogClass.WriteToLog(1, "Main field name list is empty ....", 0);
-                return Array.Empty<TpsJsonLinesUploadString.Fields>();
-            }
+            var mainFieldListToSkip = jsonData.ReadContentSettings.MainFieldToSkip;
 
             var mainField = new List<TpsJsonLinesUploadString.Fields>
             {
@@ -145,6 +140,8 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
 
             foreach (var (fieldName, fieldValue) in mainFieldNameList.Zip(valueList, (name, value) => (name, value)))
             {
+                if (mainFieldListToSkip.Contains(fieldName)) continue;
+                
                 mainField.Add(new TpsJsonLinesUploadString.Fields() { Name = fieldName, Value = fieldValue });
             }
             
