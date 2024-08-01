@@ -1,7 +1,6 @@
 ﻿using DEA.Next.FileOperations.TpsJsonStringCreatorFunctions;
 using UserConfigRetriverClass;
 using WriteLog;
-using Directory = Microsoft.Graph.Directory;
 
 namespace DEA.Next.FileOperations.TpsFileFunctions
 {
@@ -96,16 +95,21 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
                        setId,
                        clientId);
                 }
+
+                if (result == 1)
+                {
+                    WriteLogClass.WriteToLog(1, "Files uploaded successfully ....", 1);
+                    return result;
+                }
                 
-                WriteLogClass.WriteToLog(0, "No files to upload to TPS ....", 1);
+                WriteLogClass.WriteToLog(0, "No files to upload ....", 1);
+                return result;
             }
             catch (Exception e)
             {
                 WriteLogClass.WriteToLog(0, $"Exception at Sending to TPS: {e.Message}", 0);
                 return result;
             }
-            
-            return result;
         }
     }
 }

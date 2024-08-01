@@ -1,4 +1,5 @@
 ﻿using DEA.Next.FileOperations.TpsFileFunctions;
+using DEA.Next.HelperClasses.FolderFunctions;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
 using UserConfigRetriverClass;
@@ -59,16 +60,17 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 var mainFieldList = jsonData.ReadContentSettings.MainFieldNameList;
                 var outputFileExtension =
                     string.Concat('.', jsonData.ReadContentSettings.OutputFileExtension);
-                var pdfMainFieldList = new string[]
+                var pdfMainFieldList = new[]
                 {
                     "Generated Date", "Generated Time", "File Name", "Set Id"
                 };
-                var pdfMainFieldListValues = new string[]
+                var pdfMainFieldListValues = new[]
                 {
                     DateTime.Now.ToString("yyyy-MM-dd"), DateTime.Now.ToString("HH:mm:ss"),
                     Path.GetFileNameWithoutExtension(mainFileName), setId
                 };
                 var i = 1;
+                var result = 0;
                 
                 if (data is null || !data.Any())
                 {
@@ -180,7 +182,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
 
                     if (!File.Exists(newOutputPath)) continue;
                     WriteLogClass.WriteToLog(1, "Pdf file created successfully ....", 1);
-                    var result = await SendToWebServiceWithLines.SendToWebServiceAsync(null,
+                    result = await SendToWebServiceWithLines.SendToWebServiceAsync(null,
                         values,
                         newInvoiceNumber,
                         mainFileName,
@@ -188,14 +190,39 @@ namespace DEA.Next.HelperClasses.FileFunctions
                         setId,
                         clientId);
                 }
+
+                if (result == 1)
+                {
+                    WriteLogClass.WriteToLog(1, "All files uploaded successfully ....", 1);
+                    var lastDirectoryName = Path.GetDirectoryName(outputPath);
+
+                    if (string.IsNullOrEmpty(lastDirectoryName))
+                    {
+                        WriteLogClass.WriteToLog(0, "The local last directory path is null or empty ....", 1);
+                        return false;
+                    }
+                    
+                    WriteLogClass.WriteToLog(1, "Deleting local files and folders ....", 1);
+                    
+                    var removeMainFileTask = FolderCleanerLines.RemoveMainFileAsync(outputPath, mainFileName);
+                    var deleteLocalHoldFolderTask = FolderCleanerLines.DeleteLocalHoldFolderAsync(lastDirectoryName);
+                    
+                    await Task.WhenAll(removeMainFileTask, deleteLocalHoldFolderTask);
+
+                    if (removeMainFileTask.Result && deleteLocalHoldFolderTask.Result)
+                    {
+                        return await FolderCleanerLines.RemoveDataFileFromFtpAsync(mainFileName, clientId);
+                    }
+                }
+                
+                WriteLogClass.WriteToLog(0, "Some files failed to upload ....", 1);
+                return false;
             }
             catch (Exception e)
             {
                 WriteLogClass.WriteToLog(0, $"Exception at process data in batch line: {e.Message}", 0);
                 return false;
             }
-            
-            return true;
         }
 
         /// <summary>
@@ -252,8 +279,14 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 var table = section.AddTable();
                 table.Borders.Visible = true;
 
+                if (data == null)
+                {
+                    WriteLogClass.WriteToLog(0, "Data array is null ....", 1);
+                    return false;
+                }
+
                 // Add columns to the table based on keys in the first data row
-                foreach (var header in data[0].Keys)
+                foreach (var unused in data[0].Keys)
                 {
                     table.AddColumn(Unit.FromPoint(100));
                 }

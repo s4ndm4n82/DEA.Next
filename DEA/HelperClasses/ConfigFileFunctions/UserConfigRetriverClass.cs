@@ -50,5 +50,10 @@ namespace UserConfigRetriverClass
 
             return ftpdetails;
         }
+
+        public static async Task RetriveUserConfigJson(int clientId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

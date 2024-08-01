@@ -108,8 +108,8 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
                 setId,
                 clientId);
             
-            /*if (File.Exists(localFilePath))
-                return await TpsServerOnSuccessLines.ServerOnSuccessLinesAsync(localFilePath);*/
+            if (File.Exists(localFilePath))
+                return await TpsServerOnSuccessLines.ServerOnSuccessLinesAsync(localFilePath);
             
             return -1;
         }

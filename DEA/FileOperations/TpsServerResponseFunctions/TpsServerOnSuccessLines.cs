@@ -11,17 +11,19 @@ public static class TpsServerOnSuccessLines
     {
         try
         {
+            var fileName = Path.GetFileName(localFile);
+            
             WriteLogClass.WriteToLog(1, 
-                $"Uploaded files to TPS: {localFile}", 1);
+                $"Uploaded file \"{fileName}\" was successfully sent to TPS ....", 1);
             
             if (await FolderCleanerLines.RemoveUploadedFilesLinesAsync(localFile)) return 1;
+
+            return 0;
         }
         catch (Exception ex)
         {
             WriteLogClass.WriteToLog(0, $"Exception at TPS server on success lines: {ex.Message}", 0);
             return -1;
         }
-
-        return 1;
     }
 }
