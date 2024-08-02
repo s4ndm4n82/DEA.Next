@@ -205,7 +205,7 @@ namespace DownloadFtpFilesClass
                 }
 
                 // Creating the file stream.
-                FileStream fileStream = null;
+                FileStream fileStream;
 
                 // Get the SFTP file list.
                 IEnumerable<ISftpFile> sftpFileNameList = sftpConnect.ListDirectory(sftpPath)

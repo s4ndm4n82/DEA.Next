@@ -2,8 +2,8 @@ using System.Diagnostics;
 using ConnectFtp;
 using ConnectFtps;
 using ConnectSftp;
+using DEA.Next.FTP.FtpConnectionInterfaces;
 using DEA.Next.HelperClasses.OtherFunctions;
-using Renci.SshNet;
 using UserConfigRetriverClass;
 using WriteLog;
 
@@ -11,58 +11,6 @@ namespace DEA.Next.HelperClasses.FolderFunctions;
 
 public static class FolderCleanerLines
 {
-    public interface IFtpClient
-    {
-        Task<object> ConnectAsync(int clientId);
-    }
-
-    public class AsyncFtpClient : IFtpClient
-    {
-        public async Task<object> ConnectAsync(int clientId)
-        {
-            var jsonFtpData = await UserConfigRetriver.RetriveFtpConfigById(clientId);
-            
-            var ftpClient = await ConnectFtpClass.ConnectFtp(jsonFtpData.FtpProfile,
-                jsonFtpData.FtpHostName,
-                jsonFtpData.FtpUser,
-                jsonFtpData.FtpPassword,
-                jsonFtpData.FtpPort);
-            
-            return ftpClient;
-        }
-    }
-    
-    public class AsyncFtpsClient : IFtpClient
-    {
-        public async Task<object> ConnectAsync(int clientId)
-        {
-            var jsonFtpData = await UserConfigRetriver.RetriveFtpConfigById(clientId);
-            
-            var ftpClient = await ConnectFtpsClass.ConnectFtps(jsonFtpData.FtpProfile,
-                jsonFtpData.FtpHostName,
-                jsonFtpData.FtpUser,
-                jsonFtpData.FtpPassword,
-                jsonFtpData.FtpPort);
-            
-            return ftpClient;
-        }
-    }
-    
-    public class AsyncSftpClient : IFtpClient
-    {
-        public async Task<object> ConnectAsync(int clientId)
-        {
-            var jsonFtpData = await UserConfigRetriver.RetriveFtpConfigById(clientId);
-            
-            var ftpClient = await ConnectSftpClass.ConnectSftp(jsonFtpData.FtpHostName,
-                jsonFtpData.FtpUser,
-                jsonFtpData.FtpPassword,
-                jsonFtpData.FtpPort);
-            
-            return ftpClient;
-        }
-    }
-    
     public static async Task<bool> RemoveUploadedFilesLinesAsync(string localeFile)
     {
         try
@@ -95,7 +43,7 @@ public static class FolderCleanerLines
             WriteLogClass.WriteToLog(1, $"\"{mainFileName}\" file deleted successfully ....", 1);
             return true;
         }
-        catch (IOException ex)
+        catch (IOException)
         {
             // If the file is in use, close any processes that are using it and then delete the file
             var processes = Process.GetProcessesByName("explorer");
@@ -156,26 +104,64 @@ public static class FolderCleanerLines
 
     public static async Task<bool> RemoveDataFileFromFtpAsync(string mainFileName, int clientId)
     {
-        var ftpClient = await CreateFtpClientAsync(clientId);;
+        var jsonFtpData = await UserConfigRetriver.RetriveFtpConfigById(clientId);
+        var ftpFilePath = jsonFtpData.FtpMainFolder;
+        var ftpConnection = await CreateFtpClientAsync(clientId);
+        
+        var dataType = ftpConnection.GetType();
+
+        if (dataType == typeof(AsyncFtpConnection))
+        {
+            var ftpFileList = await ftpConnection.GetListingFtp(jsonFtpData.FtpMainFolder, clientId);
+        }
+        
+        if (dataType == typeof(SftpConnection))
+        {
+            var sftpFileList = await ftpConnection.GetListingSftp(jsonFtpData.FtpMainFolder, clientId);
+            
+            if (sftpFileList.Any(f => f.FullName.EndsWith(mainFileName, StringComparison.OrdinalIgnoreCase)))
+                return await ftpConnection.DeleteFileSftp(jsonFtpData.FtpMainFolder, mainFileName, clientId);
+        }
         
         return true;
     }
 
-    private static async Task<IFtpClient> CreateFtpClientAsync(int clientId)
+    private static async Task<IFtpConnection> CreateFtpClientAsync(int clientId)
     {
         var jsonFtpData = await UserConfigRetriver.RetriveFtpConfigById(clientId);
 
-        switch (jsonFtpData.FtpType.ToLower())
+        var ftpType = jsonFtpData.FtpType;
+        var ftpProfile = jsonFtpData.FtpProfile;
+        var host = jsonFtpData.FtpHostName;
+        var user = jsonFtpData.FtpUser;
+        var password = jsonFtpData.FtpPassword;
+        var port = jsonFtpData.FtpPort;
+        
+        switch (ftpType.ToLowerInvariant())
         {
             case MagicWords.ftp:
-                return new AsyncFtpClient();
+                return new AsyncFtpConnection(await ConnectFtpClass.ConnectFtp(ftpProfile,
+                    host,
+                    user,
+                    password,
+                    port));
+            
             case MagicWords.ftps:
-                return new AsyncFtpsClient();
+                return new AsyncFtpConnection(await ConnectFtpsClass.ConnectFtps(ftpProfile,
+                    host,
+                    user,
+                    password,
+                    port));
+            
             case MagicWords.sftp:
-                return new AsyncSftpClient();
+                return new SftpConnection(await ConnectSftpClass.ConnectSftp(host,
+                    user,
+                    password,
+                    port));
+            
             default:
-                WriteLogClass.WriteToLog(0, $"Ftp type {jsonFtpData.FtpType} not found.", 1);
-                throw new ArgumentException($@"Ftp type {jsonFtpData.FtpType} not found.", nameof(jsonFtpData.FtpType));
+                WriteLogClass.WriteToLog(0, $"Invalid FTP type: {ftpType} ....", 0);
+                throw new ArgumentException("Invalid FTP type");
         }
     }
 }

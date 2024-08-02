@@ -347,16 +347,16 @@
         ]
       },
       "FtpDetails": {
-        "FtpType": "FTP",
+        "FtpType": "SFTP",
         // The ftp profile name. Currently available profiles are profilepxe, profileepe, and profilefsv.
         // profilepxe: Connection type PASVEX, Encryption None, ValidateAnyCertificate false.
         // profileepe: Connection type AutoActive, Encryption Auto, ValidateAnyCertificate false. <-- Recommended.
         // profilefsv: Connection type AutoPassive, Encryption Explicit, ValidateAnyCertificate true.
         "FtpProfile": "profileepe",
         "FtpHostName": "localhost",
-        "FtpUser": "testuser",
+        "FtpUser": "testsshuser",
         "FtpPassword": "jackkills",
-        "FtpPort": 21, // FTP connection port.
+        "FtpPort": 22, // FTP connection port.
         "FtpFolderLoop": 0, // If 1, then loop through folders. If 0, then only main folder or the mapped folder path.
         "FtpMainFolder": "/Aksesspunkt",
         "FtpMoveToSubFolder": false, // If true, then move the file to a subfolder. If false, files will be removed from the FTP after upload."
