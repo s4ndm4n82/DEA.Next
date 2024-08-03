@@ -3,6 +3,7 @@ using FluentFTP;
 using Renci.SshNet;
 using Renci.SshNet.Sftp;
 using UserConfigRetriverClass;
+using WriteLog;
 
 namespace DEA.Next.FTP.FtpConnectionInterfaces;
 
@@ -12,7 +13,9 @@ public interface IFtpConnection : IDisposable
     Task DisconnectAsync();
     Task<IEnumerable<FtpListItem>> GetListingFtp(string path, int clientId);
     Task<IEnumerable<ISftpFile>> GetListingSftp(string path, int clientId);
-    Task<bool> DeleteFileFtp(string path, int clientId);
+    Task<bool> DeleteFileFtp(string ftpFilePath);
+    Task<bool> DeleteFileSftp(string ftpFilePath);
+    
 }
 
 public sealed class AsyncFtpConnection : IFtpConnection
@@ -35,24 +38,6 @@ public sealed class AsyncFtpConnection : IFtpConnection
         await _ftpClient.Disconnect();
     }
     
-    public async Task<IEnumerable<FtpListItem>> GetListingFtp(string path, int clientId)
-    {
-        var jsonFtpData = await UserConfigRetriver.RetriveUserConfigById(clientId);
-        var allowedFileExtensions = jsonFtpData.DocumentDetails.DocumentExtensions;
-        
-        var fileList = await _ftpClient.GetListing(path);
-        return fileList
-            .Where(f => f.Type == FtpObjectType.File
-                        && allowedFileExtensions.
-                            Any(ext => f.FullName.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
-            .Select(f => new FtpListItem{ FullName = f.FullName});
-    }
-    
-    public Task<IEnumerable<ISftpFile>> GetListingSftp(string path, int clientId)
-    {
-        throw new NotImplementedException();
-    }
-
     public void Dispose()
     {
         Dispose(true);
@@ -72,6 +57,48 @@ public sealed class AsyncFtpConnection : IFtpConnection
         }
 
         _disposed = true;
+    }
+    
+    ~AsyncFtpConnection()
+    {
+        Dispose(false);
+    }
+    
+    public async Task<IEnumerable<FtpListItem>> GetListingFtp(string path, int clientId)
+    {
+        var jsonFtpData = await UserConfigRetriver.RetriveUserConfigById(clientId);
+        var allowedFileExtensions = jsonFtpData.DocumentDetails.DocumentExtensions;
+        
+        var fileList = await _ftpClient.GetListing(path);
+        return fileList
+            .Where(f => f.Type == FtpObjectType.File
+                        && allowedFileExtensions.
+                            Any(ext => f.FullName.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
+            .Select(f => new FtpListItem{ FullName = f.FullName});
+    }
+    
+    public Task<IEnumerable<ISftpFile>> GetListingSftp(string path, int clientId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<bool> DeleteFileFtp(string path)
+    {
+        try
+        {
+            await _ftpClient.DeleteFile(path);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            WriteLogClass.WriteToLog(0, $"Exception at DeleteFileFtp: {ex.Message}", 0);
+            return false;
+        }
+    }
+
+    public Task<bool> DeleteFileSftp(string path)
+    {
+        throw new NotImplementedException();
     }
 }
 
@@ -97,21 +124,6 @@ public sealed class SftpConnection : IFtpConnection
         });
     }
     
-    public Task<IEnumerable<FtpListItem>> GetListingFtp(string path, int clientId)
-    {
-        throw new NotImplementedException();
-    }
-    
-    public async Task<IEnumerable<ISftpFile>> GetListingSftp(string path, int clientId)
-    {
-        var jsonFtpData = await UserConfigRetriver.RetriveUserConfigById(clientId);
-        var allowedFileExtensions = jsonFtpData.DocumentDetails.DocumentExtensions;
-        
-        return await Task.Run(() => _sftpClient.ListDirectory(path)
-            .Where(f => f.IsRegularFile && allowedFileExtensions
-            .Any(ext => f.Name.EndsWith(ext, StringComparison.OrdinalIgnoreCase))));
-    }
-    
     public void Dispose()
     {
         Dispose(true);
@@ -131,5 +143,44 @@ public sealed class SftpConnection : IFtpConnection
         }
 
         _disposed = true;
+    }
+    
+    ~SftpConnection()
+    {
+        Dispose(false);
+    }
+    
+    public Task<IEnumerable<FtpListItem>> GetListingFtp(string path, int clientId)
+    {
+        throw new NotImplementedException();
+    }
+    
+    public async Task<IEnumerable<ISftpFile>> GetListingSftp(string path, int clientId)
+    {
+        var jsonFtpData = await UserConfigRetriver.RetriveUserConfigById(clientId);
+        var allowedFileExtensions = jsonFtpData.DocumentDetails.DocumentExtensions;
+        
+        return await Task.Run(() => _sftpClient.ListDirectory(path)
+            .Where(f => f.IsRegularFile && allowedFileExtensions
+            .Any(ext => f.Name.EndsWith(ext, StringComparison.OrdinalIgnoreCase))));
+    }
+    
+    public Task<bool> DeleteFileFtp(string path)
+    {
+        throw new NotImplementedException();
+    }
+    
+    public Task<bool> DeleteFileSftp(string path)
+    {
+        try
+        {
+            _sftpClient.DeleteFile(path);
+            return Task.FromResult(true);
+        }
+        catch (Exception ex)
+        {
+            WriteLogClass.WriteToLog(0, $"Exception at SFTP file deletion: {ex.Message}", 0);
+            return Task.FromResult(false);
+        }
     }
 }

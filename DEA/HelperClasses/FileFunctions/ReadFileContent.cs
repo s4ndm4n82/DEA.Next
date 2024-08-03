@@ -4,6 +4,7 @@ using UserConfigRetriverClass;
 using UserConfigSetterClass;
 using WriteLog;
 using static DownloadFtpFilesClass.FtpFilesDownload;
+using File = System.IO.File;
 
 namespace DEA.Next.HelperClasses.FileFunctions
 {
@@ -22,11 +23,17 @@ namespace DEA.Next.HelperClasses.FileFunctions
         {
             var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
             var batchSize = jsonData.ReadContentSettings.NumberOfLinesToRead;
-
+            
+            
             try
             {
                 foreach (var fileName in downloadFileList)
                 {
+                    var trigger = fileName.FileName
+                        .Contains(jsonData.ReadContentSettings.ReadByLineTrigger, StringComparison.OrdinalIgnoreCase);
+
+                    if (trigger) batchSize = 1;
+                    
                     var setId = MakeSetId();
                     
                     var data = await ReadFileData(filePath,
@@ -39,18 +46,18 @@ namespace DEA.Next.HelperClasses.FileFunctions
                         return -1;
                     }
 
-                    if (await ProcessDataInBatches(data,
-                            batchSize,
+                    if (!await ProcessDataInBatches(data,
                             filePath,
                             fileName.FileName,
                             setId,
+                            batchSize,
                             clientId))
                     {
-                        continue;
+                        WriteLogClass.WriteToLog(0, "File data processing failed ....", 1);
+                        return -1;
                     }
-                    
-                    WriteLogClass.WriteToLog(0, "Batch file creation failed ....", 1);
-                    return -1;
+                    WriteLogClass.WriteToLog(1, "File data processed successfully ....", 1);
+                    return 1;
                 }
                 return 1;
             }
@@ -126,14 +133,15 @@ namespace DEA.Next.HelperClasses.FileFunctions
         /// <param name="setId">The set ID of the PDF file.</param>
         /// <param name="clientId">The client ID for retrieving user configuration.</param>
         private static async Task<bool> ProcessDataInBatches(List<Dictionary<string, string>> data,
-            int batchSize,
             string filePath,
             string fileName,
             string setId,
+            int batchSize,
             int clientId)
         {
             var loopCount = 0;
             var allBatchesSuccessful = true;
+            var lastItem = false;
             
             try
             {
@@ -141,14 +149,20 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 while (loopCount < data.Count)
                 {
                     var batchData = data.Skip(loopCount).Take(batchSize).ToList();
+                    
+                    if (loopCount + batchSize >= data.Count)
+                    {
+                        lastItem = true;
+                    }
 
                     // Start creating PDF files for the batch data
                     var batchSuccessful = await CreatePdfFile.StartCreatePdfFile(batchData,
                         filePath,
                         fileName,
                         setId,
+                        lastItem,
                         clientId);
-
+                    
                     if (!batchSuccessful)
                     {
                         allBatchesSuccessful = false;

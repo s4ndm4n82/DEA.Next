@@ -105,24 +105,42 @@ public static class FolderCleanerLines
     public static async Task<bool> RemoveDataFileFromFtpAsync(string mainFileName, int clientId)
     {
         var jsonFtpData = await UserConfigRetriver.RetriveFtpConfigById(clientId);
-        var ftpFilePath = jsonFtpData.FtpMainFolder;
+        var ftpFilePath = string.Concat(jsonFtpData.FtpMainFolder, "/", mainFileName);
         var ftpConnection = await CreateFtpClientAsync(clientId);
-        
         var dataType = ftpConnection.GetType();
 
         if (dataType == typeof(AsyncFtpConnection))
         {
             var ftpFileList = await ftpConnection.GetListingFtp(jsonFtpData.FtpMainFolder, clientId);
-        }
-        
-        if (dataType == typeof(SftpConnection))
-        {
-            var sftpFileList = await ftpConnection.GetListingSftp(jsonFtpData.FtpMainFolder, clientId);
+            if (!ftpFileList.Any(f => f.FullName.EndsWith(mainFileName, StringComparison.OrdinalIgnoreCase)))
+            {
+                WriteLogClass.WriteToLog(0, "File doesnt exist in FTP ....", 1);
+                return false;
+            }
+            if (!await ftpConnection.DeleteFileFtp(ftpFilePath))
+            {
+                WriteLogClass.WriteToLog(0, "Failed to delete file from FTP server ....", 1);
+                return false;
+            }
+            await ftpConnection.DisconnectAsync();
             
-            if (sftpFileList.Any(f => f.FullName.EndsWith(mainFileName, StringComparison.OrdinalIgnoreCase)))
-                return await ftpConnection.DeleteFileSftp(jsonFtpData.FtpMainFolder, mainFileName, clientId);
+            WriteLogClass.WriteToLog(1, $"\"{mainFileName}\" file deleted successfully ....", 1);
+            return true;
         }
-        
+
+        if (dataType != typeof(SftpConnection)) return false;
+        var sftpFileList = await ftpConnection.GetListingSftp(jsonFtpData.FtpMainFolder, clientId);
+        if (!sftpFileList.Any(f => f.FullName.EndsWith(mainFileName, StringComparison.OrdinalIgnoreCase)))
+        {
+            WriteLogClass.WriteToLog(0, "File doesnt exist in SFTP ....", 1);
+            return false;
+        }
+        if (!await ftpConnection.DeleteFileSftp(ftpFilePath))
+        {
+            WriteLogClass.WriteToLog(0, "Failed to delete file from SFTP server ....", 1);
+            return false;
+        }
+        await ftpConnection.DisconnectAsync();
         return true;
     }
 
@@ -130,12 +148,13 @@ public static class FolderCleanerLines
     {
         var jsonFtpData = await UserConfigRetriver.RetriveFtpConfigById(clientId);
 
-        var ftpType = jsonFtpData.FtpType;
-        var ftpProfile = jsonFtpData.FtpProfile;
-        var host = jsonFtpData.FtpHostName;
-        var user = jsonFtpData.FtpUser;
-        var password = jsonFtpData.FtpPassword;
-        var port = jsonFtpData.FtpPort;
+        // Retrieve FTP connection details from the JSON configuration
+        var ftpType = jsonFtpData.FtpType; // Type of FTP connection (e.g., FTP, FTPS, SFTP)
+        var ftpProfile = jsonFtpData.FtpProfile; // Profile name for the FTP connection
+        var host = jsonFtpData.FtpHostName; // FTP host name
+        var user = jsonFtpData.FtpUser; // FTP username
+        var password = jsonFtpData.FtpPassword; // FTP password
+        var port = jsonFtpData.FtpPort; // FTP port number
         
         switch (ftpType.ToLowerInvariant())
         {

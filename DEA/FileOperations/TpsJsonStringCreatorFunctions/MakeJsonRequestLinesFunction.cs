@@ -14,6 +14,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
             string mainFileName,
             string localFilePath,
             string setId,
+            bool lastItem,
             int clientId)
         {
             try
@@ -33,12 +34,16 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
                     localFilePath,
                     clientId);
 
-                if (!result) return await TapsServerOnFailLines.ServerOnFailLinesAsync(localFilePath,
+                if (!result) return await TpsServerOnFailLines.ServerOnFailLinesAsync(mainFileName,
+                    localFilePath,
                     setId,
+                    lastItem,
                     clientId);
                 
                 if (File.Exists(localFilePath))
-                    return await TpsServerOnSuccessLines.ServerOnSuccessLinesAsync(localFilePath);
+                    return await TpsServerOnSuccessLines.ServerOnSuccessLinesAsync(mainFileName,
+                        localFilePath,
+                        lastItem);
             }
             catch (Exception ex)
             {
@@ -86,6 +91,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
             string mainFileName,
             string localFilePath,
             string setId,
+            bool lastItem,
             int clientId)
         {
             var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
@@ -104,12 +110,16 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
                 localFilePath,
                 clientId);
             
-            if (!result) return await TapsServerOnFailLines.ServerOnFailLinesAsync(localFilePath,
+            if (!result) return await TpsServerOnFailLines.ServerOnFailLinesAsync(mainFileName,
+                localFilePath,
                 setId,
+                lastItem,
                 clientId);
             
             if (File.Exists(localFilePath))
-                return await TpsServerOnSuccessLines.ServerOnSuccessLinesAsync(localFilePath);
+                return await TpsServerOnSuccessLines.ServerOnSuccessLinesAsync(mainFileName,
+                    localFilePath,
+                    lastItem);
             
             return -1;
         }

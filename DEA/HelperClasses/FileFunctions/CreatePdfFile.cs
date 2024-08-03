@@ -16,12 +16,14 @@ namespace DEA.Next.HelperClasses.FileFunctions
         /// <param name="downloadFilePath">The path where the PDF file will be downloaded.</param>
         /// <param name="mainFileName">The main file name of the PDF file.</param>
         /// <param name="setId">The set ID of the PDF file.</param>
+        /// <param name="lastItem">True if this is the last item in the data list, false otherwise.</param>
         /// <param name="clientId">The client ID for retrieving user configuration.</param>
         /// <returns>True if the PDF file creation process is successful, false otherwise.</returns>
         public static async Task<bool> StartCreatePdfFile(List<Dictionary<string, string>>? data,
                                                            string downloadFilePath,
                                                            string mainFileName,
                                                            string setId,
+                                                           bool lastItem,
                                                            int clientId)
         {
             // Read the user config file.
@@ -37,24 +39,28 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 .Contains(jsonData.ReadContentSettings.ReadByLineTrigger, StringComparison.OrdinalIgnoreCase);
 
             if (data != null && jsonData.ReadContentSettings is { MakeUploadFile: true } && !fileB2BTrue)
-                return await CreatPdfBatch(data, outputPath, mainFileName, setId, clientId);
+                return await CreatPdfBatch(data, outputPath, mainFileName, setId, lastItem, clientId);
             
             if (data != null && jsonData.ReadContentSettings is { MakeUploadFile: true } && fileB2BTrue)
-                return await CreatPdfBatchByLine(data, outputPath, mainFileName, setId, clientId);
-            
-            WriteLogClass.WriteToLog(1, "No data to create the pdf file.", 1);
-            return false;
+                return await CreatPdfBatchByLine(data, outputPath, mainFileName, setId, lastItem, clientId);
 
+            WriteLogClass.WriteToLog(1, "No data to create the pdf file ....", 1);
+            return false;
         }
 
         private static async Task<bool> CreatPdfBatchByLine(List<Dictionary<string, string>>? data,
             string outputPath,
             string mainFileName,
             string setId,
+            bool lastItem,
             int clientId)
         {
             try
             {
+                var result = -1;
+                var filePath = Path.GetDirectoryName(outputPath);
+                if (filePath == null) return false;
+                
                 const int margin = 10;
                 var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
                 var mainFieldList = jsonData.ReadContentSettings.MainFieldNameList;
@@ -69,17 +75,15 @@ namespace DEA.Next.HelperClasses.FileFunctions
                     DateTime.Now.ToString("yyyy-MM-dd"), DateTime.Now.ToString("HH:mm:ss"),
                     Path.GetFileNameWithoutExtension(mainFileName), setId
                 };
-                var i = 1;
-                var result = 0;
                 
                 if (data is null || !data.Any())
                 {
                     WriteLogClass.WriteToLog(0, "No data to create the pdf file ....", 1);
                     return false;
                 }
-
+                
                 foreach (var dictionary in data.Skip(0))
-                {
+                {   
                     var values = dictionary.Values.ToList();
                     var invNum = values[2];
                     var invWaterAccount = values[3];
@@ -169,7 +173,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
                         return false;
                     }
                     
-                    var newFileName = string.Concat(Path.GetFileNameWithoutExtension(outputPath), "_", i, outputFileExtension);
+                    var newFileName = string.Concat(Path.GetFileNameWithoutExtension(outputPath), outputFileExtension);
                     var newOutputPath = Path.Combine(directoryPath, newFileName);
                     
                     PdfDocumentRenderer renderer = new()
@@ -178,20 +182,24 @@ namespace DEA.Next.HelperClasses.FileFunctions
                     };
                     renderer.RenderDocument();
                     renderer.PdfDocument.Save(newOutputPath);
-                    i++;
 
                     if (!File.Exists(newOutputPath)) continue;
                     WriteLogClass.WriteToLog(1, "Pdf file created successfully ....", 1);
-                    result = await SendToWebServiceWithLines.SendToWebServiceAsync(null,
+                    
+                    await SendToWebServiceWithLines.SendToWebServiceAsync(null,
                         values,
                         newInvoiceNumber,
                         mainFileName,
                         newOutputPath,
                         setId,
+                        lastItem,
                         clientId);
+                    
+                    if (!lastItem) return true;
+                    break;
                 }
 
-                if (result == 1)
+                if (lastItem)
                 {
                     WriteLogClass.WriteToLog(1, "All files uploaded successfully ....", 1);
                     var lastDirectoryName = Path.GetDirectoryName(outputPath);
@@ -232,17 +240,18 @@ namespace DEA.Next.HelperClasses.FileFunctions
         /// <param name="outputPath">The path where the generated PDF file will be saved.</param>
         /// <param name="mainFileName">Name of the original CSV file.</param>
         /// <param name="setId">The set ID of the PDF file.</param>
+        /// <param name="lastItem">True if this is the last item in the batch, false otherwise.</param>
         /// <param name="clientId">The client ID for retrieving user configuration.</param>
         /// <returns>True if the PDF file was created and saved successfully, false otherwise.</returns>
         private static async Task<bool> CreatPdfBatch(List<Dictionary<string, string>>? data,
             string outputPath,
             string mainFileName,
             string setId,
+            bool lastItem,
             int clientId)
         {
             try
             {
-                // TODO: This need to be looped till the end of data
                 // Create a new Document
                 Document document = new();
 
@@ -321,7 +330,8 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 footer.Format.Alignment = ParagraphAlignment.Right;
                 footer.Format.Font.Bold = true;
                 footer.Format.Font.Color = Colors.DarkGray;
-                footer.Format.Borders.Top = new Border { Color = Colors.Black, Style = BorderStyle.Single, Width = Unit.FromPoint(0.5) };
+                footer.Format.Borders.Top = new Border
+                    { Color = Colors.Black, Style = BorderStyle.Single, Width = Unit.FromPoint(0.5) };
 
 
                 // Save the document to a PDF file
@@ -335,23 +345,43 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 if (File.Exists(outputPath))
                 {
                     WriteLogClass.WriteToLog(1, "Pdf file created successfully ....", 1);
-                    var result = await SendToWebServiceWithLines.SendToWebServiceAsync(data,
+                    await SendToWebServiceWithLines.SendToWebServiceAsync(data,
                         null,
                         newInvoiceNumber: null,
                         mainFileName,
                         outputPath,
                         setId,
+                        lastItem,
                         clientId);
 
-                    return result switch
-                    {
-                        -1 => false,
-                        0 => false,
-                        _ => true
-                    };
+                    if (!lastItem) return true;
                 }
 
-                WriteLogClass.WriteToLog(0, "Pdf file creation unsuccessful ....", 0);
+                if (lastItem)
+                {
+                    WriteLogClass.WriteToLog(1, "All files uploaded successfully ....", 1);
+                    var lastDirectoryName = Path.GetDirectoryName(outputPath);
+
+                    if (string.IsNullOrEmpty(lastDirectoryName))
+                    {
+                        WriteLogClass.WriteToLog(0, "The local last directory path is null or empty ....", 1);
+                        return false;
+                    }
+                    
+                    WriteLogClass.WriteToLog(1, "Deleting local files and folders ....", 1);
+                    
+                    var removeMainFileTask = FolderCleanerLines.RemoveMainFileAsync(outputPath, mainFileName);
+                    var deleteLocalHoldFolderTask = FolderCleanerLines.DeleteLocalHoldFolderAsync(lastDirectoryName);
+                    
+                    await Task.WhenAll(removeMainFileTask, deleteLocalHoldFolderTask);
+
+                    if (removeMainFileTask.Result && deleteLocalHoldFolderTask.Result)
+                    {
+                        return await FolderCleanerLines.RemoveDataFileFromFtpAsync(mainFileName, clientId);
+                    }
+                }
+                
+                WriteLogClass.WriteToLog(0, "Some files failed to upload ....", 1);
                 return false;
             }
             catch (Exception ex)

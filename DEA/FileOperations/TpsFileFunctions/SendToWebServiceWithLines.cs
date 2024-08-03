@@ -12,6 +12,7 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
             string mainFileName,
             string localFilePath,
             string setId,
+            bool lastItem,
             int clientId)
         {
             try
@@ -27,12 +28,14 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
                         mainFileName,
                         localFilePath,
                         setId,
+                        lastItem,
                         clientId);
 
                 return await SendToWebServiceAsBatch(data,
                     mainFileName,
                     localFilePath,
                     setId,
+                    lastItem,
                     clientId);
             }
             catch (Exception ex)
@@ -47,6 +50,7 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
             string mainFileName,
             string localFilePath,
             string setId,
+            bool lastItem,
             int clientId)
         {
             var result = -1;
@@ -63,6 +67,7 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
                         mainFileName,
                         localFilePath,
                         setId,
+                        lastItem,
                         clientId);
                 }
             }
@@ -78,6 +83,7 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
             string mainFileName,
             string localFilePath,
             string setId,
+            bool lastItem,
             int clientId)
         {
             var result = -1;
@@ -93,6 +99,7 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
                        mainFileName,
                        localFilePath,
                        setId,
+                       lastItem,
                        clientId);
                 }
 
