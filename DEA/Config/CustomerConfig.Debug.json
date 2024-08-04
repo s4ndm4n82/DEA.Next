@@ -336,14 +336,51 @@
           "Total Including Tax",
           "Total Payable Amount",
           "Rounding Amount",
-          "Buyer TIN",
-          "Buyer Registration"
+          "Buyer TIN"
         ],
         "MainFieldToSkip": [
           "Invoice Category",
           "Invoice number",
           "Water Account No.",
           "Invoice Date"
+        ],        
+        "LineFieldNameList": [
+          "Invoice Category",
+          "Invoice Type",
+          "Invoice number",
+          "Water Account No.",
+          "Invoice Date",
+          "Total Excluding Tax",
+          "Total Including Tax",
+          "Total Payable Amount",
+          "Rounding Amount",
+          "Description of Product or Service",
+          "Buyer Name",
+          "Buyer TIN",
+          "Buyer Registration",
+          "Buyer Address Line 0",
+          "Buyer City Name",
+          "Buyer Contact Number",
+          "LHDN Status",
+          "LHDN Status Description",
+          "URL",
+          "DateTime"
+        ],
+        "LineFieldToSkip": [
+          "Invoice Category",
+          "Invoice Type",
+          "Water Account No.",
+          "Invoice Date",
+          "Buyer Name",
+          "Buyer TIN",
+          "Buyer Registration",
+          "Buyer Address Line 0",
+          "Buyer City Name",
+          "Buyer Contact Number",
+          "LHDN Status",
+          "LHDN Status Description",
+          "URL",
+          "DateTime"
         ]
       },
       "FtpDetails": {

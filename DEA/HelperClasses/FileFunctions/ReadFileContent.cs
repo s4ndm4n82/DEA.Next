@@ -94,7 +94,8 @@ namespace DEA.Next.HelperClasses.FileFunctions
 
                     List<Dictionary<string, string>> data = new();
                     // Split the header fields based on the delimiter provided in the user configuration.
-                    var headerFields = reader.ReadLine()?.Split(jsonData.ReadContentSettings.SetDelimiter) ?? Array.Empty<string>();
+                    //var headerFields = reader.ReadLine()?.Split(jsonData.ReadContentSettings.SetDelimiter) ?? Array.Empty<string>();
+                    reader.ReadLine();
 
                     while (!reader.EndOfStream)
                     {
@@ -104,9 +105,9 @@ namespace DEA.Next.HelperClasses.FileFunctions
                         Dictionary<string, string> dataRow = new();
 
                         // Map each header field to its corresponding data item in the row.
-                        for (var i = 0; i < headerFields.Length; i++)
+                        for (var i = 0; i < lineItems.Length; i++)
                         {
-                            dataRow.Add(headerFields[i], lineItems[i]);
+                            dataRow.Add(i.ToString(), lineItems[i]);
                         }
 
                         data.Add(dataRow);

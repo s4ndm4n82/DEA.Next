@@ -54,6 +54,8 @@ namespace UserConfigSetterClass
             public int NumberOfLinesToRead { get; set; }
             public string[] MainFieldNameList { get; set; } = Array.Empty<string>();
             public string[] MainFieldToSkip { get; set; } = Array.Empty<string>();
+            public string[] LineFieldNameList { get; set; } = Array.Empty<string>();
+            public string[] LineFieldToSkip { get; set; } = Array.Empty<string>();
         }
         public class Ftpdetails
         {

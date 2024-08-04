@@ -82,7 +82,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
                     return false;
                 }
                 
-                foreach (var dictionary in data.Skip(0))
+                foreach (var dictionary in data)
                 {   
                     var values = dictionary.Values.ToList();
                     var invNum = values[2];
@@ -252,6 +252,10 @@ namespace DEA.Next.HelperClasses.FileFunctions
         {
             try
             {
+                var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
+                var lineFieldNames = jsonData.ReadContentSettings.LineFieldNameList;
+                var lineFieldsToSkip = jsonData.ReadContentSettings.LineFieldToSkip;
+                
                 // Create a new Document
                 Document document = new();
 
@@ -294,10 +298,22 @@ namespace DEA.Next.HelperClasses.FileFunctions
                     return false;
                 }
 
+                var trimmedData = new List<string>();
+                if (data[0].Keys.Count != lineFieldNames.Length)
+                {
+                    var difference = data[0].Keys.Count - lineFieldNames.Length;
+                    trimmedData = data[0].Keys.Take(data[0].Keys.Count - difference).ToList();
+                }
+
                 // Add columns to the table based on keys in the first data row
-                foreach (var unused in data[0].Keys)
+                /*foreach (var unused in data[0].Keys)
                 {
                     table.AddColumn(Unit.FromPoint(100));
+                }*/
+                foreach (var lineFieldName in trimmedData)
+                {
+                    if (!lineFieldsToSkip.Contains(lineFieldName))
+                        table.AddColumn(Unit.FromPoint(100));
                 }
 
                 // Add header row to the table
@@ -308,18 +324,25 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 headerRow.HeadingFormat = true;
 
                 // Populate the header row cells with the key values
-                for (var i = 0; i < data[0].Keys.Count; i++)
+                /*for (var i = 0; i < data[0].Keys.Count; i++)
                 {
                     headerRow.Cells[i].AddParagraph(data[0].Keys.ElementAt(i));
+                }*/
+                for (var i = 0; i < trimmedData.Count; i++)
+                {
+                    if (!lineFieldsToSkip.Contains(trimmedData[i]))
+                        headerRow.Cells[i].AddParagraph(lineFieldNames[i]);
                 }
 
                 // Populate the table with data rows
                 foreach (var t in data)
                 {
+                    var difference = t.Count - trimmedData.Count;
+                    var tr = t.Take(t.Count - difference).ToList();
                     var row = table.AddRow();
-                    for (var j = 0; j < t.Count; j++)
+                    for (var j = 0; j < tr.Count; j++)
                     {
-                        row.Cells[j].AddParagraph(t.ElementAt(j).Value);
+                        row.Cells[j].AddParagraph(tr.ElementAt(j).Value);
                     }
                 }
 
