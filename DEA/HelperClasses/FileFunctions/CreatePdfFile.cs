@@ -4,10 +4,11 @@ using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
 using UserConfigRetriverClass;
 using WriteLog;
+using File = System.IO.File;
 
 namespace DEA.Next.HelperClasses.FileFunctions
 {
-    internal class CreatePdfFile
+    internal static class CreatePdfFile
     {
         /// <summary>
         /// Start the process of creating a PDF file.
@@ -253,8 +254,22 @@ namespace DEA.Next.HelperClasses.FileFunctions
             try
             {
                 var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
+                var generatedFieldName = jsonData.ReadContentSettings.GeneratedField;
                 var lineFieldNames = jsonData.ReadContentSettings.LineFieldNameList;
                 var lineFieldsToSkip = jsonData.ReadContentSettings.LineFieldToSkip;
+                var newHeaders = lineFieldNames
+                    .Where(lineFieldNameE => !lineFieldsToSkip
+                        .Contains(lineFieldNameE)).ToList();
+                
+                var newDataList = await MakeNewDataListBatch(data,
+                    lineFieldNames,
+                    lineFieldsToSkip,
+                    generatedFieldName);
+                
+                var newInvoiceNumber = newDataList
+                    .Where(dataItem => dataItem.ContainsKey(generatedFieldName))
+                    .Select(dataItem => dataItem[generatedFieldName])
+                    .FirstOrDefault();
                 
                 // Create a new Document
                 Document document = new();
@@ -297,23 +312,13 @@ namespace DEA.Next.HelperClasses.FileFunctions
                     WriteLogClass.WriteToLog(0, "Data array is null ....", 1);
                     return false;
                 }
-
-                var trimmedData = new List<string>();
-                if (data[0].Keys.Count != lineFieldNames.Length)
-                {
-                    var difference = data[0].Keys.Count - lineFieldNames.Length;
-                    trimmedData = data[0].Keys.Take(data[0].Keys.Count - difference).ToList();
-                }
-
+                
                 // Add columns to the table based on keys in the first data row
-                /*foreach (var unused in data[0].Keys)
+                foreach (var unused in newHeaders
+                             .Where(lineFieldName => !lineFieldsToSkip
+                                 .Contains(lineFieldName)))
                 {
-                    table.AddColumn(Unit.FromPoint(100));
-                }*/
-                foreach (var lineFieldName in trimmedData)
-                {
-                    if (!lineFieldsToSkip.Contains(lineFieldName))
-                        table.AddColumn(Unit.FromPoint(100));
+                    table.AddColumn(Unit.FromPoint(120));
                 }
 
                 // Add header row to the table
@@ -324,25 +329,19 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 headerRow.HeadingFormat = true;
 
                 // Populate the header row cells with the key values
-                /*for (var i = 0; i < data[0].Keys.Count; i++)
+                for (var i = 0; i < newHeaders.Count; i++)
                 {
-                    headerRow.Cells[i].AddParagraph(data[0].Keys.ElementAt(i));
-                }*/
-                for (var i = 0; i < trimmedData.Count; i++)
-                {
-                    if (!lineFieldsToSkip.Contains(trimmedData[i]))
-                        headerRow.Cells[i].AddParagraph(lineFieldNames[i]);
+                    if (!lineFieldsToSkip.Contains(newHeaders[i]))
+                        headerRow.Cells[i].AddParagraph(newHeaders[i]);
                 }
 
                 // Populate the table with data rows
-                foreach (var t in data)
+                foreach (var t in newDataList)
                 {
-                    var difference = t.Count - trimmedData.Count;
-                    var tr = t.Take(t.Count - difference).ToList();
                     var row = table.AddRow();
-                    for (var j = 0; j < tr.Count; j++)
+                    for (var j = 0; j < t.Count; j++)
                     {
-                        row.Cells[j].AddParagraph(tr.ElementAt(j).Value);
+                        row.Cells[j].AddParagraph(t.ElementAt(j).Value);
                     }
                 }
 
@@ -356,7 +355,6 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 footer.Format.Borders.Top = new Border
                     { Color = Colors.Black, Style = BorderStyle.Single, Width = Unit.FromPoint(0.5) };
 
-
                 // Save the document to a PDF file
                 PdfDocumentRenderer renderer = new()
                 {
@@ -368,9 +366,16 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 if (File.Exists(outputPath))
                 {
                     WriteLogClass.WriteToLog(1, "Pdf file created successfully ....", 1);
-                    await SendToWebServiceWithLines.SendToWebServiceAsync(data,
+
+                    if (string.IsNullOrEmpty(newInvoiceNumber))
+                    {
+                        WriteLogClass.WriteToLog(0, "Invoice number is null ....", 1);
+                        return false;
+                    }
+                    
+                    await SendToWebServiceWithLines.SendToWebServiceAsync(newDataList,
                         null,
-                        newInvoiceNumber: null,
+                        newInvoiceNumber,
                         mainFileName,
                         outputPath,
                         setId,
@@ -431,6 +436,78 @@ namespace DEA.Next.HelperClasses.FileFunctions
 
             // Creating the output filename
             return string.Concat(mainFilnameOnly, "_", dateTimeString, ".", outputFileExtension.ToLower()).Replace(" ", "_");
+        }
+
+        private static async Task<List<Dictionary<string, string>>> MakeNewDataListBatch(
+            List<Dictionary<string, string>>? data,
+            string[] lineFieldNames,
+            string[] lineFieldsToSkip,
+            string fieldToGenerate)
+        {
+            var invDate = string.Empty;
+            var invNum = string.Empty;
+            var newData = new List<Dictionary<string, string>>();
+            
+            try
+            {
+                return await Task.Run(() =>
+                {
+                    if (data == null)
+                    {
+                        WriteLogClass.WriteToLog(0, "Data array is null ....", 1);
+                        return new List<Dictionary<string, string>>();
+                    }
+                    
+                    foreach (var item in data)
+                    {
+                        var filteredItem = new Dictionary<string, string>();
+                    
+                        for (var i = 0; i < item.Count; i++)
+                        {
+                            var key = i.ToString();
+                            switch (key)
+                            {
+                                case "2":
+                                    invNum = item[key];
+                                    break;
+                            
+                                case "4":
+                                    invDate = item[key];
+                                    break;
+                            }
+                        }
+                    
+                        if (!string.IsNullOrEmpty(invNum)
+                            && !string.IsNullOrEmpty(invDate)
+                            && lineFieldNames.Contains(fieldToGenerate,
+                                StringComparer.OrdinalIgnoreCase))
+                        {
+                            filteredItem[fieldToGenerate] = $"{invNum} + {invDate}";
+                        }
+                    
+                        for (var i = 0; i < lineFieldNames.Length && i < item.Count; i++)
+                        {
+                            var fieldName = lineFieldNames[i];
+                            if (!lineFieldsToSkip.Contains(fieldName)
+                                && !string
+                                    .Equals(fieldName, fieldToGenerate,
+                                        StringComparison.OrdinalIgnoreCase))
+                            {
+                                filteredItem.Add(fieldName, item[i.ToString()]);
+                            }
+                        }
+                    
+                        newData.Add(filteredItem);
+                    }
+                
+                    return newData;
+                });
+            }
+            catch (Exception e)
+            {
+                WriteLogClass.WriteToLog(0, $"Exception at make new data list batch: {e.Message}", 0);
+                return new List<Dictionary<string, string>>();
+            }
         }
     }
 }

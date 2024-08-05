@@ -30,9 +30,6 @@ namespace UserConfigSetterClass
             public string IdField2Value { get; set; }
             public string ClientIdField2 { get; set; }
             public string FileDeliveryMethod { get; set; }
-            public bool ReadTheContent { get; set; }
-            public string SetDelimiter { get; set; }
-            public int NumberOfLinesToRead { get; set; }
             public Domaindetails DomainDetails { get; set; }
             public Readcontentsettings ReadContentSettings { get; set; }
             public Ftpdetails FtpDetails { get; set; }
@@ -52,6 +49,7 @@ namespace UserConfigSetterClass
             public string OutputFileExtension { get; set; } = "pdf";
             public string SetDelimiter { get; set; } = string.Empty;
             public int NumberOfLinesToRead { get; set; }
+            public string GeneratedField { get; set; } = string.Empty;
             public string[] MainFieldNameList { get; set; } = Array.Empty<string>();
             public string[] MainFieldToSkip { get; set; } = Array.Empty<string>();
             public string[] LineFieldNameList { get; set; } = Array.Empty<string>();

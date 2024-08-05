@@ -61,15 +61,19 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
         
         // CSV file read processed as batches
         public static TpsJsonLinesUploadString.Fields[] ReturnIdFieldListBatch(string mainFileName,
+            string newInvoiceNumber,
             string setId,
             int clientId)
         {
             var jsonData = UserConfigRetriver.RetriveUserConfigById(clientId).Result;
+            var generatedField = jsonData.ReadContentSettings.GeneratedField;
+            
 
             var mainField = new[]
             {
                 new TpsJsonLinesUploadString.Fields() { Name = jsonData.ClientIdField, Value = setId },
-                new TpsJsonLinesUploadString.Fields() { Name = jsonData.ClientIdField2, Value = mainFileName }
+                new TpsJsonLinesUploadString.Fields() { Name = jsonData.ClientIdField2, Value = mainFileName },
+                new TpsJsonLinesUploadString.Fields() { Name = generatedField, Value = newInvoiceNumber }
             };
             
             return mainField;

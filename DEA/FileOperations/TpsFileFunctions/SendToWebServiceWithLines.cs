@@ -32,6 +32,7 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
                         clientId);
 
                 return await SendToWebServiceAsBatch(data,
+                    newInvoiceNumber,
                     mainFileName,
                     localFilePath,
                     setId,
@@ -80,6 +81,7 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
         }
 
         private static async Task<int> SendToWebServiceAsBatch(List<Dictionary<string, string>>? data,
+            string newInvoiceNumber,
             string mainFileName,
             string localFilePath,
             string setId,
@@ -96,6 +98,7 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
                 if (data != null && fileExtension == acceptedExtensions)
                 {
                     result = await MakeJsonRequestLinesFunction.MakeJsonRequestBatch(data,
+                       newInvoiceNumber,
                        mainFileName,
                        localFilePath,
                        setId,

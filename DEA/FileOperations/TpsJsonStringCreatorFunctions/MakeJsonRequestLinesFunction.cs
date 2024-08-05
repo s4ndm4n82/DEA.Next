@@ -11,6 +11,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
     internal static class MakeJsonRequestLinesFunction
     {
         public static async Task<int> MakeJsonRequestBatch(List<Dictionary<string, string>>? data,
+            string newInvoiceNumber,
             string mainFileName,
             string localFilePath,
             string setId,
@@ -22,6 +23,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
                 var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
 
                 var fieldsList = MakeJsonRequestHelperClass.ReturnIdFieldListBatch(mainFileName,
+                    newInvoiceNumber,
                     setId,
                     clientId);
                 

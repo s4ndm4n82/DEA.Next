@@ -1,10 +1,8 @@
 ﻿using System.Text;
-using Microsoft.Graph;
 using UserConfigRetriverClass;
 using UserConfigSetterClass;
 using WriteLog;
 using static DownloadFtpFilesClass.FtpFilesDownload;
-using File = System.IO.File;
 
 namespace DEA.Next.HelperClasses.FileFunctions
 {
