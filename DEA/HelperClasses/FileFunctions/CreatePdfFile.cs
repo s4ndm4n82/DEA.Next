@@ -187,7 +187,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
                     if (!File.Exists(newOutputPath)) continue;
                     WriteLogClass.WriteToLog(1, "Pdf file created successfully ....", 1);
                     
-                    await SendToWebServiceWithLines.SendToWebServiceAsync(null,
+                    result = await SendToWebServiceWithLines.SendToWebServiceAsync(null,
                         values,
                         newInvoiceNumber,
                         mainFileName,
@@ -195,37 +195,21 @@ namespace DEA.Next.HelperClasses.FileFunctions
                         setId,
                         lastItem,
                         clientId);
-                    
-                    if (!lastItem) return true;
-                    break;
                 }
 
-                if (lastItem)
+                if (!lastItem) return !lastItem;
+                
+                switch (result)
                 {
-                    WriteLogClass.WriteToLog(1, "All files uploaded successfully ....", 1);
-                    var lastDirectoryName = Path.GetDirectoryName(outputPath);
-
-                    if (string.IsNullOrEmpty(lastDirectoryName))
-                    {
-                        WriteLogClass.WriteToLog(0, "The local last directory path is null or empty ....", 1);
-                        return false;
-                    }
-                    
-                    WriteLogClass.WriteToLog(1, "Deleting local files and folders ....", 1);
-                    
-                    var removeMainFileTask = FolderCleanerLines.RemoveMainFileAsync(outputPath, mainFileName);
-                    var deleteLocalHoldFolderTask = FolderCleanerLines.DeleteLocalHoldFolderAsync(lastDirectoryName);
-                    
-                    await Task.WhenAll(removeMainFileTask, deleteLocalHoldFolderTask);
-
-                    if (removeMainFileTask.Result && deleteLocalHoldFolderTask.Result)
-                    {
-                        return await FolderCleanerLines.RemoveDataFileFromFtpAsync(mainFileName, clientId);
-                    }
+                    case 1:
+                        WriteLogClass.WriteToLog(1, "All data uploaded successfully ....", 1);
+                        break;
+                    default:
+                        WriteLogClass.WriteToLog(1, "Data uploaded unsuccessfully ....", 1);
+                        break;
                 }
                 
-                WriteLogClass.WriteToLog(0, "Some files failed to upload ....", 1);
-                return false;
+                return await RemoveFilesAfterUpload(outputPath, mainFileName, clientId);
             }
             catch (Exception e)
             {
@@ -253,6 +237,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
         {
             try
             {
+                var result = -1;
                 var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
                 var generatedFieldName = jsonData.ReadContentSettings.GeneratedField;
                 var lineFieldNames = jsonData.ReadContentSettings.LineFieldNameList;
@@ -271,100 +256,111 @@ namespace DEA.Next.HelperClasses.FileFunctions
                     .Select(dataItem => dataItem[generatedFieldName])
                     .FirstOrDefault();
                 
-                // Create a new Document
-                Document document = new();
-
-                // Add a new section to the document
-                var section = document.AddSection();
-
-                // Set page width, height, and orientation
-                section.PageSetup.PageWidth = Unit.FromPoint(1754);
-                section.PageSetup.PageHeight = Unit.FromPoint(1240);
-                section.PageSetup.Orientation = Orientation.Landscape;
-
-                // Add header
-                var pageHeader = section.Headers.Primary.AddParagraph();
-                pageHeader.Format.Alignment = ParagraphAlignment.Right;
-                pageHeader.Format.Font.Bold = true;
-                pageHeader.Format.Font.Size = 8;
-                pageHeader.AddText("Page ");
-                pageHeader.AddPageField();
-                pageHeader.AddLineBreak();
-
-                // Add empty space before the text and table
-                section.AddParagraph().Format.SpaceAfter = Unit.FromPoint(100);
-
-                // Add text before the table
-                section.AddParagraph($"Generated Date: {DateTime.Now:yyyy-MM-dd}");
-                section.AddParagraph($"Generated Time: {DateTime.Now:HH:mm:ss}");
-                section.AddParagraph($"File Name: {Path.GetFileNameWithoutExtension(mainFileName)}");
-                section.AddParagraph($"Set ID: {setId}");
-
-                // Add empty space before the table
-                section.AddParagraph().Format.SpaceAfter = Unit.FromPoint(10);
-
-                // Add a table to the section
-                var table = section.AddTable();
-                table.Borders.Visible = true;
-
-                if (data == null)
-                {
-                    WriteLogClass.WriteToLog(0, "Data array is null ....", 1);
-                    return false;
-                }
+                var groupedData = newDataList
+                    .GroupBy(dataItem => dataItem.GetValueOrDefault(generatedFieldName))
+                    .Where(group => group.Key != null);
                 
-                // Add columns to the table based on keys in the first data row
-                foreach (var unused in newHeaders
-                             .Where(lineFieldName => !lineFieldsToSkip
-                                 .Contains(lineFieldName)))
+                var groupedDataItems = groupedData
+                    as IGrouping<string, Dictionary<string, string>>[] ?? groupedData.ToArray();
+                
+                foreach (var groupedDataItem in groupedDataItems)
                 {
-                    table.AddColumn(Unit.FromPoint(120));
-                }
+                    // Create a new Document
+                    Document document = new();
 
-                // Add header row to the table
-                var headerRow = table.AddRow();
-                headerRow.Format.Alignment = ParagraphAlignment.Center;
-                headerRow.Format.Font.Bold = true;
-                headerRow.Format.Font.Size = 12;
-                headerRow.HeadingFormat = true;
+                    // Add a new section to the document
+                    var section = document.AddSection();
 
-                // Populate the header row cells with the key values
-                for (var i = 0; i < newHeaders.Count; i++)
-                {
-                    if (!lineFieldsToSkip.Contains(newHeaders[i]))
-                        headerRow.Cells[i].AddParagraph(newHeaders[i]);
-                }
+                    // Set page width, height, and orientation
+                    section.PageSetup.PageWidth = Unit.FromPoint(1754);
+                    section.PageSetup.PageHeight = Unit.FromPoint(1240);
+                    section.PageSetup.Orientation = Orientation.Landscape;
 
-                // Populate the table with data rows
-                foreach (var t in newDataList)
-                {
-                    var row = table.AddRow();
-                    for (var j = 0; j < t.Count; j++)
+                    // Add header
+                    var pageHeader = section.Headers.Primary.AddParagraph();
+                    pageHeader.Format.Alignment = ParagraphAlignment.Right;
+                    pageHeader.Format.Font.Bold = true;
+                    pageHeader.Format.Font.Size = 8;
+                    pageHeader.AddText("Page ");
+                    pageHeader.AddPageField();
+                    pageHeader.AddLineBreak();
+
+                    // Add empty space before the text and table
+                    section.AddParagraph().Format.SpaceAfter = Unit.FromPoint(100);
+
+                    // Add text before the table
+                    section.AddParagraph($"Generated Date: {DateTime.Now:yyyy-MM-dd}");
+                    section.AddParagraph($"Generated Time: {DateTime.Now:HH:mm:ss}");
+                    section.AddParagraph($"File Name: {Path.GetFileNameWithoutExtension(mainFileName)}");
+                    section.AddParagraph($"Set ID: {setId}");
+
+                    // Add empty space before the table
+                    section.AddParagraph().Format.SpaceAfter = Unit.FromPoint(10);
+
+                    // Add a table to the section
+                    var table = section.AddTable();
+                    table.Borders.Visible = true;
+
+                    if (data == null)
                     {
-                        row.Cells[j].AddParagraph(t.ElementAt(j).Value);
+                        WriteLogClass.WriteToLog(0, "Data array is null ....", 1);
+                        return false;
                     }
-                }
 
-                // Add footer
-                var footer = section.Footers.Primary.AddParagraph();
-                footer.AddText("Created by DEA.NEXT upload system");
-                footer.Format.Font.Size = 8;
-                footer.Format.Alignment = ParagraphAlignment.Right;
-                footer.Format.Font.Bold = true;
-                footer.Format.Font.Color = Colors.DarkGray;
-                footer.Format.Borders.Top = new Border
-                    { Color = Colors.Black, Style = BorderStyle.Single, Width = Unit.FromPoint(0.5) };
+                    // Add columns to the table based on keys in the first data row
+                    foreach (var unused in newHeaders
+                                 .Where(lineFieldName => !lineFieldsToSkip
+                                     .Contains(lineFieldName)))
+                    {
+                       var column = table.AddColumn(Unit.FromPoint(120));
+                       column.Format.Alignment = ParagraphAlignment.Center;
+                    }
 
-                // Save the document to a PDF file
-                PdfDocumentRenderer renderer = new()
-                {
-                    Document = document
-                };
-                renderer.RenderDocument();
-                renderer.PdfDocument.Save(outputPath);
+                    // Add header row to the table
+                    var headerRow = table.AddRow();
+                    headerRow.Format.Alignment = ParagraphAlignment.Center;
+                    headerRow.Format.Font.Bold = true;
+                    headerRow.Format.Font.Size = 12;
+                    headerRow.HeadingFormat = true;
 
-                if (File.Exists(outputPath))
-                {
+                    // Populate the header row cells with the key values
+                    for (var i = 0; i < newHeaders.Count; i++)
+                    {
+                        if (!lineFieldsToSkip.Contains(newHeaders[i]))
+                            headerRow.Cells[i].AddParagraph(newHeaders[i]);
+                    }
+
+                    // Populate the table with data rows
+                    foreach (var dataItem in groupedDataItem)
+                    {
+                        var row = table.AddRow();
+                        for (var j = 0; j < dataItem.Count; j++)
+                        {
+                            row.Cells[j].AddParagraph(dataItem.ElementAt(j).Value);
+                        }
+                    }
+
+                    // Add footer
+                    var footer = section.Footers.Primary.AddParagraph();
+                    footer.AddText("Created by DEA.NEXT upload system");
+                    footer.Format.Font.Size = 8;
+                    footer.Format.Alignment = ParagraphAlignment.Right;
+                    footer.Format.Font.Bold = true;
+                    footer.Format.Font.Color = Colors.DarkGray;
+                    footer.Format.Borders.Top = new Border
+                        { Color = Colors.Black, Style = BorderStyle.Single, Width = Unit.FromPoint(0.5) };
+
+                    // Save the document to a PDF file
+                    PdfDocumentRenderer renderer = new()
+                    {
+                        Document = document
+                    };
+                    renderer.RenderDocument();
+                    renderer.PdfDocument.Save(outputPath);
+
+                    var groupData = groupedDataItem.ToList();
+
+                    if (!File.Exists(outputPath)) continue;
                     WriteLogClass.WriteToLog(1, "Pdf file created successfully ....", 1);
 
                     if (string.IsNullOrEmpty(newInvoiceNumber))
@@ -372,8 +368,8 @@ namespace DEA.Next.HelperClasses.FileFunctions
                         WriteLogClass.WriteToLog(0, "Invoice number is null ....", 1);
                         return false;
                     }
-                    
-                    await SendToWebServiceWithLines.SendToWebServiceAsync(newDataList,
+
+                    result = await SendToWebServiceWithLines.SendToWebServiceAsync(groupData,
                         null,
                         newInvoiceNumber,
                         mainFileName,
@@ -381,36 +377,21 @@ namespace DEA.Next.HelperClasses.FileFunctions
                         setId,
                         lastItem,
                         clientId);
-
-                    if (!lastItem) return true;
                 }
 
-                if (lastItem)
+                if (!lastItem) return !lastItem;
+                
+                switch (result)
                 {
-                    WriteLogClass.WriteToLog(1, "All files uploaded successfully ....", 1);
-                    var lastDirectoryName = Path.GetDirectoryName(outputPath);
-
-                    if (string.IsNullOrEmpty(lastDirectoryName))
-                    {
-                        WriteLogClass.WriteToLog(0, "The local last directory path is null or empty ....", 1);
-                        return false;
-                    }
-                    
-                    WriteLogClass.WriteToLog(1, "Deleting local files and folders ....", 1);
-                    
-                    var removeMainFileTask = FolderCleanerLines.RemoveMainFileAsync(outputPath, mainFileName);
-                    var deleteLocalHoldFolderTask = FolderCleanerLines.DeleteLocalHoldFolderAsync(lastDirectoryName);
-                    
-                    await Task.WhenAll(removeMainFileTask, deleteLocalHoldFolderTask);
-
-                    if (removeMainFileTask.Result && deleteLocalHoldFolderTask.Result)
-                    {
-                        return await FolderCleanerLines.RemoveDataFileFromFtpAsync(mainFileName, clientId);
-                    }
+                    case 1:
+                        WriteLogClass.WriteToLog(1, "All data uploaded successfully ....", 1);
+                        break;
+                    default:
+                        WriteLogClass.WriteToLog(1, "Data uploaded unsuccessfully ....", 1);
+                        break;
                 }
                 
-                WriteLogClass.WriteToLog(0, "Some files failed to upload ....", 1);
-                return false;
+                return await RemoveFilesAfterUpload(outputPath, mainFileName, clientId);
             }
             catch (Exception ex)
             {
@@ -432,10 +413,10 @@ namespace DEA.Next.HelperClasses.FileFunctions
             var dateTimeString = now.ToString("yyyyMMdd_HHmmss");
 
             // Main file name
-            var mainFilnameOnly = Path.GetFileNameWithoutExtension(mainFileName);
+            var mainFileNameOnly = Path.GetFileNameWithoutExtension(mainFileName);
 
             // Creating the output filename
-            return string.Concat(mainFilnameOnly, "_", dateTimeString, ".", outputFileExtension.ToLower()).Replace(" ", "_");
+            return string.Concat(mainFileNameOnly, "_", dateTimeString, ".", outputFileExtension.ToLower()).Replace(" ", "_");
         }
 
         private static async Task<List<Dictionary<string, string>>> MakeNewDataListBatch(
@@ -507,6 +488,40 @@ namespace DEA.Next.HelperClasses.FileFunctions
             {
                 WriteLogClass.WriteToLog(0, $"Exception at make new data list batch: {e.Message}", 0);
                 return new List<Dictionary<string, string>>();
+            }
+        }
+
+        private static async Task<bool> RemoveFilesAfterUpload(string outputPath, string mainFileName, int clientId)
+        {
+            try
+            {
+                var lastDirectoryName = Path.GetDirectoryName(outputPath);
+
+                if (string.IsNullOrEmpty(lastDirectoryName))
+                {
+                    WriteLogClass.WriteToLog(0, "The local last directory path is null or empty ....", 1);
+                    return false;
+                }
+
+                WriteLogClass.WriteToLog(1, "Deleting local files and folders ....", 1);
+
+                var removeMainFileTask = FolderCleanerLines.RemoveMainFileAsync(outputPath, mainFileName);
+                var deleteLocalHoldFolderTask =
+                    FolderCleanerLines.DeleteLocalHoldFolderAsync(lastDirectoryName);
+
+                await Task.WhenAll(removeMainFileTask, deleteLocalHoldFolderTask);
+
+                if (removeMainFileTask.Result && deleteLocalHoldFolderTask.Result)
+                {
+                    return await FolderCleanerLines.RemoveDataFileFromFtpAsync(mainFileName, clientId);
+                }
+                
+                return false;
+            }
+            catch (Exception e)
+            {
+                WriteLogClass.WriteToLog(0, $"Exception at remove files after upload: {e.Message}", 0);
+                return false;
             }
         }
     }
