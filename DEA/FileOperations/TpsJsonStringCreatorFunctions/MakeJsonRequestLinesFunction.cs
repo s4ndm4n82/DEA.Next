@@ -88,7 +88,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
             }
         }
 
-        public static async Task<int> MakeJsonRequestByLine(List<string> valuesList,
+        public static async Task<int> MakeJsonRequestByLine(List<Dictionary<string, string>>? data,
             string newInvoiceNumber,
             string mainFileName,
             string localFilePath,
@@ -98,8 +98,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
         {
             var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
             
-            var fieldsList = MakeJsonRequestHelperClass.ReturnIdFieldListLines(valuesList,
-                newInvoiceNumber,
+            var fieldsList = MakeJsonRequestHelperClass.ReturnIdFieldListLines(data,
                 mainFileName,
                 setId,
                 clientId);

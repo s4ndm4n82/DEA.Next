@@ -125,30 +125,31 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
         }
         
         // CSV file read processed as lines
-        public static TpsJsonLinesUploadString.Fields[] ReturnIdFieldListLines(List<string> valueList,
-            string newInvoiceNumber,
+        public static TpsJsonLinesUploadString.Fields[] ReturnIdFieldListLines(List<Dictionary<string, string>>? data,
             string mainFileName,
             string setId,
             int clientId)
         {
             var jsonData = UserConfigRetriver.RetriveUserConfigById(clientId).Result;
-            var mainFieldNameList = jsonData.ReadContentSettings.MainFieldNameList;
             var mainFieldListToSkip = jsonData.ReadContentSettings.MainFieldToSkip;
 
             var mainField = new List<TpsJsonLinesUploadString.Fields>
             {
                 new() { Name = jsonData.ClientIdField, Value = setId },
-                new() { Name = jsonData.ClientIdField2, Value = mainFileName },
-                new() { Name = mainFieldNameList[2], Value = newInvoiceNumber }
+                new() { Name = jsonData.ClientIdField2, Value = mainFileName }
             };
 
-            foreach (var (fieldName, fieldValue) in mainFieldNameList.Zip(valueList, (name, value) => (name, value)))
+            if (data == null) return mainField.ToArray();
+            foreach (var dataItem in data)
             {
-                if (mainFieldListToSkip.Contains(fieldName)) continue;
-                
-                mainField.Add(new TpsJsonLinesUploadString.Fields() { Name = fieldName, Value = fieldValue });
+                foreach (var (fieldName, fieldValue) in dataItem)
+                {
+                    if (mainFieldListToSkip.Contains(fieldName)) continue;
+
+                    mainField.Add(new TpsJsonLinesUploadString.Fields() { Name = fieldName, Value = fieldValue });
+                }
             }
-            
+
             return mainField.ToArray();
         }
     }

@@ -330,18 +330,18 @@
         "MainFieldNameList": [
           "Invoice Category",
           "Invoice Type",
-          "Invoice number",
+          "Invoice Number",
           "Water Account No.",
           "Invoice Date",
           "Total Excluding Tax",
           "Total Including Tax",
           "Total Payable Amount",
           "Rounding Amount",
-          "Buyer TIN"
+          "Buyer TIN",
+          "Buyer Registration"
         ],
         "MainFieldToSkip": [
           "Invoice Category",
-          "Invoice number",
           "Water Account No.",
           "Invoice Date"
         ],        

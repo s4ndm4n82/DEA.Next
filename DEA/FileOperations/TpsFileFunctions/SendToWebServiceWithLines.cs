@@ -7,7 +7,6 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
     internal static class SendToWebServiceWithLines
     {
         public static async Task<int> SendToWebServiceAsync(List<Dictionary<string, string>>? data,
-            List<string>? valuesList,
             string newInvoiceNumber,
             string mainFileName,
             string localFilePath,
@@ -22,8 +21,8 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
                 var trigger = mainFileName
                     .Contains(jsonData.ReadContentSettings.ReadByLineTrigger, StringComparison.OrdinalIgnoreCase);
 
-                if (trigger && valuesList!= null)
-                    return await SendToWebServiceAsLine(valuesList,
+                if (trigger)
+                    return await SendToWebServiceAsLine(data,
                         newInvoiceNumber,
                         mainFileName,
                         localFilePath,
@@ -46,7 +45,7 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
             }
         }
         
-        private static async Task<int> SendToWebServiceAsLine(List<string> valuesList,
+        private static async Task<int> SendToWebServiceAsLine(List<Dictionary<string, string>>? data,
             string newInvoiceNumber,
             string mainFileName,
             string localFilePath,
@@ -61,9 +60,9 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
                 var fileExtension = Path.GetExtension(localFilePath);
                 var acceptedExtensions = string.Concat(".", jsonData.ReadContentSettings.OutputFileExtension);
 
-                if (fileExtension == acceptedExtensions && valuesList.Any())
+                if (fileExtension == acceptedExtensions && data != null)
                 {
-                    result = await MakeJsonRequestLinesFunction.MakeJsonRequestByLine(valuesList,
+                    result = await MakeJsonRequestLinesFunction.MakeJsonRequestByLine(data,
                         newInvoiceNumber,
                         mainFileName,
                         localFilePath,
