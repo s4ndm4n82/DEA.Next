@@ -9,72 +9,79 @@ namespace DEA.Next.HelperClasses.FileFunctions
     internal static class ReadFileContent
     {
         /// <summary>
-        /// Starts reading the content of the file based on the specified parameters.
+        /// Starts reading file content from a list of FTP files.
         /// </summary>
-        /// <param name="filePath">The path of the file to read.</param>
-        /// <param name="downloadFileList">The list of files to download.</param>
+        /// <param name="filePath">The path to the files to be read.</param>
+        /// <param name="downloadFileList">A list of FTP file information.</param>
         /// <param name="clientId">The client ID for retrieving user configuration.</param>
-        /// <returns>1 if the file content reading process is successful, -1 otherwise.</returns>
+        /// <returns>A task representing the asynchronous operation that returns an integer indicating the result of the operation.</returns>
         public static async Task<int> StartReadingFileContent(string filePath,
-                                                               List<FtpFileInfo> downloadFileList,
-                                                               int clientId)
+            List<FtpFileInfo> downloadFileList,
+            int clientId)
         {
+            // Retrieve user configuration data by client ID
             var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
+
+            // Initialize batch size from user configuration
             var batchSize = jsonData.ReadContentSettings.NumberOfLinesToRead;
-            
-            
+
             try
             {
+                // Iterate through each file in the download list
                 foreach (var fileName in downloadFileList)
                 {
-                    var trigger = fileName.FileName
-                        .Contains(jsonData.ReadContentSettings.ReadByLineTrigger, StringComparison.OrdinalIgnoreCase);
+                    // Check if the file name contains a trigger to read by line
+                    var trigger = fileName.FileName.Contains(jsonData.ReadContentSettings.ReadByLineTrigger,
+                        StringComparison.OrdinalIgnoreCase);
 
+                    // If trigger is found, set batch size to 1
                     if (trigger) batchSize = 1;
-                    
-                    var setId = MakeSetId();
-                    
-                    var data = await ReadFileData(filePath,
-                        fileName.FileName,
-                        jsonData);
 
+                    // Generate a unique set ID
+                    var setId = MakeSetId();
+
+                    // Read file data from the specified file path and file name
+                    var data = await ReadFileData(filePath, fileName.FileName, jsonData);
+
+                    // Check if there is any data to process
                     if (data.Count == 0)
                     {
+                        // Log a message indicating no data to create PDF file
                         WriteLogClass.WriteToLog(0, "No data to create the pdf file ....", 1);
                         return -1;
                     }
 
-                    if (!await ProcessDataInBatches(data,
-                            filePath,
-                            fileName.FileName,
-                            setId,
-                            batchSize,
-                            clientId))
+                    // Process data in batches
+                    if (!await ProcessDataInBatches(data, filePath, fileName.FileName, setId, batchSize, clientId))
                     {
+                        // Log a message indicating file data processing failed
                         WriteLogClass.WriteToLog(0, "File data processing failed ....", 1);
                         return -1;
                     }
+
+                    // Log a message indicating file data processed successfully
                     WriteLogClass.WriteToLog(1, "File data processed successfully ....", 1);
                     return 1;
                 }
+
+                // If all files are processed successfully, return 1
                 return 1;
             }
             catch (Exception ex)
             {
+                // Log an exception message
                 WriteLogClass.WriteToLog(0, $"Exception at reading file content: {ex.Message}", 0);
                 return -1;
             }
         }
 
         /// <summary>
-        /// Reads data from a file located at the specified filePath and fileName.
-        /// Parses the data based on the delimiter provided in the user configuration.
-        /// Returns a list of dictionaries where each dictionary represents a row of data.
+        /// Reads file data from a specified file path and returns it as a list of dictionaries.
         /// </summary>
-        /// <param name="filePath">The path of the file to read.</param>
-        /// <param name="fileName">The name of the file to read.</param>
-        /// <param name="jsonData">User configuration data containing parsing settings.</param>
-        /// <returns>A task representing the asynchronous operation that returns a list of dictionaries.</returns>
+        /// <param name="filePath">The path to the file to be read.</param>
+        /// <param name="fileName">The name of the file to be read.</param>
+        /// <param name="jsonData">The user configuration data.</param>
+        /// <returns>A task representing the asynchronous operation that returns a list of dictionaries containing the file data.</returns>
         private static async Task<List<Dictionary<string, string>>> ReadFileData(string filePath,
             string fileName,
             UserConfigSetter.Customerdetail jsonData)
@@ -91,18 +98,18 @@ namespace DEA.Next.HelperClasses.FileFunctions
                     using StreamReader reader = new(fileStream);
 
                     List<Dictionary<string, string>> data = new();
-                    // Split the header fields based on the delimiter provided in the user configuration.
-                    //var headerFields = reader.ReadLine()?.Split(jsonData.ReadContentSettings.SetDelimiter) ?? Array.Empty<string>();
+                    // Skip the first line of the file (assuming it contains header information)
                     reader.ReadLine();
 
                     while (!reader.EndOfStream)
                     {
-                        // Split each line of data based on the delimiter.
-                        var lineItems = reader.ReadLine()?.Split(jsonData.ReadContentSettings.SetDelimiter) ?? Array.Empty<string>();
+                        // Split each line of data based on the delimiter provided in the user configuration.
+                        var lineItems = reader.ReadLine()?.Split(jsonData.ReadContentSettings.SetDelimiter) ??
+                                        Array.Empty<string>();
 
                         Dictionary<string, string> dataRow = new();
 
-                        // Map each header field to its corresponding data item in the row.
+                        // Map each data item to its corresponding header field in the row.
                         for (var i = 0; i < lineItems.Length; i++)
                         {
                             dataRow.Add(i.ToString(), lineItems[i]);
@@ -123,14 +130,15 @@ namespace DEA.Next.HelperClasses.FileFunctions
         }
 
         /// <summary>
-        /// Process data in batches and create PDF files for each batch.
+        /// Processes data in batches.
         /// </summary>
-        /// <param name="data">The list of dictionaries containing the data to be processed.</param>
-        /// <param name="batchSize">The size of each batch to be processed.</param>
-        /// <param name="filePath">The path where the PDF files will be stored.</param>
-        /// <param name="fileName">The name of the file to be created.</param>
-        /// <param name="setId">The set ID of the PDF file.</param>
-        /// <param name="clientId">The client ID for retrieving user configuration.</param>
+        /// <param name="data">The data to process.</param>
+        /// <param name="filePath">The path to the file.</param>
+        /// <param name="fileName">The name of the file.</param>
+        /// <param name="setId">The set ID.</param>
+        /// <param name="batchSize">The size of each batch.</param>
+        /// <param name="clientId">The client ID.</param>
+        /// <returns>True if all batches are successful, false otherwise.</returns>
         private static async Task<bool> ProcessDataInBatches(List<Dictionary<string, string>> data,
             string filePath,
             string fileName,
@@ -141,14 +149,16 @@ namespace DEA.Next.HelperClasses.FileFunctions
             var loopCount = 0;
             var allBatchesSuccessful = true;
             var lastItem = false;
-            
+
             try
             {
                 // Process data in batches
                 while (loopCount < data.Count)
                 {
+                    // Get the current batch of data
                     var batchData = data.Skip(loopCount).Take(batchSize).ToList();
-                    
+
+                    // If this is the last batch, set the lastItem flag to true
                     if (loopCount + batchSize >= data.Count)
                     {
                         lastItem = true;
@@ -161,13 +171,15 @@ namespace DEA.Next.HelperClasses.FileFunctions
                         setId,
                         lastItem,
                         clientId);
-                    
+
+                    // If the batch is not successful, set the allBatchesSuccessful flag to false and break the loop
                     if (!batchSuccessful)
                     {
                         allBatchesSuccessful = false;
                         break;
                     }
 
+                    // Increment the loopCount to move to the next batch
                     loopCount += batchSize;
                 }
             }
@@ -178,13 +190,14 @@ namespace DEA.Next.HelperClasses.FileFunctions
                 allBatchesSuccessful = false;
             }
 
+            // Return the result of all batches
             return allBatchesSuccessful;
         }
         
         /// <summary>
-        /// Generates a unique Set ID based on the current date and random characters.
+        /// Generates a unique set ID by combining the current date and time with four random uppercase letters.
         /// </summary>
-        /// <returns>The generated Set ID string.</returns>
+        /// <returns>A string representing the unique set ID.</returns>
         private static string MakeSetId()
         {
             // Get the current date and time
@@ -195,12 +208,14 @@ namespace DEA.Next.HelperClasses.FileFunctions
             Random random = new();
             StringBuilder builtString = new(4);
 
+            // Generate four random uppercase letters
             for (var i = 0; i < 4; i++)
             {
                 var randomChar = (char)random.Next(65, 91); // Random ASCII characters from A to Z
                 builtString.Append(randomChar);
             }
 
+            // Concatenate the date and time with the random characters to create the set ID
             return string.Concat(nowString, builtString.ToString());
         }
     }

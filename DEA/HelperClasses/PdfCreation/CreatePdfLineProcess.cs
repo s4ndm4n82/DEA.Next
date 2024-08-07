@@ -152,6 +152,7 @@ public static class CreatePdfLineProcess
                 footer.Format.Borders.Top = new Border
                     { Color = Colors.Black, Style = BorderStyle.Single, Width = Unit.FromPoint(0.5) };
                 
+                // Checking if the new invoice number is null
                 if (newInvoiceNumber == null)
                 {
                     // Write a log message indicating that the invoice number is null
@@ -159,10 +160,11 @@ public static class CreatePdfLineProcess
                     return false;
                 }
                 
+                // Saves the document to a PDF file and returns a tuple indicating whether the operation was successful
+                // and the new invoice number.
                 var saveResult = await PdfCreationHelperClass.SaveDocumentToPdf(document,
                     outputPath,
-                    outputFileExtension,
-                    newInvoiceNumber);
+                    outputFileExtension);
 
                 if (!saveResult.Item1 || string.IsNullOrEmpty(newInvoiceNumber))
                 {

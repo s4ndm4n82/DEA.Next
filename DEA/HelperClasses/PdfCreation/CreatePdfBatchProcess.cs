@@ -27,41 +27,56 @@ public static class CreatePdfBatchProcess
     {
         try
         {
+            // Initialize result to -1
             var result = -1;
+
+            // Set a margin constant
             const int margin = 10;
+
+            // Retrieve user configuration data based on client ID
             var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
+
+            // Get the generated field name, line field names, and line fields to skip from user configuration
             var generatedFieldName = jsonData.ReadContentSettings.GeneratedField;
             var lineFieldNames = jsonData.ReadContentSettings.LineFieldNameList;
             var lineFieldsToSkip = jsonData.ReadContentSettings.LineFieldToSkip;
 
+            // Define the main field list for the PDF
             var pdfMainFieldList = new[]
             {
                 "Generated Date", "Generated Time", "File Name", "Set Id"
             };
+
+            // Define the values for the main fields of the PDF
             var pdfMainFieldListValues = new[]
             {
                 DateTime.Now.ToString("yyyy-MM-dd"), DateTime.Now.ToString("HH:mm:ss"),
                 Path.GetFileNameWithoutExtension(mainFileName), setId
             };
 
+            // Filter line field names based on fields to skip
             var newHeaders = lineFieldNames
                 .Where(lineFieldNameE => !lineFieldsToSkip
                     .Contains(lineFieldNameE)).ToList();
 
+            // Create a new data list for PDF creation
             var newDataList = await PdfCreationHelperClass.MakeNewDataListBatch(data,
                 lineFieldNames,
                 lineFieldsToSkip,
                 generatedFieldName);
 
+            // Extract the new invoice number from the data list
             var newInvoiceNumber = newDataList
                 .Where(dataItem => dataItem.ContainsKey(generatedFieldName))
                 .Select(dataItem => dataItem[generatedFieldName])
                 .FirstOrDefault();
 
+            // Group data based on the generated field name
             var groupedData = newDataList
                 .GroupBy(dataItem => dataItem.GetValueOrDefault(generatedFieldName))
                 .Where(group => group.Key != null);
 
+            // Convert grouped data to an array of grouping items
             var groupedDataItems = groupedData
                 as IGrouping<string, Dictionary<string, string>>[] ?? groupedData.ToArray();
 
@@ -179,15 +194,21 @@ public static class CreatePdfBatchProcess
 
                 var groupData = groupedDataItem.ToList();
 
-                if (!File.Exists(outputPath)) continue;
+                // Check if the PDF file exists
+                if (!File.Exists(outputPath))
+                {
+                    continue;
+                }
                 WriteLogClass.WriteToLog(1, "Pdf file created successfully ....", 1);
 
+                // Check if the invoice number is null or empty
                 if (string.IsNullOrEmpty(newInvoiceNumber))
                 {
                     WriteLogClass.WriteToLog(0, "Invoice number is null ....", 1);
                     return false;
                 }
 
+                // Send the data to the web service
                 result = await SendToWebServiceWithLines.SendToWebServiceAsync(groupData,
                     newInvoiceNumber,
                     mainFileName,
