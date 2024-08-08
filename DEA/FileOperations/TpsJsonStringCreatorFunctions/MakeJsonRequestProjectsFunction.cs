@@ -36,7 +36,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
                     Username = customerDetails.UserName,
                     TemplateKey = customerDetails.TemplateKey,
                     Queue = customerDetails.Queue,
-                    ProjectID = customerDetails.ProjetID,
+                    ProjectID = customerDetails.ProjectId,
                     Fields = idFields,
                     Files = jsonFileList
                 };

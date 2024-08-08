@@ -31,11 +31,13 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
                 var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
 
                 // Check if the main file name contains the trigger string for line by line processing
-                var trigger = mainFileName
-                    .Contains(jsonData.ReadContentSettings.ReadByLineTrigger, StringComparison.OrdinalIgnoreCase);
+                var trigger = !string.IsNullOrEmpty(jsonData.ReadContentSettings.ReadByLineTrigger)
+                                  && mainFileName.Contains(jsonData.ReadContentSettings.ReadByLineTrigger,
+                                      StringComparison.OrdinalIgnoreCase);
 
                 if (trigger)
                 {
+                    WriteLogClass.WriteToLog(1, $"Sending data to TPS as line by line ....", 4);
                     // Send data line by line
                     return await SendToWebServiceAsLine(data,
                         newInvoiceNumber,
@@ -46,6 +48,7 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
                         clientId);
                 }
 
+                WriteLogClass.WriteToLog(1, $"Sending data to TPS as batch ....", 4);
                 // Send data as a batch
                 return await SendToWebServiceAsBatch(data,
                     newInvoiceNumber,
@@ -157,12 +160,12 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
                 if (result == 1)
                 {
                     // Log successful upload
-                    WriteLogClass.WriteToLog(1, "Files uploaded successfully ....", 1);
+                    WriteLogClass.WriteToLog(1, "Files uploaded successfully ....", 4);
                     return result;
                 }
 
                 // Log no files to upload
-                WriteLogClass.WriteToLog(0, "No files to upload ....", 1);
+                WriteLogClass.WriteToLog(0, "No files to upload ....", 4);
                 return result;
             }
             catch (Exception e)

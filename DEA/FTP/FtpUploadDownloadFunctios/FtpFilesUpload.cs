@@ -41,7 +41,7 @@ namespace UploadFtpFilesClass
             string[] localFiles = Directory.GetFiles(ftpHoldFolder, "*.*", SearchOption.TopDirectoryOnly);
 
             // If the project ID is not empty, then send the files to the web service using normal upload.
-            if (!string.IsNullOrWhiteSpace(customerdetail.ProjetID))
+            if (!string.IsNullOrWhiteSpace(customerdetail.ProjectId))
             {
                 return await SendToWebServiceProject.SendToWebServiceProjectAsync(ftpConnect,
                                                                                   sftpConnect,

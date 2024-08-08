@@ -56,7 +56,7 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
                                                                             serverResponse.Content ?? "No content found");
                 }
 
-                return await TpsServerOnSuccess.ServerOnSuccessProjectAsync(customerDetails.ProjetID,
+                return await TpsServerOnSuccess.ServerOnSuccessProjectAsync(customerDetails.ProjectId,
                                                                             customerDetails.Queue,
                                                                             fileCount,
                                                                             customerDetails.FileDeliveryMethod.ToLower(),

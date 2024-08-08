@@ -109,7 +109,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
                     Username = jsonData.UserName,
                     TemplateKey = jsonData.TemplateKey,
                     Queue = jsonData.Queue,
-                    ProjectId = jsonData.ProjetID,
+                    ProjectId = jsonData.ProjectId,
                     Fields = fieldsList,
                     Tables = tablesList,
                     Files = localFileList
@@ -151,23 +151,35 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
             var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
 
             // Get the list of fields
-            var fieldsList = MakeJsonRequestHelperClass.ReturnIdFieldListLines(data, mainFileName, setId, clientId);
+            var fieldsList = MakeJsonRequestHelperClass.ReturnIdFieldListLines(data,
+                mainFileName,
+                setId,
+                clientId);
 
             // Create the JSON request
-            var jsonRequest = await CreatTheJsonRequestLines(localFilePath, jsonData, fieldsList);
+            var jsonRequest = await CreatTheJsonRequestLines(localFilePath,
+                jsonData,
+                fieldsList);
 
             // Send files to the API asynchronously
-            var result = await SendFilesToApiLines.SendFilesToApiAsync(jsonRequest, localFilePath, clientId);
+            var result = await SendFilesToApiLines.SendFilesToApiAsync(jsonRequest,
+                localFilePath,
+                clientId);
 
             // Handle failure case
             if (!result)
-                return await TpsServerOnFailLines.ServerOnFailLinesAsync(mainFileName, localFilePath, setId, lastItem,
+                return await TpsServerOnFailLines.ServerOnFailLinesAsync(mainFileName,
+                    localFilePath,
+                    setId,
+                    lastItem,
                     clientId);
 
             // Handle success case
             if (File.Exists(localFilePath))
-                return await TpsServerOnSuccessLines.ServerOnSuccessLinesAsync(mainFileName, localFilePath, lastItem);
-
+                return await TpsServerOnSuccessLines.ServerOnSuccessLinesAsync(mainFileName,
+                    localFilePath,
+                    lastItem);
+            
             return -1;
         }
 
@@ -194,7 +206,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
                     Username = jsonData.UserName, // Set the username
                     TemplateKey = jsonData.TemplateKey, // Set the template key
                     Queue = jsonData.Queue, // Set the queue
-                    ProjectId = jsonData.ProjetID, // Set the project ID
+                    ProjectId = jsonData.ProjectId, // Set the project ID
                     Fields = fieldList, // Set the fields
                     Tables = Array.Empty<TpsJsonLinesUploadString.Tables>(), // Set the tables (empty for line data)
                     Files = localFileList // Set the files

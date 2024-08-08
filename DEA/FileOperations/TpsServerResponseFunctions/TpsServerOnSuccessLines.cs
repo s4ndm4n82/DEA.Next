@@ -14,7 +14,8 @@ public static class TpsServerOnSuccessLines
             var filePath = Path.GetDirectoryName(localFile);
             
             WriteLogClass.WriteToLog(1, 
-                $"Uploaded file \"{Path.GetFileName(localFile)}\" was successfully sent to TPS ....", 1);
+                $"Uploaded file " +
+                $"\"{Path.GetFileNameWithoutExtension(localFile)}\" was successfully sent to TPS ....", 4);
             
             await FolderCleanerLines.RemoveUploadedFilesLinesAsync(localFile);
 

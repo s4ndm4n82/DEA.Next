@@ -35,8 +35,9 @@ namespace DEA.Next.HelperClasses.FileFunctions
             var outputPath = Path.Combine(downloadFilePath, outputFileName);
 
             // Check if the main filename contains the trigger string for B2B files.
-            var fileB2BTrue = mainFileName
-                .Contains(jsonData.ReadContentSettings.ReadByLineTrigger, StringComparison.OrdinalIgnoreCase);
+            var fileB2BTrue = !string.IsNullOrEmpty(jsonData.ReadContentSettings.ReadByLineTrigger)
+                              && mainFileName.Contains(jsonData.ReadContentSettings.ReadByLineTrigger,
+                                  StringComparison.OrdinalIgnoreCase);
 
             // If there is data to process and the user config indicates that an upload file should be created,
             // and the main filename does not contain the trigger string for B2B files,

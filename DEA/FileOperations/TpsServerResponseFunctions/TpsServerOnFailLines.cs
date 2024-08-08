@@ -14,7 +14,7 @@ public static class TpsServerOnFailLines
         try
         {
             WriteLogClass.WriteToLog(1, 
-                $"{Path.GetFileName(localFile)} file upload failed ....", 1);
+                $"{Path.GetFileName(localFile)} file upload failed ....", 4);
 
             var filePath = Path.GetDirectoryName(localFile);
             await HandleErrorFilesLine.HandleErrorFilesLineAsync(localFile,

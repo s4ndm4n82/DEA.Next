@@ -22,18 +22,19 @@ namespace DEA.Next.HelperClasses.FileFunctions
             // Retrieve user configuration data by client ID
             var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
 
-            // Initialize batch size from user configuration
-            var batchSize = jsonData.ReadContentSettings.NumberOfLinesToRead;
-
             try
             {
                 // Iterate through each file in the download list
                 foreach (var fileName in downloadFileList)
                 {
                     // Check if the file name contains a trigger to read by line
-                    var trigger = fileName.FileName.Contains(jsonData.ReadContentSettings.ReadByLineTrigger,
-                        StringComparison.OrdinalIgnoreCase);
-
+                    var trigger = !string.IsNullOrEmpty(jsonData.ReadContentSettings.ReadByLineTrigger) &&
+                                  fileName.FileName.Contains(jsonData.ReadContentSettings.ReadByLineTrigger,
+                                      StringComparison.OrdinalIgnoreCase);
+                    
+                    // Initialize batch size from user configuration
+                    var batchSize = jsonData.ReadContentSettings.NumberOfLinesToRead;
+                    
                     // If trigger is found, set batch size to 1
                     if (trigger) batchSize = 1;
 
@@ -61,7 +62,6 @@ namespace DEA.Next.HelperClasses.FileFunctions
 
                     // Log a message indicating file data processed successfully
                     WriteLogClass.WriteToLog(1, "File data processed successfully ....", 1);
-                    return 1;
                 }
 
                 // If all files are processed successfully, return 1

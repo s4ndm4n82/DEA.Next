@@ -78,7 +78,7 @@ public static class FolderCleanerLines
                 if (!isFolderEmpty)
                 {
                     WriteLogClass.WriteToLog(1, $"Local hold folder is not empty ....", 1);
-                    return false;
+                    return true;
                 }
             
                 if (Directory.Exists(localFolderPath))
@@ -114,17 +114,18 @@ public static class FolderCleanerLines
             var ftpFileList = await ftpConnection.GetListingFtp(jsonFtpData.FtpMainFolder, clientId);
             if (!ftpFileList.Any(f => f.FullName.EndsWith(mainFileName, StringComparison.OrdinalIgnoreCase)))
             {
-                WriteLogClass.WriteToLog(0, "File doesnt exist in FTP ....", 1);
+                WriteLogClass.WriteToLog(0, "File doesnt exist in FTP ....", 3);
                 return false;
             }
             if (!await ftpConnection.DeleteFileFtp(ftpFilePath))
             {
-                WriteLogClass.WriteToLog(0, "Failed to delete file from FTP server ....", 1);
+                WriteLogClass.WriteToLog(0, "Failed to delete file from FTP server ....", 3);
                 return false;
             }
             await ftpConnection.DisconnectAsync();
             
-            WriteLogClass.WriteToLog(1, $"\"{mainFileName}\" file deleted successfully ....", 1);
+            WriteLogClass.WriteToLog(1, $"{Path.GetFileNameWithoutExtension(mainFileName)}\"" +
+                                        $" file deleted successfully ....", 3);
             return true;
         }
 
@@ -132,15 +133,17 @@ public static class FolderCleanerLines
         var sftpFileList = await ftpConnection.GetListingSftp(jsonFtpData.FtpMainFolder, clientId);
         if (!sftpFileList.Any(f => f.FullName.EndsWith(mainFileName, StringComparison.OrdinalIgnoreCase)))
         {
-            WriteLogClass.WriteToLog(0, "File doesnt exist in SFTP ....", 1);
+            WriteLogClass.WriteToLog(0, "File doesnt exist in SFTP ....", 3);
             return false;
         }
         if (!await ftpConnection.DeleteFileSftp(ftpFilePath))
         {
-            WriteLogClass.WriteToLog(0, "Failed to delete file from SFTP server ....", 1);
+            WriteLogClass.WriteToLog(0, "Failed to delete file from SFTP server ....", 3);
             return false;
         }
         await ftpConnection.DisconnectAsync();
+        WriteLogClass.WriteToLog(1, $"\"{Path.GetFileNameWithoutExtension(mainFileName)}\"" +
+                                    $" file deleted successfully ....", 3);
         return true;
     }
 

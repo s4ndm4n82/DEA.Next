@@ -204,7 +204,7 @@ public static class CreatePdfBatchProcess
                 // Check if the invoice number is null or empty
                 if (string.IsNullOrEmpty(newInvoiceNumber))
                 {
-                    WriteLogClass.WriteToLog(0, "Invoice number is null ....", 1);
+                    WriteLogClass.WriteToLog(0, "Invoice number is null in Batch process ....", 1);
                     return false;
                 }
 
@@ -223,10 +223,10 @@ public static class CreatePdfBatchProcess
             switch (result)
             {
                 case 1:
-                    WriteLogClass.WriteToLog(1, "All data uploaded successfully ....", 1);
+                    WriteLogClass.WriteToLog(1, "All data uploaded successfully ....", 4);
                     break;
                 default:
-                    WriteLogClass.WriteToLog(1, "Data uploaded unsuccessfully ....", 1);
+                    WriteLogClass.WriteToLog(1, "Data uploaded unsuccessfully ....", 4);
                     break;
             }
 

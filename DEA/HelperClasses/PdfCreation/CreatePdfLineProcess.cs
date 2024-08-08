@@ -156,7 +156,7 @@ public static class CreatePdfLineProcess
                 if (newInvoiceNumber == null)
                 {
                     // Write a log message indicating that the invoice number is null
-                    WriteLogClass.WriteToLog(1, "Invoice number is null ....", 1);
+                    WriteLogClass.WriteToLog(0, "Invoice number is null in Line process ....", 1);
                     return false;
                 }
                 
@@ -169,7 +169,8 @@ public static class CreatePdfLineProcess
                 if (!saveResult.Item1 || string.IsNullOrEmpty(newInvoiceNumber))
                 {
                     WriteLogClass.WriteToLog(1,
-                        saveResult.Item1 ? "Invoice number is null ...." : "Pdf file creation unsuccessful ....",
+                        saveResult.Item1 ? "Invoice number is null in Line process ...."
+                            : "Pdf file creation unsuccessful ....",
                         1);
                     return false;
                 }
@@ -192,11 +193,11 @@ public static class CreatePdfLineProcess
             {
                 case 1:
                     // Log a success message if all data was uploaded successfully
-                    WriteLogClass.WriteToLog(1, "All data uploaded successfully ....", 1);
+                    WriteLogClass.WriteToLog(1, "All data uploaded successfully ....", 4);
                     break;
                 default:
                     // Log a failure message if data upload was unsuccessful
-                    WriteLogClass.WriteToLog(1, "Data uploaded unsuccessfully ....", 1);
+                    WriteLogClass.WriteToLog(1, "Data uploaded unsuccessfully ....", 4);
                     break;
             }
 
