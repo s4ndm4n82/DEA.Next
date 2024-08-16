@@ -135,6 +135,7 @@ public static class PdfCreationHelperClass
         // Initialize variables to store the invoice date and number
         var invDate = string.Empty;
         var invNum = string.Empty;
+        var waterNum = string.Empty;
 
         // Initialize an empty list to store the transformed data
         var newData = new List<Dictionary<string, string>>();
@@ -171,6 +172,11 @@ public static class PdfCreationHelperClass
                                 // Store the invoice number
                                 invNum = item[key];
                                 break;
+                            
+                            case "3":
+                                // Store the water account number
+                                waterNum = item[key];
+                                break;
 
                             case "4":
                                 // Store the invoice date
@@ -185,7 +191,7 @@ public static class PdfCreationHelperClass
                         && lineFieldNames.Contains(fieldToGenerate, StringComparer.OrdinalIgnoreCase))
                     {
                         // Generate the field value based on the invoice number and date
-                        filteredItem[fieldToGenerate] = $"{invNum}+{invDate}";
+                        filteredItem[fieldToGenerate] = $"{invNum}+{waterNum}+{invDate}";
                     }
 
                     // Iterate over each field in the line field names
