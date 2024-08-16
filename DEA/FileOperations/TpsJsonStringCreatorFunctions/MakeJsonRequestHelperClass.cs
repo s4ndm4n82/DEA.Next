@@ -73,7 +73,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
             {
                 new TpsJsonLinesUploadString.Fields() { Name = jsonData.ClientIdField, Value = setId },
                 new TpsJsonLinesUploadString.Fields() { Name = jsonData.ClientIdField2, Value = mainFileName },
-                new TpsJsonLinesUploadString.Fields() { Name = generatedField, Value = newInvoiceNumber }
+                new TpsJsonLinesUploadString.Fields() { Name = "Invoice Number", Value = newInvoiceNumber }
             };
             
             return mainField;

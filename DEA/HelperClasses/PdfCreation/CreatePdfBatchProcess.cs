@@ -29,6 +29,9 @@ public static class CreatePdfBatchProcess
         {
             // Initialize result to -1
             var result = -1;
+            
+            // Loop count to create main field invoice number sequence
+            var loopCount = 1;
 
             // Set a margin constant
             const int margin = 10;
@@ -66,10 +69,18 @@ public static class CreatePdfBatchProcess
                 generatedFieldName);
 
             // Extract the new invoice number from the data list
-            var newInvoiceNumber = newDataList
+            var newLineInvoiceNumber = newDataList
                 .Where(dataItem => dataItem.ContainsKey(generatedFieldName))
                 .Select(dataItem => dataItem[generatedFieldName])
                 .FirstOrDefault();
+            
+            // Extract the date from the above newLineInvoiceNumber
+            if (newLineInvoiceNumber == null)
+            {
+                WriteLogClass.WriteToLog(0, $"New Line Invoice Number Is Empty ....", 0);
+                return false;
+            }
+            var invoiceDate = newLineInvoiceNumber.Split('+')[2];
 
             // Group data based on the generated field name
             var groupedData = newDataList
@@ -82,6 +93,9 @@ public static class CreatePdfBatchProcess
 
             foreach (var groupedDataItem in groupedDataItems)
             {
+                // New main field invoice number with sequence
+                var newMainFieldInvoiceNumber = $"{invoiceDate}_{loopCount.ToString().PadLeft(4, '0')}";
+                
                 // Create a new Document
                 Document document = new();
 
@@ -202,7 +216,7 @@ public static class CreatePdfBatchProcess
                 WriteLogClass.WriteToLog(1, "Pdf file created successfully ....", 1);
 
                 // Check if the invoice number is null or empty
-                if (string.IsNullOrEmpty(newInvoiceNumber))
+                if (string.IsNullOrEmpty(newMainFieldInvoiceNumber))
                 {
                     WriteLogClass.WriteToLog(0, "Invoice number is null in Batch process ....", 1);
                     return false;
@@ -210,7 +224,7 @@ public static class CreatePdfBatchProcess
 
                 // Send the data to the web service
                 result = await SendToWebServiceWithLines.SendToWebServiceAsync(groupData,
-                    newInvoiceNumber,
+                    newMainFieldInvoiceNumber,
                     mainFileName,
                     outputPath,
                     setId,

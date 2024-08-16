@@ -298,7 +298,7 @@ namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
                                                     .Select(file => file.Name)
                                                     .ToArray();
 
-                    // Create a single task that uploads all fiels in the batch.
+                    // Create a single task that uploads all files in the batch.
                     int uploadResult = await SendToWebServiceProject.SendToWebServiceProjectAsync(null,
                                                                                                   null,
                                                                                                   downloadFolderPath,
