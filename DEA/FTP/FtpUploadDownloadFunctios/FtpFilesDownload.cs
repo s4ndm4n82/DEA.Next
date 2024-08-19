@@ -1,4 +1,5 @@
-﻿using DEA.Next.HelperClasses.FileFunctions;
+﻿using AppConfigReader;
+using DEA.Next.HelperClasses.FileFunctions;
 using FluentFTP;
 using GraphHelper;
 using Renci.SshNet;
@@ -39,7 +40,7 @@ namespace DownloadFtpFilesClass
 
             try
             {
-                // Reads the appsettings.json file.
+                // Reads the CustomerConfig.json file.
                 var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientID);
                 
                 // Allowed file extensions
@@ -112,6 +113,9 @@ namespace DownloadFtpFilesClass
 
             try
             {
+                var appJsonData = AppConfigReaderClass.ReadAppDotConfig();
+                var delayTime = appJsonData.ProgramSettings.UploadDelayTime;
+                
                 for (var batchCurrentIndex = 0; batchCurrentIndex < downloadFilesList.Count; batchCurrentIndex += batchSize)
                 {
                     // Get the current batch of files to upload.
@@ -136,6 +140,9 @@ namespace DownloadFtpFilesClass
                     {
                         return result;
                     }
+                    
+                    // Wait for the specified time before uploading the next batch of files
+                    await Task.Delay(delayTime);
                 }
 
                 return result;

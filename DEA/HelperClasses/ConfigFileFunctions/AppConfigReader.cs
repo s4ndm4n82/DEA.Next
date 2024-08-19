@@ -21,6 +21,7 @@ namespace AppConfigReader
             public int MaxSubEmailFolders { get; set; }
             public int MaxBatchSize { get; set; }
             public int MaxErrorFolders { get; set; }
+            public int UploadDelayTime { get; set; }
             public bool SendErrorEmail { get; set; }
             public bool CleanLogs { get; set; }
             public int RetryLine { get; set; }

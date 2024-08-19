@@ -1,8 +1,11 @@
 using DEA.Next.FileOperations.TpsFileFunctions;
+using Microsoft.Graph;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
 using UserConfigRetriverClass;
 using WriteLog;
+using Directory = Microsoft.Graph.Directory;
+using File = System.IO.File;
 
 namespace DEA.Next.HelperClasses.PdfCreation;
 
@@ -16,6 +19,7 @@ public static class CreatePdfBatchProcess
     /// <param name="mainFileName">Name of the original CSV file.</param>
     /// <param name="setId">The set ID of the PDF file.</param>
     /// <param name="lastItem">True if this is the last item in the batch, false otherwise.</param>
+    /// <param name="loopCount">The number of times the loop has been executed.</param>
     /// <param name="clientId">The client ID for retrieving user configuration.</param>
     /// <returns>True if the PDF file was created and saved successfully, false otherwise.</returns>
     public static async Task<bool> CreatPdfBatch(List<Dictionary<string, string>>? data,
@@ -23,15 +27,13 @@ public static class CreatePdfBatchProcess
         string mainFileName,
         string setId,
         bool lastItem,
+        int fileNameSequence,
         int clientId)
     {
         try
         {
             // Initialize result to -1
             var result = -1;
-            
-            // Loop count to create main field invoice number sequence
-            var loopCount = 1;
 
             // Set a margin constant
             const int margin = 10;
@@ -41,6 +43,8 @@ public static class CreatePdfBatchProcess
 
             // Get the generated field name, line field names, and line fields to skip from user configuration
             var generatedFieldName = jsonData.ReadContentSettings.GeneratedField;
+            var groupDataByField = jsonData.ReadContentSettings.GroupDataBy;
+            var groupFieldRemove = jsonData.ReadContentSettings.RemoveGroupDataField;
             var lineFieldNames = jsonData.ReadContentSettings.LineFieldNameList;
             var lineFieldsToSkip = jsonData.ReadContentSettings.LineFieldToSkip;
 
@@ -82,19 +86,17 @@ public static class CreatePdfBatchProcess
             }
             var invoiceDate = newLineInvoiceNumber.Split('+')[2];
 
-            // Group data based on the generated field name
-            var groupedData = newDataList
-                .GroupBy(dataItem => dataItem.GetValueOrDefault(generatedFieldName))
-                .Where(group => group.Key != null);
-
-            // Convert grouped data to an array of grouping items
-            var groupedDataItems = groupedData
-                as IGrouping<string, Dictionary<string, string>>[] ?? groupedData.ToArray();
-
+            // Group the data by the specified field and remove the group field if necessary
+            var groupedDataItems = await PdfCreationHelperClass.GroupDataByField(
+                newDataList,
+                groupDataByField,
+                groupFieldRemove
+            );
+            
             foreach (var groupedDataItem in groupedDataItems)
             {
                 // New main field invoice number with sequence
-                var newMainFieldInvoiceNumber = $"{invoiceDate}_{loopCount.ToString().PadLeft(4, '0')}";
+                var newMainFieldInvoiceNumber = $"{invoiceDate}_{fileNameSequence.ToString().PadLeft(4, '0')}";
                 
                 // Create a new Document
                 Document document = new();

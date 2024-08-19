@@ -1,4 +1,5 @@
-﻿using Microsoft.Graph;
+﻿using AppConfigReader;
+using Microsoft.Graph;
 using FileNameCleanerClass;
 using WriteLog;
 using WriteNamesToLog;
@@ -253,7 +254,7 @@ namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
                         return 2;
                     }
 
-                    return await StartAttachmentFilesUplaod(downloadFolderPath, customerId, recipientEmail);
+                    return await StartAttachmentFilesUpload(downloadFolderPath, customerId, recipientEmail);
                 }
             }
             catch (Exception ex)
@@ -271,12 +272,15 @@ namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
         /// <param name="customerId">Customer ID</param>
         /// <param name="toEmail">Email the client has sent email to.</param>
         /// <returns></returns>
-        private static async Task<int> StartAttachmentFilesUplaod(string downloadFolderPath,
+        private static async Task<int> StartAttachmentFilesUpload(string downloadFolderPath,
                                                                   int customerId,
                                                                   string toEmail)
         {
             try
             {
+                var appJsonData = AppConfigReaderClass.ReadAppDotConfig();
+                var delayTime = appJsonData.ProgramSettings.UploadDelayTime;
+                
                 if (!Directory.Exists(downloadFolderPath))
                 {
                     WriteLogClass.WriteToLog(0, $"Directory not found: {downloadFolderPath}", 0);
@@ -319,12 +323,15 @@ namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
 
                     // Increment the batch index
                     batchCurrentIndex += batchSize.MaxBatchSize;
+                    
+                    // Wait for the specified time before uploading the next batch of files
+                    await Task.Delay(delayTime);
                 }
                 return successfullUpload;
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(0, $"Exception at StartAttachmentFilesUplaod: {ex.Message}", 0);
+                WriteLogClass.WriteToLog(0, $"Exception at StartAttachmentFilesUpload: {ex.Message}", 0);
                 return 2;
             }
         }

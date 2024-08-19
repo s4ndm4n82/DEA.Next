@@ -125,6 +125,8 @@ public static class PdfCreationHelperClass
     /// <param name="lineFieldNames">The names of the fields to include in the output data.</param>
     /// <param name="lineFieldsToSkip">The names of the fields to exclude from the output data.</param>
     /// <param name="fieldToGenerate">The name of the field to generate based on the input data.</param>
+    /// <param name="groupByFieldName">The name of the field to group by.</param>
+    /// <param name="groupFieldRemove">Whether to remove the group field from the output data.</param>
     /// <returns>A list of dictionaries representing the transformed data.</returns>
     public static async Task<List<Dictionary<string, string>>> MakeNewDataListBatch(
         List<Dictionary<string, string>>? data,
@@ -324,5 +326,44 @@ public static class PdfCreationHelperClass
         // Write a log message indicating that the PDF file was created successfully
         WriteLogClass.WriteToLog(1, "Pdf file created successfully ....", 1);
         return Tuple.Create(true, newOutputPath);
+    }
+
+    public static async Task<IEnumerable<Dictionary<string, string>>[]> GroupDataByField(
+        List<Dictionary<string,string>> newDataList,
+        string groupDataByField,
+        bool groupFieldRemove)
+    {
+        try
+        {
+            return await Task.Run(() =>
+            {
+                // Group data based on the generated field name
+                var groupedData = newDataList
+                    .GroupBy(dataItem => dataItem.GetValueOrDefault(groupDataByField))
+                    .Where(group => group.Key != null);
+            
+                // var newGroupedData = Enumerable.Empty<IEnumerable<System.Collections.Generic.Dictionary<string, string>>>();
+                var newGroupedData = groupFieldRemove ? groupedData
+                        .Select(group => group
+                            .Select(dataItem => dataItem
+                                .Where(kvp => kvp.Key != groupDataByField)
+                                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value)))
+                    : groupedData;
+            
+                // Convert grouped data to an array of grouping items
+                var groupedDataItems = newGroupedData
+                    as IGrouping<string, Dictionary<string, string>>[] ?? newGroupedData.ToArray();
+            
+                // Return newGroupedData.ToArray();
+                return groupedDataItems;
+            });
+        }
+        catch (Exception e)
+        {
+            // Log an error message if an exception occurs
+            WriteLogClass.WriteToLog(0, $"Exception at group data by field: {e.Message}", 0);
+            // Return an empty array
+            return Array.Empty<IEnumerable<Dictionary<string, string>>>();
+        }
     }
 }

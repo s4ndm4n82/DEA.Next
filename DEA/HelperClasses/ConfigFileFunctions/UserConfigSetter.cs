@@ -50,6 +50,8 @@ namespace UserConfigSetterClass
             public string SetDelimiter { get; set; } = string.Empty;
             public int NumberOfLinesToRead { get; set; }
             public string GeneratedField { get; set; } = string.Empty;
+            public string GroupDataBy { get; set; } = string.Empty;
+            public bool RemoveGroupDataField { get; set; }
             public string[] MainFieldNameList { get; set; } = Array.Empty<string>();
             public string[] MainFieldToSkip { get; set; } = Array.Empty<string>();
             public string[] LineFieldNameList { get; set; } = Array.Empty<string>();

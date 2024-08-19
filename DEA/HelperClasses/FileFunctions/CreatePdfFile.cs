@@ -14,6 +14,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
         /// <param name="mainFileName">The name of the main file.</param>
         /// <param name="setId">The ID of the set.</param>
         /// <param name="lastItem">A boolean indicating whether this is the last item in the batch.</param>
+        /// <param name="loopCount">The number of times the loop has been executed.</param>
         /// <param name="clientId">The ID of the client.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a boolean indicating whether the PDF file was successfully created.</returns>
         public static async Task<bool> StartCreatePdfFile(List<Dictionary<string, string>>? data,
@@ -21,6 +22,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
             string mainFileName,
             string setId,
             bool lastItem,
+            int fileNameSequence,
             int clientId)
         {
             // Read the user config file.
@@ -48,6 +50,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
                     mainFileName,
                     setId,
                     lastItem,
+                    fileNameSequence,
                     clientId);
 
             // If there is data to process and the user config indicates that an upload file should be created,

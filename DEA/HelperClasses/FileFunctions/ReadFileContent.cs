@@ -147,6 +147,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
             int clientId)
         {
             var loopCount = 0;
+            var fileNameSequence = 0;
             var allBatchesSuccessful = true;
             var lastItem = false;
 
@@ -170,6 +171,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
                         fileName,
                         setId,
                         lastItem,
+                        fileNameSequence,
                         clientId);
 
                     // If the batch is not successful, set the allBatchesSuccessful flag to false and break the loop
@@ -181,6 +183,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
 
                     // Increment the loopCount to move to the next batch
                     loopCount += batchSize;
+                    fileNameSequence++;
                 }
             }
             catch (Exception ex)
