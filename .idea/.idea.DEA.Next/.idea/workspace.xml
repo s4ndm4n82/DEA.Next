@@ -10,8 +10,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="33275f24-18e6-4ba3-81b4-a2ab1183ffd0" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Config/CustomerConfig.Debug.json" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Config/CustomerConfig.Debug.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/PdfCreation/PdfCreationHelperClass.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/PdfCreation/PdfCreationHelperClass.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FTP/FtpUploadDownloadFunctios/FtpFilesDownload.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FTP/FtpUploadDownloadFunctios/FtpFilesDownload.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Graph/GraphAttachmentRetlatedActions/GraphAttachmentFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GraphAttachmentRetlatedActions/GraphAttachmentFunctions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/AppConfigReader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/AppConfigReader.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Versioning/AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Versioning/AssemblyInfo.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -51,13 +54,13 @@
     &quot;Publish to folder.DEA.Next Publish.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;database.data.extractors.current.export.id&quot;: &quot;JSON-Groovy.json.groovy&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;issue__45&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Without__CSV&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.json.schema&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -68,7 +71,7 @@
     ]
   }
 }</component>
-  <component name="RunManager" selected=".NET Project.DEA.Next">
+  <component name="RunManager" selected="Publish to folder.DEA.Next Publish">
     <configuration name="DEA.Next Publish" type="DotNetFolderPublish" factoryName="Publish to folder">
       <riderPublish configuration="Release" platform="Any CPU" runtime="Portable" target_folder="$PROJECT_DIR$/DEA/bin/Release/net6.0/publish/FolderPublish" target_framework="net6.0" uuid_high="-7580840089019791257" uuid_low="-7026497347669342426" />
       <method v="2" />
@@ -197,6 +200,9 @@
       <workItem from="1723792845818" duration="2990000" />
       <workItem from="1723804869055" duration="167000" />
       <workItem from="1723805110657" duration="522000" />
+      <workItem from="1724036484231" duration="169000" />
+      <workItem from="1724036811392" duration="3049000" />
+      <workItem from="1724043243773" duration="805000" />
     </task>
     <servers />
   </component>
@@ -211,43 +217,17 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestLinesFunction.cs</url>
-          <line>164</line>
-          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\FileOperations\TpsJsonStringCreatorFunctions\MakeJsonRequestLinesFunction.cs" containingFunctionPresentation="Method 'MakeJsonRequestByLine'">
+          <url>file://$PROJECT_DIR$/DEA/Graph/GraphAttachmentRetlatedActions/GraphAttachmentFunctions.cs</url>
+          <line>295</line>
+          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\Graph\GraphAttachmentRetlatedActions\GraphAttachmentFunctions.cs" containingFunctionPresentation="Method 'StartAttachmentFilesUpload'">
             <startOffsets>
-              <option value="7129" />
+              <option value="14608" />
             </startOffsets>
             <endOffsets>
-              <option value="7258" />
+              <option value="14634" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestLinesFunction.cs</url>
-          <line>51</line>
-          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\FileOperations\TpsJsonStringCreatorFunctions\MakeJsonRequestLinesFunction.cs" containingFunctionPresentation="Method 'MakeJsonRequestBatch'">
-            <startOffsets>
-              <option value="2353" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2490" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/DEA/HelperClasses/PdfCreation/PdfCreationHelperClass.cs</url>
-          <line>213</line>
-          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\HelperClasses\PdfCreation\PdfCreationHelperClass.cs" containingFunctionPresentation="Lambda expression inside Method 'MakeNewDataListBatch'">
-            <startOffsets>
-              <option value="9702" />
-            </startOffsets>
-            <endOffsets>
-              <option value="9703" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

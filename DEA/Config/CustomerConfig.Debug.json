@@ -44,8 +44,8 @@
         "FtpPort": 21, // FTP connection port.
         "FtpFolderLoop": 0, // If 1, then loop through folders. If 0, then only main folder or the mapped folder path.
         "FtpMainFolder": "/Aksesspunkt",
-        "FtpMainFolder": "/Duett", // Path to the main folder FTP folder.
-        "FtpMoveToSubFolder": true, // If true, then move the file to a subfolder. If false, files will be removed from the FTP after upload."
+       // "FtpMainFolder": "/Duett", // Path to the main folder FTP folder.
+        "FtpMoveToSubFolder": false, // If true, then move the file to a subfolder. If false, files will be removed from the FTP after upload."
         "FtpSubFolder": "/Duett/Uploaded", // The subfolder path to move the files to.
         //"FtpSubFolder": "/Aksesspunkt/Uploaded" // The subfolder path to move the files to.
       },

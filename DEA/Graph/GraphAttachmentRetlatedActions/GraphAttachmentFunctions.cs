@@ -1,4 +1,5 @@
-﻿using Microsoft.Graph;
+﻿using AppConfigReader;
+using Microsoft.Graph;
 using FileNameCleanerClass;
 using WriteLog;
 using WriteNamesToLog;
@@ -253,7 +254,7 @@ namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
                         return 2;
                     }
 
-                    return await StartAttachmentFilesUplaod(downloadFolderPath, customerId, recipientEmail);
+                    return await StartAttachmentFilesUpload(downloadFolderPath, customerId, recipientEmail);
                 }
             }
             catch (Exception ex)
@@ -271,7 +272,7 @@ namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
         /// <param name="customerId">Customer ID</param>
         /// <param name="toEmail">Email the client has sent email to.</param>
         /// <returns></returns>
-        private static async Task<int> StartAttachmentFilesUplaod(string downloadFolderPath,
+        private static async Task<int> StartAttachmentFilesUpload(string downloadFolderPath,
                                                                   int customerId,
                                                                   string toEmail)
         {
@@ -284,7 +285,14 @@ namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
                 }
 
                 int successfullUpload = 0; // Successful upload count.
+                // Reads the ClientConfig.json file. 
                 UserConfigSetter.Customerdetail batchSize = await UserConfigRetriver.RetriveUserConfigById(customerId);
+                
+                // Reads the appsettings.json file. 
+                var appJsonData = AppConfigReaderClass.ReadAppDotConfig();
+                var delayTime = appJsonData.ProgramSettings.UploadDelayTime;
+                
+                // Setting the batch count index 
                 int batchCurrentIndex = 0;
 
                 DirectoryInfo downloadDirectoryInfo = new(downloadFolderPath);
@@ -298,7 +306,7 @@ namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
                                                     .Select(file => file.Name)
                                                     .ToArray();
 
-                    // Create a single task that uploads all fiels in the batch.
+                    // Create a single task that uploads all files in the batch.
                     int uploadResult = await SendToWebServiceProject.SendToWebServiceProjectAsync(null,
                                                                                                   null,
                                                                                                   downloadFolderPath,
@@ -319,12 +327,15 @@ namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
 
                     // Increment the batch index
                     batchCurrentIndex += batchSize.MaxBatchSize;
+                    
+                    // Delaying the next upload
+                    await Task.Delay(delayTime);
                 }
                 return successfullUpload;
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(0, $"Exception at StartAttachmentFilesUplaod: {ex.Message}", 0);
+                WriteLogClass.WriteToLog(0, $"Exception at StartAttachmentFilesUpload: {ex.Message}", 0);
                 return 2;
             }
         }
