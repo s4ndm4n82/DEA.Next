@@ -63,14 +63,16 @@ public static class CreatePdfBatchProcess
 
             // Filter line field names based on fields to skip
             var newHeaders = lineFieldNames
-                .Where(lineFieldNameE => !lineFieldsToSkip
-                    .Contains(lineFieldNameE)).ToList();
+                .Where(lineFieldNameE => !lineFieldsToSkip.Contains(lineFieldNameE) && 
+                                         (!groupFieldRemove || lineFieldNameE != groupDataByField))
+                .ToList();
 
             // Create a new data list for PDF creation
             var newDataList = await PdfCreationHelperClass.MakeNewDataListBatch(data,
                 lineFieldNames,
                 lineFieldsToSkip,
-                generatedFieldName);
+                generatedFieldName,
+                clientId);
 
             // Extract the new invoice number from the data list
             var newLineInvoiceNumber = newDataList
@@ -95,6 +97,10 @@ public static class CreatePdfBatchProcess
             
             foreach (var groupedDataItem in groupedDataItems)
             {
+                // Convert the grouped data item to a dictionary
+                var dataItems = groupedDataItem
+                    as Dictionary<string, string>[] ?? groupedDataItem.ToArray();
+                
                 // New main field invoice number with sequence
                 var newMainFieldInvoiceNumber = $"{invoiceDate}_{fileNameSequence.ToString().PadLeft(4, '0')}";
                 
@@ -158,9 +164,7 @@ public static class CreatePdfBatchProcess
                 }
 
                 // Add columns to the table based on keys in the first data row
-                foreach (var unused in newHeaders
-                             .Where(lineFieldName => !lineFieldsToSkip
-                                 .Contains(lineFieldName)))
+                foreach (var unused in newHeaders)
                 {
                     var column = table.AddColumn(Unit.FromPoint(120));
                     column.Format.Alignment = ParagraphAlignment.Center;
@@ -181,7 +185,7 @@ public static class CreatePdfBatchProcess
                 }
 
                 // Populate the table with data rows
-                foreach (var dataItem in groupedDataItem)
+                foreach (var dataItem in dataItems)
                 {
                     var row = table.AddRow();
                     for (var j = 0; j < dataItem.Count; j++)
@@ -208,7 +212,7 @@ public static class CreatePdfBatchProcess
                 renderer.RenderDocument();
                 renderer.PdfDocument.Save(outputPath);
 
-                var groupData = groupedDataItem.ToList();
+                var groupData = dataItems.ToList();
 
                 // Check if the PDF file exists
                 if (!File.Exists(outputPath))

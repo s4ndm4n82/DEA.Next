@@ -1,6 +1,7 @@
 using DEA.Next.HelperClasses.FolderFunctions;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
+using UserConfigRetriverClass;
 using WriteLog;
 
 namespace DEA.Next.HelperClasses.PdfCreation;
@@ -132,8 +133,14 @@ public static class PdfCreationHelperClass
         List<Dictionary<string, string>>? data,
         string[] lineFieldNames,
         string[] lineFieldsToSkip,
-        string fieldToGenerate)
+        string fieldToGenerate,
+        int clientId)
     {
+        // Get user configuration
+        var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
+        // Toggle where to add the generated field
+        var addToEnd = jsonData.ReadContentSettings.GeneratedFieldToEnd;
+        
         // Initialize variables to store the invoice date and number
         var invDate = string.Empty;
         var invNum = string.Empty;
@@ -142,7 +149,7 @@ public static class PdfCreationHelperClass
 
         // Initialize an empty list to store the transformed data
         var newData = new List<Dictionary<string, string>>();
-
+        
         try
         {
             // Process the input data in a separate thread
@@ -193,13 +200,19 @@ public static class PdfCreationHelperClass
                         }
                     }
 
-                    // Check if the invoice number and date are not empty and the field to generate is in the line field names
+                    // New invoice number
+                    var newInvNum = $"{invNum}+{waterNum}+{invDate}+{invoiceDescription}";
+                    
+                    // Check if the invoice number and date are not empty and the field to generate is
+                    // in the line field names
+                    // Adds the value to start of the list
                     if (!string.IsNullOrEmpty(invNum)
                         && !string.IsNullOrEmpty(invDate)
-                        && lineFieldNames.Contains(fieldToGenerate, StringComparer.OrdinalIgnoreCase))
+                        && lineFieldNames.Contains(fieldToGenerate, StringComparer.OrdinalIgnoreCase)
+                        && !addToEnd)
                     {
                         // Generate the field value based on the invoice number and date
-                        filteredItem[fieldToGenerate] = $"{invNum}+{waterNum}+{invDate}+{invoiceDescription}";
+                        filteredItem[fieldToGenerate] = newInvNum;
                     }
 
                     // Iterate over each field in the line field names
@@ -219,6 +232,10 @@ public static class PdfCreationHelperClass
 
                     // Add the filtered data to the new data list
                     newData.Add(filteredItem);
+
+                    if (!addToEnd) continue;
+                    var lastItem = newData.Last();
+                    lastItem.Add(fieldToGenerate, newInvNum);
                 }
 
                 // Return the new data list

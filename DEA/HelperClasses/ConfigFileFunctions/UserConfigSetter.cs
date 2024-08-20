@@ -52,6 +52,7 @@ namespace UserConfigSetterClass
             public string GeneratedField { get; set; } = string.Empty;
             public string GroupDataBy { get; set; } = string.Empty;
             public bool RemoveGroupDataField { get; set; }
+            public bool GeneratedFieldToEnd { get; set; }
             public string[] MainFieldNameList { get; set; } = Array.Empty<string>();
             public string[] MainFieldToSkip { get; set; } = Array.Empty<string>();
             public string[] LineFieldNameList { get; set; } = Array.Empty<string>();
