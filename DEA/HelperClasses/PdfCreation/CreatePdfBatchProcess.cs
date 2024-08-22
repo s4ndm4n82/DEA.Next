@@ -1,3 +1,4 @@
+using AppConfigReader;
 using DEA.Next.FileOperations.TpsFileFunctions;
 using Microsoft.Graph;
 using MigraDoc.DocumentObjectModel;
@@ -19,7 +20,7 @@ public static class CreatePdfBatchProcess
     /// <param name="mainFileName">Name of the original CSV file.</param>
     /// <param name="setId">The set ID of the PDF file.</param>
     /// <param name="lastItem">True if this is the last item in the batch, false otherwise.</param>
-    /// <param name="loopCount">The number of times the loop has been executed.</param>
+    /// <param name="fileNameSequence">The sequence number of the PDF file.</param>
     /// <param name="clientId">The client ID for retrieving user configuration.</param>
     /// <returns>True if the PDF file was created and saved successfully, false otherwise.</returns>
     public static async Task<bool> CreatPdfBatch(List<Dictionary<string, string>>? data,
@@ -34,6 +35,9 @@ public static class CreatePdfBatchProcess
         {
             // Initialize result to -1
             var result = -1;
+            
+            // Loop count to add to the file name
+            var loopCount = 0;
 
             // Set a margin constant
             const int margin = 10;
@@ -48,6 +52,10 @@ public static class CreatePdfBatchProcess
             var lineFieldNames = jsonData.ReadContentSettings.LineFieldNameList;
             var lineFieldsToSkip = jsonData.ReadContentSettings.LineFieldToSkip;
 
+            // Get the upload delay time from app config
+            var appJsonData = AppConfigReaderClass.ReadAppDotConfig();
+            var uploadDelay = appJsonData.ProgramSettings.UploadDelayTime;
+            
             // Define the main field list for the PDF
             var pdfMainFieldList = new[]
             {
@@ -164,9 +172,8 @@ public static class CreatePdfBatchProcess
                 }
 
                 // Add columns to the table based on keys in the first data row
-                foreach (var unused in newHeaders)
+                foreach (var column in newHeaders.Select(unused => table.AddColumn(Unit.FromPoint(120))))
                 {
-                    var column = table.AddColumn(Unit.FromPoint(120));
                     column.Format.Alignment = ParagraphAlignment.Center;
                 }
 
@@ -203,19 +210,27 @@ public static class CreatePdfBatchProcess
                 footer.Format.Font.Color = Colors.DarkGray;
                 footer.Format.Borders.Top = new Border
                     { Color = Colors.Black, Style = BorderStyle.Single, Width = Unit.FromPoint(0.5) };
-
+                
+                // Creating a new file name for the PDF file.
+                var newFileName = $"{Path.GetFileNameWithoutExtension(outputPath)}" +
+                                  $"_{loopCount.ToString("D4")}" +
+                                  $"{Path.GetExtension(outputPath)}";
+                
+                // Creating a new output path for the PDF file.
+                var newOutputPath = Path.Combine(Path.GetDirectoryName(outputPath), newFileName);
+                
                 // Save the document to a PDF file
                 PdfDocumentRenderer renderer = new()
                 {
                     Document = document
                 };
                 renderer.RenderDocument();
-                renderer.PdfDocument.Save(outputPath);
+                renderer.PdfDocument.Save(newOutputPath);
 
                 var groupData = dataItems.ToList();
 
                 // Check if the PDF file exists
-                if (!File.Exists(outputPath))
+                if (!File.Exists(newOutputPath))
                 {
                     continue;
                 }
@@ -232,10 +247,16 @@ public static class CreatePdfBatchProcess
                 result = await SendToWebServiceWithLines.SendToWebServiceAsync(groupData,
                     newMainFieldInvoiceNumber,
                     mainFileName,
-                    outputPath,
+                    newOutputPath,
                     setId,
                     lastItem,
                     clientId);
+
+                // Add a delay to avoid overloading the web service
+                await Task.Delay(uploadDelay);
+                
+                // Count the loop on each iteration
+                loopCount++;
             }
 
             if (!lastItem) return !lastItem;

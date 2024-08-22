@@ -1,3 +1,4 @@
+using AppConfigReader;
 using DEA.Next.FileOperations.TpsFileFunctions;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
@@ -48,6 +49,10 @@ public static class CreatePdfLineProcess
             var outputFileExtension = string.Concat('.', jsonData.ReadContentSettings.OutputFileExtension);
             var generatedFieldName = jsonData.ReadContentSettings.GeneratedField;
 
+            // Get the upload delay time from app config
+            var appJsonData = AppConfigReaderClass.ReadAppDotConfig();
+            var uploadDelay = appJsonData.ProgramSettings.UploadDelayTime;
+            
             // Define the PDF main field list
             var pdfMainFieldList = new[]
             {
@@ -183,6 +188,9 @@ public static class CreatePdfLineProcess
                     setId,
                     lastItem,
                     clientId);
+                
+                // Add a delay to avoid overloading the web service
+                await Task.Delay(uploadDelay);
             }
 
             // Check if the process is not the last item, return the opposite of lastItem
