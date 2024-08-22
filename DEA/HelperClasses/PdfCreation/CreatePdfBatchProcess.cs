@@ -271,7 +271,7 @@ public static class CreatePdfBatchProcess
                     break;
             }
 
-            return await PdfCreationHelperClass.RemoveFilesAfterUpload(outputPath, mainFileName, clientId);
+            return await PdfCreationHelperClass.CleanFoldersAfterUpload(outputPath, mainFileName, clientId);
         }
         catch (Exception ex)
         {

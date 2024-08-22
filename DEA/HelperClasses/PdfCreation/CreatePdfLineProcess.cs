@@ -210,7 +210,7 @@ public static class CreatePdfLineProcess
             }
 
             // Call the method to remove files after upload and return the result asynchronously
-            return await PdfCreationHelperClass.RemoveFilesAfterUpload(outputPath, mainFileName, clientId);
+            return await PdfCreationHelperClass.CleanFoldersAfterUpload(outputPath, mainFileName, clientId);
         }
         catch (Exception e)
         {

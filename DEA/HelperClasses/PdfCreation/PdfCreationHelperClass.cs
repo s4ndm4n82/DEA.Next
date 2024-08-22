@@ -257,7 +257,7 @@ public static class PdfCreationHelperClass
     /// <param name="mainFileName">The name of the main file.</param>
     /// <param name="clientId">The client ID for retrieving user configuration.</param>
     /// <returns>True if the files were successfully removed, false otherwise.</returns>
-    public static async Task<bool> RemoveFilesAfterUpload(string outputPath, string mainFileName, int clientId)
+    public static async Task<bool> CleanFoldersAfterUpload(string outputPath, string mainFileName, int clientId)
     {
         try
         {
