@@ -3,10 +3,10 @@ using ConnectFtps;
 using ConnectSftp;
 using DEA.Next.FileOperations.TpsFileFunctions;
 using DEA.Next.FileOperations.TpsJsonStringCreatorFunctions;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using DEA.Next.HelperClasses.OtherFunctions;
 using FluentFTP;
 using Renci.SshNet;
-using UserConfigRetriverClass;
 using UserConfigSetterClass;
 using WriteLog;
 using static UserConfigSetterClass.UserConfigSetter;
@@ -24,13 +24,13 @@ namespace FileFunctions
                                                                    string ftpFolderName,
                                                                    string recipientEmail)
         {
-            Ftpdetails ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(customerId);
+            Ftpdetails ftpDetails = await UserConfigRetriever.RetrieveFtpConfigById(customerId);
 
             try
             {
                 WriteLogClass.WriteToLog(1, "Starting file upload process .... ", 4);
 
-                var clientDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
+                var clientDetails = await UserConfigRetriever.RetrieveUserConfigById(customerId);
 
                 // Get the correct org number depending on what type of download method is used.
                 var clientOrg = SendToWebServiceHelpertFunctions.SetCustomerOrg(clientDetails.FtpDetails.FtpFolderLoop,

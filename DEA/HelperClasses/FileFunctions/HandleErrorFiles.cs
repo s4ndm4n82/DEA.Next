@@ -1,6 +1,6 @@
-﻿using DEA.Next.HelperClasses.OtherFunctions;
+﻿using DEA.Next.HelperClasses.ConfigFileFunctions;
+using DEA.Next.HelperClasses.OtherFunctions;
 using FolderFunctions;
-using UserConfigRetriverClass;
 using UserConfigSetterClass;
 using WriteLog;
 
@@ -24,7 +24,7 @@ namespace HandleErrorFiles
             try
             {
                 // Read the user config file.
-                UserConfigSetter.Customerdetail clientDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
+                UserConfigSetter.Customerdetail clientDetails = await UserConfigRetriever.RetrieveUserConfigById(customerId);
 
                 // Source folder path.
                 string sourcePath = downloadFolderPath;

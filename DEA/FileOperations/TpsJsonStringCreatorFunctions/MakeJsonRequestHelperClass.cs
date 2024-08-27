@@ -1,6 +1,6 @@
 ﻿using DEA.Next.FileOperations.TpsJsonStringClasses;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using TpsJsonProjectUploadString;
-using UserConfigRetriverClass;
 using WriteLog;
 using static UserConfigSetterClass.UserConfigSetter;
 
@@ -11,7 +11,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
         public static List<TpsJsonProjectUploadStringClass.FieldList> ReturnIdFieldList(int customerId,
                                                                                         string clientOrgNo)
         {
-            Customerdetail customerDetails = UserConfigRetriver.RetriveUserConfigById(customerId).Result;
+            Customerdetail customerDetails = UserConfigRetriever.RetrieveUserConfigById(customerId).Result;
 
             // Creating the field list to be added to the Json request.
             List<TpsJsonProjectUploadStringClass.FieldList> idField = new()
@@ -46,7 +46,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
 
         public static List<TpsJsonSendBodyTextClass.Emailfieldlist> ReturnEmailFieldList(int customerId, string bodyText)
         {
-            Customerdetail customerDetails = UserConfigRetriver.RetriveUserConfigById(customerId).Result;
+            Customerdetail customerDetails = UserConfigRetriever.RetrieveUserConfigById(customerId).Result;
             List<Emailfieldlist> emailFieldNames = customerDetails.EmailDetails.EmailFieldList.Where(fname => fname.FieldName != "FieldId").ToList();
             List<TpsJsonSendBodyTextClass.Emailfieldlist> emailFieldList = new();
 
@@ -65,7 +65,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
             string setId,
             int clientId)
         {
-            var jsonData = UserConfigRetriver.RetriveUserConfigById(clientId).Result;
+            var jsonData = UserConfigRetriever.RetrieveUserConfigById(clientId).Result;
             var generatedField = jsonData.ReadContentSettings.GeneratedField;
             
 
@@ -130,7 +130,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
             string setId,
             int clientId)
         {
-            var jsonData = UserConfigRetriver.RetriveUserConfigById(clientId).Result;
+            var jsonData = UserConfigRetriever.RetrieveUserConfigById(clientId).Result;
             var mainFieldListToSkip = jsonData.ReadContentSettings.MainFieldToSkip;
 
             var mainField = new List<TpsJsonLinesUploadString.Fields>

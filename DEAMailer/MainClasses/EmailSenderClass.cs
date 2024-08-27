@@ -1,23 +1,23 @@
 ﻿using System.Net.Mail;
-using WriteLog;
 using AppConfigReader;
+using WriteLog;
 
-namespace Emailer
+namespace DEAMailer.MainClasses
 {
-    internal class EmailerClass
+    internal static class EmailClass
     {
         public static bool EmailSenderHandler(string emailBody)
         {
-            AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
-            AppConfigReaderClass.Emailserversettings emailSettings = jsonData.EmailServerSettings;
+            var jsonData = AppConfigReaderClass.ReadAppDotConfig();
+            var emailSettings = jsonData.EmailServerSettings;
 
-            string senderEmail = emailSettings.EmailSettings.FromEmail;
-            string[] recipientEmails = emailSettings.EmailSettings.ToEmail;
+            var senderEmail = emailSettings.EmailSettings.FromEmail;
+            var recipientEmails = emailSettings.EmailSettings.ToEmail;
 
             MailMessage emailMessage = new();
-            emailMessage.From = new(senderEmail);
+            emailMessage.From = new MailAddress(senderEmail);
 
-            foreach (string recipientEmail in recipientEmails)
+            foreach (var recipientEmail in recipientEmails)
             {
                 emailMessage.To.Add(recipientEmail);
             }

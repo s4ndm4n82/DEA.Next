@@ -1,5 +1,5 @@
 ﻿using DEA.Next.FileOperations.TpsJsonStringCreatorFunctions;
-using UserConfigRetriverClass;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using WriteLog;
 
 namespace DEA.Next.FileOperations.TpsFileFunctions
@@ -28,7 +28,7 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
             try
             {
                 // Retrieve user configuration
-                var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
+                var jsonData = await UserConfigRetriever.RetrieveUserConfigById(clientId);
 
                 // Check if the main file name contains the trigger string for line by line processing
                 var trigger = !string.IsNullOrEmpty(jsonData.ReadContentSettings.ReadByLineTrigger)
@@ -89,7 +89,7 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
             try
             {
                 // Retrieve user configuration
-                var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
+                var jsonData = await UserConfigRetriever.RetrieveUserConfigById(clientId);
 
                 // Check if the file extension is accepted
                 var fileExtension = Path.GetExtension(localFilePath);
@@ -139,7 +139,7 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
             try
             {
                 // Retrieve user configuration
-                var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
+                var jsonData = await UserConfigRetriever.RetrieveUserConfigById(clientId);
 
                 // Check if the file extension is accepted
                 var fileExtension = Path.GetExtension(localFilePath);

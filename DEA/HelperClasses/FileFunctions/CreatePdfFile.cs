@@ -1,5 +1,5 @@
-﻿using DEA.Next.HelperClasses.PdfCreation;
-using UserConfigRetriverClass;
+﻿using DEA.Next.HelperClasses.ConfigFileFunctions;
+using DEA.Next.HelperClasses.PdfCreation;
 using WriteLog;
 
 namespace DEA.Next.HelperClasses.FileFunctions
@@ -26,7 +26,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
             int clientId)
         {
             // Read the user config file.
-            var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
+            var jsonData = await UserConfigRetriever.RetrieveUserConfigById(clientId);
 
             // Get the output filename
             var outputFileName =

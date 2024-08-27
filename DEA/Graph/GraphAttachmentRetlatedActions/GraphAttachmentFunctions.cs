@@ -7,13 +7,13 @@ using GraphEmailFunctions;
 using GetMailFolderIds;
 using Directory = System.IO.Directory;
 using FileFunctions;
-using UserConfigRetriverClass;
 using UserConfigSetterClass;
 using GraphDownloadAttachmentFilesClass;
 using GraphMoveEmailsToExportClass;
 using GraphMoveEmailsrClass;
 using Message = Microsoft.Graph.Message;
 using DEA.Next.Graph.GraphEmailActons;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 
 namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
 {
@@ -101,7 +101,7 @@ namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
                                                            int customerId)
         {
             // Get client details.
-            UserConfigSetter.Customerdetail clientDeails = await UserConfigRetriver.RetriveUserConfigById(customerId);
+            UserConfigSetter.Customerdetail clientDeails = await UserConfigRetriever.RetrieveUserConfigById(customerId);
 
             // Filter the attachments.
             IEnumerable<Attachment> attachmentList = GraphDownloadAttachmentFiles.FilterAttachments(message.Attachments,
@@ -288,7 +288,7 @@ namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
                 }
 
                 int successfullUpload = 0; // Successful upload count.
-                UserConfigSetter.Customerdetail batchSize = await UserConfigRetriver.RetriveUserConfigById(customerId);
+                UserConfigSetter.Customerdetail batchSize = await UserConfigRetriever.RetrieveUserConfigById(customerId);
                 int batchCurrentIndex = 0;
 
                 DirectoryInfo downloadDirectoryInfo = new(downloadFolderPath);

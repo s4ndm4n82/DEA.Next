@@ -1,8 +1,8 @@
 ﻿using DEA.Next.FileOperations.TpsFileFunctions;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using FileFunctions;
 using FluentFTP;
 using Renci.SshNet;
-using UserConfigRetriverClass;
 using UserConfigSetterClass;
 
 namespace UploadFtpFilesClass
@@ -26,7 +26,7 @@ namespace UploadFtpFilesClass
                                                           string ftpFolderName,
                                                           int clientId)
         {
-            UserConfigSetter.Customerdetail customerdetail = await UserConfigRetriver.RetriveUserConfigById(clientId);
+            UserConfigSetter.Customerdetail customerdetail = await UserConfigRetriever.RetrieveUserConfigById(clientId);
 
             // Get the matching file names.
             string[] matchingFileNames = currentBatch

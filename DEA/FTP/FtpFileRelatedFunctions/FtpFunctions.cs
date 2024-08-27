@@ -7,9 +7,9 @@ using ProcessStatusMessageSetter;
 using DownloadFtpFilesClass;
 using FtpLoopDownloadClass;
 using DEA.Next.HelperClasses.OtherFunctions;
-using UserConfigRetriverClass;
 using Renci.SshNet;
 using ConnectSftp;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using static UserConfigSetterClass.UserConfigSetter;
 
 namespace FtpFunctions
@@ -45,7 +45,7 @@ namespace FtpFunctions
             // SFTP connection token
             SftpClient? sftpConnectToken = null;
 
-            var ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(clientId);
+            var ftpDetails = await UserConfigRetriever.RetrieveFtpConfigById(clientId);
 
             var downloadFolder = Path.Combine(FolderFunctionsClass.CheckFolders(MagicWords.ftp)
                                                 , ftpDetails.FtpMainFolder.Trim('/').Replace('/', '\\'));
@@ -111,7 +111,7 @@ namespace FtpFunctions
             // Return result.
             var downloadResult = 0;
             // Get the FTP details from the config file.
-            var ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(clientId);
+            var ftpDetails = await UserConfigRetriever.RetrieveFtpConfigById(clientId);
 
             try
             {
@@ -147,7 +147,7 @@ namespace FtpFunctions
             // Return result.
             int downloadResult = 0;
             // Get the FTP details from the config file.
-            Ftpdetails ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(clientId);
+            Ftpdetails ftpDetails = await UserConfigRetriever.RetrieveFtpConfigById(clientId);
             try
             {
                 using (sftpConnectToken)
@@ -197,7 +197,7 @@ namespace FtpFunctions
                                                                int clientId,
                                                                IEnumerable<string> ftpFilesList)
         {
-            Ftpdetails ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(clientId);
+            Ftpdetails ftpDetails = await UserConfigRetriever.RetrieveFtpConfigById(clientId);
 
             try
             {

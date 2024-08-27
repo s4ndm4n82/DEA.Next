@@ -1,9 +1,9 @@
 using AppConfigReader;
 using DEA.Next.FileOperations.TpsFileFunctions;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using Microsoft.Graph;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
-using UserConfigRetriverClass;
 using WriteLog;
 using Directory = Microsoft.Graph.Directory;
 using File = System.IO.File;
@@ -43,7 +43,7 @@ public static class CreatePdfBatchProcess
             const int margin = 10;
 
             // Retrieve user configuration data based on client ID
-            var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
+            var jsonData = await UserConfigRetriever.RetrieveUserConfigById(clientId);
 
             // Get the generated field name, line field names, and line fields to skip from user configuration
             var generatedFieldName = jsonData.ReadContentSettings.GeneratedField;

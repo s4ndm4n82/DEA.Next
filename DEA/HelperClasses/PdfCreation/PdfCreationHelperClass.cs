@@ -1,7 +1,7 @@
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using DEA.Next.HelperClasses.FolderFunctions;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
-using UserConfigRetriverClass;
 using WriteLog;
 
 namespace DEA.Next.HelperClasses.PdfCreation;
@@ -137,7 +137,7 @@ public static class PdfCreationHelperClass
         int clientId)
     {
         // Get user configuration
-        var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
+        var jsonData = await UserConfigRetriever.RetrieveUserConfigById(clientId);
         // Toggle where to add the generated field
         var addToEnd = jsonData.ReadContentSettings.GeneratedFieldToEnd;
         

@@ -1,17 +1,15 @@
 ﻿using System.Text.RegularExpressions;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using Microsoft.IdentityModel.Tokens;
 using WriteLog;
-using UserConfigSetterClass;
-using UserConfigRetriverClass;
-using Emailer;
 
-namespace CreatEmail
+namespace DEAMailer.MainClasses
 {
-    internal class CreateEmailClass
+    internal static class CreateEmailClass
     {
-        public class EmailInfor
+        private class EmailInformation
         {
-            public int CustomerID { get; set; }
+            public int CustomerId { get; set; }
             public int FileCount { get; set; }
             public int FolderCount { get; set; }
         }
@@ -20,25 +18,25 @@ namespace CreatEmail
         {
             try
             {
-                string[] detailsArray = Array.Empty<string>();
+                var detailsArray = Array.Empty<string>();
 
-                EmailInfor emailInfor = new()
+                EmailInformation emailInformation = new()
                 {
                     FolderCount = folderPath.EnumerateDirectories("*.*", SearchOption.TopDirectoryOnly).Count()
                 };
 
-                foreach (DirectoryInfo subFolderPath in folderList)
+                foreach (var subFolderPath in folderList)
                 {
-                    string regexPattern = @"ID_(\d+)";
-                    Match matchValue = Regex.Match(subFolderPath.Name, regexPattern);
+                    const string regexPattern = @"ID_(\d+)";
+                    var matchValue = Regex.Match(subFolderPath.Name, regexPattern);
 
                     if (matchValue.Success)
                     {
-                        emailInfor.CustomerID = int.Parse(matchValue.Groups[1].Value);
-                        emailInfor.FileCount = subFolderPath.EnumerateFiles("*.*", SearchOption.AllDirectories).Count();
+                        emailInformation.CustomerId = int.Parse(matchValue.Groups[1].Value);
+                        emailInformation.FileCount = subFolderPath.EnumerateFiles("*.*", SearchOption.AllDirectories).Count();
 
-                        UserConfigSetterClass.UserConfigSetter.CustomerDetailsObject jsonData = UserConfigSetterClass.UserConfigSetter.ReadUserDotConfigAsync<UserConfigSetterClass.UserConfigSetter.CustomerDetailsObject>();
-                        UserConfigSetterClass.UserConfigSetter.Customerdetail clientDetails = jsonData.CustomerDetails!.FirstOrDefault(cid => cid.Id == emailInfor.CustomerID)!;
+                        var jsonData = UserConfigRetriever.RetrieveUserConfigById(emailInformation.CustomerId);
+                        var clientDetails = jsonData.Result;
 
                         if (!clientDetails.ClientName.IsNullOrEmpty())
                         {
@@ -46,7 +44,7 @@ namespace CreatEmail
                             Array.Resize(ref detailsArray, detailsArray.Length + 1);
 
                             // [^1] is equal to [detailsArray.Length - 1]. Which add the value to the last index of the array.
-                            detailsArray[^1] = " - Client " + clientDetails.ClientName + " has " + emailInfor.FileCount + " files in the error folder.";
+                            detailsArray[^1] = " - Client " + clientDetails.ClientName + " has " + emailInformation.FileCount + " files in the error folder.";
                         }
                     }
                     else
@@ -55,16 +53,9 @@ namespace CreatEmail
                     }
                 }
 
-                if (detailsArray != null && detailsArray.Length != 0)
+                if (detailsArray.Length != 0)
                 {
-                    if (CreatEmailBody(detailsArray, emailInfor.FolderCount))
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return CreatEmailBody(detailsArray, emailInformation.FolderCount);
                 }
                 else
                 {
@@ -74,28 +65,21 @@ namespace CreatEmail
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(0,$"Exeption at SartCreatingEmail under CreatEmailClass: {ex.Message}", 0);
+                WriteLogClass.WriteToLog(0,$"Exception at StartCreatingEmail under CreatEmailClass: {ex.Message}", 0);
             }
             return false;
         }
 
-        public static bool CreatEmailBody(string[] detailsArray, int folderCount)
+        private static bool CreatEmailBody(string[] detailsArray, int folderCount)
         {
             try
             {
-                string folderDetails = string.Join(Environment.NewLine, detailsArray);
-                string emailBody = $@"There a total of {folderCount} problem folder/s waiting in error DEA.Next folder.{Environment.NewLine}{Environment.NewLine}{folderDetails}";
+                var folderDetails = string.Join(Environment.NewLine, detailsArray);
+                var emailBody = $@"There a total of {folderCount} problem folder/s waiting in error DEA.Next folder.{Environment.NewLine}{Environment.NewLine}{folderDetails}";
 
                 if(!folderDetails.IsNullOrEmpty())
                 {
-                    if (EmailerClass.EmailSenderHandler(emailBody))
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return EmailClass.EmailSenderHandler(emailBody);
                 }
                 else
                 {
@@ -105,7 +89,7 @@ namespace CreatEmail
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(0,$"Exeption at CreatEmailBody CreatEmailClass: {ex.Message}", 0);
+                WriteLogClass.WriteToLog(0,$"Exception at CreatEmailBody CreatEmailClass: {ex.Message}", 0);
                 return false;
             }
         }

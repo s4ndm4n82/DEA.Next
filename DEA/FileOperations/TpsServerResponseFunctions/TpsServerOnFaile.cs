@@ -7,7 +7,7 @@ using HandleErrorFiles;
 using Microsoft.Graph;
 using Renci.SshNet;
 using System.Net;
-using UserConfigRetriverClass;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using UserConfigSetterClass;
 using WriteLog;
 using Directory = System.IO.Directory;
@@ -47,7 +47,7 @@ namespace DEA.Next.FileOperations.TpsServerResponseFunctions
             {
                 int deleteResult = 2;
 
-                UserConfigSetter.Ftpdetails ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(customerId);
+                UserConfigSetter.Ftpdetails ftpDetails = await UserConfigRetriever.RetrieveFtpConfigById(customerId);
 
                 WriteLogClass.WriteToLog(0, $"Server status code: {serverStatusCode}, Server Response Error: {serverResponseContent}", 0);
 

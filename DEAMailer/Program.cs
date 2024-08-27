@@ -1,5 +1,5 @@
 ﻿using AppConfigReader;
-using CreatEmail;
+using DEAMailer.MainClasses;
 using ErrorFolderChecker;
 using WriteLog;
 

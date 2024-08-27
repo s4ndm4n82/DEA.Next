@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using UserConfigRetriverClass;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using UserConfigSetterClass;
 using WriteLog;
 using static DownloadFtpFilesClass.FtpFilesDownload;
@@ -20,7 +20,7 @@ namespace DEA.Next.HelperClasses.FileFunctions
             int clientId)
         {
             // Retrieve user configuration data by client ID
-            var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
+            var jsonData = await UserConfigRetriever.RetrieveUserConfigById(clientId);
 
             try
             {

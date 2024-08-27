@@ -9,8 +9,8 @@ using DEA.Next.Graph.GraphEmailInboxFunctions;
 using DEA.Next.HelperClasses.OtherFunctions;
 using DEA.Next.Graph.GraphAttachmentRetlatedActions;
 using UserConfigSetterClass;
-using UserConfigRetriverClass;
 using DEA.Next.Graph.GraphEmailBodyRelatedActions;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 
 namespace DEA.Next.Graph.GraphEmailActons
 {
@@ -37,7 +37,7 @@ namespace DEA.Next.Graph.GraphEmailActons
             AppConfigReaderClass.Programsettings maxMails = jsonData.ProgramSettings;
 
             // Read from the client config file.
-            UserConfigSetter.Emaildetails emailDetails = await UserConfigRetriver.RetriveEmailConfigById(customerId);
+            UserConfigSetter.Emaildetails emailDetails = await UserConfigRetriever.RetrieveEmailConfigById(customerId);
 
             int result = 0;
             // Get the folder ID's after searching the folder names.

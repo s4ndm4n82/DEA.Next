@@ -1,16 +1,16 @@
 ﻿using AppConfigReader;
-using LogFileCleaner;
+using DEACleaner.MainClasses;
 using WriteLog;
 
-AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
-AppConfigReaderClass.Programsettings programSettings = jsonData.ProgramSettings;
+var jsonData = AppConfigReaderClass.ReadAppDotConfig();
+var programSettings = jsonData.ProgramSettings;
 
 if (programSettings.CleanLogs)
 {
-    int deleteStatus = LogFileCleanerClass.StartCleaner();
+    var deleteStatus = LogFileCleanerClass.StartCleaner();
 
-    string logEntry = deleteStatus == 1 ? "Log file deletion ended successfully ...." : "log file deletion unsuccessfull ....";
-    int logType = deleteStatus != 1 ? 0 : 1;
+    var logEntry = deleteStatus == 1 ? "Log file deletion ended successfully ...." : "log file deletion unsuccessful ....";
+    var logType = deleteStatus != 1 ? 0 : 1;
 
     WriteLogClass.WriteToLog(logType, logEntry, 1);
 }

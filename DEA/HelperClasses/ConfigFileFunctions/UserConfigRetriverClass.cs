@@ -1,10 +1,10 @@
 ﻿using UserConfigSetterClass;
 
-namespace UserConfigRetriverClass
+namespace DEA.Next.HelperClasses.ConfigFileFunctions
 {
-    internal class UserConfigRetriver
+    public class UserConfigRetriever
     {
-        public static async Task<UserConfigSetter.Customerdetail> RetriveUserConfigById(int? cid)
+        public static async Task<UserConfigSetter.Customerdetail> RetrieveUserConfigById(int? cid)
         {
             if (cid == 0)
             {
@@ -17,7 +17,7 @@ namespace UserConfigRetriverClass
             return customerData;
         }
 
-        public static async Task<UserConfigSetter.Ftpdetails> RetriveFtpConfigById(int cid)
+        public static async Task<UserConfigSetter.Ftpdetails> RetrieveFtpConfigById(int cid)
         {
             UserConfigSetter.CustomerDetailsObject jsonData = await UserConfigSetter.ReadUserDotConfigAsync<UserConfigSetter.CustomerDetailsObject>();
             UserConfigSetter.Customerdetail customerData = jsonData.CustomerDetails.FirstOrDefault(id => id.Id == cid);
@@ -26,7 +26,7 @@ namespace UserConfigRetriverClass
             return ftpData;
         }
 
-        public static async Task<UserConfigSetter.Emaildetails> RetriveEmailConfigById(int cid)
+        public static async Task<UserConfigSetter.Emaildetails> RetrieveEmailConfigById(int cid)
         {
             UserConfigSetter.CustomerDetailsObject jsonData = await UserConfigSetter.ReadUserDotConfigAsync<UserConfigSetter.CustomerDetailsObject>();
             UserConfigSetter.Customerdetail customerData = jsonData.CustomerDetails.FirstOrDefault(id => id.Id == cid);
@@ -35,14 +35,14 @@ namespace UserConfigRetriverClass
             return emailData;
         }
         
-        public static async Task<UserConfigSetter.Customerdetail[]> RetriveAllUserConfig()
+        public static async Task<UserConfigSetter.Customerdetail[]> RetrieveAllUserConfig()
         {
             UserConfigSetter.CustomerDetailsObject jsonAllData = await UserConfigSetter.ReadUserDotConfigAsync<UserConfigSetter.CustomerDetailsObject>();
 
             return jsonAllData.CustomerDetails;
         }
 
-        public static async Task<UserConfigSetter.Ftpdetails[]> RetriveAllFtpConfig()
+        public static async Task<UserConfigSetter.Ftpdetails[]> RetrieveAllFtpConfig()
         {
             UserConfigSetter.CustomerDetailsObject jsonAllData = await UserConfigSetter.ReadUserDotConfigAsync<UserConfigSetter.CustomerDetailsObject>();
             UserConfigSetter.Customerdetail[] customerDetails = jsonAllData.CustomerDetails;
@@ -51,7 +51,7 @@ namespace UserConfigRetriverClass
             return ftpdetails;
         }
 
-        public static async Task RetriveUserConfigJson(int clientId)
+        public static async Task RetrieveUserConfigJson(int clientId)
         {
             throw new NotImplementedException();
         }

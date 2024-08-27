@@ -1,7 +1,7 @@
 ﻿using DEA.Next.FileOperations.TpsJsonStringCreatorFunctions;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using FluentFTP;
 using Renci.SshNet;
-using UserConfigRetriverClass;
 using UserConfigSetterClass;
 using WriteLog;
 
@@ -23,7 +23,7 @@ namespace DEA.Next.FileOperations.TpsFileFunctions
             {
                 WriteLogClass.WriteToLog(1, "Starting file upload process .... ", 4);
 
-                UserConfigSetter.Customerdetail customerDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
+                UserConfigSetter.Customerdetail customerDetails = await UserConfigRetriever.RetrieveUserConfigById(customerId);
 
                 // Creat the local file list.
                 string[] downloadedFileList = SendToWebServiceHelpertFunctions.MakeDownloadedFileList(customerDetails,

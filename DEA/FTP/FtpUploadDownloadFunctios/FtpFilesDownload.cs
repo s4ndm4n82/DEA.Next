@@ -1,4 +1,5 @@
 ﻿using AppConfigReader;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using DEA.Next.HelperClasses.FileFunctions;
 using FluentFTP;
 using GraphHelper;
@@ -6,7 +7,6 @@ using Renci.SshNet;
 using Renci.SshNet.Async;
 using Renci.SshNet.Sftp;
 using UploadFtpFilesClass;
-using UserConfigRetriverClass;
 using UserConfigSetterClass;
 using WriteLog;
 using WriteNamesToLog;
@@ -41,7 +41,7 @@ namespace DownloadFtpFilesClass
             try
             {
                 // Reads the CustomerConfig.json file.
-                var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientID);
+                var jsonData = await UserConfigRetriever.RetrieveUserConfigById(clientID);
                 
                 // Allowed file extensions
                 var allowedFileExtensions = jsonData.DocumentDetails.DocumentExtensions;

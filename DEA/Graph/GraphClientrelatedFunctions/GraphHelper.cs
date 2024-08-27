@@ -5,9 +5,9 @@ using WriteLog;
 using UserConfigSetterClass;
 using Microsoft.IdentityModel.Tokens;
 using AppConfigReader;
-using UserConfigRetriverClass;
 using DEA.Next.Graph.GraphEmailInboxFunctions;
 using DEA.Next.Graph.GraphEmailActons;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 
 namespace GraphHelper
 {
@@ -27,7 +27,7 @@ namespace GraphHelper
         public static async Task<int> InitializGetAttachment(int customerId)
         {
             int result = 0;
-            UserConfigSetter.Customerdetail clientDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
+            UserConfigSetter.Customerdetail clientDetails = await UserConfigRetriever.RetrieveUserConfigById(customerId);
 
             GetInboxFolderNames getInboxFolderNames = new(clientDetails.EmailDetails.EmailInboxPath);
             string mainInbox = getInboxFolderNames.GetNextInboxName();

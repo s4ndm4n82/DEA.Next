@@ -2,7 +2,7 @@
 using Microsoft.Graph;
 using RestSharp;
 using System.Net;
-using UserConfigRetriverClass;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using UserConfigSetterClass;
 
 namespace DEA.Next.FileOperations.TpsFileUploadFunctions
@@ -15,7 +15,7 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
                                                               string jsonString,
                                                               int clientId)
         {
-            UserConfigSetter.Customerdetail customerDetails = await UserConfigRetriver.RetriveUserConfigById(clientId);
+            UserConfigSetter.Customerdetail customerDetails = await UserConfigRetriever.RetrieveUserConfigById(clientId);
 
             // Creating rest api request.
             RestClient client = new($"{customerDetails.DomainDetails.MainDomain}");

@@ -3,7 +3,7 @@ using FluentFTP;
 using Renci.SshNet;
 using RestSharp;
 using System.Net;
-using UserConfigRetriverClass;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using UserConfigSetterClass;
 using WriteLog;
 
@@ -24,7 +24,7 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
         {
             try
             {
-                UserConfigSetter.Customerdetail customerDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
+                UserConfigSetter.Customerdetail customerDetails = await UserConfigRetriever.RetrieveUserConfigById(customerId);
 
                 // Creating rest api request.
                 RestClient client = new($"{customerDetails.DomainDetails.MainDomain}");

@@ -1,8 +1,8 @@
 using AppConfigReader;
 using DEA.Next.FileOperations.TpsFileFunctions;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
-using UserConfigRetriverClass;
 using WriteLog;
 
 namespace DEA.Next.HelperClasses.PdfCreation;
@@ -41,7 +41,7 @@ public static class CreatePdfLineProcess
             const int margin = 10;
 
             // Retrieve the user configuration data by client ID
-            var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
+            var jsonData = await UserConfigRetriever.RetrieveUserConfigById(clientId);
 
             // Get the main field list, main fields to skip, output file extension, and generated field name from the user configuration data
             var mainFieldList = jsonData.ReadContentSettings.MainFieldNameList;

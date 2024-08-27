@@ -1,8 +1,8 @@
 ﻿using DEA.Next.FileOperations.TpsFileUploadFunctions;
 using DEA.Next.FileOperations.TpsJsonStringClasses;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using Microsoft.Graph;
 using Newtonsoft.Json;
-using UserConfigRetriverClass;
 using UserConfigSetterClass;
 using WriteLog;
 
@@ -18,7 +18,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
         {
             try
             {
-                UserConfigSetter.Customerdetail customerDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
+                UserConfigSetter.Customerdetail customerDetails = await UserConfigRetriever.RetrieveUserConfigById(customerId);
 
                 // Creaing the email field list to be added to the JSON request.
                 List<TpsJsonSendBodyTextClass.Emailfieldlist> emailFieldList = MakeJsonRequestHelperClass.ReturnEmailFieldList(customerId, messageBody);

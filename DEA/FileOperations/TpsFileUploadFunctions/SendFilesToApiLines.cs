@@ -1,6 +1,6 @@
-﻿using DEA.Next.HelperClasses.FolderFunctions;
+﻿using DEA.Next.HelperClasses.ConfigFileFunctions;
+using DEA.Next.HelperClasses.FolderFunctions;
 using RestSharp;
-using UserConfigRetriverClass;
 using WriteLog;
 
 namespace DEA.Next.FileOperations.TpsFileUploadFunctions
@@ -19,7 +19,7 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
             int clientId)
         {
             // Retrieve user configuration by client ID
-            var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
+            var jsonData = await UserConfigRetriever.RetrieveUserConfigById(clientId);
     
             try
             {

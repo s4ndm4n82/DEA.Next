@@ -1,8 +1,8 @@
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using DownloadFtpFilesClass;
 using FluentFTP;
 using Renci.SshNet;
 using Renci.SshNet.Sftp;
-using UserConfigRetriverClass;
 using WriteLog;
 
 namespace DEA.Next.FTP.FtpConnectionInterfaces;
@@ -66,7 +66,7 @@ public sealed class AsyncFtpConnection : IFtpConnection
     
     public async Task<IEnumerable<FtpListItem>> GetListingFtp(string path, int clientId)
     {
-        var jsonFtpData = await UserConfigRetriver.RetriveUserConfigById(clientId);
+        var jsonFtpData = await UserConfigRetriever.RetrieveUserConfigById(clientId);
         var allowedFileExtensions = jsonFtpData.DocumentDetails.DocumentExtensions;
         
         var fileList = await _ftpClient.GetListing(path);
@@ -157,7 +157,7 @@ public sealed class SftpConnection : IFtpConnection
     
     public async Task<IEnumerable<ISftpFile>> GetListingSftp(string path, int clientId)
     {
-        var jsonFtpData = await UserConfigRetriver.RetriveUserConfigById(clientId);
+        var jsonFtpData = await UserConfigRetriever.RetrieveUserConfigById(clientId);
         var allowedFileExtensions = jsonFtpData.DocumentDetails.DocumentExtensions;
         
         return await Task.Run(() => _sftpClient.ListDirectory(path)

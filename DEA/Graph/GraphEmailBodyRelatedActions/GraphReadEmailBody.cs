@@ -1,7 +1,7 @@
 ﻿using DEA.Next.FileOperations.TpsJsonStringCreatorFunctions;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using GetRecipientEmail;
 using Microsoft.Graph;
-using UserConfigRetriverClass;
 using UserConfigSetterClass;
 using WriteLog;
 
@@ -19,7 +19,7 @@ namespace DEA.Next.Graph.GraphEmailBodyRelatedActions
             {
                 int loopCount = 0;
 
-                UserConfigSetter.Emaildetails emailDetails = await UserConfigRetriver.RetriveEmailConfigById(clientId);
+                UserConfigSetter.Emaildetails emailDetails = await UserConfigRetriever.RetrieveEmailConfigById(clientId);
 
                 IMailFolderMessagesCollectionPage messages = await requestBuilder
                                                                   .Messages

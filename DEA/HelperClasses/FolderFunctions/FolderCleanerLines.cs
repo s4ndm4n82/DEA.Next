@@ -3,8 +3,8 @@ using ConnectFtp;
 using ConnectFtps;
 using ConnectSftp;
 using DEA.Next.FTP.FtpConnectionInterfaces;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using DEA.Next.HelperClasses.OtherFunctions;
-using UserConfigRetriverClass;
 using WriteLog;
 
 namespace DEA.Next.HelperClasses.FolderFunctions;
@@ -104,7 +104,7 @@ public static class FolderCleanerLines
 
     public static async Task<bool> RemoveDataFileFromFtpAsync(string mainFileName, int clientId)
     {
-        var jsonFtpData = await UserConfigRetriver.RetriveFtpConfigById(clientId);
+        var jsonFtpData = await UserConfigRetriever.RetrieveFtpConfigById(clientId);
         var ftpFilePath = string.Concat(jsonFtpData.FtpMainFolder, "/", mainFileName);
         var ftpConnection = await CreateFtpClientAsync(clientId);
         var dataType = ftpConnection.GetType();
@@ -149,7 +149,7 @@ public static class FolderCleanerLines
 
     private static async Task<IFtpConnection> CreateFtpClientAsync(int clientId)
     {
-        var jsonFtpData = await UserConfigRetriver.RetriveFtpConfigById(clientId);
+        var jsonFtpData = await UserConfigRetriever.RetrieveFtpConfigById(clientId);
 
         // Retrieve FTP connection details from the JSON configuration
         var ftpType = jsonFtpData.FtpType; // Type of FTP connection (e.g., FTP, FTPS, SFTP)

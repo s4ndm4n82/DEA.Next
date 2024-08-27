@@ -6,7 +6,7 @@ using GraphMoveEmailsToExportClass;
 using Microsoft.Graph;
 using Renci.SshNet;
 using System.Net;
-using UserConfigRetriverClass;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using UserConfigSetterClass;
 using WriteLog;
 using WriteNamesToLog;
@@ -50,7 +50,7 @@ namespace DEA.Next.FileOperations.TpsServerResponseFunctions
         {
             try
             {
-                UserConfigSetter.Ftpdetails ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(customerId);
+                UserConfigSetter.Ftpdetails ftpDetails = await UserConfigRetriever.RetrieveFtpConfigById(customerId);
 
                 WriteLogClass.WriteToLog(1, $"Uploaded {fileCount} file to project {projectId} using queue {queue} ....", 4);
                 WriteLogClass.WriteToLog(1, $"Uploaded filenames: {WriteNamesToLogClass.GetFileNames(jsonFileList)}", 4);

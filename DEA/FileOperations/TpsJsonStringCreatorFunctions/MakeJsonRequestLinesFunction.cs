@@ -1,8 +1,8 @@
 ﻿using DEA.Next.FileOperations.TpsFileUploadFunctions;
 using DEA.Next.FileOperations.TpsJsonStringClasses;
 using DEA.Next.FileOperations.TpsServerResponseFunctions;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using Newtonsoft.Json;
-using UserConfigRetriverClass;
 using UserConfigSetterClass;
 using WriteLog;
 
@@ -34,7 +34,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
             try
             {
                 // Retrieve user configuration
-                var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
+                var jsonData = await UserConfigRetriever.RetrieveUserConfigById(clientId);
 
                 // Get the list of fields to include in the JSON request
                 var fieldsList = MakeJsonRequestHelperClass.ReturnIdFieldListBatch(mainFileName,
@@ -148,7 +148,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
             int clientId)
         {
             // Retrieve user configuration
-            var jsonData = await UserConfigRetriver.RetriveUserConfigById(clientId);
+            var jsonData = await UserConfigRetriever.RetrieveUserConfigById(clientId);
 
             // Get the list of fields
             var fieldsList = MakeJsonRequestHelperClass.ReturnIdFieldListLines(data,

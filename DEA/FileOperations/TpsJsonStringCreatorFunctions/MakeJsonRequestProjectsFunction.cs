@@ -1,9 +1,9 @@
 ﻿using DEA.Next.FileOperations.TpsFileUploadFunctions;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using FluentFTP;
 using Newtonsoft.Json;
 using Renci.SshNet;
 using TpsJsonProjectUploadString;
-using UserConfigRetriverClass;
 using UserConfigSetterClass;
 using WriteLog;
 
@@ -21,7 +21,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
         {
             try
             {
-                UserConfigSetter.Customerdetail customerDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
+                UserConfigSetter.Customerdetail customerDetails = await UserConfigRetriever.RetrieveUserConfigById(customerId);
 
                 // Create the file list to be added to the Json request.
                 List<TpsJsonProjectUploadStringClass.FileList> jsonFileList = MakeJsonRequestHelperClass.ReturnFileList(filesToSend);
