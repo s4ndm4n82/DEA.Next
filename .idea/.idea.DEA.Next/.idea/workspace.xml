@@ -10,6 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="33275f24-18e6-4ba3-81b4-a2ab1183ffd0" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/shelf/Uncommitted_changes_before_Checkout_at_27_08_2024_08_45_[Changes]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/shelf/Uncommitted_changes_before_Checkout_at_27_08_2024_08_45__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Config/CustomerConfig.Debug.json" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Config/CustomerConfig.Debug.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Versioning/AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Versioning/AssemblyInfo.cs" afterDir="false" />
