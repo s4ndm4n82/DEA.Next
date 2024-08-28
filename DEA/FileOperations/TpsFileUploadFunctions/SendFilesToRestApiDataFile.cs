@@ -16,7 +16,7 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
         public static async Task<int> SendFilesToRestDataFileAsync(AsyncFtpClient ftpConnect,
                                                                    SftpClient sftpConnect,
                                                                    int customerId,
-                                                                   string jsonReuest,
+                                                                   string jsonRequest,
                                                                    string downloadFolderPath,
                                                                    string fileName,
                                                                    string[] ftpFileList,
@@ -32,7 +32,7 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
                 RequestFormat = DataFormat.Json
             };
 
-            tpsRequest.AddBody(jsonReuest);
+            tpsRequest.AddBody(jsonRequest);
             RestResponse serverResponse = await client.ExecuteAsync(tpsRequest); // Executes the request and send to the server.
 
             if (serverResponse.StatusCode != HttpStatusCode.OK)

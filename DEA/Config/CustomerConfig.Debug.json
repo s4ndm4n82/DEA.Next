@@ -14,6 +14,7 @@
       //"ProjectID": "9b83f71a-2371-434b-88ca-7afb4b63220f",
       //"ProjectID": "690e35df-73b1-4802-46a5-08da8ffc4c42",
       "DocumentId": "", // If the upload is just a data file then this is needed.
+      "DocumentEncoding": "", // Set this to the encoding of the file. Only used when uploading a data file. Default is UTF-8.
       "MaxBatchSize": 2, // Number of files that can be in a download batch. Max file limit is 200.
       "RenameFile": 0, // Add Org to the name in front of the filename. To activate use 1 else 0.
       "MainCustomer": "Aksesspunkt",
@@ -78,7 +79,8 @@
       "TemplateKey": "",
       "Queue": "6",
       "ProjectID": "0c298408-76b9-4f4c-9941-edb101126329",
-      "DocumentId": "",
+      "DocumentId": "", // If the upload is just a data file then this is needed.
+      "DocumentEncoding": "", // Set this to the encoding of the file. Only used when uploading a data file. Default is UTF-8.
       "MaxBatchSize": 1, // Number of files that can be in a download batch. Max file limit is 200.
       "MainCustomer": "DigiAcc",
       "ClientName": "DigiAcc",
@@ -137,7 +139,8 @@
       "TemplateKey": "",
       "Queue": "6",
       "ProjectID": "0c298408-76b9-4f4c-9941-edb101126329",
-      "DocumentId": "",
+      "DocumentId": "", // If the upload is just a data file then this is needed.
+      "DocumentEncoding": "", // Set this to the encoding of the file. Only used when uploading a data file. Default is UTF-8.
       "MaxBatchSize": 1, // Number of files that can be in a download batch. Max file limit is 200.
       "MainCustomer": "Advania Norge",
       "ClientName": "Kristiansand Byggentrepenør AS",
@@ -188,7 +191,8 @@
       "TemplateKey": "",
       "Queue": "",
       "ProjectID": "",
-      "DocumentId": "298cc955-5a4d-480c-5a8d-08dba22ebdea",
+      "DocumentId": "298cc955-5a4d-480c-5a8d-08dba22ebdea", // If the upload is just a data file then this is needed.
+      "DocumentEncoding": "Windows-1252", // Set this to the encoding of the file. Only used when uploading a data file. Default is UTF-8.
       "MaxBatchSize": 1, // Number of files that can be in a download batch. Max file limit is 200.
       "MainCustomer": "",
       "ClientName": "",
@@ -246,6 +250,7 @@
       //"ProjectID": "9b83f71a-2371-434b-88ca-7afb4b63220f",
       //"ProjectID": "690e35df-73b1-4802-46a5-08da8ffc4c42",
       //"DocumentId": "298cc955-5a4d-480c-5a8d-08dba22ebdea", // If the upload is just a data file then this is needed.
+      "DocumentEncoding": "", // Set this to the encoding of the file. Only used when uploading a data file. Default is UTF-8.
       "MaxBatchSize": 2, // Number of files that can be in a download batch. Max file limit is 200.
       "RenameFile": 0, // Add Org to the name in front of the filename. To activate use 1 else 0.
       "MainCustomer": "Aksesspunkt",
@@ -305,6 +310,7 @@
       "Queue": "370",
       "ProjectID": "f4f7d432-2c37-4c19-a4d7-d1d52b961de7",
       "DocumentId": "", // If the upload is just a data file then this is needed.
+      "DocumentEncoding": "", // Set this to the encoding of the file. Only used when uploading a data file. Default is UTF-8.
       "MaxBatchSize": 2, // Number of files that can be in a download batch. Max file limit is 200.
       "RenameFile": 0, // Add Org to the name in front of the filename. To activate use 1 else 0.
       "MainCustomer": "RSAJ",
@@ -389,13 +395,14 @@
     },
     {
       "id": 7, // IMPORTANT. Hast add manually and increment by 1 each time
-      "CustomerStatus": 0, // Customer status. If active 1 if not 0.
+      "CustomerStatus": 1, // Customer status. If active 1 if not 0.
       "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSU1QX1NBSiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImpzYW1hcmFzaW5naGUraW1wX3NhakBnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjRiZjEzNzE4LTZhYWQtNDAxOS1hMzQ3LWVlMmZlMjc2OTc1MSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcHJpbWFyeWdyb3Vwc2lkIjoiZTc4YTNjZTktNjZhYS00YTdhLWExYmUtYWVjYTllMGQwNzc5IiwiZXhwIjoxNzU0NTg2NDQ2LCJpc3MiOiJ3d3cuZWRlbnRyaS5jb20iLCJhdWQiOiJodHRwczovL2NhcHR1cmUuZWRlbnRyaS5jb20vdHBzIn0.O_xI6C1Am5O8AYEzf_8vvt9dbF0c846JvRakrut9Lsg",
       "UserName": "imp_saj",
       "TemplateKey": "",
       "Queue": "372",
       "ProjectID": "f841fa4e-ca24-41cd-a7c9-8eccbff5a447",
       "DocumentId": "", // If the upload is just a data file then this is needed.
+      "DocumentEncoding": "", // Set this to the encoding of the file. Only used when uploading a data file. Default is UTF-8.
       "MaxBatchSize": 1, // Number of files that can be in a download batch. Max file limit is 200.
       "RenameFile": 0, // Add Org to the name in front of the filename. To activate use 1 else 0.
       "MainCustomer": "RSAJ",
