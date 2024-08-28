@@ -10,14 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="33275f24-18e6-4ba3-81b4-a2ab1183ffd0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/projectSettingsUpdater.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/projectSettingsUpdater.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Config/CustomerConfig.Debug.json" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Config/CustomerConfig.Debug.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsFileUploadFunctions/SendFilesToRestApiDataFile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsFileUploadFunctions/SendFilesToRestApiDataFile.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringClasses/TpsJsonDataFileUploadString.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringClasses/TpsJsonDataFileUploadString.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestDataFileFunction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestDataFileFunction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/UserConfigSetter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/UserConfigSetter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Versioning/AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Versioning/AssemblyInfo.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +60,7 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="Publish to folder.DEA.Next Publish">
+  <component name="RunManager" selected=".NET Project.DEA.Next">
     <configuration name="DEA.Next Publish" type="DotNetFolderPublish" factoryName="Publish to folder">
       <riderPublish configuration="Release" platform="Any CPU" runtime="Portable" target_folder="$PROJECT_DIR$/DEA/bin/Release/net6.0/publish/FolderPublish" target_framework="net6.0" uuid_high="-7580840089019791257" uuid_low="-7026497347669342426" />
       <method v="2" />
@@ -201,6 +194,7 @@
       <workItem from="1724043243773" duration="805000" />
       <workItem from="1724817357962" duration="826000" />
       <workItem from="1724818227434" duration="1044000" />
+      <workItem from="1724821088999" duration="768000" />
     </task>
     <servers />
   </component>
