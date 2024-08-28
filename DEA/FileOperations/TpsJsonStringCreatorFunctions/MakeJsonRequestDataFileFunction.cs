@@ -24,24 +24,25 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
         {
             try
             {
-                UserConfigSetter.Customerdetail customerDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
+                var customerDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
 
                 // Get the filename.
-                string fileName = Path.GetFileName(fileToSend.FirstOrDefault());
+                var fileName = Path.GetFileName(fileToSend.FirstOrDefault());
 
                 // Convert the file to base64 string.
-                string fileData = Convert.ToBase64String(File.ReadAllBytes(fileToSend.FirstOrDefault()));
+                var fileData = Convert.ToBase64String(File.ReadAllBytes(fileToSend.FirstOrDefault()));
 
-                TpsJsonDataFileUploadString.TpsJsonDataFileUploadObject TpsJsonRequest = new()
+                TpsJsonDataFileUploadString.TpsJsonDataFileUploadObject tpsJsonRequest = new()
                 {
                     Token = customerDetails.Token,
                     Username = customerDetails.UserName,
                     ID = customerDetails.DocumentId,
+                    Encoding = customerDetails.DocumentEncoding,
                     FileData = fileData,
                 };
 
                 // Creat the Json request.
-                string jsonRequest = JsonConvert.SerializeObject(TpsJsonRequest, Formatting.Indented);
+                var jsonRequest = JsonConvert.SerializeObject(tpsJsonRequest, Formatting.Indented);
 
                 return await SendFilesToRestApiDataFile.SendFilesToRestDataFileAsync(ftpConnect,
                                                                                      sftpConnect,

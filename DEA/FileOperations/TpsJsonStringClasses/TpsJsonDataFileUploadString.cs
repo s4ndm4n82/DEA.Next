@@ -1,13 +1,14 @@
 ﻿namespace DEA.Next.FileOperations.TpsJsonStringClasses
 {
-    internal class TpsJsonDataFileUploadString
+    internal static class TpsJsonDataFileUploadString
     {
         public class TpsJsonDataFileUploadObject
         {
-            public string Token { get; set; }
-            public string Username { get; set; }
-            public string ID { get; set; }
-            public string FileData { get; set; }
+            public string Token { get; set; } = string.Empty;
+            public string Username { get; set; } = string.Empty;
+            public string ID { get; set; } = string.Empty;
+            public string Encoding { get; set; } = "UTF-8";
+            public string FileData { get; set; } = string.Empty;
         }
     }
 }

@@ -20,6 +20,7 @@ namespace UserConfigSetterClass
             public string Queue { get; set; }
             public string ProjetID { get; set; }
             public string DocumentId { get; set; }
+            public string DocumentEncoding { get; set; } = "UTF-8";
             public int MaxBatchSize { get; set; }
             public int RenameFile { get; set; }
             public string MainCustomer { get; set; }

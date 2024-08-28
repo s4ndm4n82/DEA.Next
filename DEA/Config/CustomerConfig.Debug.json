@@ -189,6 +189,7 @@
       "Queue": "",
       "ProjectID": "",
       "DocumentId": "b996dd60-0de7-4fb3-cecb-08dcc6477513",
+      "DocumentEncoding": "Windows-1252",
       "MaxBatchSize": 1, // Number of files that can be in a download batch. Max file limit is 200.
       "MainCustomer": "",
       "ClientName": "",
