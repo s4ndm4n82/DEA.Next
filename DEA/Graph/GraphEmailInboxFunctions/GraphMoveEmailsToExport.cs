@@ -1,4 +1,5 @@
-﻿using GraphMoveEmailsrClass;
+﻿using DEA.Next.HelperClasses.OtherFunctions;
+using GraphMoveEmailsrClass;
 using Microsoft.Graph;
 using WriteLog;
 
@@ -22,29 +23,47 @@ namespace GraphMoveEmailsToExportClass
                                                           string messageId,
                                                           string messageSubject)
         {
-            if (requestBuilder == null)
+            try
             {
-                WriteLogClass.WriteToLog(0, $"Request builder is null ...", 0);
-                return false;
+                // Checking if the request builder is null.
+                if (requestBuilder == null)
+                {
+                    WriteLogClass.WriteToLog(0, $"Request builder is null ...", 0);
+                    return false;
+                }
+
+                // Getting the list of child folders.
+                IMailFolderChildFoldersCollectionPage emailMoveLocation = await requestBuilder
+                                                                                .ChildFolders
+                                                                                .Request()
+                                                                                .GetAsync();
+                // Get the ID of the export folder.
+                string exportFolderId = emailMoveLocation.FirstOrDefault(fldr => fldr.DisplayName == MagicWords.exported).Id;
+
+                // Checking if the export folder exists.
+                if (string.IsNullOrWhiteSpace(exportFolderId))
+                {
+                    WriteLogClass.WriteToLog(0, $"Export folder not found ....", 0);
+                    return false;
+                }
+
+                // Moving the email to the export folder.
+                if (await GraphMoveEmailsFolder.MoveEmailsToAnotherFolder(requestBuilder,
+                                                                          messageId,
+                                                                          exportFolderId))
+                {
+                    WriteLogClass.WriteToLog(1, $"Email {messageSubject} moved to export folder ...", 2);
+                    return true;
+                }
+                else
+                {
+                    WriteLogClass.WriteToLog(1, $"Email {messageSubject} not moved to export folder ...", 2);
+                    return false;
+                }
             }
-
-            IMailFolderChildFoldersCollectionPage emailMoveLocation = await requestBuilder
-                                                                            .ChildFolders
-                                                                            .Request()
-                                                                            .GetAsync();
-
-            string exportFolderId = emailMoveLocation.FirstOrDefault(fldr => fldr.DisplayName == "Exported").Id;
-
-            if (await GraphMoveEmailsFolder.MoveEmailsToAnotherFolder(requestBuilder,
-                                                                           messageId,
-                                                                           exportFolderId))
+            catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(1, $"Email {messageSubject} moved to export folder ...", 2);
-                return true;
-            }
-            else
-            {
-                WriteLogClass.WriteToLog(1, $"Email {messageSubject} not moved to export folder ...", 2);
+                WriteLogClass.WriteToLog(0, $"Exception error moving email: {ex.Message}", 0);
                 return false;
             }
         }

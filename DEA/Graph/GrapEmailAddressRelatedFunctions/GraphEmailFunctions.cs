@@ -18,12 +18,12 @@ namespace GraphEmailFunctions
         /// <param name="subFolderId2"></param>
         /// <param name="messageId"></param>
         /// <param name="clientEmail"></param>
-        /// <param name="atnStatus"></param>
+        /// <param name="attachmentStatus"></param>
         /// <returns></returns>
         public static async Task<(bool, string)> EmailForwarder(IMailFolderRequestBuilder requestBuilder,
                                                                 string messageId,
                                                                 string clientEmail,
-                                                                int atnStatus)
+                                                                int attachmentStatus)
         {            
             bool returnResult;
 
@@ -61,7 +61,7 @@ namespace GraphEmailFunctions
                                                       fromEmail,
                                                       clientEmail,
                                                       messageId,
-                                                      atnStatus);
+                                                      attachmentStatus);
                 // Return the result and reply email
                 return (returnResult, replyEmail);
             }

@@ -19,12 +19,17 @@ namespace UserConfigSetterClass
             public string TemplateKey { get; set; }
             public string Queue { get; set; }
             public string ProjetID { get; set; }
+            public string DocumentId { get; set; }
+            public string DocumentEncoding { get; set; } = "UTF-8";
             public int MaxBatchSize { get; set; }
+            public int RenameFile { get; set; }
             public string MainCustomer { get; set; }
             public string ClientName { get; set; }
             public int SendEmail { get; set; }
             public string ClientOrgNo { get; set; }
             public string ClientIdField { get; set; }
+            public string IdField2Value { get; set; }
+            public string ClientIdField2 { get; set; }
             public string FileDeliveryMethod { get; set; }
             public Domaindetails DomainDetails { get; set; }
             public Ftpdetails FtpDetails { get; set; }
@@ -39,18 +44,30 @@ namespace UserConfigSetterClass
         public class Ftpdetails
         {
             public string FtpType { get; set; }
+            public string FtpProfile { get; set; }
             public string FtpHostName { get; set; }
-            public string FtpHostIp { get; set; }
             public string FtpUser { get; set; }
             public string FtpPassword { get; set; }
+            public int FtpPort { get; set; }
             public int FtpFolderLoop { get; set; }
-            public string FtpMainFolder { get; set; }            
+            public string FtpMainFolder { get; set; }
+            public bool FtpMoveToSubFolder { get; set; }
+            public string FtpSubFolder { get; set; }
         }
 
         public class Emaildetails
         {
             public string EmailAddress { get; set; }
             public string EmailInboxPath { get; set; }
+            public int EmailRead { get; set; }
+            public List<string> EmailList { get; set; }
+            public List<Emailfieldlist> EmailFieldList { get; set; }
+        }
+
+        public class Emailfieldlist
+        {
+            public int FieldId { get; set; }
+            public string FieldName { get; set; }
         }
 
         public class Documentdetails
@@ -63,7 +80,7 @@ namespace UserConfigSetterClass
         {
             try
             {
-                using StreamReader fileData = new StreamReader(userConfigFilePath);
+                using StreamReader fileData = new(userConfigFilePath);
                 string userConfigData = await fileData.ReadToEndAsync();
                 T jsonData = JsonConvert.DeserializeObject<T>(userConfigData);
 

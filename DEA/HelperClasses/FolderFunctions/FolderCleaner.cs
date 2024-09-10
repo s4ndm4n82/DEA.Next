@@ -1,5 +1,7 @@
-﻿using FluentFTP;
+﻿using DEA.Next.HelperClasses.OtherFunctions;
+using FluentFTP;
 using HandleErrorFiles;
+using Renci.SshNet;
 using WriteLog;
 using WriteNamesToLog;
 
@@ -15,19 +17,16 @@ namespace FolderCleaner
         /// <param name="customerID"></param>
         /// <param name="clientEmail"></param>
         /// <returns></returns>
-
-        private static class DeliveryType
-        {
-            public const string email = "email";
-            public const string ftp = "ftp";
-        }
-
-        public static async Task<bool> GetFolders(string downloadFilePath, string[] jsonFileNames, int? customerID, string clientEmail, string deliveryType)
+        public static async Task<bool> GetFolders(string downloadFilePath,
+                                                  string[] jsonFileNames,
+                                                  int? customerID,
+                                                  string clientEmail,
+                                                  string deliveryType)
         {
             bool result = false;
             string localDownloadFilePath = downloadFilePath;
 
-            if (deliveryType == DeliveryType.email)
+            if (deliveryType == MagicWords.email)
             {
                 localDownloadFilePath = Path.GetDirectoryName(downloadFilePath);
             }
@@ -49,13 +48,17 @@ namespace FolderCleaner
         /// <param name="customerId"></param>
         /// <param name="clientEmail"></param>
         /// <returns></returns>
-        private static async Task<bool> FolderCleaningProcess(string downloadedFolderPath, string[] jsonFileList, int? customerId, string clientEmail, string deliverType)
-        {   
+        private static async Task<bool> FolderCleaningProcess(string downloadedFolderPath,
+                                                              string[] jsonFileList,
+                                                              int? customerId,
+                                                              string clientEmail,
+                                                              string deliverType)
+        {
             try
             {
                 bool fileMoveResult = true; // Store the result of move files to error folder.
 
-                if (deliverType == DeliveryType.email)
+                if (deliverType == MagicWords.email)
                 {
                     if (!AttachmentFileDelete(downloadedFolderPath, jsonFileList))
                     {
@@ -66,7 +69,7 @@ namespace FolderCleaner
                 // File delete files will be written to the log. And return false.
                 if (!DeleteFiles(downloadedFolderPath, jsonFileList))
                 {
-                    WriteLogClass.WriteToLog(0, "Delete files failed ....", 0);
+                    WriteLogClass.WriteToLog(0, "Deleting files failed ....", 1);
                     return false;
                 }
 
@@ -74,19 +77,27 @@ namespace FolderCleaner
                 if (nameList.Any()) // If there are any unmatched files.
                 {
                     // Calls the MoveFilesToErrorFolder method to start moving the missed files.
-                    fileMoveResult =  await HandleErrorFilesClass.MoveFilesToErrorFolder(downloadedFolderPath,
+                    fileMoveResult = await HandleErrorFilesClass.MoveFilesToErrorFolder(downloadedFolderPath,
                                                                                   nameList,
                                                                                   customerId,
                                                                                   clientEmail);
                     // Writes the result to the log.
                     WriteLogClass.WriteToLog(1, fileMoveResult ? $"Moved files {WriteNamesToLogClass.WriteMissedFilenames(nameList)}"
                                                                : "Moving files was unsuccessful ...", 1);
-                }                
+                }
+
+                // Checking if the folder is not empty.
+                IEnumerable<string> fileList = Directory.EnumerateFiles(downloadedFolderPath, "*.*");
+                // Return false if the folder is not empty.
+                if (fileList.Any())
+                {
+                    return false;
+                }
 
                 // Folder delete failes will be written to the log. And return false.
                 if (!DeleteEmptyFolders(downloadedFolderPath))
                 {
-                    WriteLogClass.WriteToLog(0, "Delete empty folders failed ....", 0);
+                    WriteLogClass.WriteToLog(0, "Deletting empty folders failed ....", 1);
                     return false;
                 }
 
@@ -106,18 +117,21 @@ namespace FolderCleaner
         /// <param name="ftpFileList">File list from the FTP server.</param>
         /// <param name="localFileList">File list from the local download folder.</param>
         /// <returns>The result of remove process or false.</returns>
-        public static async Task<bool> StartFtpFileDelete(AsyncFtpClient ftpConnect, IEnumerable<string> ftpFileList, string[] localFileList)
+        public static async Task<bool> StartFtpFileDelete(AsyncFtpClient? ftpConnect,
+                                                          SftpClient? sftpConnect,
+                                                          IEnumerable<string> ftpFileList,
+                                                          string[] localFileList)
         {
             try
             {
+                // Get the FTP path from the first FTP file.
+                string ftpPath = GetFtpPath(ftpFileList.FirstOrDefault());
                 // Local file name list.
                 IEnumerable<string> localFileNames = localFileList.Select(localFilePath => Path.GetFileName(localFilePath));
                 // FTP file name list.
                 IEnumerable<string> ftpFileNames = ftpFileList.Select(ftpFilePath => Path.GetFileName(ftpFilePath));
                 // Matching file names.
                 IEnumerable<string> matchingFileNames = localFileNames.Intersect(ftpFileNames);
-                // Get the FTP path from the first FTP file.
-                string ftpPath = GetFtpPath(ftpFileList.FirstOrDefault());                
                 // Result of the foreach loop.
                 bool result = false;
 
@@ -127,10 +141,22 @@ namespace FolderCleaner
                     return result;
                 }
 
-                // Delete FTP files.
-                foreach (string matchingFileName in matchingFileNames)
+                if (ftpConnect != null)
                 {
-                    result = await DeleteFtpFiles(ftpConnect, string.Concat(ftpPath, matchingFileName));
+                    // Delete FTP files.
+                    foreach (string matchingFileName in matchingFileNames)
+                    {
+                        result = await DeleteFtpFiles(ftpConnect, string.Concat(ftpPath, matchingFileName));
+                    }
+                }
+
+                if (sftpConnect != null)
+                {
+                    // Delete SFTP files.
+                    foreach (string matchingFileName in matchingFileNames)
+                    {
+                        result = await DeleteSftpFiles(sftpConnect, string.Concat(ftpPath, matchingFileName));
+                    }
                 }
                 return result;
             }
@@ -147,13 +173,13 @@ namespace FolderCleaner
         /// <param name="localFolderPath">Local download process path</param>
         /// <param name="remoteFileList">FTP files list.</param>
         /// <returns>Returns the unmatched file names list.</returns>
-        public static IEnumerable<string> CheckMissedFiles(string localFolderPath, IEnumerable<string> remoteFileList)
+        private static IEnumerable<string> CheckMissedFiles(string localFolderPath,
+                                                            IEnumerable<string> remoteFileList)
         {
             try
             {
                 // Makes the downloaded files list from the folder path.
                 IEnumerable<string> downloadedFileList = Directory.EnumerateFiles(localFolderPath, "*.*");
-
                 // Creates file name only list from the json file list.
                 IEnumerable<string> jsonFileNames = remoteFileList.Select(jsonFilePath => Path.GetFileName(jsonFilePath));
                 // Creates file name only list from the downloaded file list.
@@ -179,7 +205,8 @@ namespace FolderCleaner
         /// <param name="ftpConnect">FTP connection token.</param>
         /// <param name="ftpFileName">FTP files list.</param>
         /// <returns>Return true or false.</returns>
-        private static async Task<bool> DeleteFtpFiles(AsyncFtpClient ftpConnect, string fileToDelete)
+        private static async Task<bool> DeleteFtpFiles(AsyncFtpClient ftpConnect,
+                                                       string fileToDelete)
         {
             try
             {
@@ -193,6 +220,22 @@ namespace FolderCleaner
                 return false;
             }
 
+        }
+
+        private static async Task<bool> DeleteSftpFiles(SftpClient sftpConnect,
+                                                        string fileToDelete)
+        {
+            try
+            {
+                // Delete the SFTP file.
+                await sftpConnect.DeleteFileAsync(fileToDelete, CancellationToken.None);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(0, $"Exception at SFTP file deletetion: {ex.Message}, file name {fileToDelete}.", 0);
+                return false;
+            }
         }
 
         /// <summary>
@@ -213,7 +256,8 @@ namespace FolderCleaner
         /// </summary>
         /// <param name="downloadFolderPath">Path of the local download folder.</param>
         /// <returns>Returns true or false.</returns>
-        private static bool DeleteFiles(string downloadFolderPath, string[] jsonFileList)
+        public static bool DeleteFiles(string downloadFolderPath,
+                                        string[] jsonFileList)
         {
             // Returns if the loacal directory is missing without executing the remove code.
             if (!Directory.Exists(downloadFolderPath))
@@ -223,10 +267,17 @@ namespace FolderCleaner
 
             // Makes the downloaded files list from the folder path.
             IEnumerable<string> downloadedFileNamesList = Directory.EnumerateFiles(downloadFolderPath, "*.*");
-
+            // Creates file name only list from the downloaded file list.
             IEnumerable<string> downloadedFileNames = downloadedFileNamesList.Select(downloadedFilePath => Path.GetFileName(downloadedFilePath));
-            IEnumerable<string> matchingFileNames = jsonFileList.Intersect(jsonFileList);
-            bool result = true; // Result of the foreach loop.
+            // Checking if the jsonFileList contains file names or file names with path.
+            bool containsPath = jsonFileList.Any(filePath => filePath.Contains('/') || filePath.Contains('\\'));
+            // Creates file name only list from the json file list.
+            IEnumerable<string> jsonFileNames = containsPath ? jsonFileList.Select(jsonFilePath => Path.GetFileName(jsonFilePath)) : jsonFileList;
+            // Makes the matching file names list.
+            //IEnumerable<string> matchingFileNames = jsonFileList.Intersect(jsonFileList); <-- remove this if not needed. Do this next release
+            IEnumerable<string> matchingFileNames = jsonFileNames.Intersect(downloadedFileNames).Where(fileName => downloadedFileNames.Contains(fileName));
+            // Result of the foreach loop.
+            bool result = true;
 
             // Delete files.
             foreach (string fileName in matchingFileNames)
@@ -252,31 +303,55 @@ namespace FolderCleaner
         /// <returns></returns>
         public static bool DeleteEmptyFolders(string downloadFolderPath)
         {
-            string fullPath = Path.GetFullPath(downloadFolderPath);
-            string basePath = Path.GetDirectoryName(fullPath);
-            
-            IEnumerable<string> directoryList = Directory.EnumerateDirectories(basePath, "*", SearchOption.AllDirectories);
-
-            IEnumerable<string> emptyFolderList = directoryList.Where(dirPath => !Directory.EnumerateFileSystemEntries(dirPath).Any());
-            bool result = true;
-
-            foreach (string emptyFolder in emptyFolderList)
+            try
             {
-                try
+                bool result = true;
+                // Get the download folder name.
+                string basePath = Path.GetDirectoryName(downloadFolderPath);
+                // List all the folder with in the local download folder.
+                IEnumerable<string> directoryList = Directory.EnumerateDirectories(basePath, "*", SearchOption.AllDirectories);
+                // List all the empty folders.
+                IEnumerable<string> emptyFolderList = directoryList.Where(dirPath => !Directory.EnumerateFileSystemEntries(dirPath).Any());
+
+                if (!emptyFolderList.Any())
                 {
-                    // Delete the folders.
-                    Directory.Delete(emptyFolder);
+                    WriteLogClass.WriteToLog(1, "No empty folders found ....", 1);
+                    return false;
                 }
-                catch (Exception ex)
+
+                foreach (string emptyFolder in emptyFolderList)
                 {
-                    WriteLogClass.WriteToLog(0, $"Exception at folder delete: {ex.Message}", 0);
-                    result = false;
+                    try
+                    {
+                        // Check if the folder is not empty.
+                        IEnumerable<string> fileList = Directory.EnumerateFiles(emptyFolder, "*.*");
+                        if (fileList.Any())
+                        {
+                            WriteLogClass.WriteToLog(1, "The download folder is not empty ....", 1);
+                            continue;
+                        }
+
+                        // Delete the folders if empty.
+                        Directory.Delete(emptyFolder);
+                        WriteLogClass.WriteToLog(1, $"Local download folder {Path.GetFileName(emptyFolder)} deleted ....", 1);
+                    }
+                    catch (Exception ex)
+                    {
+                        WriteLogClass.WriteToLog(0, $"Exception at DeleteEmptyFolders foreach: {ex.Message}", 0);
+                        result = false;
+                    }
                 }
+                return result;
             }
-            return result;
+            catch (Exception ex)
+            {
+                WriteLogClass.WriteToLog(0, $"Exception at DeleteEmptyFolders: {ex.Message}", 0);
+                return false;
+            }
         }
 
-        private static bool AttachmentFileDelete(string downloadFolerPath, string[] jsonFileList)
+        private static bool AttachmentFileDelete(string downloadFolerPath,
+                                                 string[] jsonFileList)
         {
             bool result = true;
             try

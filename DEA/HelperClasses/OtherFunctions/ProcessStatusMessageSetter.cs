@@ -1,4 +1,6 @@
-﻿namespace ProcessStatusMessageSetter
+﻿using DEA.Next.HelperClasses.OtherFunctions;
+
+namespace ProcessStatusMessageSetter
 {
     enum ProcessStatusMain
     {
@@ -8,7 +10,8 @@
         EmailProcessEndedWithErrors,
         FTPProcessCompleted,
         FTPProcessEndedWithErrors,
-        TerminatedDueToErrors
+        TerminatedDueToErrors,
+        EmailWithTooManyReplies
     }
 
     enum ProcessStatusOther
@@ -19,7 +22,9 @@
         FolderEmpty,     
         EmailUploadFailed,
         EmailDownloadFailed,
-        Unsuccess
+        Unsuccess,
+        TooManyReplies,
+        FtpSubUploadFailed
     }
 
     internal class ProcessStatusMessageSetterClass
@@ -27,7 +32,7 @@
         public static string SetProcessStatusMain(int emailResult, int ftpResult)
         {
             ProcessStatusMain processStatus = GetProcessStatusMain(emailResult, ftpResult);
-            string processStatusMessage = GetStatusProcessMessageMain(processStatus, emailResult, ftpResult);
+            string processStatusMessage = GetStatusProcessMessageMain(processStatus, ftpResult);
 
             return processStatusMessage;
         }
@@ -51,6 +56,10 @@
             {
                 return ProcessStatusMain.EmailProcessEndedWithErrors;
             }
+            else if (emailResult == 5)
+            {
+                return ProcessStatusMain.EmailWithTooManyReplies;
+            }
             else
             {
                 return ProcessStatusMain.TerminatedDueToErrors;
@@ -68,7 +77,7 @@
             };
         }
 
-        private static string GetStatusProcessMessageMain(ProcessStatusMain processStatus, int emailResult, int ftpResult)
+        private static string GetStatusProcessMessageMain(ProcessStatusMain processStatus, int ftpResult)
         {
             return processStatus switch
             {
@@ -76,6 +85,7 @@
                 ProcessStatusMain.CompletedWithIssues => "Process completed with issues ....",
                 ProcessStatusMain.EmailProcessCompleted => $"Email process completed .... {GetFtpStatus(ftpResult)} ....",
                 ProcessStatusMain.EmailProcessEndedWithErrors => $"Email process ended with errors.... {GetFtpStatus(ftpResult)} ....",
+                ProcessStatusMain.EmailWithTooManyReplies => "Process completed .... Email with too many replies ....",
                 ProcessStatusMain.TerminatedDueToErrors => "Process terminated due to errors ....",
                 _ => string.Empty,
             };
@@ -99,7 +109,7 @@
         public static string SetProcessStatusOther(int statusResult, string processType)
         {
             ProcessStatusOther processStatus = GetProcessStatusOther(statusResult, processType);
-            string processStatusMessage = GetStatusProcessMessageOther(processStatus, statusResult, processType);
+            string processStatusMessage = GetStatusProcessMessageOther(processStatus);
             return processStatusMessage;
         }
 
@@ -107,26 +117,30 @@
         {
             return (statusResult, processType) switch
             {
-                (1, "ftp") or (1, "email") => ProcessStatusOther.Success,
-                (2, "ftp") => ProcessStatusOther.FtpUploadFailed,
-                (2, "email") => ProcessStatusOther.EmailUploadFailed,
-                (3, "ftp") => ProcessStatusOther.FtpDownloadFailed,
-                (3, "email") => ProcessStatusOther.EmailDownloadFailed,
-                (4, "ftp") or (4, "email") => ProcessStatusOther.FolderEmpty,
+                (1, MagicWords.ftp) or (1, MagicWords.email) => ProcessStatusOther.Success,
+                (2, MagicWords.ftp) => ProcessStatusOther.FtpUploadFailed,
+                (2, MagicWords.email) => ProcessStatusOther.EmailUploadFailed,
+                (3, MagicWords.ftp) => ProcessStatusOther.FtpDownloadFailed,
+                (3, MagicWords.email) => ProcessStatusOther.EmailDownloadFailed,
+                (4, MagicWords.ftp) or (4, MagicWords.email) => ProcessStatusOther.FolderEmpty,
+                (5, MagicWords.email) => ProcessStatusOther.TooManyReplies,
+                (6, MagicWords.ftp) => ProcessStatusOther.FtpSubUploadFailed,
                 _ => ProcessStatusOther.Unsuccess,
             };
         }
 
-        private static string GetStatusProcessMessageOther(ProcessStatusOther processStatus, int statusResult, string processType)
+        private static string GetStatusProcessMessageOther(ProcessStatusOther processStatus)
         {
             return processStatus switch
             {
                 ProcessStatusOther.Success => "Files sent to processing successfully .... ",
-                ProcessStatusOther.FtpUploadFailed => "Uploading files failed. File moved to error ....,",
+                ProcessStatusOther.FtpUploadFailed => "Uploading files failed. File moved to error folder ....,",
                 ProcessStatusOther.EmailUploadFailed => "Uploading file/s didn't complete successfully. Moved files to error folder ....",
                 ProcessStatusOther.FtpDownloadFailed => "File download failed ....",
                 ProcessStatusOther.EmailDownloadFailed => "No attachment or file type not supported. Email moved to error and forwarded to sender ....",
                 ProcessStatusOther.FolderEmpty => "Folder/Inbox empty ....",
+                ProcessStatusOther.TooManyReplies => "Too many replies. Email moved to deleted items ....",
+                ProcessStatusOther.FtpSubUploadFailed => "Uploading files failed. Local files removed ....",
                 _ => "Operation failed ....",
             };
         }
@@ -134,7 +148,7 @@
         public static int SetMessageTypeOther(int statusResult)
         {
             int msgTyp = 0;
-            bool successful = statusResult == 1 || statusResult == 3 || statusResult == 4;
+            bool successful = statusResult == 1 || statusResult == 3 || statusResult == 4 || statusResult == 5;
             bool successfulWithErrors = statusResult == 2;
 
             if (successful || successfulWithErrors)

@@ -1,58 +1,65 @@
 ﻿using System.Net;
 using FluentFTP;
 using WriteLog;
+using static DEA.Next.FTP.FtpConnectionClasses.FtpProfilesSelector;
+using static DEA.Next.FTP.FtpConnectionClasses.FtpProfileChecker;
 
 namespace ConnectFtps
 {
     internal class ConnectFtpsClass
     {
-        public static async Task<AsyncFtpClient> ConnectFtps(string hostName, string hostIp, string userName, string userPassword)
+        /// <summary>
+        /// Creates the ftp connection using FluentFTP.
+        /// </summary>
+        /// <param name="ftpProfile">FTP settings profile name</param>
+        /// <param name="hostName">FTP address to the server</param>
+        /// <param name="userName">FTP username</param>
+        /// <param name="userPassword">FTP Password</param>
+        /// <param name="ftpPort">FTP port</param>
+        /// <returns>The conncetion token.</returns>
+        public static async Task<AsyncFtpClient> ConnectFtps(string ftpProfile,
+                                                             string hostName,                                                             
+                                                             string userName,
+                                                             string userPassword,
+                                                             int ftpPort)
         {
+            // Check is the profile exists.
+            if (!await CheckProfileExistsAsync(ftpProfile))
+            {
+                return null;
+            }
+
+            // Cancellation token.
             CancellationToken cancelToken = new();
 
+            // Get the FTP profile.
+            FtpConfigurations ftpConfiguration = await GetFtpProfiles(ftpProfile);
+
+            // Create the FTP connection.
             AsyncFtpClient ftpsConnect = new()
             {
                 Host = hostName,
-                Credentials = new NetworkCredential(userName, userPassword)
+                Port = ftpPort,
+                Credentials = new NetworkCredential(userName, userPassword),
+                Config = new FtpConfig()
+                {
+                    DataConnectionType = ftpConfiguration.DataConnectionType,
+                    EncryptionMode = ftpConfiguration.EncryptionMode,
+                    ValidateAnyCertificate = ftpConfiguration.ValidateCertificate
+                }
             };
-            ftpsConnect.Config.EncryptionMode = FtpEncryptionMode.Explicit;
-            ftpsConnect.Config.ValidateAnyCertificate = true;
 
             try
             {
+                // Connect to the FTP server.
                 await ftpsConnect.Connect(cancelToken);
                 WriteLogClass.WriteToLog(1, "FTPS Connection successful ....", 3);
             }
-            catch
-            {
-                WriteLogClass.WriteToLog(1, $"Trying to connect using alt method ....", 3);
-                ftpsConnect = await ConnectFtpsAlt(hostIp, userName, userPassword);
-            }
-            return ftpsConnect;
-        }
-
-        private static async Task<AsyncFtpClient> ConnectFtpsAlt(string _hostIp, string _userName, string _userPassword)
-        {
-            CancellationToken cancelToken = new();
-
-            AsyncFtpClient ftpsConnect = new()
-            {
-                Host = _hostIp,
-                Credentials = new NetworkCredential(_userName, _userPassword)
-            };
-            ftpsConnect.Config.EncryptionMode = FtpEncryptionMode.Explicit;
-            ftpsConnect.Config.ValidateAnyCertificate = true;
-
-            try
-            {
-                await ftpsConnect.Connect(cancelToken);
-                WriteLogClass.WriteToLog(1, "FTPS Alt Connection successful ....", 3);
-            }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(0, $"Exception at FTPS connection: {ex.Message}", 0);
-                return null;
+                WriteLogClass.WriteToLog(0, $"Exception at connect FTPS: {ex.Message}", 0);
             }
+            // Return the FTP connection.
             return ftpsConnect;
         }
     }

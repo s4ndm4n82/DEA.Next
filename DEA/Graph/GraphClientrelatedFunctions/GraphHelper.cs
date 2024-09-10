@@ -2,12 +2,12 @@
 using Microsoft.Identity.Client;
 using System.Net.Http.Headers;
 using WriteLog;
-using GraphGetAttachments;
 using UserConfigSetterClass;
 using Microsoft.IdentityModel.Tokens;
 using AppConfigReader;
 using UserConfigRetriverClass;
 using DEA.Next.Graph.GraphEmailInboxFunctions;
+using DEA.Next.Graph.GraphEmailActons;
 
 namespace GraphHelper
 {
@@ -44,7 +44,7 @@ namespace GraphHelper
                 {
                     WriteLogClass.WriteToLog(0, $"Exception at graph API call: {ex.Message}", 0);
                 }
-                
+
             }
 
             if (!mainInbox.IsNullOrEmpty())
@@ -52,17 +52,17 @@ namespace GraphHelper
                 try
                 {
                     // Calls the function to read ATC emails.
-                    result = await GraphGetAttachmentsClass.GetEmailsAttacments(graphClient,
-                                                                                clientDetails.EmailDetails.EmailAddress!,
-                                                                                mainInbox,
-                                                                                subInbox1,
-                                                                                subInbox2,
-                                                                                customerId);
+                    result = await GraphGetAttachmentsClass.StartAttacmentDownload(graphClient,
+                                                                                   clientDetails.EmailDetails.EmailAddress!,
+                                                                                   mainInbox,
+                                                                                   subInbox1,
+                                                                                   subInbox2,
+                                                                                   customerId);
                     return result;
                 }
                 catch (Exception ex)
                 {
-                    WriteLogClass.WriteToLog(0, $"Exception at GraphHelper2Levels: {ex.Message}", 0);
+                    WriteLogClass.WriteToLog(0, $"Exception at ATC email read: {ex.Message}", 0);
                     return result;
                 }
             }
@@ -96,16 +96,19 @@ namespace GraphHelper
 
             public GraphApiInitializer()
             {
-                jsonData = AppConfigReaderClass.ReadAppDotConfig();                
+                jsonData = AppConfigReaderClass.ReadAppDotConfig();
             }
 
             public async Task<bool> GraphInitialize()
             {
                 AppConfigReaderClass.Graphconfig graphSettings = jsonData.GraphConfig;
 
-                bool success = await InitializeGraphClient(graphSettings.ClientId, graphSettings.Instance,
-                                                           graphSettings.TenantId, graphSettings.GraphApiUrl,
-                                                           graphSettings.ClientSecret, graphSettings.Scopes);
+                bool success = await InitializeGraphClient(graphSettings.ClientId,
+                                                           graphSettings.Instance,
+                                                           graphSettings.TenantId,
+                                                           graphSettings.GraphApiUrl,
+                                                           graphSettings.ClientSecret,
+                                                           graphSettings.Scopes);
 
                 return success;
             }
@@ -121,7 +124,12 @@ namespace GraphHelper
         /// <param name="clientSecret"></param>
         /// <param name="scopes"></param>
         /// <returns></returns>        
-        public static Task<bool> InitializeGraphClient(string clientId, string instanceId, string tenantId, string graphUrl, string clientSecret, string[] scopes)
+        public static Task<bool> InitializeGraphClient(string clientId,
+                                                       string instanceId,
+                                                       string tenantId,
+                                                       string graphUrl,
+                                                       string clientSecret,
+                                                       string[] scopes)
         {
             try
             {
@@ -188,6 +196,6 @@ namespace GraphHelper
                 numString = String.Concat(numString, rndNumber.Next(10).ToString());
             }
             return numString;
-        }        
+        }
     }
 }

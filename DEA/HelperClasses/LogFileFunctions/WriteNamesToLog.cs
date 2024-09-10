@@ -1,5 +1,4 @@
-﻿using System.Text;
-using WriteLog;
+﻿using WriteLog;
 
 namespace WriteNamesToLog
 {
@@ -20,7 +19,7 @@ namespace WriteNamesToLog
                     return "";
                 }
                 
-                return String.Join(", ", jsonFileList);
+                return string.Join(", ", jsonFileList);
             }
             catch (Exception ex)
             {

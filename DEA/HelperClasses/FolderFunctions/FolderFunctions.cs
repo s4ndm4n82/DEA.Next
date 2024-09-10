@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
-using System.IO;
 using WriteLog;
+using DEA.Next.HelperClasses.OtherFunctions;
 
 namespace FolderFunctions
 {
@@ -14,13 +14,13 @@ namespace FolderFunctions
         public static string CheckFolders(string folderSwitch)
         {
             string pathRootFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
-            string[] folderNames = { "Download", "Attachments", "FTPFiles", "Logs", "Error" };
+            string[] folderNames = { MagicWords.download, MagicWords.attachments, MagicWords.ftpfiles, MagicWords.logs, MagicWords.error };
             string folderPath;
             string returnFolderPath = string.Empty;
 
             foreach (string folderName in folderNames)
             {
-                if (folderName != "Attachments" && folderName != "FTPFiles")
+                if (folderName != MagicWords.attachments && folderName != MagicWords.ftpfiles)
                 {
                     folderPath = Path.Combine(pathRootFolder!, folderName);
                 }
@@ -44,9 +44,10 @@ namespace FolderFunctions
 
             if (!string.IsNullOrEmpty(folderSwitch))
             {
-                string folderName = folderNames.FirstOrDefault(fn => fn.ToLower().Contains(folderSwitch))!;
+                string folderName = folderNames.FirstOrDefault(fn =>
+                                               fn.IndexOf(folderSwitch, StringComparison.CurrentCultureIgnoreCase) != -1);
 
-                if (folderName != "Attachments" && folderName != "FTPFiles")
+                if (folderName != MagicWords.attachments && folderName != MagicWords.ftpfiles)
                 {
                     returnFolderPath = Path.Combine(pathRootFolder!, folderName);
                 }

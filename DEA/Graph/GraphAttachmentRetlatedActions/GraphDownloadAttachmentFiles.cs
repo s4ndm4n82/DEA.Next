@@ -48,7 +48,7 @@ namespace GraphDownloadAttachmentFilesClass
         }
 
         /// <summary>
-        /// Filter the attachments accordinmg to the accepted extensions and files size.
+        /// Filter the attachments according to the accepted extensions and files size.
         /// </summary>
         /// <param name="attachments"></param>
         /// <param name="acceptedExtensions"></param>

@@ -1,4 +1,5 @@
-﻿using Microsoft.Graph;
+﻿using AppConfigReader;
+using Microsoft.Graph;
 using FileNameCleanerClass;
 using WriteLog;
 using WriteNamesToLog;
@@ -12,9 +13,9 @@ using GraphDownloadAttachmentFilesClass;
 using GraphMoveEmailsToExportClass;
 using GraphMoveEmailsrClass;
 using Message = Microsoft.Graph.Message;
-using DEA.Next.Graph.GraphHelperClasses;
+using DEA.Next.Graph.GraphEmailActons;
 
-namespace GraphAttachmentFunctions
+namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
 {
     internal class GraphAttachmentFunctionsClass
     {
@@ -30,9 +31,10 @@ namespace GraphAttachmentFunctions
         /// <returns>A bool value (true or false)</returns>
         public static async Task<int> GetMessagesWithAttachments(IMailFolderRequestBuilder requestBuilder,
                                                                  string inEmail,
+                                                                 string deletedItemsId,
                                                                  int maxMails,
                                                                  int customerId)
-        {   
+        {
             IMailFolderMessagesCollectionPage messages;
             try
             {
@@ -64,6 +66,7 @@ namespace GraphAttachmentFunctions
                 taskReturns.Add(ProcessMessageAsync(requestBuilder,
                                                     message,
                                                     inEmail,
+                                                    deletedItemsId,
                                                     customerId));
             }
 
@@ -71,10 +74,10 @@ namespace GraphAttachmentFunctions
             int[] results = await Task.WhenAll(taskReturns);
 
             // Error code list.
-            int[] errorCodes = { 4, 3, 1 };
+            int[] errorCodes = { 5, 4, 3, 1 };
 
             // Get the first error code from the list.
-            int flag = errorCodes.FirstOrDefault(code => results.Contains(code));
+            int flag = errorCodes.LastOrDefault(code => results.Contains(code));
 
             // If there is no error code, then return 0.
             flag = flag != 0 ? flag : 0;
@@ -82,24 +85,63 @@ namespace GraphAttachmentFunctions
             return flag;
         }
 
+        /// <summary>
+        /// Start the attachment processing and downloading.
+        /// </summary>
+        /// <param name="requestBuilder">Request built</param>
+        /// <param name="message">Email message</param>
+        /// <param name="inEmail">Clients email address.</param>
+        /// <param name="deletedItemsId">Deleted items folder ID</param>
+        /// <param name="customerId">Customer ID</param>
+        /// <returns>Returns the success or error code.</returns>
         private static async Task<int> ProcessMessageAsync(IMailFolderRequestBuilder requestBuilder,
-                                                                             Message message,
-                                                                              string inEmail,
-                                                                                 int customerId)
+                                                           Message message,
+                                                           string inEmail,
+                                                           string deletedItemsId,
+                                                           int customerId)
         {
+            // Get client details.
             UserConfigSetter.Customerdetail clientDeails = await UserConfigRetriver.RetriveUserConfigById(customerId);
+
+            // Filter the attachments.
             IEnumerable<Attachment> attachmentList = GraphDownloadAttachmentFiles.FilterAttachments(message.Attachments,
                                                                                                     clientDeails.DocumentDetails.DocumentExtensions);
 
-            if (!attachmentList.Any())
+            // If there are attachments.
+            if (attachmentList.Any())
             {
                 try
                 {
+                    // If there are attachments, download them.
+                    return await DownloadAttachments(requestBuilder,
+                                                     message,
+                                                     attachmentList,
+                                                     clientDeails,
+                                                     message.Id,
+                                                     customerId);
+                }
+                catch (Exception ex)
+                {
+                    WriteLogClass.WriteToLog(0, $"Exception at ProcessMessageAsync running attachment download: {ex.Message}", 0);
+                    return 4;
+                }
+            }
+            else
+            {
+                try
+                {
+                    // Check if the email has too many replies. If so email will be moved to deleted items.
+                    if (await CheckEmailChain.CheckEmailChainAsync(requestBuilder, message.Id, deletedItemsId))
+                    {
+                        WriteLogClass.WriteToLog(0, $"Email {message.Subject} has too many replies moved to deleted items ....", 0);
+                        return 5;
+                    }
+
                     // If there are no attachments, forward the email and return 3.
                     (bool forwardSuccess, string forwardResult) = await GraphEmailFunctionsClass.EmailForwarder(requestBuilder,
                                                                                                                 message.Id,
                                                                                                                 inEmail,
-                                                                                                                customerId);
+                                                                                                                message.Attachments.Count);
                     if (!forwardSuccess)
                     {
                         // Log the failure and return an error code
@@ -122,13 +164,13 @@ namespace GraphAttachmentFunctions
                     {
                         // Move the email to the error folder. And returns a bool value.
                         bool moveSuccess = await GraphMoveEmailsFolder.MoveEmailsToAnotherFolder(requestBuilder,
-                                                                                                      message.Id,
-                                                                                                      destinationId);
+                                                                                                 message.Id,
+                                                                                                 destinationId);
                         if (!moveSuccess)
                         {
                             // Log the failure and return an error code
                             WriteLogClass.WriteToLog(1, $"Failed to move email {message.Id} to error folder.", 2);
-                            return 4; // Error code for failure
+                            return 2; // Error code for failure
                         }
                     }
 
@@ -137,25 +179,7 @@ namespace GraphAttachmentFunctions
                 catch (Exception ex)
                 {
                     WriteLogClass.WriteToLog(0, $"Exception at ProcessMessageAsync: {ex.Message}", 0);
-                    return 4;
-                }
-            }
-            else
-            {
-                try
-                {
-                    // If there are attachments, download them.
-                    return await DownloadAttachments(requestBuilder,
-                                                     message,
-                                                     attachmentList,
-                                                     clientDeails,
-                                                     message.Id,
-                                                     customerId);
-                }
-                catch (Exception ex)
-                {
-                    WriteLogClass.WriteToLog(0, $"Exception at ProcessMessageAsync running attachment downloader: {ex.Message}", 0);
-                    return 4;
+                    return 2;
                 }
             }
         }
@@ -226,16 +250,17 @@ namespace GraphAttachmentFunctions
                                                                           inMessage.Id,
                                                                           inMessage.Subject))
                     {
-                        return 0;
+                        WriteLogClass.WriteToLog(0, $"Failed to move email {inMessage.Subject} to export folder ....", 2);
+                        return 2;
                     }
 
-                    return await StartAttachmentFilesUplaod(downloadFolderPath, customerId, recipientEmail);
+                    return await StartAttachmentFilesUpload(downloadFolderPath, customerId, recipientEmail);
                 }
             }
             catch (Exception ex)
             {
                 WriteLogClass.WriteToLog(0, $"Exception at DownloadAttachments: {ex.Message}", 0);
-                return 0;
+                return 2;
             }
             return 0;
         }
@@ -247,7 +272,7 @@ namespace GraphAttachmentFunctions
         /// <param name="customerId">Customer ID</param>
         /// <param name="toEmail">Email the client has sent email to.</param>
         /// <returns></returns>
-        private static async Task<int> StartAttachmentFilesUplaod(string downloadFolderPath,
+        private static async Task<int> StartAttachmentFilesUpload(string downloadFolderPath,
                                                                   int customerId,
                                                                   string toEmail)
         {
@@ -259,8 +284,15 @@ namespace GraphAttachmentFunctions
                     return -1;
                 }
 
-                int successfullUpload = 0; // Successfull upload count.
+                int successfullUpload = 0; // Successful upload count.
+                // Reads the ClientConfig.json file. 
                 UserConfigSetter.Customerdetail batchSize = await UserConfigRetriver.RetriveUserConfigById(customerId);
+                
+                // Reads the appsettings.json file. 
+                var appJsonData = AppConfigReaderClass.ReadAppDotConfig();
+                var delayTime = appJsonData.ProgramSettings.UploadDelayTime;
+                
+                // Setting the batch count index 
                 int batchCurrentIndex = 0;
 
                 DirectoryInfo downloadDirectoryInfo = new(downloadFolderPath);
@@ -274,13 +306,15 @@ namespace GraphAttachmentFunctions
                                                     .Select(file => file.Name)
                                                     .ToArray();
 
-                    // Create a single task that uploads all fiels in the batch.
-                    int uploadResult = await FileFunctionsClass.SendToWebService(null,
-                                                                                 downloadFolderPath,
-                                                                                 customerId,
-                                                                                 currentBatchFileNames,
-                                                                                 null,
-                                                                                 toEmail);
+                    // Create a single task that uploads all files in the batch.
+                    int uploadResult = await SendToWebServiceProject.SendToWebServiceProjectAsync(null,
+                                                                                                  null,
+                                                                                                  downloadFolderPath,
+                                                                                                  customerId,
+                                                                                                  currentBatchFileNames,
+                                                                                                  null,
+                                                                                                  string.Empty,
+                                                                                                  toEmail);
                     if (uploadResult != 1)
                     {
                         WriteLogClass.WriteToLog(0, $"Upload failed with result: {uploadResult}", 0);
@@ -293,13 +327,16 @@ namespace GraphAttachmentFunctions
 
                     // Increment the batch index
                     batchCurrentIndex += batchSize.MaxBatchSize;
+                    
+                    // Delaying the next upload
+                    await Task.Delay(delayTime);
                 }
                 return successfullUpload;
             }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(0, $"Exception at StartAttachmentFilesUplaod: {ex.Message}", 0);
-                return -1;
+                WriteLogClass.WriteToLog(0, $"Exception at StartAttachmentFilesUpload: {ex.Message}", 0);
+                return 2;
             }
         }
 

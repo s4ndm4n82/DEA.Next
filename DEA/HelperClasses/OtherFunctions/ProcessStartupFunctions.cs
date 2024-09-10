@@ -1,4 +1,5 @@
-﻿using FtpFunctions;
+﻿using DEA.Next.HelperClasses.OtherFunctions;
+using FtpFunctions;
 using GraphHelper;
 using ProcessStatusMessageSetter;
 using UserConfigSetterClass;
@@ -8,11 +9,11 @@ namespace ProcessSartupFunctions
 {
     internal class ProcessStartupFunctionsClass
     {
-        readonly UserConfigSetterClass.UserConfigSetter.CustomerDetailsObject jsonDataObject;
+        readonly UserConfigSetter.CustomerDetailsObject jsonDataObject;
 
         public ProcessStartupFunctionsClass()
         {
-            jsonDataObject = UserConfigSetterClass.UserConfigSetter.ReadUserDotConfigAsync<UserConfigSetterClass.UserConfigSetter.CustomerDetailsObject>().Result;
+            jsonDataObject = UserConfigSetter.ReadUserDotConfigAsync<UserConfigSetter.CustomerDetailsObject>().Result;
         }
 
         public static async Task StartupProcess()
@@ -21,14 +22,14 @@ namespace ProcessSartupFunctions
             int emailReturnCode = 0;
 
             ProcessStartupFunctionsClass jsonData = new();
-            UserConfigSetterClass.UserConfigSetter.Customerdetail[] jsonCustomerData = jsonData.jsonDataObject.CustomerDetails;
+            UserConfigSetter.Customerdetail[] jsonCustomerData = jsonData.jsonDataObject.CustomerDetails;
 
-            IEnumerable<UserConfigSetterClass.UserConfigSetter.Customerdetail> ftpClients = jsonCustomerData.Where(ftpc => ftpc.FileDeliveryMethod!.ToLower() == ConfigSettingStrings.ftp);
-            IEnumerable<UserConfigSetterClass.UserConfigSetter.Customerdetail> emailClients = jsonCustomerData.Where(emailc => emailc.FileDeliveryMethod!.ToLower() == ConfigSettingStrings.email);
+            IEnumerable<UserConfigSetter.Customerdetail> ftpClients = jsonCustomerData.Where(ftpc => ftpc.FileDeliveryMethod!.ToLower() == MagicWords.ftp);
+            IEnumerable<UserConfigSetter.Customerdetail> emailClients = jsonCustomerData.Where(emailc => emailc.FileDeliveryMethod!.ToLower() == MagicWords.email);
 
             if (ftpClients.Any())
             {
-               ftpReturnCode = await StartFtpDownload(ftpClients);
+                ftpReturnCode = await StartFtpDownload(ftpClients);
             }
 
             if (emailClients.Any())
@@ -39,27 +40,22 @@ namespace ProcessSartupFunctions
             WriteLastStatusMessage(emailReturnCode, ftpReturnCode);
         }
 
-        private static async Task<int> StartFtpDownload(IEnumerable<UserConfigSetterClass.UserConfigSetter.Customerdetail> ftpClients)
+        private static async Task<int> StartFtpDownload(IEnumerable<UserConfigSetter.Customerdetail> ftpClients)
         {
             int ftpResult = 0;
 
             foreach (var ftpClient in ftpClients)
             {
-                if ((ftpClient.FtpDetails!.FtpType!.ToLower() == ConfigSettingStrings.ftp || ftpClient.FtpDetails!.FtpType!.ToLower() == ConfigSettingStrings.ftps) && ftpClient.CustomerStatus == 1)
+                if (ftpClient.CustomerStatus == 1)
                 {
                     ftpResult = await FtpFunctionsClass.GetFtpFiles(ftpClient.Id);
-                }
-                else
-                {
-                    // Awating to be implimented. Will be added when needed.
-                    //SftpFunctionsClass.GetSftpFiles(ftpClient.id);
                 }
             }
 
             return ftpResult;
         }
 
-        private static async Task<int> StartEmailDownload(IEnumerable<UserConfigSetterClass.UserConfigSetter.Customerdetail> emailClients)
+        private static async Task<int> StartEmailDownload(IEnumerable<UserConfigSetter.Customerdetail> emailClients)
         {
             int emailResult = 0;
 
@@ -76,14 +72,6 @@ namespace ProcessSartupFunctions
         private static void WriteLastStatusMessage(int emailResultStatus, int ftpResultStatus)
         {
             WriteLogClass.WriteToLog(ProcessStatusMessageSetterClass.SetMessageTypeMain(emailResultStatus, ftpResultStatus), $"{ProcessStatusMessageSetterClass.SetProcessStatusMain(emailResultStatus, ftpResultStatus)}\n", 1);
-        }
-
-        private static class ConfigSettingStrings
-        {
-            public const string email = "email";
-            public const string ftp = "ftp";
-            public const string sftp = "sftp";
-            public const string ftps = "ftps";
         }
     }
 }

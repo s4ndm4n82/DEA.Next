@@ -23,17 +23,26 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="FluentFTP" Version="48.0.3" />
+	  <None Remove="Graph\GraphClientrelatedFunctions\GraphHelper.cs~RFc0edc5.TMP" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="FluentFTP" Version="50.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Graph" Version="4.54.0" />
+		<PackageReference Include="Microsoft.VisualStudio.SlowCheetah" Version="4.0.50">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="Renci.SshNet.Async" Version="1.4.0" />
 		<PackageReference Include="RestSharp" Version="110.2.0" />
 		<PackageReference Include="Serilog" Version="3.1.1" />
 		<PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
 		<PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-		<PackageReference Include="SSH.NET" Version="2023.0.0" />
+		<PackageReference Include="SSH.NET" Version="2024.0.0" />
 		<PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
 		<PackageReference Include="TimeZoneConverter" Version="6.1.0" />
 	</ItemGroup>
@@ -54,6 +63,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Update="Config\CustomerConfig.Debug.json">
+		  <IsTransformFile>true</IsTransformFile>
+		  <DependentUpon>CustomerConfig.json</DependentUpon>
+		</None>
+		<None Update="Config\CustomerConfig.Release.json">
+		  <IsTransformFile>true</IsTransformFile>
+		  <DependentUpon>CustomerConfig.json</DependentUpon>
+		</None>
 		<None Update="Config\_appsettings.json.bkp">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
@@ -65,6 +82,7 @@
 		</None>
 		<None Update="Config\CustomerConfig.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<TransformOnBuild>true</TransformOnBuild>
 		</None>	
 	</ItemGroup>
 	

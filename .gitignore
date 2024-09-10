@@ -363,11 +363,10 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-# Settings json
-appsettings.*
-app.*
-CustomerConfig.*
-
 # Unwanted folers.
 SSH.NETHelpFile/
 MetadataSamples/
+
+# Settings json
+/DEA/Config/appsettings.json
+/DEA/Config/CustomerConfig.json

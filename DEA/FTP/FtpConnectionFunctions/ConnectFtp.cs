@@ -1,56 +1,67 @@
 ﻿using FluentFTP;
 using System.Net;
 using WriteLog;
+using static DEA.Next.FTP.FtpConnectionClasses.FtpProfilesSelector;
+using static DEA.Next.FTP.FtpConnectionClasses.FtpProfileChecker;
 
 namespace ConnectFtp
 {
     internal class ConnectFtpClass
     {
-        public static async Task<AsyncFtpClient> ConnectFtp(string hostName, string hostIp, string userName,string userPassword)
+        /// <summary>
+        /// Creates the ftp connection using FluentFTP.
+        /// </summary>
+        /// <param name="ftpProfile">FTP settings profile name</param>
+        /// <param name="hostName">FTP address to the server</param>
+        /// <param name="userName">FTP username</param>
+        /// <param name="userPassword">FTP Password</param>
+        /// <param name="ftpPort">FTP port</param>
+        /// <returns>The conncetion token.</returns>
+        public static async Task<AsyncFtpClient> ConnectFtp(string ftpProfile,
+                                                            string hostName,
+                                                            string userName,
+                                                            string userPassword,
+                                                            int ftpPort)
         {
+            // Check is the profile exists.
+            if (!await CheckProfileExistsAsync(ftpProfile))
+            {
+                return null;
+            }
+
+            // Cancellation token.
             CancellationToken closeToken = new();
 
+            // Get the FTP profile.
+            FtpConfigurations ftpConfiguration = await GetFtpProfiles(ftpProfile);
+
+            // Create the FTP connection.
             AsyncFtpClient ftpConnect = new()
-            {
+            {                
                 Host = hostName,
-                Credentials = new NetworkCredential(userName, userPassword)
+                Port = ftpPort,
+                Credentials = new NetworkCredential(userName, userPassword),                
+                Config = new FtpConfig()
+                {
+                    DataConnectionType = ftpConfiguration.DataConnectionType,
+                    EncryptionMode = ftpConfiguration.EncryptionMode,
+                    ValidateAnyCertificate = ftpConfiguration.ValidateCertificate
+                }
             };
+
             try
             {
+                // Makes the FTP connection.
                 await ftpConnect.Connect(closeToken);
                 WriteLogClass.WriteToLog(1, "FTP Connection successful ....", 3);
             }
-            catch
-            {
-                WriteLogClass.WriteToLog(1, $"Trying to connect using alt method ....", 3);
-                await ConnectFtpAlt(hostIp, userName, userPassword);
-            }
-
-            return ftpConnect;
-        }
-
-        private static async Task<AsyncFtpClient> ConnectFtpAlt(string _hostIp, string _userName, string _userPassword)
-        {
-            CancellationToken closeToken = new();
-
-            AsyncFtpClient ftpConnect = new()
-            {
-                Host = _hostIp,
-                Credentials = new NetworkCredential(_userName, _userPassword)
-            };
-
-            try
-            {
-                await ftpConnect.Connect(closeToken);
-                WriteLogClass.WriteToLog(1, "FTP Alt Connection successful ....", 3);
-            }
             catch (Exception ex)
             {
-                WriteLogClass.WriteToLog(0, $"Exception at FTP connection: {ex.Message}", 0);
-                ftpConnect = null;
+                WriteLogClass.WriteToLog(1, $"Exception at FTP connecting to FTP: {ex.Message}", 3);
             }
-            
+
+            // Return the FTP connection.
             return ftpConnect;
-        }
+        }        
     }
 }
