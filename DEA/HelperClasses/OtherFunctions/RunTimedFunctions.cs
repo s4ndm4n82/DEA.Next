@@ -72,7 +72,7 @@ namespace RunTimedFunctions
         private static double GetTimeDifference()
         {
             // Parse the previous run time as a TimeSpan.
-            TimeSpan previousRunTime = TimeSpan.Parse(GetJsonFileData().PreviousRunTime);
+            var previousRunTime = TimeSpan.Parse(GetJsonFileData().PreviousRunTime);
 
             // Combine the current date with the previous run time TimeSpan
             DateTime previousRunDateTime = DateTime.Today.Add(previousRunTime);
@@ -88,7 +88,7 @@ namespace RunTimedFunctions
             }
 
             // Get the difference between the current time and the previous run time.
-            TimeSpan timeDifference = currentRunTime - previousRunDateTime;
+            var timeDifference = currentRunTime - previousRunDateTime;
 
             // Get the difference in minutes.
             double timeDifferenceInMiuntes = timeDifference.TotalMinutes;

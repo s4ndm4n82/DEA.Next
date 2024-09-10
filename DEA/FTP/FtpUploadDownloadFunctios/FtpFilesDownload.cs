@@ -35,9 +35,6 @@ namespace DownloadFtpFilesClass
                                                                string ftpFolderName,
                                                                int clientID)
         {
-            // Return value.
-            int result = -1;
-
             try
             {
                 // Reads the CustomerConfig.json file.
@@ -86,7 +83,7 @@ namespace DownloadFtpFilesClass
             catch (Exception ex)
             {
                 WriteLogClass.WriteToLog(0, $"Exception at file download: {ex.Message}", 0);
-                return result;
+                return -1;
             }
         }
 
@@ -109,7 +106,7 @@ namespace DownloadFtpFilesClass
                                                    string ftpFolderName,
                                                    int clientID)
         {
-            int result = -1;
+            var result = -1;
 
             try
             {
