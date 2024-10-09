@@ -53,7 +53,7 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
                                                                             serverResponse.Content);
                 }
 
-                return await TpsServerOnSuccess.ServerOnSuccessProjectAsync(customerDetails.ProjetID,
+                return await TpsServerOnSuccess.ServerOnSuccessProjectAsync(customerDetails.ProjectID,
                                                                             customerDetails.Queue,
                                                                             fileCount,
                                                                             customerDetails.FileDeliveryMethod.ToLower(),

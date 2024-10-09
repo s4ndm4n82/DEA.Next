@@ -12,7 +12,6 @@ namespace FolderCleaner
         /// <summary>
         /// This function calls the folder cleaning function below.
         /// </summary>
-        /// <param name="localDownloadFilePath"></param>
         /// <param name="jsonFileNames"></param>
         /// <param name="customerID"></param>
         /// <param name="clientEmail"></param>
@@ -113,7 +112,7 @@ namespace FolderCleaner
         /// <summary>
         /// Start the FTP file delete process.
         /// </summary>
-        /// <param name="ftpConnect">Ftp conntection token.</param>
+        /// <param name="ftpConnect">Ftp connection token.</param>
         /// <param name="ftpFileList">File list from the FTP server.</param>
         /// <param name="localFileList">File list from the local download folder.</param>
         /// <returns>The result of remove process or false.</returns>

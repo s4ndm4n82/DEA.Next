@@ -16,7 +16,6 @@ namespace UploadFtpFilesClass
         /// <param name="currentBatch">Files downloaded from the server.</param>
         /// <param name="ftpHoldFolder">Local download folder.</param>
         /// <param name="clientId">Client ID.</param>
-        /// <param name="downloadResult"></param>
         /// <returns></returns>
         public static async Task<int> FilesUploadFuntcion(AsyncFtpClient? ftpConnect,
                                                           SftpClient? sftpConnect,
@@ -41,7 +40,7 @@ namespace UploadFtpFilesClass
             string[] localFiles = Directory.GetFiles(ftpHoldFolder, "*.*", SearchOption.TopDirectoryOnly);
 
             // If the project ID is not empty, then send the files to the web service using normal upload.
-            if (!string.IsNullOrWhiteSpace(customerdetail.ProjetID))
+            if (!string.IsNullOrWhiteSpace(customerdetail.ProjectID))
             {
                 return await SendToWebServiceProject.SendToWebServiceProjectAsync(ftpConnect,
                                                                                   sftpConnect,
