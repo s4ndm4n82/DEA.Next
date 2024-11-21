@@ -172,7 +172,7 @@
     },
     {
       "id": 4, // IMPORTANT. Hast add manually and increment by 1 each time
-      "CustomerStatus": 1, // Customer status. If active 1 if not 0.
+      "CustomerStatus": 0, // Customer status. If active 1 if not 0.
       "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZGNfaW1wb3J0IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiaW1wb3J0QGRpZ2l0YWxjYXB0dXJlLm5vIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI1OGRiZTAzOC1mNGIwLTQzNjYtYjJiYi03ZTZiZjU1YzBiOGQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6ImM0YzQwYzk0LTdiMmEtNDI0ZS04MzVlLWVkODA5MmYyODE0YyIsImV4cCI6MTc0NzgxMjIxMiwiaXNzIjoid3d3LmVkZW50cmkuY29tIiwiYXVkIjoiaHR0cHM6Ly9jYXB0dXJlLmVkZW50cmkuY29tL3RwcyJ9.lrUVYrlCoOGaOPKH0KDkODv-kXklm6R4YGdf-NKIw0Q",
       "UserName": "dc_import",
       "TemplateKey": "",
@@ -480,6 +480,60 @@
         "DocumentExtensions": [
           ".pdf",
           ".csv"
+        ]
+      }
+    },
+    {
+      "id": 8, // IMPORTANT. Hast add manually and increment by 1 each time
+      "CustomerStatus": 1, // Customer status. If active 1 if not 0.
+      "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiaW1wb3J0X2RobCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImltcG9ydEBkaGwuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiJmZWJjNWYyNS1hNzBjLTQ1MGQtODBmZi0zMWRmYmViNzYxOTAiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6IjBmZDU2ZGI0LWQ0ZjAtNDEyYS04N2I4LWVlZWUxYjQwOTZkOCIsImV4cCI6MTczNzA2NTEzOSwiaXNzIjoid3d3LmVkZW50cmkuY29tIiwiYXVkIjoiaHR0cHM6Ly9jYXB0dXJlLmVkZW50cmkuY29tL3RwcyJ9.UQA83-oEnSt3_BEwL5cewQrS3ZSjdfNP4UQG4XXkDWQ",
+      "UserName": "import_dhl",
+      "TemplateKey": "",
+      "Queue": "1",
+      "ProjetID": "dab858a5-41e2-4aad-bbfc-1315c88675d4",
+      "DocumentId": "", // If the upload is just a data file then this is needed.
+      "MaxBatchSize": 1, // Number of files that can be in a download batch. Max file limit is 200.
+      "MainCustomer": "Aksesspunkt",
+      "ClientName": "DHL",
+      "SendEmail": 1, // If 1 then send email. If 0 then use configured org.
+      "SendSubject": true,
+      "ClientOrgNo": "",
+      "ClientIdField": "",
+      "IdField2Value": "", // If this value is set then "ClientIdField2" will use the set value as its value in the TPS. If its not set then "ClientOrg" will be used as the value.
+      "ClientIdField2": "", // Don't set this if not going to be used.
+      "FileDeliveryMethod": "email",
+      "DomainDetails": {
+        "MainDomain": "https://process.edentri.com",
+        "TpsRequestUrl": "tps2/Import?"
+      },
+      "FtpDetails": {
+        "FtpType": "",
+        // The ftp profile name. Currently available profiles are profilepxe, profileepe, and profilefsv.
+        // profilepxe: Connection type PASVEX, Encription None, ValidateAnyCertificate false.
+        // profileepe: Connection type AutoActive, Encription Auto, ValidateAnyCertificate false. <-- Recommended.
+        // profilefsv: Connection type AutoPassive, Encription Explicit, ValidateAnyCertificate true.
+        "FtpProfile": "profileepe",
+        "FtpHostName": "",
+        "FtpUser": "",
+        "FtpPassword": "",
+        "FtpPort": 21, // FTP connection port.
+        "FtpFolderLoop": 0, // Use 1 to enable the folder loop, 0 to disable.
+        "FtpMainFolder": ""
+      },
+      "EmailDetails": {
+        "EmailAddress": "atc02@efakturamottak.no",
+        // You can configure the inbox path for the application to look for emails.
+        // Can go up to 3 levels. Ex: /Enkelt pående/Kristiansand Byggentrepenør AS or /Enkelt pående/Kristiansand Byggentrepenør AS/subInbox.
+        "EmailInboxPath": "/DHLTILTPS"
+      },
+      "DocumentDetails": {
+        "DocumentType": "MULTI",
+        "DocumentExtensions": [
+          ".pdf",
+          ".jpg",
+          ".jpeg",
+          ".tif",
+          ".tiff"
         ]
       }
     }
