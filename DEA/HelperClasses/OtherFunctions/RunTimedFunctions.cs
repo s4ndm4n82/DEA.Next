@@ -21,13 +21,13 @@ namespace RunTimedFunctions
             string processFileName = Path.ChangeExtension(processName, ".exe").ToLower();
 
             // Get the 'ErrorCheckInterval' value from the JSON file.
-            double timeItnterval = TimeSpan.FromMinutes(GetJsonFileData().ErrorCheckInterval).TotalMinutes;
+            double timeInterval = TimeSpan.FromMinutes(GetJsonFileData().ErrorCheckInterval).TotalMinutes;
 
             // Get the 'LogsDeleteAfter' value from the JSON file
             int dateInterval = GetJsonFileData().LogsDeleteAfter;
 
             // Check if it's time to run the process.
-            if (GetTimeDifference() < timeItnterval)
+            if (GetTimeDifference() < timeInterval)
             {
                 return false;                
             }
@@ -71,29 +71,19 @@ namespace RunTimedFunctions
         /// <returns>Return the total time in minutes.</returns>
         private static double GetTimeDifference()
         {
-            // Parse the previous run time as a TimeSpan.
-            TimeSpan previousRunTime = TimeSpan.Parse(GetJsonFileData().PreviousRunTime);
-
-            // Combine the current date with the previous run time TimeSpan
-            DateTime previousRunDateTime = DateTime.Today.Add(previousRunTime);
+            // Parse the previous run time as a DateTime.
+            DateTime previousRunDateTime = DateTime.Parse(GetJsonFileData().PreviousRunTime);
 
             // Get the current DateTime
             DateTime currentRunTime = DateTime.Now;
-
-            // If the previous run time is greater than the current time, it means the previous run was yesterday.
-            if (previousRunDateTime > currentRunTime)
-            {
-                // Subtract a day from the previous run DateTime to get the correct DateTime value.
-                previousRunDateTime = previousRunDateTime.AddDays(-1);
-            }
 
             // Get the difference between the current time and the previous run time.
             TimeSpan timeDifference = currentRunTime - previousRunDateTime;
 
             // Get the difference in minutes.
-            double timeDifferenceInMiuntes = timeDifference.TotalMinutes;
+            double timeDifferenceInMinutes = timeDifference.TotalMinutes;
 
-            return timeDifferenceInMiuntes;
+            return timeDifferenceInMinutes;
         }
 
         /// <summary>
@@ -128,7 +118,7 @@ namespace RunTimedFunctions
             {
                 FileName = Path.Combine(workingDirPath, exeFileName),
                 RedirectStandardOutput = true, // Redirects the standard output of the process.
-                UseShellExecute = false, // Makes the process launch in it's own windows and to have it's own arguments, if set to true.
+                UseShellExecute = false, // Makes the process launch in its own windows and to have its own arguments, if set to true.
                 CreateNoWindow = true, // This stops the external process from creating a window.
             };
 

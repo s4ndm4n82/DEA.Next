@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DEA.Next.HelperClasses.OtherFunctions;
+using Newtonsoft.Json;
 using WriteLog;
 
 namespace UserConfigSetterClass
@@ -14,51 +15,52 @@ namespace UserConfigSetterClass
         {
             public int Id { get; set; }
             public int CustomerStatus { get; set; }
-            public string Token { get; set; }
-            public string UserName { get; set; }
-            public string TemplateKey { get; set; }
-            public string Queue { get; set; }
-            public string ProjetID { get; set; }
-            public string DocumentId { get; set; }
+            public string Token { get; set; } = string.Empty;
+            public string UserName { get; set; } = string.Empty;
+            public string TemplateKey { get; set; } = string.Empty;
+            public string Queue { get; set; } = string.Empty;
+            public string ProjectID { get; set; } = string.Empty;
+            public string DocumentId { get; set; } = string.Empty;
             public string DocumentEncoding { get; set; } = "UTF-8";
             public int MaxBatchSize { get; set; }
             public int RenameFile { get; set; }
-            public string MainCustomer { get; set; }
-            public string ClientName { get; set; }
+            public string MainCustomer { get; set; } = string.Empty;
+            public string ClientName { get; set; } = string.Empty;
             public int SendEmail { get; set; }
-            public string ClientOrgNo { get; set; }
-            public string ClientIdField { get; set; }
-            public string IdField2Value { get; set; }
-            public string ClientIdField2 { get; set; }
-            public string FileDeliveryMethod { get; set; }
-            public Domaindetails DomainDetails { get; set; }
-            public Ftpdetails FtpDetails { get; set; }
-            public Emaildetails EmailDetails { get; set; }
-            public Documentdetails DocumentDetails { get; set; }
+            public string ClientOrgNo { get; set; } = string.Empty;
+            public string ClientIdField { get; set; } = string.Empty;
+            public string IdField2Value { get; set; } = string.Empty;
+            public string ClientIdField2 { get; set; } = string.Empty;
+            public string FileDeliveryMethod { get; set; } = string.Empty;
+            public Domaindetails DomainDetails { get; set; } = new();
+            public Ftpdetails FtpDetails { get; set; } = new();
+            public Emaildetails EmailDetails { get; set; } = new();
+            public Documentdetails DocumentDetails { get; set; } = new();
         }
         public class Domaindetails
         {
-            public string MainDomain { get; set; }
-            public string TpsRequestUrl { get; set; }
+            public string MainDomain { get; set; } = string.Empty;
+            public string TpsRequestUrl { get; set; } = string.Empty;
         }
         public class Ftpdetails
         {
-            public string FtpType { get; set; }
-            public string FtpProfile { get; set; }
-            public string FtpHostName { get; set; }
-            public string FtpUser { get; set; }
-            public string FtpPassword { get; set; }
+            public string FtpType { get; set; } = MagicWords.ftp;
+            public string FtpProfile { get; set; } = string.Empty;
+            public string FtpHostName { get; set; } = string.Empty;
+            public string FtpUser { get; set; } = string.Empty;
+            public string FtpPassword { get; set; } = string.Empty;
             public int FtpPort { get; set; }
             public int FtpFolderLoop { get; set; }
-            public string FtpMainFolder { get; set; }
+            public string FtpMainFolder { get; set; } = string.Empty;
             public bool FtpMoveToSubFolder { get; set; }
-            public string FtpSubFolder { get; set; }
+            public string FtpSubFolder { get; set; } = string.Empty;
+            public bool FtpRemoveFiles { get; set; } = true;
         }
 
         public class Emaildetails
         {
-            public string EmailAddress { get; set; }
-            public string EmailInboxPath { get; set; }
+            public string EmailAddress { get; set; } = string.Empty;
+            public string EmailInboxPath { get; set; } = string.Empty;
             public int EmailRead { get; set; }
             public List<string> EmailList { get; set; }
             public List<Emailfieldlist> EmailFieldList { get; set; }
@@ -67,13 +69,13 @@ namespace UserConfigSetterClass
         public class Emailfieldlist
         {
             public int FieldId { get; set; }
-            public string FieldName { get; set; }
+            public string FieldName { get; set; } = string.Empty;
         }
 
         public class Documentdetails
         {
-            public string DocumentType { get; set; }
-            public List<string> DocumentExtensions { get; set; }
+            public string DocumentType { get; set; } = string.Empty;
+            public List<string> DocumentExtensions { get; set; } = new();
         }
 
         public static async Task<T> ReadUserDotConfigAsync<T>(string userConfigFilePath = @".\Config\CustomerConfig.json")
@@ -81,10 +83,12 @@ namespace UserConfigSetterClass
             try
             {
                 using StreamReader fileData = new(userConfigFilePath);
-                string userConfigData = await fileData.ReadToEndAsync();
-                T jsonData = JsonConvert.DeserializeObject<T>(userConfigData);
-
-                return jsonData;
+                var userConfigData = await fileData.ReadToEndAsync();
+                var jsonData = string.IsNullOrEmpty(userConfigData)
+                    ? default(T) :
+                    JsonConvert.DeserializeObject<T>(userConfigData);
+                
+                return jsonData ?? default(T)!;
             }
             catch (IOException ioEx)
             {

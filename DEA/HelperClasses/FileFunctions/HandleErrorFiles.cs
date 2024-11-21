@@ -11,7 +11,7 @@ namespace HandleErrorFiles
         /// <summary>
         /// This is a bit different from MoveAllFilesToErrorFolder. This function moves each file to the error folder.
         /// </summary>
-        /// <param name="sourcePath">Source folder path.</param>
+        /// <param name="downloadFolderPath"></param>
         /// <param name="fileNames">source file name list.</param>
         /// <param name="customerId">Customer ID.</param>
         /// <param name="clientEmail">If user uses email to deliver files then need this to make the folder name.</param>
@@ -24,10 +24,10 @@ namespace HandleErrorFiles
             try
             {
                 // Read the user config file.
-                UserConfigSetter.Customerdetail clientDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
+                var clientDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
 
                 // Source folder path.
-                string sourcePath = downloadFolderPath;
+                var sourcePath = downloadFolderPath;
 
                 if (!File.GetAttributes(downloadFolderPath).HasFlag(FileAttributes.Directory))
                 {
@@ -35,7 +35,7 @@ namespace HandleErrorFiles
                 }
                 
                 // Source folder name.
-                string sourcFolderName = sourcePath.Split(Path.DirectorySeparatorChar).Last();
+                string sourceFolderName = sourcePath.Split(Path.DirectorySeparatorChar).Last();
                 
                 // Destination folder name.
                 string destinationFolderName = clientDetails.FileDeliveryMethod.ToLower() == MagicWords.email ? string.Concat("ID_", customerId.ToString(), " ", "Email_", clientEmail)
@@ -43,7 +43,7 @@ namespace HandleErrorFiles
                 // Destination folder path.
                 string destinationFolderPath = Path.Combine(FolderFunctionsClass.CheckFolders(MagicWords.error),
                                                             destinationFolderName,
-                                                            sourcFolderName);
+                                                            sourceFolderName);
 
                 // Create destination folder.
                 if (!Directory.Exists(destinationFolderPath))
