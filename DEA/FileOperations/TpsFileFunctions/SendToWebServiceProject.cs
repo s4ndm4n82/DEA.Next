@@ -24,18 +24,18 @@ namespace FileFunctions
             {
                 WriteLogClass.WriteToLog(1, "Starting file upload process .... ", 4);
 
-                UserConfigSetter.Customerdetail clientDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
+                var clientDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
 
                 // Get the correct org number depending on what type of download method is used.
-                string clientOrg = SendToWebServiceHelpertFunctions.SetCustomerOrg(clientDetails.FtpDetails.FtpFolderLoop,
+                var clientOrg = SendToWebServiceHelpertFunctions.SetCustomerOrg(clientDetails.FtpDetails.FtpFolderLoop,
                                                                                    clientDetails.SendEmail,
                                                                                    clientDetails.SendSubject,
                                                                                    clientDetails.ClientOrgNo,
                                                                                    ftpFolderName,
                                                                                    recipientEmail,
                                                                                    emailSubject);
-                // Creats the file list of the downloaded files.
-                string[] downloadedFiles = SendToWebServiceHelpertFunctions.MakeDownloadedFileList(clientDetails,
+                // Creates the file list of the downloaded files.
+                var downloadedFiles = SendToWebServiceHelpertFunctions.MakeDownloadedFileList(clientDetails,
                                                                                                    filePath,
                                                                                                    clientOrg,
                                                                                                    ftpFileList);

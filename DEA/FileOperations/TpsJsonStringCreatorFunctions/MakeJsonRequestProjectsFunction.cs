@@ -21,16 +21,16 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
         {
             try
             {
-                UserConfigSetter.Customerdetail customerDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
+                var customerDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
 
                 // Create the file list to be added to the Json request.
-                List<TpsJsonProjectUploadStringClass.FileList> jsonFileList = MakeJsonRequestHelperClass.ReturnFileList(filesToSend);
+                var jsonFileList = MakeJsonRequestHelperClass.ReturnFileList(filesToSend);
 
                 // Create the field list to be added to the Json request.
-                List<TpsJsonProjectUploadStringClass.FieldList> idFields = MakeJsonRequestHelperClass.ReturnIdFieldList(customerId, clientOrgNo);
+                var idFields = MakeJsonRequestHelperClass.ReturnIdFieldList(customerId, clientOrgNo);
 
                 // Create the Json request.
-                TpsJsonProjectUploadStringClass.TpsJsonProjectUploadObject TpsJsonRequest = new()
+                TpsJsonProjectUploadStringClass.TpsJsonProjectUploadObject tpsJsonRequest = new()
                 {
                     Token = customerDetails.Token,
                     Username = customerDetails.UserName,
@@ -42,7 +42,7 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
                 };
 
                 // Assigning the Json request to a string. To be handed over to the rest api.
-                string jsonResult = JsonConvert.SerializeObject(TpsJsonRequest, Formatting.Indented);
+                var jsonResult = JsonConvert.SerializeObject(tpsJsonRequest, Formatting.Indented);
 
                 // Send the Json request to the rest api.
                 return await SendFilesToRestApiProject.SendFilesToRestProjectAsync(ftpConnect,

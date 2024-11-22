@@ -24,7 +24,7 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
         {
             try
             {
-                UserConfigSetter.Customerdetail customerDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
+                var customerDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
 
                 // Creating rest api request.
                 RestClient client = new($"{customerDetails.DomainDetails.MainDomain}");
@@ -36,8 +36,8 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions
 
                 tpsRequest.AddBody(jsonResult);
 
-                RestResponse serverResponse = await client.ExecuteAsync(tpsRequest); // Executes the request and send to the server.
-                string dirPath = Directory.GetParent(fullFilePath).FullName; // Gets the directory path of the file.
+                var serverResponse = await client.ExecuteAsync(tpsRequest); // Executes the request and send to the server.
+                var dirPath = Directory.GetParent(fullFilePath).FullName; // Gets the directory path of the file.
 
                 if (serverResponse.StatusCode != HttpStatusCode.OK)
                 {
