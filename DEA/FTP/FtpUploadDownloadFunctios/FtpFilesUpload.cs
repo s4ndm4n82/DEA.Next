@@ -49,7 +49,8 @@ namespace UploadFtpFilesClass
                                                                                   matchingFileNames,
                                                                                   localFiles,
                                                                                   ftpFolderName,
-                                                                                  null!);
+                                                                                  null!,
+                                                                                  string.Empty);
             }
 
             // If the project ID is empty then it's a data file upload. Then this upload process will be used.

@@ -490,12 +490,12 @@
       "UserName": "import_dhl",
       "TemplateKey": "",
       "Queue": "1",
-      "ProjetID": "dab858a5-41e2-4aad-bbfc-1315c88675d4",
+      "ProjectID": "dab858a5-41e2-4aad-bbfc-1315c88675d4",
       "DocumentId": "", // If the upload is just a data file then this is needed.
       "MaxBatchSize": 1, // Number of files that can be in a download batch. Max file limit is 200.
       "MainCustomer": "Aksesspunkt",
       "ClientName": "DHL",
-      "SendEmail": 1, // If 1 then send email. If 0 then use configured org.
+      "SendEmail": 0, // If 1 then send email. If 0 then use configured org.
       "SendSubject": true,
       "ClientOrgNo": "",
       "ClientIdField": "",
@@ -504,7 +504,7 @@
       "FileDeliveryMethod": "email",
       "DomainDetails": {
         "MainDomain": "https://process.edentri.com",
-        "TpsRequestUrl": "tps2/Import?"
+        "TpsRequestUrl": "tps_test/import?"
       },
       "FtpDetails": {
         "FtpType": "",
@@ -521,10 +521,10 @@
         "FtpMainFolder": ""
       },
       "EmailDetails": {
-        "EmailAddress": "atc02@efakturamottak.no",
+        "EmailAddress": "apptesting@efakturamottak.no",
         // You can configure the inbox path for the application to look for emails.
         // Can go up to 3 levels. Ex: /Enkelt pående/Kristiansand Byggentrepenør AS or /Enkelt pående/Kristiansand Byggentrepenør AS/subInbox.
-        "EmailInboxPath": "/DHLTILTPS"
+        "EmailInboxPath": "/Level 1"
       },
       "DocumentDetails": {
         "DocumentType": "MULTI",

@@ -17,7 +17,8 @@ namespace FileFunctions
                                                                    string[] ftpFileList,
                                                                    string[] localFileList,
                                                                    string ftpFolderName,
-                                                                   string recipientEmail)
+                                                                   string recipientEmail,
+                                                                   string emailSubject)
         {
             try
             {
@@ -28,9 +29,11 @@ namespace FileFunctions
                 // Get the correct org number depending on what type of download method is used.
                 string clientOrg = SendToWebServiceHelpertFunctions.SetCustomerOrg(clientDetails.FtpDetails.FtpFolderLoop,
                                                                                    clientDetails.SendEmail,
+                                                                                   clientDetails.SendSubject,
                                                                                    clientDetails.ClientOrgNo,
                                                                                    ftpFolderName,
-                                                                                   recipientEmail);
+                                                                                   recipientEmail,
+                                                                                   emailSubject);
                 // Creats the file list of the downloaded files.
                 string[] downloadedFiles = SendToWebServiceHelpertFunctions.MakeDownloadedFileList(clientDetails,
                                                                                                    filePath,

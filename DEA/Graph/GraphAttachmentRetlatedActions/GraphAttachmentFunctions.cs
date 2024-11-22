@@ -254,7 +254,10 @@ namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
                         return 2;
                     }
 
-                    return await StartAttachmentFilesUpload(downloadFolderPath, customerId, recipientEmail);
+                    return await StartAttachmentFilesUpload(downloadFolderPath,
+                        customerId,
+                        recipientEmail,
+                        inMessage.Subject);
                 }
             }
             catch (Exception ex)
@@ -274,7 +277,8 @@ namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
         /// <returns></returns>
         private static async Task<int> StartAttachmentFilesUpload(string downloadFolderPath,
                                                                   int customerId,
-                                                                  string toEmail)
+                                                                  string toEmail,
+                                                                  string emailSubject)
         {
             try
             {
@@ -314,7 +318,8 @@ namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
                                                                                                   currentBatchFileNames,
                                                                                                   null,
                                                                                                   string.Empty,
-                                                                                                  toEmail);
+                                                                                                  toEmail,
+                                                                                                  emailSubject);
                     if (uploadResult != 1)
                     {
                         WriteLogClass.WriteToLog(0, $"Upload failed with result: {uploadResult}", 0);

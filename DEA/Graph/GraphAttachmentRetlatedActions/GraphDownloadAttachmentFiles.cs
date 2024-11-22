@@ -42,8 +42,8 @@ namespace GraphDownloadAttachmentFilesClass
         /// <returns></returns>
         public static string CreateDownloadPath(string recipientEmail)
         {
-            string attachmentsRoot = FolderFunctionsClass.CheckFolders("attachments");
-            string uniqueFolder = GraphHelperClass.FolderNameRnd(10);
+            var attachmentsRoot = FolderFunctionsClass.CheckFolders("attachments");
+            var uniqueFolder = GraphHelperClass.FolderNameRnd(10);
             return Path.Combine(attachmentsRoot, recipientEmail, uniqueFolder);
         }
 
@@ -55,7 +55,7 @@ namespace GraphDownloadAttachmentFilesClass
         /// <returns></returns>
         public static IEnumerable<Attachment> FilterAttachments(IEnumerable<Attachment> attachments, List<string> acceptedExtensions)
         {
-            List<string> normalizedAcceptedExtensions = acceptedExtensions.Select(ext => ext.ToLower()).ToList();
+            var normalizedAcceptedExtensions = acceptedExtensions.Select(ext => ext.ToLower()).ToList();
 
             return attachments.Where(attachment => normalizedAcceptedExtensions.Contains(Path.GetExtension(attachment.Name).ToLower())
                                      && attachment.Size > 10240
@@ -104,21 +104,19 @@ namespace GraphDownloadAttachmentFilesClass
                 }
             }
 
-            if (attachmentData is FileAttachment fileAttachment)
+            if (attachmentData is not FileAttachment fileAttachment) return false;
+            
+            try
             {
-                try
-                {
-                    await File.WriteAllBytesAsync(FileRenamer.FileRenamerFunction(filePath, fileName), fileAttachment.ContentBytes);
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    // Handle exceptions, e.g., log error and return false
-                    WriteLogClass.WriteToLog(0, $"Exception when saving file {filePath}: {ex.Message}", 0);
-                    return false;
-                }
+                await File.WriteAllBytesAsync(FileRenamer.FileRenamerFunction(filePath, fileName), fileAttachment.ContentBytes);
+                return true;
             }
-            return false;
+            catch (Exception ex)
+            {
+                // Handle exceptions, e.g., log error and return false
+                WriteLogClass.WriteToLog(0, $"Exception when saving file {filePath}: {ex.Message}", 0);
+                return false;
+            }
         }        
     }
 }

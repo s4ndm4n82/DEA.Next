@@ -27,6 +27,7 @@ namespace UserConfigSetterClass
             public string MainCustomer { get; set; } = string.Empty;
             public string ClientName { get; set; } = string.Empty;
             public int SendEmail { get; set; }
+            public bool SendSubject { get; set; }
             public string ClientOrgNo { get; set; } = string.Empty;
             public string ClientIdField { get; set; } = string.Empty;
             public string IdField2Value { get; set; } = string.Empty;
