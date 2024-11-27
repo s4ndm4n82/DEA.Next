@@ -11,11 +11,6 @@
   <component name="ChangeListManager">
     <list default="true" id="33275f24-18e6-4ba3-81b4-a2ab1183ffd0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Config/CustomerConfig.Debug.json" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Config/CustomerConfig.Debug.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceProject.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceProject.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsFileUploadFunctions/SendFilesToRestApiProject.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsFileUploadFunctions/SendFilesToRestApiProject.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestProjectsFunction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestProjectsFunction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Versioning/AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Versioning/AssemblyInfo.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,6 +28,18 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;s4ndm4n82&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:s4ndm4n82/DEA.Next.git&quot;,
+    &quot;accountId&quot;: &quot;2c14f9a1-2d6a-4253-8bf5-15836f27a58f&quot;
+  }
+}</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
@@ -46,26 +53,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Executable.DEA.Next.executor": "Run",
-    ".NET Project.DEA.Next.executor": "Debug",
-    "Publish to IIS.DEA.Next: FolderProfile.executor": "Run",
-    "Publish to folder.DEA.Next Publish.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "com.codeium.enabled": "true",
-    "database.data.extractors.current.export.id": "JSON-Groovy.json.groovy",
-    "git-widget-placeholder": "issue__57",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "settings.json.schema",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Executable.DEA.Next.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Project.DEA.Next.executor&quot;: &quot;Debug&quot;,
+    &quot;Publish to IIS.DEA.Next: FolderProfile.executor&quot;: &quot;Run&quot;,
+    &quot;Publish to folder.DEA.Next Publish.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;com.codeium.enabled&quot;: &quot;true&quot;,
+    &quot;database.data.extractors.current.export.id&quot;: &quot;JSON-Groovy.json.groovy&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;issue__57&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.json.schema&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Publish to folder.DEA.Next Publish">
     <configuration name="DEA.Next Publish" type="DotNetFolderPublish" factoryName="Publish to folder">
       <riderPublish configuration="Release" platform="Any CPU" runtime="Portable" target_folder="$PROJECT_DIR$/DEA/bin/Release/net6.0/publish/FolderPublish" target_framework="net6.0" uuid_high="-7580840089019791257" uuid_low="-7026497347669342426" />
@@ -208,6 +215,9 @@
       <workItem from="1732185678880" duration="158000" />
       <workItem from="1732261885145" duration="3890000" />
       <workItem from="1732266199973" duration="2423000" />
+      <workItem from="1732691062150" duration="2260000" />
+      <workItem from="1732693458244" duration="673000" />
+      <workItem from="1732694218165" duration="167000" />
     </task>
     <servers />
   </component>
