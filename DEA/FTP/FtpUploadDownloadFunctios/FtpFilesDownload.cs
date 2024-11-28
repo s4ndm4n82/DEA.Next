@@ -44,7 +44,6 @@ namespace DownloadFtpFilesClass
                 
                 // Reads the appsettings.json file.
                 var appJsonData = AppConfigReaderClass.ReadAppDotConfig();
-                var delayTime = appJsonData.ProgramSettings.UploadDelayTime;
                 
                 // Allowed file extentions
                 List<string> allowedFileExtensions = jsonData.DocumentDetails.DocumentExtensions;
@@ -99,9 +98,6 @@ namespace DownloadFtpFilesClass
 
                     // Increment the batch index
                     batchCurrentIndex += batchSize;
-                    
-                    // Delaying the next upload
-                    await Task.Delay(delayTime);
                 }
                 return result;
             }

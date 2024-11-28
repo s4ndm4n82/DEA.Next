@@ -84,6 +84,10 @@ namespace DEA.Next.FileOperations.TpsServerReponseFunctions
                         WriteLogClass.WriteToLog(0,
                             "Moving files to FTP sub folder failed ....",
                             1);
+                        await FolderCleanerClass.StartFtpFileDelete(ftpConnect,
+                            sftpConnect,
+                            ftpFileList,
+                            localFileList);
                         return -1;
                     // Deletes the file from local hold folder when sending is successful.
                     case MagicWords.ftp when !await FolderCleanerClass.GetFolders(downloadFolderPath,

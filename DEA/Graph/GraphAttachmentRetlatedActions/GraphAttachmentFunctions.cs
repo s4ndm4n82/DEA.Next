@@ -294,7 +294,6 @@ namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
                 
                 // Reads the appsettings.json file. 
                 var appJsonData = AppConfigReaderClass.ReadAppDotConfig();
-                var delayTime = appJsonData.ProgramSettings.UploadDelayTime;
                 
                 // Setting the batch count index 
                 int batchCurrentIndex = 0;
@@ -332,9 +331,6 @@ namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
 
                     // Increment the batch index
                     batchCurrentIndex += batchSize.MaxBatchSize;
-                    
-                    // Delaying the next upload
-                    await Task.Delay(delayTime);
                 }
                 return successfullUpload;
             }

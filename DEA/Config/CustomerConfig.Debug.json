@@ -492,7 +492,7 @@
       "Queue": "6",
       "ProjectID": "0c298408-76b9-4f4c-9941-edb101126329",
       "DocumentId": "", // If the upload is just a data file then this is needed.
-      "MaxBatchSize": 1, // Number of files that can be in a download batch. Max file limit is 200.
+      "MaxBatchSize": 20, // Number of files that can be in a download batch. Max file limit is 200.
       "MainCustomer": "Aksesspunkt",
       "ClientName": "DHL",
       "SendEmail": 0, // If 1 then send email. If 0 then use configured org.
