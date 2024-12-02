@@ -7,11 +7,6 @@ using DisplayLogoClass;
 using AppConfigReader;
 using VersionIncrementerClass;
 using DEA.Next.HelperClasses.InternetLineChecker;
-
-// DEA.Next
-// ~~~~~~~~
-// TODO 1: Rewrite the code to match Graph v5.0.0. +
-
 // Increments the version number
 VersionIncrementer.IncrementVersion();
 // Displays the logo
@@ -20,10 +15,10 @@ DisplayLogo.Logo();
 // Checks and creates the main folders that used by the app.
 FolderFunctionsClass.CheckFolders(null!);
 // Get the set amount of allowed error folders.
-AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
-int maxErrorFolders = jsonData.ProgramSettings.MaxErrorFolders;
+var jsonData = AppConfigReaderClass.ReadAppDotConfig();
+var maxErrorFolders = jsonData.ProgramSettings.MaxErrorFolders;
 // Checks how many folders are in the error folder.
-int errorFolderItemCount = ErrorFolderCheckerClass.ErrorFolderChecker().Item1.Count();
+var errorFolderItemCount = ErrorFolderCheckerClass.ErrorFolderChecker().Item1.Count();
 // If there are more than the set amount of allowed error folders then call the dea timed processes.
 if (errorFolderItemCount > maxErrorFolders)
 {

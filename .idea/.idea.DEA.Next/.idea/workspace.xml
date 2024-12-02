@@ -10,13 +10,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="33275f24-18e6-4ba3-81b4-a2ab1183ffd0" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/DEA/Data/DataContext.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DEA/Entities/CustomerDetails.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DEA/Entities/Documentdetails.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DEA/Entities/Emaildetails.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DEA/Entities/FtpDetails.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Config/CustomerConfig.Debug.json" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Config/CustomerConfig.Debug.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/FTP/FtpUploadDownloadFunctios/FtpFilesDownload.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FTP/FtpUploadDownloadFunctios/FtpFilesDownload.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsServerReponseFunctions/TpsServerOnSuccess.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsServerReponseFunctions/TpsServerOnSuccess.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Graph/GraphAttachmentRetlatedActions/GraphAttachmentFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GraphAttachmentRetlatedActions/GraphAttachmentFunctions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/AppConfigReader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/AppConfigReader.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Versioning/AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Versioning/AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/DEA.Next.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/DEA.Next.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Graph/GraphClientrelatedFunctions/GraphHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GraphClientrelatedFunctions/GraphHelper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEACleaner/DEACleaner.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DEACleaner/DEACleaner.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEAMailer/DEAMailer.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DEAMailer/DEAMailer.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,8 +53,7 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/a0b45f29f34f594814a7b1fbc25fe5ef3c18257956ed4f4fbfa68717db58/DbContext.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/ba3f23566a5654bfd8c7a49a51dc813be89635b01cf819485c5a61f61e4f53/TimeSpanParse.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
@@ -69,7 +74,7 @@
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;com.codeium.enabled&quot;: &quot;true&quot;,
     &quot;database.data.extractors.current.export.id&quot;: &quot;JSON-Groovy.json.groovy&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;issue__58&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;card__1&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -79,7 +84,7 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="Publish to folder.DEA.Next Publish">
+  <component name="RunManager" selected=".NET Project.DEA.Next">
     <configuration name="DEA.Next Publish" type="DotNetFolderPublish" factoryName="Publish to folder">
       <riderPublish configuration="Release" platform="Any CPU" runtime="Portable" target_folder="$PROJECT_DIR$/DEA/bin/Release/net6.0/publish/FolderPublish" target_framework="net6.0" uuid_high="-7580840089019791257" uuid_low="-7026497347669342426" />
       <method v="2" />
@@ -229,6 +234,10 @@
       <workItem from="1732696113481" duration="2770000" />
       <workItem from="1732758001760" duration="1438000" />
       <workItem from="1732759622874" duration="2939000" />
+      <workItem from="1733112982311" duration="653000" />
+      <workItem from="1733115693645" duration="2770000" />
+      <workItem from="1733126321811" duration="179000" />
+      <workItem from="1733126709279" duration="6830000" />
     </task>
     <servers />
   </component>
@@ -244,13 +253,13 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/DEA/Graph/GraphAttachmentRetlatedActions/GraphAttachmentFunctions.cs</url>
-          <line>334</line>
+          <line>333</line>
           <properties documentPath="F:\Users\S4NDM4N\Development\DEA.Next\DEA\Graph\GraphAttachmentRetlatedActions\GraphAttachmentFunctions.cs" containingFunctionPresentation="Method 'StartAttachmentFilesUpload'">
             <startOffsets>
-              <option value="16960" />
+              <option value="16942" />
             </startOffsets>
             <endOffsets>
-              <option value="16985" />
+              <option value="16943" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="4" />

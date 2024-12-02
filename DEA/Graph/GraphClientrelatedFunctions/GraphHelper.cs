@@ -47,7 +47,7 @@ namespace GraphHelper
 
             }
 
-            if (!mainInbox.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(mainInbox))
             {
                 try
                 {
