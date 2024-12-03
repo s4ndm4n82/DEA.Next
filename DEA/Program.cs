@@ -1,12 +1,22 @@
-﻿using WriteLog;
-using FolderFunctions;
-using RunTimedFunctions;
-using ProcessSartupFunctions;
-using ErrorFolderChecker;
-using DisplayLogoClass;
-using AppConfigReader;
-using VersionIncrementerClass;
+﻿using AppConfigReader;
+using DEA.Next.Extensions;
 using DEA.Next.HelperClasses.InternetLineChecker;
+using DisplayLogoClass;
+using ErrorFolderChecker;
+using FolderFunctions;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using ProcessSartupFunctions;
+using RunTimedFunctions;
+using VersionIncrementerClass;
+using WriteLog;
+
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddApplicationServices(builder.Configuration.AddJsonFile(@".\Config\appsettings.json").Build());
+
+var app = builder.Build();
+
 // Increments the version number
 VersionIncrementer.IncrementVersion();
 // Displays the logo
@@ -41,3 +51,5 @@ else
     WriteLogClass.WriteToLog(0, "No working internet connection. Exiting ....", 0);
     Environment.Exit(0);
 }
+
+app.Run();

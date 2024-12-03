@@ -28,13 +28,13 @@
 
 	<ItemGroup>
 		<PackageReference Include="FluentFTP" Version="52.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
 		<PackageReference Include="Microsoft.Graph" Version="4.54.0" />
 		<PackageReference Include="Microsoft.Identity.Client" Version="4.66.2" />
 		<PackageReference Include="Microsoft.VisualStudio.SlowCheetah" Version="4.0.50">

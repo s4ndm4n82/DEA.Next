@@ -10,8 +10,8 @@ namespace AppConfigUpdater
         {
             try
             {
-                AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
-                AppConfigReaderClass.Timingsettings timeSettings = jsonData.TimingSettings;
+                var jsonData = AppConfigReaderClass.ReadAppDotConfig();
+                var timeSettings = jsonData.TimingSettings;
 
                 if (lastRunDate != timeSettings.PreviousRunDate && !string.IsNullOrEmpty(lastRunDate) && string.IsNullOrEmpty(lastRunTime))
                 {
@@ -23,7 +23,7 @@ namespace AppConfigUpdater
                     timeSettings.PreviousRunTime = lastRunTime;
                 }
 
-                string updatedJson = JsonConvert.SerializeObject(jsonData, Formatting.Indented);
+                var updatedJson = JsonConvert.SerializeObject(jsonData, Formatting.Indented);
 
                 File.WriteAllText(@".\Config\appsettings.json", updatedJson);
                 WriteLogClass.WriteToLog(1, "Config file updated ....\n", 1);

@@ -370,3 +370,5 @@ MetadataSamples/
 # Settings json
 /DEA/Config/appsettings.json
 /DEA/Config/CustomerConfig.json
+/DEA/Config/CustomerConfig.Debug.json
+/DEA/Config/CustomerConfig.Release.json

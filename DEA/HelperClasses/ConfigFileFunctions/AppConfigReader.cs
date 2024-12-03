@@ -77,7 +77,7 @@ namespace AppConfigReader
             AppSettingsRoot? jsonAppData = default;
             try
             {
-                string jsonFileData = File.ReadAllText(@".\Config\appsettings.json");
+                var jsonFileData = File.ReadAllText(@".\Config\appsettings.json");
                 return jsonAppData = JsonConvert.DeserializeObject<AppSettingsRoot>(jsonFileData)!;
             }
             catch (Exception ex)

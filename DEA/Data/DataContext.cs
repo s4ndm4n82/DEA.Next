@@ -5,5 +5,5 @@ namespace DEA.Next.Data;
 
 public class DataContext(DbContextOptions options) : DbContext(options)
 {
-    public DbSet<CustomerDetails> CustomerDetails { get; set; }
+    public DbSet<CustomerDetails> CustomerDetails { get; init; }
 }

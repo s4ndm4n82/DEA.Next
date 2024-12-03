@@ -10,19 +10,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="33275f24-18e6-4ba3-81b4-a2ab1183ffd0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/DEA/Data/DataContext.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DEA/Entities/CustomerDetails.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DEA/Entities/Documentdetails.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DEA/Entities/Emaildetails.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DEA/Entities/FtpDetails.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/DEA/Data/Migrations/20241203094340_FirstMigration.Designer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DEA/Data/Migrations/20241203094340_FirstMigration.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DEA/Data/Migrations/DataContextModelSnapshot.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DEA/Extensions/ApplicationServiceExtension.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/DEA.Next.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/DEA.Next.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Graph/GraphClientrelatedFunctions/GraphHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GraphClientrelatedFunctions/GraphHelper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Data/DataContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Data/DataContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Entities/CustomerDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Entities/CustomerDetails.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Entities/Documentdetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Entities/Documentdetails.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Entities/Emaildetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Entities/Emaildetails.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Entities/FtpDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Entities/FtpDetails.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/AppConfigReader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/AppConfigReader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/AppConfigUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/AppConfigUpdater.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEACleaner/DEACleaner.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DEACleaner/DEACleaner.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEAMailer/DEAMailer.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DEAMailer/DEAMailer.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +57,9 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/a0b45f29f34f594814a7b1fbc25fe5ef3c18257956ed4f4fbfa68717db58/DbContext.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/ba3f23566a5654bfd8c7a49a51dc813be89635b01cf819485c5a61f61e4f53/TimeSpanParse.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f53868e293d4af914f24c3e72181cca5136758f5d8ed89e4a38e452cb12847e2/HostApplicationBuilder.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -80,7 +84,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.codeium.AppSettingsConfigurable&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -237,13 +241,27 @@
       <workItem from="1733112982311" duration="653000" />
       <workItem from="1733115693645" duration="2770000" />
       <workItem from="1733126321811" duration="179000" />
-      <workItem from="1733126709279" duration="6830000" />
+      <workItem from="1733126709279" duration="7426000" />
+      <workItem from="1733194184892" duration="720000" />
+      <workItem from="1733195405132" duration="367000" />
+      <workItem from="1733195801263" duration="60000" />
+      <workItem from="1733196087042" duration="4268000" />
+      <workItem from="1733204555106" duration="178000" />
+      <workItem from="1733204809293" duration="1471000" />
+      <workItem from="1733207653217" duration="83000" />
+      <workItem from="1733207785329" duration="3897000" />
+      <workItem from="1733214518006" duration="1803000" />
+      <workItem from="1733216798061" duration="1678000" />
+      <workItem from="1733218777545" duration="2317000" />
+      <workItem from="1733222842373" duration="100000" />
+      <workItem from="1733222992194" duration="445000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
