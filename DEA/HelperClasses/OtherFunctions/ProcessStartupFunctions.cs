@@ -1,4 +1,6 @@
-﻿using DEA.Next.HelperClasses.OtherFunctions;
+﻿using DEA.Next.Data;
+using DEA.Next.Entities;
+using DEA.Next.HelperClasses.OtherFunctions;
 using FtpFunctions;
 using GraphHelper;
 using ProcessStatusMessageSetter;
@@ -9,30 +11,32 @@ namespace ProcessSartupFunctions
 {
     internal class ProcessStartupFunctionsClass
     {
-        readonly UserConfigSetter.CustomerDetailsObject jsonDataObject;
+        private readonly DataContext _context;
 
-        public ProcessStartupFunctionsClass()
+        public ProcessStartupFunctionsClass(DataContext context)
         {
-            jsonDataObject = UserConfigSetter.ReadUserDotConfigAsync<UserConfigSetter.CustomerDetailsObject>().Result;
+            _context = context;
         }
 
-        public static async Task StartupProcess()
+        public async Task StartupProcess()
         {
-            int ftpReturnCode = 0;
-            int emailReturnCode = 0;
+            var ftpReturnCode = 0;
+            var emailReturnCode = 0;
+            
+            var ftpClients = _context.CustomerDetails
+                .Where(f => f.FileDeliveryMethod
+                    .Equals(MagicWords.ftp, StringComparison.OrdinalIgnoreCase)).ToList();
 
-            ProcessStartupFunctionsClass jsonData = new();
-            UserConfigSetter.Customerdetail[] jsonCustomerData = jsonData.jsonDataObject.CustomerDetails;
+            var emailClients = _context.CustomerDetails
+                .Where(e => e.FileDeliveryMethod
+                    .Equals(MagicWords.email, StringComparison.OrdinalIgnoreCase)).ToList();
 
-            IEnumerable<UserConfigSetter.Customerdetail> ftpClients = jsonCustomerData.Where(ftpc => ftpc.FileDeliveryMethod!.ToLower() == MagicWords.ftp);
-            IEnumerable<UserConfigSetter.Customerdetail> emailClients = jsonCustomerData.Where(emailc => emailc.FileDeliveryMethod!.ToLower() == MagicWords.email);
-
-            if (ftpClients.Any())
+            if (ftpClients.Count != 0)
             {
                 ftpReturnCode = await StartFtpDownload(ftpClients);
             }
-
-            if (emailClients.Any())
+            
+            if (emailClients.Count != 0)
             {
                 emailReturnCode = await StartEmailDownload(emailClients);
             }
@@ -40,31 +44,25 @@ namespace ProcessSartupFunctions
             WriteLastStatusMessage(emailReturnCode, ftpReturnCode);
         }
 
-        private static async Task<int> StartFtpDownload(IEnumerable<UserConfigSetter.Customerdetail> ftpClients)
+        private static async Task<int> StartFtpDownload(List<CustomerDetails> ftpClients)
         {
-            int ftpResult = 0;
+            var ftpResult = 0;
 
-            foreach (var ftpClient in ftpClients)
+            foreach (var ftpClient in ftpClients.Where(ftpClient => ftpClient.Status))
             {
-                if (ftpClient.CustomerStatus == 1)
-                {
-                    ftpResult = await FtpFunctionsClass.GetFtpFiles(ftpClient.Id);
-                }
+                ftpResult = await FtpFunctionsClass.GetFtpFiles(ftpClient.Id);
             }
 
             return ftpResult;
         }
 
-        private static async Task<int> StartEmailDownload(IEnumerable<UserConfigSetter.Customerdetail> emailClients)
+        private static async Task<int> StartEmailDownload(List<CustomerDetails> emailClients)
         {
-            int emailResult = 0;
+            var emailResult = 0;
 
-            foreach (var emailClient in emailClients)
+            foreach (var emailClient in emailClients.Where(emailClient => emailClient.Status))
             {
-                if (emailClient.CustomerStatus == 1)
-                {
-                    emailResult = await GraphHelperClass.InitializGetAttachment(emailClient.Id);
-                }
+                emailResult = await GraphHelperClass.InitializGetAttachment(emailClient.Id);
             }
             return emailResult;
         }

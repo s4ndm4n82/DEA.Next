@@ -19,9 +19,9 @@ namespace FtpFunctions
         /// <summary>
         /// This function is created to get the ftp files and this starts the ftp file download process.
         /// </summary>
-        /// <param name="Customerid"></param>
+        /// <param name="customerId"></param>
         /// <returns></returns>
-        public static async Task<int> GetFtpFiles(int customerId)
+        public static async Task<int> GetFtpFiles(Guid customerId)
         {
             // Starts the file download process if the client details are not empty.
             if (customerId != default)
@@ -34,18 +34,18 @@ namespace FtpFunctions
         /// <summary>
         /// Start the FTP file download process.
         /// </summary>
-        /// <param name="FtpClientDetails">All the client details from the config file.</param>
+        /// <param name="clientId"></param>
         /// <returns>Return 1 or 0.</returns>
-        private static async Task<int> InitiateFtpDownload(int clientId)
+        private static async Task<int> InitiateFtpDownload(Guid clientId)
         {
             // Return result.
-            int downloadResult = 0;
+            var downloadResult = 0;
             // FTP connection token
             AsyncFtpClient? ftpConnectToken = null;
             // SFTP connection token
             SftpClient? sftpConnectToken = null;
 
-            Ftpdetails ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(clientId);
+            var ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(clientId);
 
             string downloadFolder = Path.Combine(FolderFunctionsClass.CheckFolders(MagicWords.ftp)
                                                 , ftpDetails.FtpMainFolder.Trim('/').Replace('/', '\\'));

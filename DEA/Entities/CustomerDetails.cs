@@ -32,9 +32,11 @@ public class CustomerDetails
     public string FieldTwoName { get; init; } = string.Empty;
     [MaxLength(100)]
     public required string Domain { get; init; }
+    [MaxLength(10)]
+    public string FileDeliveryMethod { get; set; } = string.Empty;
     public DateTime CreatedDate { get; init; } = DateTime.UtcNow;
     public DateTime ModifiedDate { get; set; } = DateTime.UtcNow;
     public List<Documentdetails> DocumentDetails { get; init; } = [];
     public List<FtpDetails> FtpDetails { get; init; } = [];
-    public List<Emaildetails> EmailDetails { get; init; } = [];
+    public List<EmailDetails> EmailDetails { get; init; } = [];
 }

@@ -3,6 +3,7 @@ using System;
 using DEA.Next.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DEA.Next.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20241205074925_FirstMigrationUpdate1")]
+    partial class FirstMigrationUpdate1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -135,7 +138,7 @@ namespace DEA.Next.Data.Migrations
                     b.ToTable("Documentdetails");
                 });
 
-            modelBuilder.Entity("DEA.Next.Entities.EmailDetails", b =>
+            modelBuilder.Entity("DEA.Next.Entities.Emaildetails", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -158,7 +161,7 @@ namespace DEA.Next.Data.Migrations
 
                     b.HasIndex("CustomerDetailsId");
 
-                    b.ToTable("EmailDetails");
+                    b.ToTable("Emaildetails");
                 });
 
             modelBuilder.Entity("DEA.Next.Entities.FtpDetails", b =>
@@ -226,7 +229,7 @@ namespace DEA.Next.Data.Migrations
                     b.Navigation("CustomerDetails");
                 });
 
-            modelBuilder.Entity("DEA.Next.Entities.EmailDetails", b =>
+            modelBuilder.Entity("DEA.Next.Entities.Emaildetails", b =>
                 {
                     b.HasOne("DEA.Next.Entities.CustomerDetails", "CustomerDetails")
                         .WithMany("EmailDetails")

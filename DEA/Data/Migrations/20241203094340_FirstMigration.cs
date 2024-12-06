@@ -60,7 +60,7 @@ namespace DEA.Next.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Emaildetails",
+                name: "EmailDetails",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -112,7 +112,7 @@ namespace DEA.Next.Data.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Emaildetails_CustomerDetailsId",
-                table: "Emaildetails",
+                table: "EmailDetails",
                 column: "CustomerDetailsId");
 
             migrationBuilder.CreateIndex(
@@ -128,7 +128,7 @@ namespace DEA.Next.Data.Migrations
                 name: "Documentdetails");
 
             migrationBuilder.DropTable(
-                name: "Emaildetails");
+                name: "EmailDetails");
 
             migrationBuilder.DropTable(
                 name: "FtpDetails");

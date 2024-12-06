@@ -1,10 +1,11 @@
-﻿using UserConfigSetterClass;
+﻿using DEA.Next.Entities;
+using UserConfigSetterClass;
 
 namespace UserConfigRetriverClass
 {
     internal class UserConfigRetriver
     {
-        public static async Task<UserConfigSetter.Customerdetail> RetriveUserConfigById(int? cid)
+        public static async Task<FtpDetails> RetriveUserConfigById(int? cid)
         {
             if (cid == 0)
             {

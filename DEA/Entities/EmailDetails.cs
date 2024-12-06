@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DEA.Next.Entities;
 
-public class Emaildetails
+public class EmailDetails
 {
     public Guid Id { get; set; }
     [MaxLength(50)]
