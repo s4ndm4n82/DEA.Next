@@ -10,19 +10,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="33275f24-18e6-4ba3-81b4-a2ab1183ffd0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/DEA/Classes/CustomerDataClass.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DEA/Data/CustomerDetailsRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DEA/Interfaces/IUserConfigRepository.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/20241203094340_FirstMigration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Data/Migrations/20241203094340_FirstMigration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/DataContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Data/Migrations/DataContextModelSnapshot.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Entities/CustomerDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Entities/CustomerDetails.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Entities/Emaildetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Entities/EmailDetails.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Data/CustomerDetailsRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Data/CustomerDetailsRepository.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Extensions/ApplicationServiceExtension.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Extensions/ApplicationServiceExtension.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/FTP/FtpFileRelatedFunctions/FtpFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FTP/FtpFileRelatedFunctions/FtpFunctions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/UserConfigRetriverClass.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/UserConfigRetriverClass.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/ProcessStartupFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/ProcessStartupFunctions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Interfaces/IUserConfigRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Interfaces/IUserConfigRepository.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -281,6 +273,9 @@
       <workItem from="1733473696070" duration="2370000" />
       <workItem from="1733478692677" duration="262000" />
       <workItem from="1733479001737" duration="2809000" />
+      <workItem from="1733713863143" duration="125000" />
+      <workItem from="1733722539458" duration="214000" />
+      <workItem from="1733722819293" duration="1967000" />
     </task>
     <servers />
   </component>

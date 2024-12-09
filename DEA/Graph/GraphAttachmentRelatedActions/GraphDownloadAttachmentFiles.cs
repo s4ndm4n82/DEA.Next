@@ -1,4 +1,5 @@
-﻿using FolderFunctions;
+﻿using DEA.Next.Entities;
+using FolderFunctions;
 using GetRecipientEmail;
 using GraphHelper;
 using Microsoft.Graph;
@@ -15,13 +16,9 @@ namespace GraphDownloadAttachmentFilesClass
         /// <summary>
         /// Extract the recipient email from the message.
         /// </summary>
-        /// <param name="graphClient"></param>
+        /// <param name="requestBuilder"></param>
         /// <param name="clientDetails"></param>
-        /// <param name="mainFolderId"></param>
-        /// <param name="subFolderId1"></param>
-        /// <param name="subFolderId2"></param>
         /// <param name="messageId"></param>
-        /// <param name="inEmail"></param>
         /// <returns></returns>
         public static async Task<string> DetermineRecipientEmail(IMailFolderRequestBuilder requestBuilder,
                                                            UserConfigSetter.Customerdetail clientDetails,                                                                    
@@ -53,9 +50,12 @@ namespace GraphDownloadAttachmentFilesClass
         /// <param name="attachments"></param>
         /// <param name="acceptedExtensions"></param>
         /// <returns></returns>
-        public static IEnumerable<Attachment> FilterAttachments(IEnumerable<Attachment> attachments, List<string> acceptedExtensions)
+        public static IEnumerable<Attachment> FilterAttachments(IEnumerable<Attachment> attachments,
+            IEnumerable<DocumentDetails> acceptedExtensions)
         {
-            var normalizedAcceptedExtensions = acceptedExtensions.Select(ext => ext.ToLower()).ToList();
+            var normalizedAcceptedExtensions = acceptedExtensions
+                .Select(ext => ext.Extension.ToLower())
+                .ToList();
 
             return attachments.Where(attachment => normalizedAcceptedExtensions.Contains(Path.GetExtension(attachment.Name).ToLower())
                                      && attachment.Size > 10240

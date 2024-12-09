@@ -14,8 +14,9 @@ using GraphMoveEmailsToExportClass;
 using GraphMoveEmailsrClass;
 using Message = Microsoft.Graph.Message;
 using DEA.Next.Graph.GraphEmailActons;
+using DEA.Next.Interfaces;
 
-namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
+namespace DEA.Next.Graph.GraphAttachmentRelatedActions
 {
     internal class GraphAttachmentFunctionsClass
     {
@@ -23,19 +24,21 @@ namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
         /// As the function name suggest this funcion is designed to get messages with attachments. And then pass it on to
         /// the next step which is downloading the.
         /// </summary>
-        /// <param name="graphClient"></param>
+        /// <param name="requestBuilder"></param>
         /// <param name="inEmail"></param>
-        /// <param name="mainFolderId"></param>
-        /// <param name="subFolderId1"></param>
-        /// <param name="subFolderId2"></param>
+        /// <param name="deletedItemsId"></param>
+        /// <param name="maxMails"></param>
+        /// <param name="customerId"></param>
         /// <returns>A bool value (true or false)</returns>
-        public static async Task<int> GetMessagesWithAttachments(IMailFolderRequestBuilder requestBuilder,
-                                                                 string inEmail,
-                                                                 string deletedItemsId,
-                                                                 int maxMails,
-                                                                 int customerId)
+        public static async Task<int> GetMessagesWithAttachments(IUserConfigRepository configRepository,
+            IMailFolderRequestBuilder requestBuilder,
+            string inEmail,
+            string deletedItemsId,
+            int maxMails,
+            Guid customerId)
         {
             IMailFolderMessagesCollectionPage messages;
+            
             try
             {
                 // Get the messages with attachments.
@@ -63,11 +66,12 @@ namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
             List<Task<int>> taskReturns = new();
             foreach (Message message in messages)
             {
-                taskReturns.Add(ProcessMessageAsync(requestBuilder,
-                                                    message,
-                                                    inEmail,
-                                                    deletedItemsId,
-                                                    customerId));
+                taskReturns.Add(ProcessMessageAsync(configRepository,
+                    requestBuilder,
+                    message,
+                    inEmail,
+                    deletedItemsId,
+                    customerId));
             }
 
             // Wait for all the tasks to complete.
@@ -88,24 +92,26 @@ namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
         /// <summary>
         /// Start the attachment processing and downloading.
         /// </summary>
+        /// <param name="configRepository"></param>
         /// <param name="requestBuilder">Request built</param>
         /// <param name="message">Email message</param>
         /// <param name="inEmail">Clients email address.</param>
         /// <param name="deletedItemsId">Deleted items folder ID</param>
         /// <param name="customerId">Customer ID</param>
         /// <returns>Returns the success or error code.</returns>
-        private static async Task<int> ProcessMessageAsync(IMailFolderRequestBuilder requestBuilder,
-                                                           Message message,
-                                                           string inEmail,
-                                                           string deletedItemsId,
-                                                           int customerId)
+        private static async Task<int> ProcessMessageAsync(IUserConfigRepository configRepository,
+            IMailFolderRequestBuilder requestBuilder,
+            Message message,
+            string inEmail,
+            string deletedItemsId,
+            Guid customerId)
         {
             // Get client details.
-            UserConfigSetter.Customerdetail clientDeails = await UserConfigRetriver.RetriveUserConfigById(customerId);
+            var extensions = await configRepository.GetDocumentDetailsById(customerId);
 
             // Filter the attachments.
-            IEnumerable<Attachment> attachmentList = GraphDownloadAttachmentFiles.FilterAttachments(message.Attachments,
-                                                                                                    clientDeails.DocumentDetails.DocumentExtensions);
+            var attachmentList = GraphDownloadAttachmentFiles.FilterAttachments(message.Attachments,
+                                                                                                    extensions);
 
             // If there are attachments.
             if (attachmentList.Any())
@@ -116,7 +122,7 @@ namespace DEA.Next.Graph.GraphAttachmentRetlatedActions
                     return await DownloadAttachments(requestBuilder,
                                                      message,
                                                      attachmentList,
-                                                     clientDeails,
+                                                     clientDetails,
                                                      message.Id,
                                                      customerId);
                 }

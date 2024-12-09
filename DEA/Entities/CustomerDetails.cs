@@ -36,7 +36,7 @@ public class CustomerDetails
     public string FileDeliveryMethod { get; set; } = string.Empty;
     public DateTime CreatedDate { get; init; } = DateTime.UtcNow;
     public DateTime ModifiedDate { get; set; } = DateTime.UtcNow;
-    public List<Documentdetails> DocumentDetails { get; init; } = [];
+    public List<DocumentDetails> DocumentDetails { get; init; } = [];
     public List<FtpDetails> FtpDetails { get; init; } = [];
     public List<EmailDetails> EmailDetails { get; init; } = [];
 }

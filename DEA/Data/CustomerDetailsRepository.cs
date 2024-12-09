@@ -20,7 +20,7 @@ public class CustomerDetailsRepository : IUserConfigRepository
         return await _context.CustomerDetails.ToListAsync();
     }
 
-    public async Task<CustomerDetails> GetCustomerDetailsById(Guid id)
+    public async Task<CustomerDetails> GetClientDetailsById(Guid id)
     {
         var customer = await _context.CustomerDetails.FindAsync(id);
 
@@ -44,11 +44,21 @@ public class CustomerDetailsRepository : IUserConfigRepository
 
     public async Task<EmailDetails> GetEmailDetailsById(Guid id)
     {
+        var customerEmail = await _context.CustomerDetails
+            .SelectMany(e => e.EmailDetails)
+            .FirstOrDefaultAsync(g => g.CustomerDetailsId.Equals(id));
         
+        if (customerEmail != null) return customerEmail;
+        
+        WriteLogClass.WriteToLog(0, $"Customer with id {id} not found ....", 3);
+        throw new NullReferenceException($"Customer with id {id} not found ....");
     }
 
-    public async Task<CustomerDetails> GetClientByDeliveryMethod(string deliveryMethod)
+    public async Task<IEnumerable<DocumentDetails>> GetDocumentDetailsById(Guid id)
     {
-        throw new NotImplementedException();
+        return await _context.CustomerDetails
+            .SelectMany(g => g.DocumentDetails)
+            .Where(h => h.CustomerDetailsId.Equals(id))
+            .ToListAsync();
     }
 }

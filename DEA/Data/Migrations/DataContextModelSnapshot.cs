@@ -114,7 +114,7 @@ namespace DEA.Next.Data.Migrations
                     b.ToTable("CustomerDetails");
                 });
 
-            modelBuilder.Entity("DEA.Next.Entities.Documentdetails", b =>
+            modelBuilder.Entity("DEA.Next.Entities.DocumentDetails", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -132,7 +132,7 @@ namespace DEA.Next.Data.Migrations
 
                     b.HasIndex("CustomerDetailsId");
 
-                    b.ToTable("Documentdetails");
+                    b.ToTable("DocumentDetails");
                 });
 
             modelBuilder.Entity("DEA.Next.Entities.EmailDetails", b =>
@@ -215,7 +215,7 @@ namespace DEA.Next.Data.Migrations
                     b.ToTable("FtpDetails");
                 });
 
-            modelBuilder.Entity("DEA.Next.Entities.Documentdetails", b =>
+            modelBuilder.Entity("DEA.Next.Entities.DocumentDetails", b =>
                 {
                     b.HasOne("DEA.Next.Entities.CustomerDetails", "CustomerDetails")
                         .WithMany("DocumentDetails")

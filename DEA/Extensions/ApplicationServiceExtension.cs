@@ -1,5 +1,6 @@
 using DEA.Next.Classes;
 using DEA.Next.Data;
+using DEA.Next.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +19,7 @@ public static class ApplicationServiceExtension
         });
         
         services.AddScoped<CustomerDataClass>();
-        services.AddTransient<ProcessStartupFunctionsClass>();
+        services.AddScoped<IUserConfigRepository, CustomerDetailsRepository>();
 
         return services;
     }

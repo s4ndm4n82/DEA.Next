@@ -2,19 +2,17 @@
 
 namespace ProcessStatusMessageSetter
 {
-    enum ProcessStatusMain
+    internal enum ProcessStatusMain
     {
         CompletedSuccessfully,
         CompletedWithIssues,
         EmailProcessCompleted,
         EmailProcessEndedWithErrors,
-        FTPProcessCompleted,
-        FTPProcessEndedWithErrors,
         TerminatedDueToErrors,
         EmailWithTooManyReplies
     }
 
-    enum ProcessStatusOther
+    internal enum ProcessStatusOther
     {
         Success,
         FtpUploadFailed,
@@ -31,39 +29,24 @@ namespace ProcessStatusMessageSetter
     {
         public static string SetProcessStatusMain(int emailResult, int ftpResult)
         {
-            ProcessStatusMain processStatus = GetProcessStatusMain(emailResult, ftpResult);
-            string processStatusMessage = GetStatusProcessMessageMain(processStatus, ftpResult);
+            var processStatus = GetProcessStatusMain(emailResult, ftpResult);
+            var processStatusMessage = GetStatusProcessMessageMain(processStatus, ftpResult);
 
             return processStatusMessage;
         }
 
         private static ProcessStatusMain GetProcessStatusMain(int emailResult, int ftpResult)
         {
-            // TODO 2: Have to refine this logic again. Seems I've to break this into another one to get the FTP code message.
-            if ((emailResult == 1 || emailResult == 4) && (ftpResult == 1 || ftpResult == 4))
+            return emailResult switch
             {
-                return ProcessStatusMain.CompletedSuccessfully;
-            }
-            else if (emailResult == 2 && ftpResult == 2)
-            {
-                return ProcessStatusMain.CompletedWithIssues;
-            }
-            else if (emailResult == 1 && (ftpResult == 0 || ftpResult == 2 || ftpResult == 4))
-            {
-                return ProcessStatusMain.EmailProcessCompleted;
-            }
-            else if (emailResult == 2 && (ftpResult == 0 || ftpResult == 1 || ftpResult == 4))
-            {
-                return ProcessStatusMain.EmailProcessEndedWithErrors;
-            }
-            else if (emailResult == 5)
-            {
-                return ProcessStatusMain.EmailWithTooManyReplies;
-            }
-            else
-            {
-                return ProcessStatusMain.TerminatedDueToErrors;
-            }
+                // TODO 2: Have to refine this logic again. Seems I've to break this into another one to get the FTP code message.
+                1 or 4 when ftpResult is 1 or 4 => ProcessStatusMain.CompletedSuccessfully,
+                2 when ftpResult == 2 => ProcessStatusMain.CompletedWithIssues,
+                1 when ftpResult is 0 or 2 or 4 => ProcessStatusMain.EmailProcessCompleted,
+                2 when ftpResult is 0 or 1 or 4 => ProcessStatusMain.EmailProcessEndedWithErrors,
+                5 => ProcessStatusMain.EmailWithTooManyReplies,
+                _ => ProcessStatusMain.TerminatedDueToErrors
+            };
         }
 
         private static string GetFtpStatus(int ftpResult)
@@ -93,10 +76,10 @@ namespace ProcessStatusMessageSetter
 
         public static int SetMessageTypeMain(int emailResult, int ftpResult)
         {
-            int msgTyp = 0;
-            bool emailSuccessful = emailResult == 1 || emailResult == 4;
-            bool ftpSuccessful = ftpResult == 1 || ftpResult == 4;
-            bool successfulWithErrors = emailResult == 2 || ftpResult == 2;
+            var msgTyp = 0;
+            var emailSuccessful = emailResult is 1 or 4;
+            var ftpSuccessful = ftpResult is 1 or 4;
+            var successfulWithErrors = emailResult == 2 || ftpResult == 2;
 
             if (emailSuccessful && ftpSuccessful || successfulWithErrors)
             {
@@ -108,8 +91,8 @@ namespace ProcessStatusMessageSetter
 
         public static string SetProcessStatusOther(int statusResult, string processType)
         {
-            ProcessStatusOther processStatus = GetProcessStatusOther(statusResult, processType);
-            string processStatusMessage = GetStatusProcessMessageOther(processStatus);
+            var processStatus = GetProcessStatusOther(statusResult, processType);
+            var processStatusMessage = GetStatusProcessMessageOther(processStatus);
             return processStatusMessage;
         }
 
@@ -147,9 +130,9 @@ namespace ProcessStatusMessageSetter
 
         public static int SetMessageTypeOther(int statusResult)
         {
-            int msgTyp = 0;
-            bool successful = statusResult == 1 || statusResult == 3 || statusResult == 4 || statusResult == 5;
-            bool successfulWithErrors = statusResult == 2;
+            var msgTyp = 0;
+            var successful = statusResult is 1 or 3 or 4 or 5;
+            var successfulWithErrors = statusResult == 2;
 
             if (successful || successfulWithErrors)
             {
