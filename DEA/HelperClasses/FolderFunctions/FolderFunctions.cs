@@ -2,64 +2,63 @@
 using WriteLog;
 using DEA.Next.HelperClasses.OtherFunctions;
 
-namespace FolderFunctions
+namespace FolderFunctions;
+
+public class FolderFunctionsClass
 {
-    public class FolderFunctionsClass
+    /// <summary>
+    /// Checks and creates the main folders that used by the app. And also returns the path for those folders when needed.
+    /// </summary>
+    /// <param name="folderSwitch"></param>
+    /// <returns></returns>
+    public static string CheckFolders(string folderSwitch)
     {
-        /// <summary>
-        /// Checks and creates the main folders that used by the app. And also returns the path for those folders when needed.
-        /// </summary>
-        /// <param name="folderSwitch"></param>
-        /// <returns></returns>
-        public static string CheckFolders(string folderSwitch)
+        string pathRootFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
+        string[] folderNames = { MagicWords.Download, MagicWords.Attachments, MagicWords.Ftpfiles, MagicWords.Logs, MagicWords.Error };
+        string folderPath;
+        string returnFolderPath = string.Empty;
+
+        foreach (string folderName in folderNames)
         {
-            string pathRootFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
-            string[] folderNames = { MagicWords.download, MagicWords.attachments, MagicWords.ftpfiles, MagicWords.logs, MagicWords.error };
-            string folderPath;
-            string returnFolderPath = string.Empty;
-
-            foreach (string folderName in folderNames)
+            if (folderName != MagicWords.Attachments && folderName != MagicWords.Ftpfiles)
             {
-                if (folderName != MagicWords.attachments && folderName != MagicWords.ftpfiles)
-                {
-                    folderPath = Path.Combine(pathRootFolder!, folderName);
-                }
-                else
-                {
-                    folderPath = Path.Combine(pathRootFolder!, folderNames[0], folderName);
-                }
-
-                if (!Directory.Exists(folderPath))
-                {
-                    try
-                    {
-                        Directory.CreateDirectory(folderPath);
-                    }
-                    catch (Exception ex)
-                    {
-                        WriteLogClass.WriteToLog(0, $"Exception at main folder checker: {ex.Message}", 0);
-                    }
-                }
+                folderPath = Path.Combine(pathRootFolder!, folderName);
+            }
+            else
+            {
+                folderPath = Path.Combine(pathRootFolder!, folderNames[0], folderName);
             }
 
-            if (!string.IsNullOrEmpty(folderSwitch))
+            if (!Directory.Exists(folderPath))
             {
-                string folderName = folderNames.FirstOrDefault(fn =>
-                                               fn.IndexOf(folderSwitch, StringComparison.CurrentCultureIgnoreCase) != -1);
-
-                if (folderName != MagicWords.attachments && folderName != MagicWords.ftpfiles)
+                try
                 {
-                    returnFolderPath = Path.Combine(pathRootFolder!, folderName);
+                    Directory.CreateDirectory(folderPath);
                 }
-                else
+                catch (Exception ex)
                 {
-                    returnFolderPath = Path.Combine(pathRootFolder!, folderNames[0], folderName);
+                    WriteLogClass.WriteToLog(0, $"Exception at main folder checker: {ex.Message}", 0);
                 }
+            }
+        }
 
-                return returnFolderPath;
+        if (!string.IsNullOrEmpty(folderSwitch))
+        {
+            string folderName = folderNames.FirstOrDefault(fn =>
+                fn.IndexOf(folderSwitch, StringComparison.CurrentCultureIgnoreCase) != -1);
+
+            if (folderName != MagicWords.Attachments && folderName != MagicWords.Ftpfiles)
+            {
+                returnFolderPath = Path.Combine(pathRootFolder!, folderName);
+            }
+            else
+            {
+                returnFolderPath = Path.Combine(pathRootFolder!, folderNames[0], folderName);
             }
 
             return returnFolderPath;
         }
+
+        return returnFolderPath;
     }
 }

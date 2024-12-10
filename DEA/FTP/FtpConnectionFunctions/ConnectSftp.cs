@@ -1,47 +1,46 @@
 ﻿using Renci.SshNet;
 using WriteLog;
 
-namespace ConnectSftp
+namespace ConnectSftp;
+
+internal class ConnectSftpClass
 {
-    internal class ConnectSftpClass
+    /// <summary>
+    /// Creates the sftp connection using Renci.sshnet.
+    /// </summary>
+    /// <param name="hostName"></param>
+    /// <param name="userName"></param>
+    /// <param name="userPassword"></param>
+    /// <param name="ftpPort"></param>
+    /// <returns>Connections string</returns>
+    public static async Task<SftpClient> ConnectSftp(string hostName,
+        string userName,
+        string userPassword,
+        int ftpPort)
     {
-        /// <summary>
-        /// Creates the sftp connection using Renci.sshnet.
-        /// </summary>
-        /// <param name="hostName"></param>
-        /// <param name="userName"></param>
-        /// <param name="userPassword"></param>
-        /// <param name="ftpPort"></param>
-        /// <returns>Connections string</returns>
-        public static async Task<SftpClient> ConnectSftp(string hostName,
-                                                         string userName,
-                                                         string userPassword,
-                                                         int ftpPort)
+        // Creating the SFTP connection string.
+        ConnectionInfo connInfo = new(hostName, ftpPort, userName, new PasswordAuthenticationMethod(userName, userPassword));
+
+        SftpClient sftpConnect = new(connInfo);
+
+        try
         {
-            // Creating the SFTP connection string.
-            ConnectionInfo connInfo = new(hostName, ftpPort, userName, new PasswordAuthenticationMethod(userName, userPassword));
+            // Getting the cancellation token.
+            CancellationToken cancellationToken = new();
 
-            SftpClient sftpConnect = new(connInfo);
+            // Connecting to the SFTP server.
+            await sftpConnect.ConnectAsync(cancellationToken);
 
-            try
-            {
-                // Getting the cancellation token.
-                CancellationToken cancellationToken = new();
+            // Write to log if the connection was successful.
+            WriteLogClass.WriteToLog(1, "SFTP Connection successful ....", 3);
 
-                // Connecting to the SFTP server.
-                await sftpConnect.ConnectAsync(cancellationToken);
-
-                // Write to log if the connection was successful.
-                WriteLogClass.WriteToLog(1, "SFTP Connection successful ....", 3);
-
-                // Returning the SFTP connection.
-                return sftpConnect;
-            }
-            catch
-            {
-                WriteLogClass.WriteToLog(1, "Trying to connect using alt method ....", 3);
-                return null;
-            }
+            // Returning the SFTP connection.
+            return sftpConnect;
+        }
+        catch
+        {
+            WriteLogClass.WriteToLog(1, "Trying to connect using alt method ....", 3);
+            return null;
         }
     }
 }

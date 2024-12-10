@@ -10,11 +10,74 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="33275f24-18e6-4ba3-81b4-a2ab1183ffd0" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/UserConfigRetrieverClass.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Data/CustomerDetailsRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Data/CustomerDetailsRepository.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Extensions/ApplicationServiceExtension.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Extensions/ApplicationServiceExtension.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FTP/FtpConnectionClasses/FtpProfileChecker.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FTP/FtpConnectionClasses/FtpProfileChecker.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FTP/FtpConnectionClasses/FtpProfilesSelector.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FTP/FtpConnectionClasses/FtpProfilesSelector.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FTP/FtpConnectionFunctions/ConnectFtp.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FTP/FtpConnectionFunctions/ConnectFtp.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FTP/FtpConnectionFunctions/ConnectFtps.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FTP/FtpConnectionFunctions/ConnectFtps.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FTP/FtpConnectionFunctions/ConnectSftp.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FTP/FtpConnectionFunctions/ConnectSftp.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FTP/FtpFileRelatedFunctions/FtpFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FTP/FtpFileRelatedFunctions/FtpFunctions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FTP/FtpUploadDownloadFunctios/FtpFilesDownload.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FTP/FtpUploadDownloadFunctios/FtpFilesDownload.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FTP/FtpUploadDownloadFunctios/FtpFilesUpload.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FTP/FtpUploadDownloadFunctios/FtpFilesUpload.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FTP/FtpUploadDownloadFunctios/FtpLoopDownload.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FTP/FtpUploadDownloadFunctios/FtpLoopDownload.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceDataFile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceDataFile.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceHelpertFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceHelpertFunctions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceProject.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceProject.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsFileUploadFunctions/SendBodyTextToRestApi.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsFileUploadFunctions/SendBodyTextToRestApi.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsFileUploadFunctions/SendFilesToRestApiDataFile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsFileUploadFunctions/SendFilesToRestApiDataFile.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsFileUploadFunctions/SendFilesToRestApiProject.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsFileUploadFunctions/SendFilesToRestApiProject.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringClasses/TpsJsonDataFileUploadString.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringClasses/TpsJsonDataFileUploadString.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringClasses/TpsJsonProjectUploadString.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringClasses/TpsJsonProjectUploadString.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringClasses/TpsJsonSendBodyText.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringClasses/TpsJsonSendBodyText.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestDataFileFunction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestDataFileFunction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestHelperClass.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestHelperClass.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestProjectsFunction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestProjectsFunction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestSendBodyTextFunction.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsServerReponseFunctions/TpsServerOnFaile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsServerReponseFunctions/TpsServerOnFaile.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsServerReponseFunctions/TpsServerOnSuccess.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsServerReponseFunctions/TpsServerOnSuccess.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Graph/GrapEmailAddressRelatedFunctions/GetRecipientEmail.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GrapEmailAddressRelatedFunctions/GetRecipientEmail.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Graph/GrapEmailAddressRelatedFunctions/GraphEmailFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GrapEmailAddressRelatedFunctions/GraphEmailFunctions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Graph/GraphAttachmentRelatedActions/GraphAttachmentFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GraphAttachmentRelatedActions/GraphAttachmentFunctions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Graph/GraphAttachmentRelatedActions/GraphDownloadAttachmentFiles.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GraphAttachmentRelatedActions/GraphDownloadAttachmentFiles.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Graph/GraphClientrelatedFunctions/GraphHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GraphClientrelatedFunctions/GraphHelper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Graph/GraphEmailActions/CheckEmailChain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GraphEmailActions/CheckEmailChain.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Graph/GraphEmailActions/GraphDeleteMessages.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GraphEmailActions/GraphDeleteMessages.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Graph/GraphEmailActions/GraphEmailActionsStart.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GraphEmailActions/GraphEmailActionsStart.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Graph/GraphEmailInboxFunctions/GetDeletedItemsId.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GraphEmailInboxFunctions/GetDeletedItemsId.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Graph/GraphEmailInboxFunctions/GetInboxFolderNames.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GraphEmailInboxFunctions/GetInboxFolderNames.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Graph/GraphEmailInboxFunctions/GetMailFolderIds.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GraphEmailInboxFunctions/GetMailFolderIds.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Graph/GraphEmailInboxFunctions/GraphMoveEmailsFolder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GraphEmailInboxFunctions/GraphMoveEmailsFolder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Graph/GraphEmailInboxFunctions/GraphMoveEmailsToExport.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GraphEmailInboxFunctions/GraphMoveEmailsToExport.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Graph/GraphHelperClasses/CreateRequestBuilderClass.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GraphHelperClasses/CreateRequestBuilderClass.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/AppConfigReader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/AppConfigReader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/AppConfigUpdater.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/AppConfigUpdater.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/UserConfigRetriverClass.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/UserConfigSetter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/UserConfigSetter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/FileFunctions/FileNameCleaner.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/FileFunctions/FileNameCleaner.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/FileFunctions/FileRenamerClass.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/FileFunctions/FileRenamerClass.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/FileFunctions/HandleErrorFiles.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/FileFunctions/HandleErrorFiles.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/FolderFunctions/ErrorFolderChecker.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/FolderFunctions/ErrorFolderChecker.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/FolderFunctions/FindFolders.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/FolderFunctions/FindFolders.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/FolderFunctions/FolderCleaner.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/FolderFunctions/FolderCleaner.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/FolderFunctions/FolderFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/FolderFunctions/FolderFunctions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/InternetLineChecker/InternetLineChecker.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/InternetLineChecker/InternetLineChecker.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/LogFileFunctions/WriteLogClass.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/LogFileFunctions/WriteLogClass.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/LogFileFunctions/WriteNamesToLog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/LogFileFunctions/WriteNamesToLog.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/MagicWordLibrary.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/MagicWordLibrary.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/ProcessStartupFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/ProcessStartupFunctions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Interfaces/IUserConfigRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Interfaces/IUserConfigRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/ProcessStatusMessageSetter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/ProcessStatusMessageSetter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/RunTimedFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/RunTimedFunctions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Versioning/DisplayLogo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Versioning/DisplayLogo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Versioning/VersionIncrementer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Versioning/VersionIncrementer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEACleaner/MainClasses/LogFileCleaner.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEACleaner/MainClasses/LogFileCleaner.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEACleaner/Versioning/DisplayLogo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEACleaner/Versioning/DisplayLogo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEACleaner/Versioning/VersionIncrementer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEACleaner/Versioning/VersionIncrementer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEAMailer/MainClasses/CreateEmail.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEAMailer/MainClasses/CreateEmail.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEAMailer/MainClasses/EmailSenderClass.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEAMailer/MainClasses/EmailSenderClass.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEAMailer/Versioning/DisplayLogo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEAMailer/Versioning/DisplayLogo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEAMailer/Versioning/VersionIncrementer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEAMailer/Versioning/VersionIncrementer.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -276,6 +339,13 @@
       <workItem from="1733713863143" duration="125000" />
       <workItem from="1733722539458" duration="214000" />
       <workItem from="1733722819293" duration="1967000" />
+      <workItem from="1733724873277" duration="12951000" />
+      <workItem from="1733800440648" duration="318000" />
+      <workItem from="1733800878874" duration="494000" />
+      <workItem from="1733801456356" duration="7601000" />
+      <workItem from="1733810091298" duration="10574000" />
+      <workItem from="1733826903992" duration="298000" />
+      <workItem from="1733827343457" duration="886000" />
     </task>
     <servers />
   </component>
@@ -302,69 +372,16 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/DEA/Graph/GraphAttachmentRetlatedActions/GraphAttachmentFunctions.cs</url>
-          <line>333</line>
-          <properties documentPath="F:\Users\S4NDM4N\Development\DEA.Next\DEA\Graph\GraphAttachmentRetlatedActions\GraphAttachmentFunctions.cs" containingFunctionPresentation="Method 'StartAttachmentFilesUpload'">
-            <startOffsets>
-              <option value="16942" />
-            </startOffsets>
-            <endOffsets>
-              <option value="16943" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/DEA/FTP/FtpUploadDownloadFunctios/FtpFilesDownload.cs</url>
-          <line>99</line>
-          <properties documentPath="F:\Users\S4NDM4N\Development\DEA.Next\DEA\FTP\FtpUploadDownloadFunctios\FtpFilesDownload.cs" containingFunctionPresentation="Method 'DownloadFtpFilesFunction'">
-            <startOffsets>
-              <option value="4611" />
-            </startOffsets>
-            <endOffsets>
-              <option value="4642" />
-            </endOffsets>
-          </properties>
+          <line>94</line>
+          <properties documentPath="F:\Users\S4NDM4N\Development\DEA.Next\DEA\FTP\FtpUploadDownloadFunctios\FtpFilesDownload.cs" containingFunctionPresentation="Method 'DownloadFtpFilesFunction'" />
           <option name="timeStamp" value="5" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/DEA/FTP/FtpUploadDownloadFunctios/FtpFilesDownload.cs</url>
-          <line>101</line>
-          <properties documentPath="F:\Users\S4NDM4N\Development\DEA.Next\DEA\FTP\FtpUploadDownloadFunctios\FtpFilesDownload.cs" containingFunctionPresentation="Method 'DownloadFtpFilesFunction'">
-            <startOffsets>
-              <option value="4677" />
-            </startOffsets>
-            <endOffsets>
-              <option value="4691" />
-            </endOffsets>
-          </properties>
+          <line>97</line>
+          <properties documentPath="F:\Users\S4NDM4N\Development\DEA.Next\DEA\FTP\FtpUploadDownloadFunctios\FtpFilesDownload.cs" containingFunctionPresentation="Method 'DownloadFtpFilesFunction'" />
           <option name="timeStamp" value="6" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceProject.cs</url>
-          <line>29</line>
-          <properties documentPath="F:\Users\S4NDM4N\Development\DEA.Next\DEA\FileOperations\TpsFileFunctions\SendToWebServiceProject.cs" containingFunctionPresentation="Method 'SendToWebServiceProjectAsync'">
-            <startOffsets>
-              <option value="1434" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2160" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestProjectsFunction.cs</url>
-          <line>47</line>
-          <properties documentPath="F:\Users\S4NDM4N\Development\DEA.Next\DEA\FileOperations\TpsJsonStringCreatorFunctions\MakeJsonRequestProjectsFunction.cs" containingFunctionPresentation="Method 'MakeJsonRequestProjects'">
-            <startOffsets>
-              <option value="2227" />
-            </startOffsets>
-            <endOffsets>
-              <option value="3211" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -1,61 +1,42 @@
 ﻿using DEA.Next.FileOperations.TpsJsonStringClasses;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using TpsJsonProjectUploadString;
-using UserConfigRetriverClass;
 using static UserConfigSetterClass.UserConfigSetter;
 
-namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions
+namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions;
+
+internal class MakeJsonRequestHelperClass
 {
-    internal class MakeJsonRequestHelperClass
+    public static async Task<List<TpsJsonProjectUploadStringClass.FieldList>> ReturnIdFieldList(Guid customerId,
+        string clientOrgNo)
     {
-        public static List<TpsJsonProjectUploadStringClass.FieldList> ReturnIdFieldList(int customerId,
-                                                                                        string clientOrgNo)
+        var customerDetails = await UserConfigRetriever.RetrieveUserConfigById(customerId);
+
+        // Creating the field list to be added to the Json request.
+        List<TpsJsonProjectUploadStringClass.FieldList> idField =
+        [
+            new() { Name = customerDetails.FieldOneName, Value = clientOrgNo }
+        ];
+
+        if (!string.IsNullOrWhiteSpace(customerDetails.FieldTwoName) && string.IsNullOrWhiteSpace(customerDetails.FieldTwoValue))
         {
-            Customerdetail customerDetails = UserConfigRetriver.RetriveUserConfigById(customerId).Result;
-
-            // Creating the field list to be added to the Json request.
-            List<TpsJsonProjectUploadStringClass.FieldList> idField = new()
-            {
-                new TpsJsonProjectUploadStringClass.FieldList() { Name = customerDetails.ClientIdField, Value = clientOrgNo }
-            };
-
-            if (!string.IsNullOrWhiteSpace(customerDetails.ClientIdField2) && string.IsNullOrWhiteSpace(customerDetails.IdField2Value))
-            {
-                idField.Add(new TpsJsonProjectUploadStringClass.FieldList() { Name = customerDetails.ClientIdField2, Value = clientOrgNo });
-            }
-
-            if (!string.IsNullOrWhiteSpace(customerDetails.ClientIdField2) && !string.IsNullOrWhiteSpace(customerDetails.IdField2Value))
-            {
-                idField.Add(new TpsJsonProjectUploadStringClass.FieldList() { Name = customerDetails.ClientIdField2, Value = customerDetails.IdField2Value });
-            }
-
-            return idField;
+            idField.Add(new TpsJsonProjectUploadStringClass.FieldList { Name = customerDetails.FieldTwoName, Value = clientOrgNo });
         }
 
-        public static List<TpsJsonProjectUploadStringClass.FileList> ReturnFileList(string[] filesToSend)
+        if (!string.IsNullOrWhiteSpace(customerDetails.FieldTwoName) && !string.IsNullOrWhiteSpace(customerDetails.FieldTwoValue))
         {
-            // Creating the file list to be added to the Json request.
-            List<TpsJsonProjectUploadStringClass.FileList> jsonFileList = new();
-            foreach (var file in filesToSend)
-            {
-                jsonFileList.Add(new TpsJsonProjectUploadStringClass.FileList() { Name = Path.GetFileName(file), Data = Convert.ToBase64String(File.ReadAllBytes(file)) });
-            }
-
-            return jsonFileList;
+            idField.Add(new TpsJsonProjectUploadStringClass.FieldList() { Name = customerDetails.FieldTwoName, Value = customerDetails.FieldTwoValue });
         }
 
-        public static List<TpsJsonSendBodyTextClass.Emailfieldlist> ReturnEmailFieldList(int customerId, string bodyText)
-        {
-            Customerdetail customerDetails = UserConfigRetriver.RetriveUserConfigById(customerId).Result;
-            List<Emailfieldlist> emailFieldNames = customerDetails.EmailDetails.EmailFieldList.Where(fname => fname.FieldName != "FieldId").ToList();
-            List<TpsJsonSendBodyTextClass.Emailfieldlist> emailFieldList = new();
+        return idField;
+    }
 
-            // Creating the list with the email body text.
-            foreach (Emailfieldlist emailFieldName in emailFieldNames)
-            {
-                emailFieldList.Add(new TpsJsonSendBodyTextClass.Emailfieldlist() { Name = emailFieldName.FieldName, Value = bodyText });
-            }
-
-            return emailFieldList;
-        }
+    public static List<TpsJsonProjectUploadStringClass.FileList> ReturnFileList(string[] filesToSend)
+    {
+        // Creating the file list to be added to the Json request.
+        return filesToSend
+            .Select(file => new TpsJsonProjectUploadStringClass.FileList 
+                { Name = Path.GetFileName(file), Data = Convert.ToBase64String(File.ReadAllBytes(file)) })
+            .ToList();
     }
 }

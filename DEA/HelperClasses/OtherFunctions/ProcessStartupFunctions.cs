@@ -1,42 +1,35 @@
-﻿using DEA.Next.HelperClasses.OtherFunctions;
-using DEA.Next.Interfaces;
+﻿using DEA.Next.HelperClasses.ConfigFileFunctions;
+using DEA.Next.HelperClasses.OtherFunctions;
 using FtpFunctions;
 using GraphHelper;
 using ProcessStatusMessageSetter;
 using WriteLog;
 
-namespace ProcessSartupFunctions
+namespace ProcessSartupFunctions;
+
+internal class ProcessStartupFunctionsClass
 {
-    internal class ProcessStartupFunctionsClass
+
+    public async Task StartupProcess()
     {
-        private readonly IUserConfigRepository _configRepository;
-
-        public ProcessStartupFunctionsClass(IUserConfigRepository configRepository)
+        foreach (var client in await UserConfigRetriever.RetrieveAllUserConfig())
         {
-            _configRepository = configRepository;
-        }
-
-        public async Task StartupProcess()
-        {
-            foreach (var client in await _configRepository.GetAllCustomerDetails())
+            switch (client.FileDeliveryMethod)
             {
-                switch (client.FileDeliveryMethod)
-                {
-                    case MagicWords.ftp:
-                        WriteLastStatusMessage(0, await FtpFunctionsClass.GetFtpFiles(client.Id));
-                        break;
-                    case MagicWords.email:
-                        WriteLastStatusMessage(await GraphHelperClass.InitializeGetAttachment(_configRepository ,client.Id), 0);
-                        break;
-                }
+                case MagicWords.Ftp:
+                    WriteLastStatusMessage(0, await FtpFunctionsClass.GetFtpFiles(client.Id));
+                    break;
+                case MagicWords.Email:
+                    WriteLastStatusMessage(await GraphHelperClass.InitializeGetAttachment(client.Id), 0);
+                    break;
             }
         }
+    }
 
-        private static void WriteLastStatusMessage(int emailResultStatus, int ftpResultStatus)
-        {
-            WriteLogClass.WriteToLog(
-                ProcessStatusMessageSetterClass.SetMessageTypeMain(emailResultStatus, ftpResultStatus),
-                $"{ProcessStatusMessageSetterClass.SetProcessStatusMain(emailResultStatus, ftpResultStatus)}\n", 1);
-        }
+    private static void WriteLastStatusMessage(int emailResultStatus, int ftpResultStatus)
+    {
+        WriteLogClass.WriteToLog(
+            ProcessStatusMessageSetterClass.SetMessageTypeMain(emailResultStatus, ftpResultStatus),
+            $"{ProcessStatusMessageSetterClass.SetProcessStatusMain(emailResultStatus, ftpResultStatus)}\n", 1);
     }
 }
