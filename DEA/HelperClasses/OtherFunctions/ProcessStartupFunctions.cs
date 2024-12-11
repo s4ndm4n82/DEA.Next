@@ -1,6 +1,6 @@
-﻿using DEA.Next.HelperClasses.ConfigFileFunctions;
+﻿using DEA.Next.FTP.FtpFileRelatedFunctions;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using DEA.Next.HelperClasses.OtherFunctions;
-using FtpFunctions;
 using GraphHelper;
 using ProcessStatusMessageSetter;
 using WriteLog;

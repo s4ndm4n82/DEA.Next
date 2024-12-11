@@ -1,18 +1,17 @@
 ﻿using DEA.Next.HelperClasses.OtherFunctions;
 using FluentFTP;
-using FolderCleaner;
 using GetMailFolderIds;
 using GraphMoveEmailsrClass;
 using HandleErrorFiles;
 using Microsoft.Graph;
 using Renci.SshNet;
 using System.Net;
-using UserConfigRetriverClass;
-using UserConfigSetterClass;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
+using DEA.Next.HelperClasses.FolderFunctions;
 using WriteLog;
 using Directory = System.IO.Directory;
 
-namespace DEA.Next.FileOperations.TpsServerReponseFunctions;
+namespace DEA.Next.FileOperations.TpsServerResponseFunctions;
 
 /// <summary>
 /// Handles the operations after a failed TPS server response.
@@ -35,7 +34,7 @@ internal class TpsServerOnFaile
     /// <returns></returns>
     public static async Task<int> ServerOnFailProjectsAsync(string deliveryType,
         string fullFilePath,
-        int customerId,
+        Guid customerId,
         string clientOrgNo,
         AsyncFtpClient ftpConnect,
         SftpClient sftpConnect,
@@ -48,9 +47,11 @@ internal class TpsServerOnFaile
         {
             var deleteResult = 2;
 
-            var ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(customerId);
+            var ftpDetails = await UserConfigRetriever.RetrieveFtpConfigById(customerId);
 
-            WriteLogClass.WriteToLog(0, $"Server status code: {serverStatusCode}, Server Response Error: {serverResponseContent}", 0);
+            WriteLogClass.WriteToLog(0,
+                $"Server status code: {serverStatusCode}, Server Response Error: {serverResponseContent}",
+                0);
 
             // Moves the files to the error folder. Assumes the files was not uploaded.
             if (ftpDetails.FtpMoveToSubFolder == false
@@ -72,24 +73,28 @@ internal class TpsServerOnFaile
                     clientOrgNo,
                     MagicWords.Email):
                     return 0;
+                
                 // Delete the files from FTP server.
-                case MagicWords.Ftp when ftpDetails is { FtpMoveToSubFolder: true, FtpRemoveFiles: true }
+                case MagicWords.Ftp when ftpDetails is { FtpMoveToSubFolder: false, FtpRemoveFiles: true }
                                          && !await FolderCleanerClass.StartFtpFileDelete(ftpConnect,
                                              sftpConnect,
                                              ftpFileList,
                                              localFileList):
                     WriteLogClass.WriteToLog(0, "Deleting files from FTP server failed ....", 1);
                     return 0;
+                
                 // Deleting the files from local.
-                case MagicWords.Ftp when ftpDetails.FtpMoveToSubFolder == true
-                                         && !FolderCleanerClass.DeleteFiles(Path.GetDirectoryName(fullFilePath),
+                case MagicWords.Ftp when ftpDetails.FtpMoveToSubFolder
+                                         && !FolderCleanerClass.DeleteFiles(Path.GetDirectoryName(fullFilePath) ?? string.Empty,
                                              ftpFileList):
                     WriteLogClass.WriteToLog(0, "Deleting files failed ....", 1);
                     return 0;
+                
                 // Checking the folder is empty or not.
                 case MagicWords.Ftp:
                 {
-                    var fileList = Directory.EnumerateFiles(Path.GetDirectoryName(fullFilePath), "*", SearchOption.AllDirectories);
+                    var fileList = Directory.EnumerateFiles(Path.GetDirectoryName(fullFilePath)
+                                                            ?? string.Empty, "*", SearchOption.AllDirectories);
                     // Return if the folder is not empty.
                     if (fileList.Any())
                     {
@@ -97,7 +102,7 @@ internal class TpsServerOnFaile
                     }
 
                     // Deleting the empty folders.
-                    if (!FolderCleanerClass.DeleteEmptyFolders(Path.GetDirectoryName(fullFilePath)))
+                    if (!FolderCleanerClass.DeleteEmptyFolders(Path.GetDirectoryName(fullFilePath) ?? string.Empty))
                     {
                         WriteLogClass.WriteToLog(0, "Deleting empty folders failed ....", 1);
                         return 0;
@@ -107,7 +112,7 @@ internal class TpsServerOnFaile
                 }
             }
 
-            return ftpDetails.FtpMoveToSubFolder == true ? deleteResult = 6 : deleteResult;
+            return ftpDetails.FtpMoveToSubFolder ? 6 : deleteResult;
         }
         catch (Exception ex)
         {
@@ -120,6 +125,7 @@ internal class TpsServerOnFaile
     /// Handles the data file upload.
     /// </summary>
     /// <param name="ftpConnect"></param>
+    /// <param name="sftpConnect"></param>
     /// <param name="customerId"></param>
     /// <param name="downloadFilePath"></param>
     /// <param name="serverResponseContent"></param>
@@ -127,9 +133,9 @@ internal class TpsServerOnFaile
     /// <param name="localFileList"></param>
     /// <param name="statusCode"></param>
     /// <returns></returns>
-    public static async Task<int> ServerOnFailDataFileAsync(AsyncFtpClient ftpConnect,
-        SftpClient sftpConnect,
-        int customerId,
+    public static async Task<int> ServerOnFailDataFileAsync(AsyncFtpClient? ftpConnect,
+        SftpClient? sftpConnect,
+        Guid customerId,
         string downloadFilePath,
         string serverResponseContent,
         string[] ftpFileList,
@@ -139,7 +145,7 @@ internal class TpsServerOnFaile
         try
         {
             // User configs.
-            var ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(customerId);
+            var ftpDetails = await UserConfigRetriever.RetrieveFtpConfigById(customerId);
                 
             WriteLogClass.WriteToLog(0, 
                 $"Server status code: {statusCode}, Server Response Error: {serverResponseContent}",

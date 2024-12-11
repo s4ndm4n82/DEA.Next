@@ -1,4 +1,4 @@
-﻿using DEA.Next.FileOperations.TpsServerReponseFunctions;
+﻿using DEA.Next.FileOperations.TpsServerResponseFunctions;
 using FluentFTP;
 using Renci.SshNet;
 using RestSharp;
@@ -25,18 +25,22 @@ internal class SendFilesToRestApiProject
         {
             var customerDetails = await UserConfigRetriever.RetrieveUserConfigById(customerId);
 
+            var index = customerDetails.Domain.LastIndexOf('/');
+            var mainDomain = customerDetails.Domain[..index];
+            var query = customerDetails.Domain[(index + 1)..];
+
             // Creating rest api request.
-            RestClient client = new($"{customerDetails.DomainDetails.MainDomain}");
-            RestRequest tpsRequest = new($"{customerDetails.DomainDetails.TpsRequestUrl}")
+            var client = new RestClient(mainDomain);
+            var tpsRequest = new RestRequest(query)
             {
                 Method = Method.Post,
                 RequestFormat = DataFormat.Json
             };
 
             tpsRequest.AddBody(jsonResult);
-
             var serverResponse = await client.ExecuteAsync(tpsRequest); // Executes the request and send to the server.
-            var dirPath = Directory.GetParent(fullFilePath).FullName; // Gets the directory path of the file.
+            
+            var dirPath = Directory.GetParent(fullFilePath)?.FullName; // Gets the directory path of the file.
 
             if (serverResponse.StatusCode != HttpStatusCode.OK)
             {
@@ -52,7 +56,7 @@ internal class SendFilesToRestApiProject
                     serverResponse.Content);
             }
 
-            return await TpsServerOnSuccess.ServerOnSuccessProjectAsync(customerDetails.ProjectID,
+            return await TpsServerOnSuccess.ServerOnSuccessProjectAsync(customerDetails.ProjectId,
                 customerDetails.Queue,
                 fileCount,
                 customerDetails.FileDeliveryMethod.ToLower(),

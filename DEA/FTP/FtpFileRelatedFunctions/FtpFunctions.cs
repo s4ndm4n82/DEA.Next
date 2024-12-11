@@ -1,18 +1,18 @@
-﻿using WriteLog;
-using ConnectFtp;
+﻿using ConnectFtp;
 using ConnectFtps;
+using ConnectSftp;
+using DEA.Next.Entities;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
+using DEA.Next.HelperClasses.OtherFunctions;
+using DownloadFtpFilesClass;
 using FluentFTP;
 using FolderFunctions;
-using ProcessStatusMessageSetter;
-using DownloadFtpFilesClass;
 using FtpLoopDownloadClass;
-using DEA.Next.HelperClasses.OtherFunctions;
-using UserConfigRetriverClass;
+using ProcessStatusMessageSetter;
 using Renci.SshNet;
-using ConnectSftp;
-using static UserConfigSetterClass.UserConfigSetter;
+using WriteLog;
 
-namespace FtpFunctions;
+namespace DEA.Next.FTP.FtpFileRelatedFunctions;
 
 internal class FtpFunctionsClass
 {
@@ -45,16 +45,16 @@ internal class FtpFunctionsClass
         // SFTP connection token
         SftpClient? sftpConnectToken = null;
 
-        var ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(clientId);
+        var ftpDetails = await UserConfigRetriever.RetrieveFtpConfigById(clientId);
 
-        string downloadFolder = Path.Combine(FolderFunctionsClass.CheckFolders(MagicWords.Ftp)
+        var downloadFolder = Path.Combine(FolderFunctionsClass.CheckFolders(MagicWords.Ftp)
             , ftpDetails.FtpMainFolder.Trim('/').Replace('/', '\\'));
 
         // If the user FTP config type is FTP.
         if (string.Equals(ftpDetails.FtpType, MagicWords.Ftp, StringComparison.OrdinalIgnoreCase))
         {
             ftpConnectToken = await ConnectFtpClass.ConnectFtp(ftpDetails.FtpProfile,
-                ftpDetails.FtpHostName,
+                ftpDetails.FtpHost,
                 ftpDetails.FtpUser,
                 ftpDetails.FtpPassword,
                 ftpDetails.FtpPort);
@@ -64,7 +64,7 @@ internal class FtpFunctionsClass
         if (string.Equals(ftpDetails.FtpType, MagicWords.Ftps, StringComparison.OrdinalIgnoreCase))
         {
             ftpConnectToken = await ConnectFtpsClass.ConnectFtps(ftpDetails.FtpProfile,
-                ftpDetails.FtpHostName,
+                ftpDetails.FtpHost,
                 ftpDetails.FtpUser,
                 ftpDetails.FtpPassword,
                 ftpDetails.FtpPort);
@@ -73,7 +73,7 @@ internal class FtpFunctionsClass
         // the user FTP config type is SFTP
         if (string.Equals(ftpDetails.FtpType, MagicWords.Sftp, StringComparison.OrdinalIgnoreCase))
         {
-            sftpConnectToken = await ConnectSftpClass.ConnectSftp(ftpDetails.FtpHostName,
+            sftpConnectToken = await ConnectSftpClass.ConnectSftp(ftpDetails.FtpHost,
                 ftpDetails.FtpUser,
                 ftpDetails.FtpPassword,
                 ftpDetails.FtpPort);
@@ -106,37 +106,28 @@ internal class FtpFunctionsClass
     }
 
     private static async Task<int> InitiateFtpDownload(AsyncFtpClient? ftpConnectToken,
-        string downloadFolder, int clientId)
+        string downloadFolder,
+        Guid clientId)
     {
         // Return result.
-        int downloadResult = 0;
+        var downloadResult = 0;
+        
         // Get the FTP details from the config file.
-        Ftpdetails ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(clientId);
+        var ftpDetails = await UserConfigRetriever.RetrieveFtpConfigById(clientId);
 
         try
         {
-            using (ftpConnectToken)
+            await using (ftpConnectToken)
             {
                 WriteLogClass.WriteToLog(1, $"Starting file download from {ftpDetails.FtpMainFolder} ....", 3);
 
-                if (ftpDetails.FtpFolderLoop == 1)
+                downloadResult = ftpDetails.FtpFolderLoop switch
                 {
-                    downloadResult = await FtpLoopDownload.StartFtpLoopDownload(ftpConnectToken,
-                        null,
-                        ftpDetails.FtpMainFolder,
-                        downloadFolder,
-                        clientId);
-                }
-
-                if (ftpDetails.FtpFolderLoop == 0)
-                {
-                    downloadResult = await FtpFilesDownload.DownloadFtpFilesFunction(ftpConnectToken,
-                        null,
-                        ftpDetails.FtpMainFolder,
-                        downloadFolder,
-                        string.Empty,
-                        clientId);
-                }
+                    true => await FtpLoopDownload.StartFtpLoopDownload(ftpConnectToken, null, ftpDetails.FtpMainFolder,
+                        downloadFolder, clientId),
+                    false => await FtpFilesDownload.DownloadFtpFilesFunction(ftpConnectToken, null,
+                        ftpDetails.FtpMainFolder, downloadFolder, string.Empty, clientId)
+                };
 
                 WriteLogClass.WriteToLog(ProcessStatusMessageSetterClass.SetMessageTypeOther(downloadResult),
                     $"{ProcessStatusMessageSetterClass.SetProcessStatusOther(downloadResult, MagicWords.Ftp)}\n", 3);
@@ -152,36 +143,27 @@ internal class FtpFunctionsClass
 
     private static async Task<int> InitiateSftpDownload(SftpClient? sftpConnectToken,
         string downloadFolder,
-        int clientId)
+        Guid clientId)
     {
         // Return result.
-        int downloadResult = 0;
+        var downloadResult = 0;
+        
         // Get the FTP details from the config file.
-        Ftpdetails ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(clientId);
+        var ftpDetails = await UserConfigRetriever.RetrieveFtpConfigById(clientId);
+        
         try
         {
             using (sftpConnectToken)
             {
                 WriteLogClass.WriteToLog(1, $"Starting file download from {ftpDetails.FtpMainFolder} ....", 3);
 
-                if (ftpDetails.FtpFolderLoop == 1)
+                downloadResult = ftpDetails.FtpFolderLoop switch
                 {
-                    downloadResult = await FtpLoopDownload.StartFtpLoopDownload(null,
-                        sftpConnectToken,
-                        ftpDetails.FtpMainFolder,
-                        downloadFolder,
-                        clientId);
-                }
-
-                if (ftpDetails.FtpFolderLoop == 0)
-                {
-                    downloadResult = await FtpFilesDownload.DownloadFtpFilesFunction(null,
-                        sftpConnectToken,
-                        ftpDetails.FtpMainFolder,
-                        downloadFolder,
-                        string.Empty,
-                        clientId);
-                }
+                    true => await FtpLoopDownload.StartFtpLoopDownload(null, sftpConnectToken, ftpDetails.FtpMainFolder,
+                        downloadFolder, clientId),
+                    false => await FtpFilesDownload.DownloadFtpFilesFunction(null, sftpConnectToken,
+                        ftpDetails.FtpMainFolder, downloadFolder, string.Empty, clientId)
+                };
 
                 WriteLogClass.WriteToLog(ProcessStatusMessageSetterClass.SetMessageTypeOther(downloadResult),
                     $"{ProcessStatusMessageSetterClass.SetProcessStatusOther(downloadResult, MagicWords.Ftp)}\n", 3);
@@ -199,36 +181,35 @@ internal class FtpFunctionsClass
     /// Move the ftp files to another FTP sub folder if the setting is true.
     /// </summary>
     /// <param name="ftpConnect"></param>
+    /// <param name="sftpConnect"></param>
     /// <param name="clientId"></param>
     /// <param name="ftpFilesList"></param>
     /// <returns></returns>
     public static async Task<bool> MoveFtpFiles(AsyncFtpClient ftpConnect,
         SftpClient sftpConnect,
-        int clientId,
-        IEnumerable<string> ftpFilesList)
+        Guid clientId,
+        List<string> ftpFilesList)
     {
-        Ftpdetails ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(clientId);
+        var ftpDetails = await UserConfigRetriever.RetrieveFtpConfigById(clientId);
 
         try
         {
-            if (!ftpFilesList.Any())
+            if (ftpFilesList.Count == 0)
             {
                 WriteLogClass.WriteToLog(0, $"Ftp files list is empty ....", 3);
                 return false;
             }
 
-            if (ftpConnect != null)
+            switch (ftpDetails.FtpType)
             {
-                return await MoveFtpFiles(ftpConnect, ftpDetails, ftpFilesList);
+                case MagicWords.Ftp:
+                    return await MoveFtpFiles(ftpConnect, ftpDetails, ftpFilesList);
+                case MagicWords.Sftp:
+                    return await MoveSftpFiles(sftpConnect, ftpDetails, ftpFilesList);
+                default:
+                    WriteLogClass.WriteToLog(0, $"Moving FTP files files ....", 3);
+                    return false;
             }
-
-            if (sftpConnect != null)
-            {
-                return await MoveSftpFiles(sftpConnect, ftpDetails, ftpFilesList);
-            }
-
-            WriteLogClass.WriteToLog(0, $"Moving FTP files failes ....", 3);
-            return false;
         }
         catch (Exception ex)
         {
@@ -244,9 +225,9 @@ internal class FtpFunctionsClass
     /// <param name="ftpDetails"></param>
     /// <param name="ftpFilesList"></param>
     /// <returns></returns>
-    private static async Task<bool> MoveFtpFiles(AsyncFtpClient ftpConnect,
-        Ftpdetails ftpDetails,
-        IEnumerable<string> ftpFilesList)
+    private static async Task<bool> MoveFtpFiles(AsyncFtpClient? ftpConnect,
+        FtpDetails ftpDetails,
+        List<string> ftpFilesList)
     {
         if (ftpConnect == null)
         {
@@ -254,9 +235,9 @@ internal class FtpFunctionsClass
             return false;
         }
 
-        int loopCount = 0;
+        var loopCount = 0;
 
-        foreach (string ftpFile in ftpFilesList)
+        foreach (var ftpFile in ftpFilesList)
         {
             if (!await ftpConnect.FileExists(ftpFile))
             {
@@ -264,12 +245,12 @@ internal class FtpFunctionsClass
                 continue;
             }
 
-            string ftpFileName = Path.GetFileName(ftpFile);
-            string ftpDestinationPath = ftpDetails.FtpSubFolder;
+            var ftpFileName = Path.GetFileName(ftpFile);
+            var ftpDestinationPath = ftpDetails.FtpSubFolder;
 
-            if (ftpDetails.FtpFolderLoop == 1 && ftpDetails.FtpMoveToSubFolder)
+            if (ftpDetails.FtpFolderLoop && ftpDetails.FtpMoveToSubFolder)
             {
-                string loopFolderName = Path.GetFileName(Path.GetDirectoryName(ftpFile));
+                var loopFolderName = Path.GetFileName(Path.GetDirectoryName(ftpFile));
                 ftpDestinationPath = string.Concat(ftpDetails.FtpSubFolder, "/", loopFolderName);
             }
 
@@ -298,7 +279,7 @@ internal class FtpFunctionsClass
             return true;
         }
 
-        WriteLogClass.WriteToLog(0, $"Moving files to {ftpDetails.FtpSubFolder} unsuccessfull ....", 3);
+        WriteLogClass.WriteToLog(0, $"Moving files to {ftpDetails.FtpSubFolder} unsuccessfully ....", 3);
         return false;
     }
 
@@ -309,9 +290,9 @@ internal class FtpFunctionsClass
     /// <param name="ftpDetails"></param>
     /// <param name="sftpFilesList"></param>
     /// <returns></returns>
-    private static async Task<bool> MoveSftpFiles(SftpClient sftpConnect,
-        Ftpdetails ftpDetails,
-        IEnumerable<string> sftpFilesList)
+    private static async Task<bool> MoveSftpFiles(SftpClient? sftpConnect,
+        FtpDetails ftpDetails,
+        List<string> sftpFilesList)
     {
         if (sftpConnect == null)
         {
@@ -319,22 +300,22 @@ internal class FtpFunctionsClass
             return false;
         }
 
-        int loopCount = 0;
+        var loopCount = 0;
 
-        foreach (string sftpFile in sftpFilesList)
+        foreach (var sftpFile in sftpFilesList)
         {
-            if (!sftpConnect.Exists(sftpFile))
+            if (!await sftpConnect.ExistsAsync(sftpFile))
             {
                 WriteLogClass.WriteToLog(0, $"Source file does not exist: {sftpFile} ....", 3);
                 continue;
             }
 
-            string sftpFileName = Path.GetFileName(sftpFile);
-            string sftpDestinationPath = ftpDetails.FtpSubFolder;
+            var sftpFileName = Path.GetFileName(sftpFile);
+            var sftpDestinationPath = ftpDetails.FtpSubFolder;
 
-            if (ftpDetails.FtpFolderLoop == 1 && ftpDetails.FtpMoveToSubFolder)
+            if (ftpDetails is { FtpFolderLoop: true, FtpMoveToSubFolder: true })
             {
-                string loopFolderName = Path.GetFileName(Path.GetDirectoryName(sftpFile));
+                var loopFolderName = Path.GetFileName(Path.GetDirectoryName(sftpFile));
                 sftpDestinationPath = string.Concat(ftpDetails.FtpSubFolder, "/", loopFolderName);
             }
 
@@ -343,14 +324,14 @@ internal class FtpFunctionsClass
                 WriteLogClass.WriteToLog(1, $"Moving file: {sftpFileName} to {sftpDestinationPath} ....", 3);
 
 
-                if (!sftpConnect.Exists(sftpDestinationPath))
+                if (!await sftpConnect.ExistsAsync(sftpDestinationPath))
                 {
-                    sftpConnect.CreateDirectory(sftpDestinationPath);
+                    await sftpConnect.CreateDirectoryAsync(sftpDestinationPath);
                 }
 
                 await sftpConnect.RenameFileAsync(sftpFile, string.Concat(sftpDestinationPath, "/", sftpFileName), CancellationToken.None);
 
-                if (sftpConnect.Exists(sftpFile))
+                if (await sftpConnect.ExistsAsync(sftpFile))
                 {
                     await sftpConnect.DeleteFileAsync(sftpFile, CancellationToken.None);
                 }

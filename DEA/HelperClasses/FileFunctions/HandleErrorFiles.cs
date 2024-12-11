@@ -1,4 +1,5 @@
-﻿using DEA.Next.HelperClasses.OtherFunctions;
+﻿using DEA.Next.HelperClasses.ConfigFileFunctions;
+using DEA.Next.HelperClasses.OtherFunctions;
 using FolderFunctions;
 using UserConfigRetriverClass;
 using UserConfigSetterClass;
@@ -18,13 +19,13 @@ internal class HandleErrorFilesClass
     /// <returns>True or false.</returns>
     public static async Task<bool> MoveFilesToErrorFolder(string downloadFolderPath,
         IEnumerable<string> fileNames,
-        int? customerId,
+        Guid? customerId,
         string clientEmail)
     {
         try
         {
             // Read the user config file.
-            var clientDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
+            var clientDetails = await UserConfigRetriever.RetrieveUserConfigById(customerId ?? Guid.Empty);
 
             // Source folder path.
             var sourcePath = downloadFolderPath;
@@ -35,13 +36,15 @@ internal class HandleErrorFilesClass
             }
                 
             // Source folder name.
-            string sourceFolderName = sourcePath.Split(Path.DirectorySeparatorChar).Last();
+            var sourceFolderName = sourcePath?.Split(Path.DirectorySeparatorChar).Last();
                 
             // Destination folder name.
-            string destinationFolderName = clientDetails.FileDeliveryMethod.ToLower() == MagicWords.Email ? string.Concat("ID_", customerId.ToString(), " ", "Email_", clientEmail)
-                : string.Concat("ID_", customerId.ToString(), " ", "Org_", clientDetails.ClientOrgNo);
+            var destinationFolderName = clientDetails.FileDeliveryMethod.ToLower() == MagicWords.Email ? string.Concat("ID_", customerId.ToString(), " ", "Email_", clientEmail)
+                : string.Concat("ID_", customerId.ToString(), " ", "Org_", clientDetails.FieldOneValue);
+            
+            if 
             // Destination folder path.
-            string destinationFolderPath = Path.Combine(FolderFunctionsClass.CheckFolders(MagicWords.Error),
+            var destinationFolderPath = Path.Combine(FolderFunctionsClass.CheckFolders(MagicWords.Error),
                 destinationFolderName,
                 sourceFolderName);
 

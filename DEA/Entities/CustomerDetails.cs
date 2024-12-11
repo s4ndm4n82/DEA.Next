@@ -19,6 +19,8 @@ public class CustomerDetails
     public string TemplateKey { get; init; } = string.Empty;
     [MaxLength(50)]
     public string DocumentId { get; init; } = string.Empty;
+    [MaxLength(10)]
+    public string DocumentEncoding { get; init; } = "UTF-8";
     public int MaxBatchSize { get; init; }
     public bool SendEmail { get; init; }
     public bool SendSubject { get; init; }
@@ -33,9 +35,9 @@ public class CustomerDetails
     [MaxLength(100)]
     public required string Domain { get; init; }
     [MaxLength(10)]
-    public string FileDeliveryMethod { get; set; } = string.Empty;
+    public string FileDeliveryMethod { get; init; } = string.Empty;
     public DateTime CreatedDate { get; init; } = DateTime.UtcNow;
-    public DateTime ModifiedDate { get; set; } = DateTime.UtcNow;
+    public DateTime ModifiedDate { get; init; } = DateTime.UtcNow;
     public List<DocumentDetails> DocumentDetails { get; init; } = [];
     public List<FtpDetails> FtpDetails { get; init; } = [];
     public List<EmailDetails> EmailDetails { get; init; } = [];

@@ -1,10 +1,9 @@
 ﻿using DEA.Next.FileOperations.TpsFileUploadFunctions;
 using DEA.Next.FileOperations.TpsJsonStringClasses;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using FluentFTP;
 using Newtonsoft.Json;
 using Renci.SshNet;
-using UserConfigRetriverClass;
-using UserConfigSetterClass;
 using WriteLog;
 
 namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions;
@@ -14,9 +13,9 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions;
 /// </summary>
 internal class MakeJsonRequestDataFileFunction
 {
-    public static async Task<int> MakeJsonRequestDataFileAsync(AsyncFtpClient ftpConnect,
-        SftpClient sftpConnect,
-        int customerId,
+    public static async Task<int> MakeJsonRequestDataFileAsync(AsyncFtpClient? ftpConnect,
+        SftpClient? sftpConnect,
+        Guid customerId,
         string localFilePath,
         string[] fileToSend,
         string[] ftpFileList,
@@ -24,13 +23,16 @@ internal class MakeJsonRequestDataFileFunction
     {
         try
         {
-            var customerDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
+            var customerDetails = await UserConfigRetriever.RetrieveUserConfigById(customerId);
 
             // Get the filename.
             var fileName = Path.GetFileName(fileToSend.FirstOrDefault());
 
             // Convert the file to base64 string.
-            var fileData = Convert.ToBase64String(File.ReadAllBytes(fileToSend.FirstOrDefault()));
+            var fileData = Convert
+                .ToBase64String(await File
+                    .ReadAllBytesAsync(fileToSend
+                        .FirstOrDefault() ?? string.Empty));
 
             TpsJsonDataFileUploadString.TpsJsonDataFileUploadObject tpsJsonRequest = new()
             {
@@ -44,14 +46,18 @@ internal class MakeJsonRequestDataFileFunction
             // Creat the Json request.
             var jsonRequest = JsonConvert.SerializeObject(tpsJsonRequest, Formatting.Indented);
 
-            return await SendFilesToRestApiDataFile.SendFilesToRestDataFileAsync(ftpConnect,
-                sftpConnect,
-                customerId,
-                jsonRequest,
-                localFilePath,
-                fileName,
-                ftpFileList,
-                localFileList);
+            if (!string.IsNullOrWhiteSpace(fileName))
+                return await SendFilesToRestApiDataFile.SendFilesToRestDataFileAsync(ftpConnect,
+                    sftpConnect,
+                    customerId,
+                    jsonRequest,
+                    localFilePath,
+                    fileName,
+                    ftpFileList,
+                    localFileList);
+            
+            WriteLogClass.WriteToLog(0, "File name is null or whitespace ....", 0);
+            return -1;
         }
         catch (Exception ex)
         {

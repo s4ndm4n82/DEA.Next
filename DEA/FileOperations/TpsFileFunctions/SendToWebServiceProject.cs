@@ -25,7 +25,6 @@ internal class SendToWebServiceProject
 
             var clientDetails = await UserConfigRetriever.RetrieveUserConfigById(customerId);
             var ftpDetails = await UserConfigRetriever.RetrieveFtpConfigById(customerId);
-            var emailDetails = await UserConfigRetriever.RetrieveEmailConfigById(customerId);
 
             // Get the correct org number depending on what type of download method is used.
             var clientOrg = SendToWebServiceHelpertFunctions.SetCustomerOrg(ftpDetails.FtpFolderLoop,
@@ -37,10 +36,12 @@ internal class SendToWebServiceProject
                 emailSubject);
             
             // Creates the file list of the downloaded files.
-            var downloadedFiles = SendToWebServiceHelpertFunctions.MakeDownloadedFileList(customerId,
+            var downloadedFiles = await SendToWebServiceHelpertFunctions.MakeDownloadedFileList(customerId,
                 filePath,
                 clientOrg,
                 ftpFileList);
+            
+            if (ftpConnect == null || sftpConnect == null || localFileList == null) return -1;
 
             return await MakeJsonRequestProjectsFunction.MakeJsonRequestProjects(ftpConnect,
                 sftpConnect,

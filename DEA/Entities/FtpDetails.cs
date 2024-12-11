@@ -15,11 +15,14 @@ public class FtpDetails
     public required string FtpUser { get; set; }
     [MaxLength(50)]
     public required string FtpPassword { get; set; }
-    [MaxLength(2)]
-    public required string FtpPort { get; set; }
-    [MaxLength(100)]
-    public required string FtpPath { get; set; }
+    public required int FtpPort { get; set; }
+    [MaxLength(200)]
+    public required string FtpMainFolder { get; set; }
+    [MaxLength(200)]
+    public required string FtpSubFolder { get; set; }
     public required bool FtpFolderLoop { get; set; }
+    public required bool FtpRemoveFiles { get; set; }
+    public required bool FtpMoveToSubFolder { get; set; }
     
     // Navigation properties
     public Guid CustomerDetailsId { get; set; }

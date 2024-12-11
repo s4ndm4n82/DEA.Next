@@ -1,10 +1,9 @@
-﻿using DEA.Next.FileOperations.TpsServerReponseFunctions;
+﻿using DEA.Next.FileOperations.TpsServerResponseFunctions;
 using FluentFTP;
 using Renci.SshNet;
 using RestSharp;
 using System.Net;
-using UserConfigRetriverClass;
-using UserConfigSetterClass;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 
 namespace DEA.Next.FileOperations.TpsFileUploadFunctions;
 
@@ -13,20 +12,24 @@ namespace DEA.Next.FileOperations.TpsFileUploadFunctions;
 /// </summary>
 internal class SendFilesToRestApiDataFile
 {
-    public static async Task<int> SendFilesToRestDataFileAsync(AsyncFtpClient ftpConnect,
-        SftpClient sftpConnect,
-        int customerId,
+    public static async Task<int> SendFilesToRestDataFileAsync(AsyncFtpClient? ftpConnect,
+        SftpClient? sftpConnect,
+        Guid customerId,
         string jsonRequest,
         string downloadFolderPath,
         string fileName,
         string[] ftpFileList,
         string[] localFileList)
     {
-        var clientDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
+        var customerDetails = await UserConfigRetriever.RetrieveUserConfigById(customerId);
+
+        var index = customerDetails.Domain.LastIndexOf('/');
+        var mainDomain = customerDetails.Domain[..index];
+        var query = customerDetails.Domain[(index + 1)..];
 
         // Creating rest api request.
-        RestClient client = new($"{clientDetails.DomainDetails.MainDomain}");
-        RestRequest tpsRequest = new($"{clientDetails.DomainDetails.TpsRequestUrl}")
+        var client = new RestClient(mainDomain);
+        var tpsRequest = new RestRequest(query)
         {
             Method = Method.Post,
             RequestFormat = DataFormat.Json
@@ -35,8 +38,16 @@ internal class SendFilesToRestApiDataFile
         tpsRequest.AddBody(jsonRequest);
         var serverResponse = await client.ExecuteAsync(tpsRequest); // Executes the request and send to the server.
 
-        if (serverResponse.StatusCode != HttpStatusCode.OK)
-        {
+        if (serverResponse.StatusCode == HttpStatusCode.OK)
+            return await TpsServerOnSuccess.ServerOnSuccessDataFileAsync(ftpConnect,
+                sftpConnect,
+                customerId,
+                fileName,
+                downloadFolderPath,
+                ftpFileList,
+                localFileList);
+        
+        if (serverResponse.Content != null)
             return await TpsServerOnFaile.ServerOnFailDataFileAsync(ftpConnect,
                 sftpConnect,
                 customerId,
@@ -45,7 +56,6 @@ internal class SendFilesToRestApiDataFile
                 ftpFileList,
                 localFileList,
                 serverResponse.StatusCode);
-        }
 
         return await TpsServerOnSuccess.ServerOnSuccessDataFileAsync(ftpConnect,
             sftpConnect,

@@ -1,17 +1,15 @@
-﻿using DEA.Next.HelperClasses.OtherFunctions;
+﻿using DEA.Next.FTP.FtpFileRelatedFunctions;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
+using DEA.Next.HelperClasses.FolderFunctions;
+using DEA.Next.HelperClasses.OtherFunctions;
 using FluentFTP;
-using FolderCleaner;
-using FtpFunctions;
 using GraphMoveEmailsToExportClass;
 using Microsoft.Graph;
 using Renci.SshNet;
-using System.Net;
-using UserConfigRetriverClass;
-using UserConfigSetterClass;
 using WriteLog;
 using WriteNamesToLog;
 
-namespace DEA.Next.FileOperations.TpsServerReponseFunctions;
+namespace DEA.Next.FileOperations.TpsServerResponseFunctions;
 
 /// <summary>
 /// Handles the operations after a successful TPS server response.
@@ -36,13 +34,13 @@ internal class TpsServerOnSuccess
     /// <param name="localFileList"></param>
     /// <returns></returns>
     public static async Task<int> ServerOnSuccessProjectAsync(string projectId,
-        string queue,
+        int queue,
         int fileCount,
         string deliveryType,
         string fullFilePath,
         string downloadFolderPath,
         string[] jsonFileList,
-        int customerId,
+        Guid customerId,
         string clientOrgNo,
         AsyncFtpClient ftpConnect,
         SftpClient sftpConnect,
@@ -51,7 +49,7 @@ internal class TpsServerOnSuccess
     {
         try
         {
-            var ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(customerId);
+            var ftpDetails = await UserConfigRetriever.RetrieveFtpConfigById(customerId);
 
             WriteLogClass.WriteToLog(1, $"Uploaded {fileCount} file to project {projectId} using queue {queue} ....", 4);
             WriteLogClass.WriteToLog(1, $"Uploaded filenames: {WriteNamesToLogClass.GetFileNames(jsonFileList)}", 4);
@@ -76,11 +74,11 @@ internal class TpsServerOnSuccess
                         1);
                     return -1;
                 // Moving files to another FTP sub folder.
-                case MagicWords.Ftp when ftpDetails.FtpMoveToSubFolder == true
+                case MagicWords.Ftp when ftpDetails.FtpMoveToSubFolder
                                          && !await FtpFunctionsClass.MoveFtpFiles(ftpConnect,
                                              sftpConnect,
                                              customerId,
-                                             ftpFileList):
+                                             ftpFileList.ToList()):
                     WriteLogClass.WriteToLog(0,
                         "Moving files to FTP sub folder failed ....",
                         1);
@@ -120,9 +118,9 @@ internal class TpsServerOnSuccess
     /// <param name="ftpFileList"></param>
     /// <param name="localFileList"></param>
     /// <returns></returns>
-    public static async Task<int> ServerOnSuccessDataFileAsync(AsyncFtpClient ftpConnect,
-        SftpClient sftpConnect,
-        int customerId,
+    public static async Task<int> ServerOnSuccessDataFileAsync(AsyncFtpClient? ftpConnect,
+        SftpClient? sftpConnect,
+        Guid customerId,
         string fileName,
         string downloadFolderPath,
         string[] ftpFileList,
@@ -131,12 +129,12 @@ internal class TpsServerOnSuccess
         try
         {
             // User config details.
-            var ftpDetails = await UserConfigRetriver.RetriveFtpConfigById(customerId);
+            var ftpDetails = await UserConfigRetriever.RetrieveFtpConfigById(customerId);
                 
             WriteLogClass.WriteToLog(1, $"Uploaded data file: {fileName}", 1);
 
             // Converts the filename to an array. Needed by the FolderCleanerClass.
-            var jsonFileList = new string[] { fileName };
+            var jsonFileList = new[] { fileName };
 
             // Remove the files from FTP server.
             if (ftpDetails.FtpRemoveFiles == true

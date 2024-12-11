@@ -1,8 +1,6 @@
 ﻿using DEA.Next.FileOperations.TpsJsonStringCreatorFunctions;
 using FluentFTP;
 using Renci.SshNet;
-using UserConfigRetriverClass;
-using UserConfigSetterClass;
 using WriteLog;
 
 namespace DEA.Next.FileOperations.TpsFileFunctions;
@@ -12,9 +10,9 @@ namespace DEA.Next.FileOperations.TpsFileFunctions;
 /// </summary>
 internal class SendToWebServiceDataFile
 {
-    public static async Task<int> SendToWebServiceDataFileAsync(AsyncFtpClient ftpConnect,
-        SftpClient sftpConnect,
-        int customerId,
+    public static async Task<int> SendToWebServiceDataFileAsync(AsyncFtpClient? ftpConnect,
+        SftpClient? sftpConnect,
+        Guid customerId,
         string localFolderPath,
         string[] ftpFileList,
         string[] localFileList)
@@ -23,10 +21,8 @@ internal class SendToWebServiceDataFile
         {
             WriteLogClass.WriteToLog(1, "Starting file upload process .... ", 4);
 
-            UserConfigSetter.Customerdetail customerDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
-
             // Creat the local file list.
-            string[] downloadedFileList = SendToWebServiceHelpertFunctions.MakeDownloadedFileList(customerDetails,
+            var downloadedFileList = await SendToWebServiceHelpertFunctions.MakeDownloadedFileList(customerId,
                 localFolderPath,
                 string.Empty,
                 ftpFileList);
