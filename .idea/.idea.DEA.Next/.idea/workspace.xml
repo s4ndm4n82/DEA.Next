@@ -10,24 +10,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="33275f24-18e6-4ba3-81b4-a2ab1183ffd0" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/DEA/Extensions/CreateUrl.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Config/CustomerConfig.Debug.json" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Config/CustomerConfig.Debug.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Config/CustomerConfig.Release.json" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Config/CustomerConfig.Release.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/20241203094340_FirstMigration.Designer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/20241203094340_FirstMigration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Data/Migrations/20241212073524_Migration12122024.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/20241205074925_FirstMigrationUpdate1.Designer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Data/Migrations/20241212073524_Migration12122024.Designer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/20241205074925_FirstMigrationUpdate1.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/DataContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Data/Migrations/DataContextModelSnapshot.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Entities/CustomerDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Entities/CustomerDetails.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Entities/FtpDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Entities/FtpDetails.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/FTP/FtpFileRelatedFunctions/FtpFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FTP/FtpFileRelatedFunctions/FtpFunctions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/FTP/FtpUploadDownloadFunctios/FtpFilesDownload.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FTP/FtpUploadDownloadFunctions/FtpFilesDownload.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/FTP/FtpUploadDownloadFunctios/FtpFilesUpload.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FTP/FtpUploadDownloadFunctions/FtpFilesUpload.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/FTP/FtpUploadDownloadFunctios/FtpLoopDownload.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FTP/FtpUploadDownloadFunctions/FtpLoopDownload.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceDataFile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceDataFile.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceProject.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceProject.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Extensions/ApplicationServiceExtension.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Extensions/ApplicationServiceExtension.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsFileUploadFunctions/SendBodyTextToRestApi.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsFileUploadFunctions/SendBodyTextToRestApi.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsFileUploadFunctions/SendFilesToRestApiDataFile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsFileUploadFunctions/SendFilesToRestApiDataFile.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsFileUploadFunctions/SendFilesToRestApiProject.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsFileUploadFunctions/SendFilesToRestApiProject.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestDataFileFunction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestDataFileFunction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsServerReponseFunctions/TpsServerOnFaile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsServerResponseFunctions/TpsServerOnFaile.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsServerReponseFunctions/TpsServerOnSuccess.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsServerResponseFunctions/TpsServerOnSuccess.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsServerResponseFunctions/TpsServerOnFaile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsServerResponseFunctions/TpsServerOnFaile.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/FileFunctions/HandleErrorFiles.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/FileFunctions/HandleErrorFiles.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/FolderFunctions/FolderCleaner.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/FolderFunctions/FolderCleaner.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/ProcessStartupFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/ProcessStartupFunctions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Program.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -299,6 +299,9 @@
       <workItem from="1733897733144" duration="154000" />
       <workItem from="1733898396717" duration="354000" />
       <workItem from="1733898802389" duration="12579000" />
+      <workItem from="1733980078937" duration="2559000" />
+      <workItem from="1733983065375" duration="4572000" />
+      <workItem from="1733990461428" duration="2288000" />
     </task>
     <servers />
   </component>

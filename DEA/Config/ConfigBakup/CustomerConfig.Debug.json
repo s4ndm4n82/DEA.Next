@@ -1,0 +1,541 @@
+﻿{
+  "CustomerDetails": [
+    {
+      "id": 1, // IMPORTANT. Hast add manually and increment by 1 each time
+      "CustomerStatus": 0, // Customer status. If active 1 if not 0.
+      "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZGNfaW1wb3J0IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiaW1wb3J0QGRpZ2l0YWxjYXB0dXJlLm5vIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI1OGRiZTAzOC1mNGIwLTQzNjYtYjJiYi03ZTZiZjU1YzBiOGQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6ImM0YzQwYzk0LTdiMmEtNDI0ZS04MzVlLWVkODA5MmYyODE0YyIsImV4cCI6MTc0NzgxMjIxMiwiaXNzIjoid3d3LmVkZW50cmkuY29tIiwiYXVkIjoiaHR0cHM6Ly9jYXB0dXJlLmVkZW50cmkuY29tL3RwcyJ9.lrUVYrlCoOGaOPKH0KDkODv-kXklm6R4YGdf-NKIw0Q",
+      "UserName": "dc_import",
+      "TemplateKey": "",
+      "Queue": "6",
+      "ProjectID": "0c298408-76b9-4f4c-9941-edb101126329",
+      "DocumentId": "", // If the upload is just a data file then this is needed.
+      "MaxBatchSize": 1, // Number of files that can be in a download batch. Max file limit is 200.
+      "RenameFile": 0, // Add Org to the name in front of the filename. To activate use 1 else 0.
+      "MainCustomer": "Aksesspunkt",
+      "ClientName": "Duett",
+      "SendEmail": 0, // If 1 then send email. If 0 then use configured org. If "FtpFolderLoop" is 1 then use the folder name.
+      "ClientOrgNo": "932971917",
+      "ClientIdField": "Internal ID",
+      "IdField2Value": "", // If this value is set then "ClientIdField2" will use the set value as its value in the TPS. If its not set then "ClientOrg" will be used as the value.
+      "ClientIdField2": "Customer Organization No", // Don't set this if not going to be used.
+      "FileDeliveryMethod": "ftp", //Specify this. If delivered via FTP then use FTP. If via email, use EMAIL.
+      "DomainDetails": {
+        "MainDomain": "https://process.edentri.com/",
+        "TpsRequestUrl": "tps_test/import?"
+      },
+      "ReadContentSettings": {
+        "ReadTheContent": false, // If true then read the file. If false then just send to process.
+        "MakeUploadFile": false, // If true then creates the upload file. If not it just sends data to process.
+        "OutputFileExtension": "pdf", // If you want another file extension then set this.
+        "SetDelimiter": ",", // If the file is a CSV then this will be used.
+        "NumberOfLinesToRead": 100 // When reading from a CSV we can set the number of lines to read at once.
+      },
+      "FtpDetails": {
+        "FtpType": "FTP",
+        // The ftp profile name. Currently available profiles are profilepxe, profileepe, and profilefsv.
+        // profilepxe: Connection type PASVEX, Encryption None, ValidateAnyCertificate false.
+        // profileepe: Connection type AutoActive, Encryption Auto, ValidateAnyCertificate false. <-- Recommended.
+        // profilefsv: Connection type AutoPassive, Encryption Explicit, ValidateAnyCertificate true.
+        "FtpProfile": "profileepe",
+        "FtpHostName": "localhost",
+        "FtpUser": "testuser",
+        "FtpPassword": "jackkills",
+        "FtpPort": 21, // FTP connection port.
+        "FtpFolderLoop": 0, // If 1, then loop through folders. If 0, then only main folder or the mapped folder path.
+        "FtpMainFolder": "/Aksesspunkt",
+        "FtpMoveToSubFolder": false, // If true, then move the file to a subfolder. If false, files will be removed from the FTP after upload."
+        "FtpSubFolder": "/Duett/Uploaded", // The subfolder path to move the files to.
+        "FtpRemoveFiles": true // If false, then keep the source files after upload. Default is true.
+      },
+      "EmailDetails": {
+        "EmailAddress": "",
+        // You can configure the inbox path for the application to look for emails.
+        // Can go up to 3 levels. Ex: /Enkelt pående/Kristiansand Byggentrepenør AS or /Enkelt pående/Kristiansand Byggentrepenør AS/subInbox.
+        "EmailInboxPath": ""
+      },
+      "DocumentDetails": {
+        "DocumentType": "PDF",
+        "DocumentExtensions": [
+          ".pdf"
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "CustomerStatus": 0,
+      "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZGNfaW1wb3J0IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiaW1wb3J0QGRpZ2l0YWxjYXB0dXJlLm5vIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI1OGRiZTAzOC1mNGIwLTQzNjYtYjJiYi03ZTZiZjU1YzBiOGQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6ImM0YzQwYzk0LTdiMmEtNDI0ZS04MzVlLWVkODA5MmYyODE0YyIsImV4cCI6MTc0NzgxMjIxMiwiaXNzIjoid3d3LmVkZW50cmkuY29tIiwiYXVkIjoiaHR0cHM6Ly9jYXB0dXJlLmVkZW50cmkuY29tL3RwcyJ9.lrUVYrlCoOGaOPKH0KDkODv-kXklm6R4YGdf-NKIw0Q",
+      "UserName": "dc_import",
+      "TemplateKey": "",
+      "Queue": "6",
+      "ProjectID": "0c298408-76b9-4f4c-9941-edb101126329",
+      "DocumentId": "",
+      "MaxBatchSize": 1, // Number of files that can be in a download batch. Max file limit is 200.
+      "MainCustomer": "DigiAcc",
+      "ClientName": "DigiAcc",
+      "SendEmail": 1,
+      "ClientOrgNo": "Testing Above setting",
+      "ClientIdField": "InternalAccountingID",
+      "FileDeliveryMethod": "email", //Specify this. If delivered via FTP then use FTP. If via email, use EMAIL.
+      "ReadTheFile": 1, // If 1 then read the file content. If 0 then process the file.
+      "DomainDetails": {
+        "MainDomain": "https://process.edentri.com/",
+        "TpsRequestUrl": "tps_test/import?"
+      },
+      "FtpDetails": {
+        "FtpType": "",
+        "FtpHostName": "",
+        "FtpHostIp": "",
+        "FtpUser": "",
+        "FtpPassword": "",
+        "FtpFolderLoop": 0,
+        "FtpMainFolder": ""
+      },
+      "EmailDetails": {
+        "EmailAddress": "apptesting@efakturamottak.no",
+        "EmailInboxPath": "/Level 1",
+        //"EmailRead": 0,
+        "EmailList": [
+          "sandaruwan.s@pro-account.lk",
+          "apptesting@efakturamottak.no"
+        ],
+        "EmailFieldList": [
+          {
+            "FieldId": 1,
+            "FieldName": "Customer Organization No"
+          },
+          {
+            "FieldId": 2,
+            "FieldName": "Customer Name"
+          }
+        ]
+      },
+      "DocumentDetails": {
+        "DocumentType": "MULTI",
+        "DocumentExtensions": [
+          ".pDf",
+          ".jpg",
+          ".jpeg",
+          ".tif"
+        ]
+      }
+    },
+    {
+      "id": 3, // IMPORTANT. Hast add manually and increment by 1 each time
+      "CustomerStatus": 0, // Customer status. If active 1 if not 0.
+      "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZGNfaW1wb3J0IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiaW1wb3J0QGRpZ2l0YWxjYXB0dXJlLm5vIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI1OGRiZTAzOC1mNGIwLTQzNjYtYjJiYi03ZTZiZjU1YzBiOGQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6ImM0YzQwYzk0LTdiMmEtNDI0ZS04MzVlLWVkODA5MmYyODE0YyIsImV4cCI6MTczNzA5NDg1NCwiaXNzIjoid3d3LmVkZW50cmkuY29tIiwiYXVkIjoiaHR0cHM6Ly9jYXB0dXJlLmVkZW50cmkuY29tL3RwcyJ9.VhnBtHfGybZBVgk0IfRgOyPEzAsxj3WiUF3i4ZyIwWg",
+      "UserName": "dc_import",
+      "TemplateKey": "",
+      "Queue": "6",
+      "ProjectID": "0c298408-76b9-4f4c-9941-edb101126329",
+      "DocumentId": "",
+      "MaxBatchSize": 1, // Number of files that can be in a download batch. Max file limit is 200.
+      "MainCustomer": "Advania Norge",
+      "ClientName": "Kristiansand Byggentrepenør AS",
+      "ClientOrgNo": "993853623",
+      "ClientIdField": "Customer Organization No",
+      "FileDeliveryMethod": "email", //Specify this. If delivered via FTP then use FTP. If via email, use EMAIL.
+      "ReadTheFile": 1, // If 1 then read the file content. If 0 then process the file.
+      "DomainDetails": {
+        "MainDomain": "https://capture.edentri.com/",
+        "TpsRequestUrl": "tps_test_processing/Import?"
+      },
+      "FtpDetails": {
+        "FtpType": "",
+        "FtpHostName": "",
+        "FtpHostIp": "",
+        "FtpUser": "",
+        "FtpPassword": "",
+        "FtpFolderLoop": 0,
+        "FtpMainFolder": ""
+      },
+      "EmailDetails": {
+        "EmailAddress": "atc@efakturamottak.no",
+        "EmailInboxPath": "/Enkeltstående/Kristiansand Byggentrepenør AS",
+        "EmailRead": 1,
+        "EmailFieldList": [
+          {
+            "FieldId": 1,
+            "FieldName": "Customer Organization No"
+          },
+          {
+            "FieldId": 2,
+            "FieldName": "Customer Name"
+          }
+        ]
+      },
+      "DocumentDetails": {
+        "DocumentType": "PDF",
+        "DocumentExtensions": [
+          ".pdf"
+        ]
+      }
+    },
+    {
+      "id": 4, // IMPORTANT. Hast add manually and increment by 1 each time
+      "CustomerStatus": 0, // Customer status. If active 1 if not 0.
+      "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZGNfaW1wb3J0IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiaW1wb3J0QGRpZ2l0YWxjYXB0dXJlLm5vIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI1OGRiZTAzOC1mNGIwLTQzNjYtYjJiYi03ZTZiZjU1YzBiOGQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6ImM0YzQwYzk0LTdiMmEtNDI0ZS04MzVlLWVkODA5MmYyODE0YyIsImV4cCI6MTc0NzgxMjIxMiwiaXNzIjoid3d3LmVkZW50cmkuY29tIiwiYXVkIjoiaHR0cHM6Ly9jYXB0dXJlLmVkZW50cmkuY29tL3RwcyJ9.lrUVYrlCoOGaOPKH0KDkODv-kXklm6R4YGdf-NKIw0Q",
+      "UserName": "dc_import",
+      "TemplateKey": "",
+      "Queue": "",
+      "ProjectID": "",
+      "DocumentId": "64247483-e216-4fc9-f1c2-08dce758a898",
+      "DocumentEncoding": "UTF-8", // Set this to the encoding of the file. Only used when uploading a data file. Default is UTF-8.
+      "MaxBatchSize": 1, // Number of files that can be in a download batch. Max file limit is 200.
+      "MainCustomer": "",
+      "ClientName": "",
+      "SendEmail": 0, // If 1 then send email. If 0 then use configured org.
+      "ClientOrgNo": "",
+      "ClientIdField": "",
+      "FileDeliveryMethod": "ftp", //Specify this. If delivered via FTP then use FTP. If via email, use EMAIL.
+      "ReadTheFile": 0, // If 1 then read the file content. If 0 then process the file.
+      "DomainDetails": {
+        "MainDomain": "https://process.edentri.com/",
+        "TpsRequestUrl": "tps_test/ImportExternalData?"
+      },
+      "FtpDetails": {
+        "FtpType": "FTP",
+        "FtpProfile": "profileepe",
+        "FtpHostName": "localhost",
+        "FtpUser": "testuser",
+        "FtpPassword": "jackkills",
+        //"FtpProfile": "profilepxe",
+        //"FtpHostName": "ftp.ramberg.no",
+        //"FtpHostIp": "",
+        //"FtpUser": "FTPNAVI",
+        //"FtpPassword": "nav2016",
+        //"FtpPort": 21,
+        "FtpFolderLoop": 0, // If 1, then loop through folders. If 0, then only main folder.
+        //"FtpMainFolder": "/LoacalSFTPRoot/LoopDownload"
+        "FtpMainFolder": "/Aksesspunkt",
+        //"FtpMainFolder": "/SYSPEDFX/NAVITRO/EDISE1K"
+        "FtpRemoveFiles": true // If false, then keep the source files after upload. Default is true.
+
+      },
+      "EmailDetails": {
+        "EmailAddress": "",
+        // You can configure the inbox path for the application to look for emails.
+        // Can go up to 3 levels. Ex: /Enkelt pående/Kristiansand Byggentrepenør AS or /Enkelt pående/Kristiansand Byggentrepenør AS/subInbox.
+        "EmailInboxPath": ""
+      },
+      "DocumentDetails": {
+        "DocumentType": "CSV",
+        "DocumentExtensions": [
+          ".csv"
+        ]
+      }
+    },
+    {
+      "id": 5, // IMPORTANT. Hast add manually and increment by 1 each time
+      "CustomerStatus": 0, // Customer status. If active 1 if not 0.
+      "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZGNfaW1wb3J0IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiaW1wb3J0QGRpZ2l0YWxjYXB0dXJlLm5vIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI1OGRiZTAzOC1mNGIwLTQzNjYtYjJiYi03ZTZiZjU1YzBiOGQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6ImM0YzQwYzk0LTdiMmEtNDI0ZS04MzVlLWVkODA5MmYyODE0YyIsImV4cCI6MTc0NzgxMjIxMiwiaXNzIjoid3d3LmVkZW50cmkuY29tIiwiYXVkIjoiaHR0cHM6Ly9jYXB0dXJlLmVkZW50cmkuY29tL3RwcyJ9.lrUVYrlCoOGaOPKH0KDkODv-kXklm6R4YGdf-NKIw0Q",
+      "UserName": "dc_import",
+      //"Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiaW1wb3J0X2VmYWN0byIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImltcG9ydEBlZmFjdG8uY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI3MmJlYzAyMy00NzJhLTQyNDEtOGRjZS00Njg4YWM0MGMzYTQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6Ijk0NGNmZDU2LTkxZDAtNGMzNC04ZWFjLWEwMmQzYzMzNDc0ZCIsImV4cCI6MTczNzA2NDgxOSwiaXNzIjoid3d3LmVkZW50cmkuY29tIiwiYXVkIjoiaHR0cHM6Ly9jYXB0dXJlLmVkZW50cmkuY29tL3RwcyJ9.hyEqvyl61MTnclxQh0lIixdYdrqX2RTnHBLme69OOoM",
+      //"UserName": "import_efacto",
+      "TemplateKey": "",
+      "Queue": "6",
+      //"Queue": "3",
+      "ProjectID": "0c298408-76b9-4f4c-9941-edb101126329",
+      //"ProjectID": "9b83f71a-2371-434b-88ca-7afb4b63220f",
+      //"ProjectID": "690e35df-73b1-4802-46a5-08da8ffc4c42",
+      //"DocumentId": "298cc955-5a4d-480c-5a8d-08dba22ebdea", // If the upload is just a data file then this is needed.
+      "MaxBatchSize": 2, // Number of files that can be in a download batch. Max file limit is 200.
+      "RenameFile": 0, // Add Org to the name in front of the filename. To activate use 1 else 0.
+      "MainCustomer": "Aksesspunkt",
+      "ClientName": "Duett",
+      "SendEmail": 0, // If 1 then send email. If 0 then use configured org. If "FtpFolderLoop" is 1 then use the folder name.
+      "ClientOrgNo": "932971917",
+      "ClientIdField": "Internal ID",
+      "IdField2Value": "", // If this value is set then "ClientIdField2" will use the set value as its value in the TPS. If its not set then "ClientOrg" will be used as the value.
+      "ClientIdField2": "Customer Organization No", // Don't set this if not going to be used.
+      "FileDeliveryMethod": "ftp", //Specify this. If delivered via FTP then use FTP. If via email, use EMAIL.
+      "ReadTheFile": 1, // If 1 then read the file content. If 0 then process the file.
+      "DomainDetails": {
+        "MainDomain": "https://process.edentri.com/",
+        "TpsRequestUrl": "tps_test/import?"
+        //"MainDomain": "https://capture.edentri.com/",
+        //"TpsRequestUrl": "tps_test_processing/Import?"
+        //"TpsRequestUrl": "tps_processing2/Import?"
+      },
+      "FtpDetails": {
+        "FtpType": "SFTP",
+        // The ftp profile name. Currently available profiles are profilepxe, profileepe, and profilefsv.
+        // profilepxe: Connection type PASVEX, Encryption None, ValidateAnyCertificate false.
+        // profileepe: Connection type AutoActive, Encryption Auto, ValidateAnyCertificate false. <-- Recommended.
+        // profilefsv: Connection type AutoPassive, Encryption Explicit, ValidateAnyCertificate true.
+        "FtpProfile": "profileepe",
+        "FtpHostName": "localhost",
+        "FtpUser": "testsshuser",
+        "FtpPassword": "jackkills",
+        "FtpPort": 22, // FTP connection port.
+        "FtpFolderLoop": 0, // If 1, then loop through folders. If 0, then only main folder or the mapped folder path.
+        "FtpMainFolder": "/Aksesspunkt", // Path to the main folder FTP folder.
+        "FtpMoveToSubFolder": false, // If true, then move the file to a subfolder. If false, files will be removed from the FTP after upload."
+        "FtpSubFolder": "/Duett/Uploaded", // The subfolder path to move the files to.
+        "FtpRemoveFiles": true // If false, then keep the source files after upload. Default is true.
+      },
+      "EmailDetails": {
+        "EmailAddress": "",
+        // You can configure the inbox path for the application to look for emails.
+        // Can go up to 3 levels. Ex: /Enkelt pående/Kristiansand Byggentrepenør AS or /Enkelt pående/Kristiansand Byggentrepenør AS/subInbox.
+        "EmailInboxPath": ""
+      },
+      "DocumentDetails": {
+        "DocumentType": "PDF",
+        "DocumentExtensions": [
+          ".pdf"
+        ]
+      }
+    },
+    {
+      "id": 6, // IMPORTANT. Hast add manually and increment by 1 each time
+      "CustomerStatus": 0, // Customer status. If active 1 if not 0.
+      "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSU1QX1NBSiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImpzYW1hcmFzaW5naGUraW1wX3NhakBnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjRiZjEzNzE4LTZhYWQtNDAxOS1hMzQ3LWVlMmZlMjc2OTc1MSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcHJpbWFyeWdyb3Vwc2lkIjoiZTc4YTNjZTktNjZhYS00YTdhLWExYmUtYWVjYTllMGQwNzc5IiwiZXhwIjoxNzU0NTg2NDQ2LCJpc3MiOiJ3d3cuZWRlbnRyaS5jb20iLCJhdWQiOiJodHRwczovL2NhcHR1cmUuZWRlbnRyaS5jb20vdHBzIn0.O_xI6C1Am5O8AYEzf_8vvt9dbF0c846JvRakrut9Lsg",
+      "UserName": "imp_saj",
+      "TemplateKey": "",
+      "Queue": "370",
+      "ProjectID": "f4f7d432-2c37-4c19-a4d7-d1d52b961de7",
+      "DocumentId": "", // If the upload is just a data file then this is needed.
+      "MaxBatchSize": 2, // Number of files that can be in a download batch. Max file limit is 200.
+      "RenameFile": 0, // Add Org to the name in front of the filename. To activate use 1 else 0.
+      "MainCustomer": "RSAJ",
+      "ClientName": "RSAJ B2B",
+      "SendEmail": 0, // If 1 then send email. If 0 then use configured org. If "FtpFolderLoop" is 1 then use the folder name.
+      "ClientOrgNo": "",
+      "ClientIdField": "Set ID",
+      "IdField2Value": "", // If this value is set then "ClientIdField2" will use the set value as its value in the TPS. If its not set then "ClientOrg" will be used as the value.
+      "ClientIdField2": "Main File Name", // Don't set this if not going to be used.
+      "FileDeliveryMethod": "ftp", //Specify this. If delivered via FTP then use FTP. If via email, use EMAIL.
+      "DomainDetails": {
+        "MainDomain": "https://process.edentri.com/",
+        "TpsRequestUrl": "tps_test/import?"
+      },
+      "ReadContentSettings": {
+        "ReadTheContent": true, // If true then read the file. If false then just send to process.
+        "ReadByLineTrigger": "b2b", // If ReadByLine is true then the file name is checked to trigger the read by line function.
+        "MakeUploadFile": true, // If true then creates the upload file. If not it just sends data to process.
+        "OutputFileExtension": "pdf", // If you want another file extension then set this.
+        "SetDelimiter": ";", // If the file is a CSV then this will be used.
+        "NumberOfLinesToRead": 100, // When reading from a CSV we can set the number of lines to read at once.
+        "GeneratedField": "Invoice Number", // This is the field will be generated by using DEA.
+        "GroupDataBy": "", // Groups the data using the configured field name. Leave empty is not need to be grouped.
+        "RemoveGroupDataField": false, // Removes the GroupDataBy field name from the array list to send to TPS is set to true.
+        "GeneratedFieldToEnd": false, // Adds the generated field to the end of the array list to send to TPS.
+        "MainFieldNameList": [
+          "Invoice Category",
+          "Invoice Type",
+          "Invoice Number",
+          "Water Account No.",
+          "Invoice Date",
+          "Total Excluding Tax",
+          "Total Including Tax",
+          "Total Payable Amount",
+          "Rounding Amount",
+          "Description of Product or Service",
+          "Buyer Name",
+          "Buyer TIN",
+          "Buyer Registration",
+          "Buyer Address",
+          "Buyer City Name",
+          "Buyer Contact Number"
+        ],
+        "MainFieldToSkip": [
+          "Invoice Category",
+          "Water Account No.",
+          "Invoice Date",
+          "Description of Product or Service"
+        ],        
+        "LineFieldNameList": [],
+        "LineFieldToSkip": []
+      },
+      "FtpDetails": {
+        "FtpType": "SFTP",
+        // The ftp profile name. Currently available profiles are profilepxe, profileepe, and profilefsv.
+        // profilepxe: Connection type PASVEX, Encryption None, ValidateAnyCertificate false.
+        // profileepe: Connection type AutoActive, Encryption Auto, ValidateAnyCertificate false. <-- Recommended.
+        // profilefsv: Connection type AutoPassive, Encryption Explicit, ValidateAnyCertificate true.
+        "FtpProfile": "profileepe",
+        "FtpHostName": "localhost",
+        "FtpUser": "testsshuser",
+        "FtpPassword": "jackkills",
+        "FtpPort": 22, // FTP connection port.
+        "FtpFolderLoop": 0, // If 1, then loop through folders. If 0, then only main folder or the mapped folder path.
+        "FtpMainFolder": "/Aksesspunkt/B2B",
+        "FtpMoveToSubFolder": false, // If true, then move the file to a subfolder. If false, files will be removed from the FTP after upload."
+        "FtpSubFolder": "/Duett/Uploaded" // The subfolder path to move the files to.
+      },
+      "EmailDetails": {
+        "EmailAddress": "",
+        // You can configure the inbox path for the application to look for emails.
+        // Can go up to 3 levels. Ex: /Enkelt pående/Kristiansand Byggentrepenør AS or /Enkelt pående/Kristiansand Byggentrepenør AS/subInbox.
+        "EmailInboxPath": ""
+      },
+      "DocumentDetails": {
+        "DocumentType": "CSV",
+        "DocumentExtensions": [
+          ".pdf",
+          ".csv"
+        ]
+      }
+    },
+    {
+      "id": 7, // IMPORTANT. Hast add manually and increment by 1 each time
+      "CustomerStatus": 0, // Customer status. If active 1 if not 0.
+      "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSU1QX1NBSiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImpzYW1hcmFzaW5naGUraW1wX3NhakBnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjRiZjEzNzE4LTZhYWQtNDAxOS1hMzQ3LWVlMmZlMjc2OTc1MSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcHJpbWFyeWdyb3Vwc2lkIjoiZTc4YTNjZTktNjZhYS00YTdhLWExYmUtYWVjYTllMGQwNzc5IiwiZXhwIjoxNzU0NTg2NDQ2LCJpc3MiOiJ3d3cuZWRlbnRyaS5jb20iLCJhdWQiOiJodHRwczovL2NhcHR1cmUuZWRlbnRyaS5jb20vdHBzIn0.O_xI6C1Am5O8AYEzf_8vvt9dbF0c846JvRakrut9Lsg",
+      "UserName": "imp_saj",
+      "TemplateKey": "",
+      "Queue": "372",
+      "ProjectID": "f841fa4e-ca24-41cd-a7c9-8eccbff5a447",
+      "DocumentId": "", // If the upload is just a data file then this is needed.
+      "MaxBatchSize": 1, // Number of files that can be in a download batch. Max file limit is 200.
+      "RenameFile": 0, // Add Org to the name in front of the filename. To activate use 1 else 0.
+      "MainCustomer": "RSAJ",
+      "ClientName": "RSAJ B2C_B2G",
+      "SendEmail": 0, // If 1 then send email. If 0 then use configured org. If "FtpFolderLoop" is 1 then use the folder name.
+      "ClientOrgNo": "",
+      "ClientIdField": "Set ID",
+      "IdField2Value": "", // If this value is set then "ClientIdField2" will use the set value as its value in the TPS. If its not set then "ClientOrg" will be used as the value.
+      "ClientIdField2": "Main File Name", // Don't set this if not going to be used.
+      "FileDeliveryMethod": "ftp", //Specify this. If delivered via FTP then use FTP. If via email, use EMAIL.
+      "DomainDetails": {
+        "MainDomain": "https://process.edentri.com/",
+        "TpsRequestUrl": "tps_test/import?"
+      },
+      "ReadContentSettings": {
+        "ReadTheContent": true, // If true then read the file. If false then just send to process.
+        "ReadByLineTrigger": "", // If ReadByLine is true then the file name is checked to trigger the read by line function.
+        "MakeUploadFile": true, // If true then creates the upload file. If not it just sends data to process.
+        "OutputFileExtension": "pdf", // If you want another file extension then set this.
+        "SetDelimiter": ";", // If the file is a CSV then this will be used.
+        "NumberOfLinesToRead": 100, // When reading from a CSV we can set the number of lines to read at once.
+        "GeneratedField": "Description of Product or Service", // This is the field will be generated by using DEA.
+        "GroupDataBy": "Invoice Number", // Groups the data using the configured field name. Leave empty is not need to be grouped.
+        "RemoveGroupDataField": true, // Removes the GroupDataBy field name from the array list to send to TPS is set to true.
+        "GeneratedFieldToEnd": true, // Adds the generated field to the end of the array list to send to TPS.
+        "MainFieldNameList": [],
+        "MainFieldToSkip": [],
+        "LineFieldNameList": [
+          "Invoice Category",
+          "Invoice Type",
+          "Invoice Number",
+          "Water Account No.",
+          "Invoice Date",
+          "Total Excluding Tax",
+          "Total Including Tax",
+          "Total Payable Amount",
+          "Rounding Amount",
+          "Description of Product or Service",
+          "Buyer Name",
+          "Buyer TIN",
+          "Buyer Registration",
+          "Buyer Address",
+          "Buyer City Name",
+          "Buyer Contact Number",
+          "LHDN Status",
+          "LHDN Status Description",
+          "URL",
+          "DateTime"
+        ],
+        "LineFieldToSkip": [
+          "Invoice Category",
+          "Invoice Type",          
+          "Water Account No.",
+          "Invoice Date",
+          "Buyer Name",
+          "Buyer TIN",
+          "Buyer Registration",
+          "Buyer Address Line 0",
+          "Buyer City Name",
+          "Buyer Address",
+          "Buyer Contact Number",
+          "LHDN Status",
+          "LHDN Status Description",
+          "URL",
+          "DateTime"
+        ]
+      },
+      "FtpDetails": {
+        "FtpType": "SFTP",
+        // The ftp profile name. Currently available profiles are profilepxe, profileepe, and profilefsv.
+        // profilepxe: Connection type PASVEX, Encryption None, ValidateAnyCertificate false.
+        // profileepe: Connection type AutoActive, Encryption Auto, ValidateAnyCertificate false. <-- Recommended.
+        // profilefsv: Connection type AutoPassive, Encryption Explicit, ValidateAnyCertificate true.
+        "FtpProfile": "profileepe",
+        "FtpHostName": "localhost",
+        "FtpUser": "testsshuser",
+        "FtpPassword": "jackkills",
+        "FtpPort": 22, // FTP connection port.
+        "FtpFolderLoop": 0, // If 1, then loop through folders. If 0, then only main folder or the mapped folder path.
+        "FtpMainFolder": "/Aksesspunkt/B2C_B2G",
+        "FtpMoveToSubFolder": false, // If true, then move the file to a subfolder. If false, files will be removed from the FTP after upload."
+        "FtpSubFolder": "/Duett/Uploaded" // The subfolder path to move the files to.
+      },
+      "EmailDetails": {
+        "EmailAddress": "",
+        // You can configure the inbox path for the application to look for emails.
+        // Can go up to 3 levels. Ex: /Enkelt pående/Kristiansand Byggentrepenør AS or /Enkelt pående/Kristiansand Byggentrepenør AS/subInbox.
+        "EmailInboxPath": ""
+      },
+      "DocumentDetails": {
+        "DocumentType": "CSV",
+        "DocumentExtensions": [
+          ".pdf",
+          ".csv"
+        ]
+      }
+    },
+    {
+      "id": 8, // IMPORTANT. Hast add manually and increment by 1 each time
+      "CustomerStatus": 1, // Customer status. If active 1 if not 0.
+      "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZGNfaW1wb3J0IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiaW1wb3J0QGRpZ2l0YWxjYXB0dXJlLm5vIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI1OGRiZTAzOC1mNGIwLTQzNjYtYjJiYi03ZTZiZjU1YzBiOGQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6ImM0YzQwYzk0LTdiMmEtNDI0ZS04MzVlLWVkODA5MmYyODE0YyIsImV4cCI6MTc0NzgxMjIxMiwiaXNzIjoid3d3LmVkZW50cmkuY29tIiwiYXVkIjoiaHR0cHM6Ly9jYXB0dXJlLmVkZW50cmkuY29tL3RwcyJ9.lrUVYrlCoOGaOPKH0KDkODv-kXklm6R4YGdf-NKIw0Q",
+      "UserName": "dc_import",
+      "TemplateKey": "",
+      "Queue": "6",
+      "ProjectID": "0c298408-76b9-4f4c-9941-edb101126329",
+      "DocumentId": "", // If the upload is just a data file then this is needed.
+      "MaxBatchSize": 20, // Number of files that can be in a download batch. Max file limit is 200.
+      "MainCustomer": "Aksesspunkt",
+      "ClientName": "DHL",
+      "SendEmail": 0, // If 1 then send email. If 0 then use configured org.
+      "SendSubject": true, // Set to true when you want to send the subject.
+      "ClientOrgNo": "",
+      "ClientIdField": "Subject",
+      "IdField2Value": "", // If this value is set then "ClientIdField2" will use the set value as its value in the TPS. If its not set then "ClientOrg" will be used as the value.
+      "ClientIdField2": "", // Don't set this if not going to be used.
+      "FileDeliveryMethod": "email",
+      "DomainDetails": {
+        "MainDomain": "https://process.edentri.com",
+        "TpsRequestUrl": "tps_test/import?"
+      },
+      "FtpDetails": {
+        "FtpType": "",
+        // The ftp profile name. Currently available profiles are profilepxe, profileepe, and profilefsv.
+        // profilepxe: Connection type PASVEX, Encription None, ValidateAnyCertificate false.
+        // profileepe: Connection type AutoActive, Encription Auto, ValidateAnyCertificate false. <-- Recommended.
+        // profilefsv: Connection type AutoPassive, Encription Explicit, ValidateAnyCertificate true.
+        "FtpProfile": "profileepe",
+        "FtpHostName": "",
+        "FtpUser": "",
+        "FtpPassword": "",
+        "FtpPort": 21, // FTP connection port.
+        "FtpFolderLoop": 0, // Use 1 to enable the folder loop, 0 to disable.
+        "FtpMainFolder": ""
+      },
+      "EmailDetails": {
+        "EmailAddress": "apptesting@efakturamottak.no",
+        // You can configure the inbox path for the application to look for emails.
+        // Can go up to 3 levels. Ex: /Enkelt pående/Kristiansand Byggentrepenør AS or /Enkelt pående/Kristiansand Byggentrepenør AS/subInbox.
+        "EmailInboxPath": "/Level 1"
+      },
+      "DocumentDetails": {
+        "DocumentType": "MULTI",
+        "DocumentExtensions": [
+          ".pdf",
+          ".jpg",
+          ".jpeg",
+          ".tif",
+          ".tiff"
+        ]
+      }
+    }
+  ]
+}

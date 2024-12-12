@@ -1,8 +1,6 @@
 ﻿using DEA.Next.HelperClasses.ConfigFileFunctions;
 using DEA.Next.HelperClasses.OtherFunctions;
 using FolderFunctions;
-using UserConfigRetriverClass;
-using UserConfigSetterClass;
 using WriteLog;
 
 namespace HandleErrorFiles;
@@ -41,8 +39,13 @@ internal class HandleErrorFilesClass
             // Destination folder name.
             var destinationFolderName = clientDetails.FileDeliveryMethod.ToLower() == MagicWords.Email ? string.Concat("ID_", customerId.ToString(), " ", "Email_", clientEmail)
                 : string.Concat("ID_", customerId.ToString(), " ", "Org_", clientDetails.FieldOneValue);
-            
-            if 
+
+            if (string.IsNullOrEmpty(sourceFolderName))
+            {
+                WriteLogClass.WriteToLog(0, "Source folder name can not be empty ....", 1);
+                return false;
+            }
+                
             // Destination folder path.
             var destinationFolderPath = Path.Combine(FolderFunctionsClass.CheckFolders(MagicWords.Error),
                 destinationFolderName,
@@ -53,6 +56,13 @@ internal class HandleErrorFilesClass
             {
                 Directory.CreateDirectory(destinationFolderPath);
             }
+            
+            if (string.IsNullOrEmpty(sourcePath))
+            {
+                WriteLogClass.WriteToLog(0, "Source path can not be empty ....", 1);
+                return false;
+            }
+            
             // Move files.
             return MoveEachFile(sourcePath,
                 destinationFolderPath,

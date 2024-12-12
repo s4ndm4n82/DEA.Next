@@ -23,7 +23,7 @@ public static class ApplicationServiceExtension
         services.AddScoped<IUserConfigRepository, CustomerDetailsRepository>();
         
         var repository = services.BuildServiceProvider().GetService<IUserConfigRepository>();
-        UserConfigRetriever.Initialize(repository);
+        if (repository != null) UserConfigRetriever.Initialize(repository);
 
         return services;
     }

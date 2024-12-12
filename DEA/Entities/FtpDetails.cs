@@ -15,7 +15,7 @@ public class FtpDetails
     public required string FtpUser { get; set; }
     [MaxLength(50)]
     public required string FtpPassword { get; set; }
-    public required int FtpPort { get; set; }
+    public int FtpPort { get; set; }
     [MaxLength(200)]
     public required string FtpMainFolder { get; set; }
     [MaxLength(200)]

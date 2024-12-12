@@ -41,7 +41,7 @@ internal class TpsServerOnFaile
         string[] ftpFileList,
         string[] localFileList,
         HttpStatusCode serverStatusCode,
-        string serverResponseContent)
+        string? serverResponseContent)
     {
         try
         {
@@ -198,7 +198,7 @@ internal class TpsServerOnFaile
     /// </summary>        
     public static async Task<int> ServerOnFailBodyTextAsync(IMailFolderRequestBuilder requestBuilder,
         string messageId,
-        string serverResponseContent,
+        string? serverResponseContent,
         HttpStatusCode serverStatusCode)
     {
         var errorFolderId = await GetMailFolderIdsClass.GetErrorFolderId(requestBuilder);

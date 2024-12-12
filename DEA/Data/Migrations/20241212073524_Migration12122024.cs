@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DEA.Next.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstMigration : Migration
+    public partial class Migration12122024 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,6 +24,7 @@ namespace DEA.Next.Data.Migrations
                     ProjectId = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     TemplateKey = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     DocumentId = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    DocumentEncoding = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
                     MaxBatchSize = table.Column<int>(type: "integer", nullable: false),
                     SendEmail = table.Column<bool>(type: "boolean", nullable: false),
                     SendSubject = table.Column<bool>(type: "boolean", nullable: false),
@@ -32,6 +33,7 @@ namespace DEA.Next.Data.Migrations
                     FieldTwoValue = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     FieldTwoName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Domain = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    FileDeliveryMethod = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ModifiedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -50,9 +52,9 @@ namespace DEA.Next.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Documentdetails", x => x.Id);
+                    table.PrimaryKey("PK_DocumentDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Documentdetails_CustomerDetails_CustomerDetailsId",
+                        name: "FK_DocumentDetails_CustomerDetails_CustomerDetailsId",
                         column: x => x.CustomerDetailsId,
                         principalTable: "CustomerDetails",
                         principalColumn: "Id",
@@ -70,9 +72,9 @@ namespace DEA.Next.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Emaildetails", x => x.Id);
+                    table.PrimaryKey("PK_EmailDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Emaildetails_CustomerDetails_CustomerDetailsId",
+                        name: "FK_EmailDetails_CustomerDetails_CustomerDetailsId",
                         column: x => x.CustomerDetailsId,
                         principalTable: "CustomerDetails",
                         principalColumn: "Id",
@@ -89,9 +91,12 @@ namespace DEA.Next.Data.Migrations
                     FtpHost = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     FtpUser = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     FtpPassword = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    FtpPort = table.Column<string>(type: "character varying(2)", maxLength: 2, nullable: false),
-                    FtpPath = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    FtpPort = table.Column<int>(type: "integer", nullable: false),
+                    FtpMainFolder = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    FtpSubFolder = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     FtpFolderLoop = table.Column<bool>(type: "boolean", nullable: false),
+                    FtpRemoveFiles = table.Column<bool>(type: "boolean", nullable: false),
+                    FtpMoveToSubFolder = table.Column<bool>(type: "boolean", nullable: false),
                     CustomerDetailsId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -106,12 +111,12 @@ namespace DEA.Next.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Documentdetails_CustomerDetailsId",
+                name: "IX_DocumentDetails_CustomerDetailsId",
                 table: "DocumentDetails",
                 column: "CustomerDetailsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Emaildetails_CustomerDetailsId",
+                name: "IX_EmailDetails_CustomerDetailsId",
                 table: "EmailDetails",
                 column: "CustomerDetailsId");
 

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DEA.Next.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241203094340_FirstMigration")]
-    partial class FirstMigration
+    [Migration("20241212073524_Migration12122024")]
+    partial class Migration12122024
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,6 +38,11 @@ namespace DEA.Next.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<string>("DocumentEncoding")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
 
                     b.Property<string>("DocumentId")
                         .IsRequired()
@@ -68,6 +73,11 @@ namespace DEA.Next.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<string>("FileDeliveryMethod")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
 
                     b.Property<int>("MaxBatchSize")
                         .HasColumnType("integer");
@@ -112,7 +122,7 @@ namespace DEA.Next.Data.Migrations
                     b.ToTable("CustomerDetails");
                 });
 
-            modelBuilder.Entity("DEA.Next.Entities.Documentdetails", b =>
+            modelBuilder.Entity("DEA.Next.Entities.DocumentDetails", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -130,10 +140,10 @@ namespace DEA.Next.Data.Migrations
 
                     b.HasIndex("CustomerDetailsId");
 
-                    b.ToTable("Documentdetails");
+                    b.ToTable("DocumentDetails");
                 });
 
-            modelBuilder.Entity("DEA.Next.Entities.Emaildetails", b =>
+            modelBuilder.Entity("DEA.Next.Entities.EmailDetails", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -156,7 +166,7 @@ namespace DEA.Next.Data.Migrations
 
                     b.HasIndex("CustomerDetailsId");
 
-                    b.ToTable("Emaildetails");
+                    b.ToTable("EmailDetails");
                 });
 
             modelBuilder.Entity("DEA.Next.Entities.FtpDetails", b =>
@@ -176,25 +186,34 @@ namespace DEA.Next.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<string>("FtpMainFolder")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<bool>("FtpMoveToSubFolder")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("FtpPassword")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<string>("FtpPath")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("FtpPort")
-                        .IsRequired()
-                        .HasMaxLength(2)
-                        .HasColumnType("character varying(2)");
+                    b.Property<int>("FtpPort")
+                        .HasColumnType("integer");
 
                     b.Property<string>("FtpProfile")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
+
+                    b.Property<bool>("FtpRemoveFiles")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("FtpSubFolder")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("FtpType")
                         .IsRequired()
@@ -213,7 +232,7 @@ namespace DEA.Next.Data.Migrations
                     b.ToTable("FtpDetails");
                 });
 
-            modelBuilder.Entity("DEA.Next.Entities.Documentdetails", b =>
+            modelBuilder.Entity("DEA.Next.Entities.DocumentDetails", b =>
                 {
                     b.HasOne("DEA.Next.Entities.CustomerDetails", "CustomerDetails")
                         .WithMany("DocumentDetails")
@@ -224,7 +243,7 @@ namespace DEA.Next.Data.Migrations
                     b.Navigation("CustomerDetails");
                 });
 
-            modelBuilder.Entity("DEA.Next.Entities.Emaildetails", b =>
+            modelBuilder.Entity("DEA.Next.Entities.EmailDetails", b =>
                 {
                     b.HasOne("DEA.Next.Entities.CustomerDetails", "CustomerDetails")
                         .WithMany("EmailDetails")

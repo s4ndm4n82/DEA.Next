@@ -36,6 +36,11 @@ namespace DEA.Next.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<string>("DocumentEncoding")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
                     b.Property<string>("DocumentId")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -178,25 +183,34 @@ namespace DEA.Next.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<string>("FtpMainFolder")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<bool>("FtpMoveToSubFolder")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("FtpPassword")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<string>("FtpPath")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("FtpPort")
-                        .IsRequired()
-                        .HasMaxLength(2)
-                        .HasColumnType("character varying(2)");
+                    b.Property<int>("FtpPort")
+                        .HasColumnType("integer");
 
                     b.Property<string>("FtpProfile")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
+
+                    b.Property<bool>("FtpRemoveFiles")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("FtpSubFolder")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("FtpType")
                         .IsRequired()

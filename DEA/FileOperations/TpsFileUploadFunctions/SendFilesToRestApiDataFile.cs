@@ -3,6 +3,7 @@ using FluentFTP;
 using Renci.SshNet;
 using RestSharp;
 using System.Net;
+using DEA.Next.Extensions;
 using DEA.Next.HelperClasses.ConfigFileFunctions;
 
 namespace DEA.Next.FileOperations.TpsFileUploadFunctions;
@@ -21,11 +22,7 @@ internal class SendFilesToRestApiDataFile
         string[] ftpFileList,
         string[] localFileList)
     {
-        var customerDetails = await UserConfigRetriever.RetrieveUserConfigById(customerId);
-
-        var index = customerDetails.Domain.LastIndexOf('/');
-        var mainDomain = customerDetails.Domain[..index];
-        var query = customerDetails.Domain[(index + 1)..];
+        var (mainDomain, query) = await customerId.SplitUrl();
 
         // Creating rest api request.
         var client = new RestClient(mainDomain);

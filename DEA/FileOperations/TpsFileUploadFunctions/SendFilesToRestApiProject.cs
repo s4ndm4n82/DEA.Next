@@ -3,6 +3,7 @@ using FluentFTP;
 using Renci.SshNet;
 using RestSharp;
 using System.Net;
+using DEA.Next.Extensions;
 using DEA.Next.HelperClasses.ConfigFileFunctions;
 using WriteLog;
 
@@ -24,11 +25,8 @@ internal class SendFilesToRestApiProject
         try
         {
             var customerDetails = await UserConfigRetriever.RetrieveUserConfigById(customerId);
-
-            var index = customerDetails.Domain.LastIndexOf('/');
-            var mainDomain = customerDetails.Domain[..index];
-            var query = customerDetails.Domain[(index + 1)..];
-
+            var (mainDomain, query) = await customerId.SplitUrl();
+            
             // Creating rest api request.
             var client = new RestClient(mainDomain);
             var tpsRequest = new RestRequest(query)
@@ -56,19 +54,24 @@ internal class SendFilesToRestApiProject
                     serverResponse.Content);
             }
 
-            return await TpsServerOnSuccess.ServerOnSuccessProjectAsync(customerDetails.ProjectId,
-                customerDetails.Queue,
-                fileCount,
-                customerDetails.FileDeliveryMethod.ToLower(),
-                fullFilePath,
-                dirPath,
-                jsonFileList,
-                customerId,
-                clientOrgNo,
-                ftpConnect,
-                sftpConnect,
-                ftpFileList,
-                localFileList);
+            if (!string.IsNullOrEmpty(dirPath))
+                return await TpsServerOnSuccess.ServerOnSuccessProjectAsync(customerDetails.ProjectId,
+                    customerDetails.Queue,
+                    fileCount,
+                    customerDetails.FileDeliveryMethod.ToLower(),
+                    fullFilePath,
+                    dirPath,
+                    jsonFileList,
+                    customerId,
+                    clientOrgNo,
+                    ftpConnect,
+                    sftpConnect,
+                    ftpFileList,
+                    localFileList);
+            
+            WriteLogClass.WriteToLog(0, "Directory path is empty ....", 0);
+            return 0;
+
         }
         catch (Exception ex)
         {

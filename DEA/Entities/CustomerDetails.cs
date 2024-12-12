@@ -21,7 +21,7 @@ public class CustomerDetails
     public string DocumentId { get; init; } = string.Empty;
     [MaxLength(10)]
     public string DocumentEncoding { get; init; } = "UTF-8";
-    public int MaxBatchSize { get; init; }
+    public int MaxBatchSize { get; init; } = 1;
     public bool SendEmail { get; init; }
     public bool SendSubject { get; init; }
     [MaxLength(100)]
