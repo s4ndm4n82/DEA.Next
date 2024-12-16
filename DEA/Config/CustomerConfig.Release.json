@@ -1,2 +1,104 @@
 ﻿{
+  "CustomerDetails": [
+    {
+      "Status": true,
+      "CustomerName": "Efacto Norway",
+      "UserName": "dc_import",
+      "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZGNfaW1wb3J0IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiaW1wb3J0QGRpZ2l0YWxjYXB0dXJlLm5vIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI1OGRiZTAzOC1mNGIwLTQzNjYtYjJiYi03ZTZiZjU1YzBiOGQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6ImM0YzQwYzk0LTdiMmEtNDI0ZS04MzVlLWVkODA5MmYyODE0YyIsImV4cCI6MTc0NzgxMjIxMiwiaXNzIjoid3d3LmVkZW50cmkuY29tIiwiYXVkIjoiaHR0cHM6Ly9jYXB0dXJlLmVkZW50cmkuY29tL3RwcyJ9.lrUVYrlCoOGaOPKH0KDkODv-kXklm6R4YGdf-NKIw0Q",
+      "Queue": 6,
+      "ProjectId": "0c298408-76b9-4f4c-9941-edb101126329",
+      "TemplateKey": "",
+      "DocumentId": "",
+      "DocumentEncoding": "",
+      "MaxBatchSize": "",
+      "FieldOneValue": "932971917",
+      "FieldOneName": "Internal ID",
+      "FieldTwoValue": "",
+      "FieldTwoName": "Customer Organization No",
+      "Domain": "https://process.edentri.com/tps_test/import?",
+      "FileDeliveryMethod": "FTP",
+      "DocumentDetails": [
+        {
+          "Extension": ".pdf"
+        },
+        {
+          "Extension": ".csv"
+        },
+        {
+          "Extension": ".jpg"
+        }
+      ],
+      "FtpDetails": {
+        "FtpType": "ftp",
+        "FtpProfile": "profileepe",
+        "FtpHost": "localhost",
+        "FtpUser": "testuser",
+        "FtpPassword": "jackkills",
+        "FtpPort": 21,
+        "FtpFolderLoop": false,
+        "FtpMainFolder": "/Aksesspunkt",
+        "FtpMoveToSubFolder": false,
+        "FtpSubFolder": "/Aksesspunkt/Uploaded",
+        "FtpRemoveFiles": true
+      },
+      "EmailDetails": {
+        "Email": "",
+        "EmailInboxPath": "",
+        "SendEmail": false,
+        "SendSubject": false
+      },
+      "CreatedDate": "2024-08-18T13:15:15.000Z",
+      "ModifiedDate": "2024-08-18T13:15:15.000Z"
+    },
+    {
+      "Status": false,
+      "CustomerName": "DigiAcc",
+      "UserName": "dc_import",
+      "Token": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZGNfaW1wb3J0IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiaW1wb3J0QGRpZ2l0YWxjYXB0dXJlLm5vIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI1OGRiZTAzOC1mNGIwLTQzNjYtYjJiYi03ZTZiZjU1YzBiOGQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlncm91cHNpZCI6ImM0YzQwYzk0LTdiMmEtNDI0ZS04MzVlLWVkODA5MmYyODE0YyIsImV4cCI6MTc0NzgxMjIxMiwiaXNzIjoid3d3LmVkZW50cmkuY29tIiwiYXVkIjoiaHR0cHM6Ly9jYXB0dXJlLmVkZW50cmkuY29tL3RwcyJ9.lrUVYrlCoOGaOPKH0KDkODv-kXklm6R4YGdf-NKIw0Q",
+      "Queue": 6,
+      "ProjectId": "0c298408-76b9-4f4c-9941-edb101126329",
+      "TemplateKey": "",
+      "DocumentId": "",
+      "DocumentEncoding": "",
+      "MaxBatchSize": "",
+      "FieldOneValue": "932971917",
+      "FieldOneName": "Internal ID",
+      "FieldTwoValue": "",
+      "FieldTwoName": "Customer Organization No",
+      "Domain": "https://process.edentri.com/tps_test/import?",
+      "FileDeliveryMethod": "EMAIL",
+      "DocumentDetails": [
+        {
+          "Extension": ".pdf"
+        },
+        {
+          "Extension": ".csv"
+        },
+        {
+          "Extension": ".jpg"
+        }
+      ],
+      "FtpDetails": {
+        "FtpType": "ftp",
+        "FtpProfile": "profileepe",
+        "FtpHost": "localhost",
+        "FtpUser": "testuser",
+        "FtpPassword": "jackkills",
+        "FtpPort": 21,
+        "FtpFolderLoop": false,
+        "FtpMainFolder": "/Aksesspunkt",
+        "FtpMoveToSubFolder": false,
+        "FtpSubFolder": "/Aksesspunkt/Uploaded",
+        "FtpRemoveFiles": true
+      },
+      "EmailDetails": {
+        "Email": "apptesting@efakturamottak.no",
+        "EmailInboxPath": "/Level 1",
+        "SendEmail": false,
+        "SendSubject": false
+      },
+      "CreatedDate": "2024-08-18T14:20:25.000Z",
+      "ModifiedDate": "2024-08-18T14:20:25.000Z"
+    }
+  ]
 }

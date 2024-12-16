@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DEA.Next.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Migration12122024 : Migration
+    public partial class Migration16122024 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,8 +26,6 @@ namespace DEA.Next.Data.Migrations
                     DocumentId = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     DocumentEncoding = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
                     MaxBatchSize = table.Column<int>(type: "integer", nullable: false),
-                    SendEmail = table.Column<bool>(type: "boolean", nullable: false),
-                    SendSubject = table.Column<bool>(type: "boolean", nullable: false),
                     FieldOneValue = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     FieldOneName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     FieldTwoValue = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
@@ -68,6 +66,8 @@ namespace DEA.Next.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Email = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     EmailInboxPath = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    SendEmail = table.Column<bool>(type: "boolean", nullable: false),
+                    SendSubject = table.Column<bool>(type: "boolean", nullable: false),
                     CustomerDetailsId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -92,11 +92,11 @@ namespace DEA.Next.Data.Migrations
                     FtpUser = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     FtpPassword = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     FtpPort = table.Column<int>(type: "integer", nullable: false),
+                    FtpFolderLoop = table.Column<bool>(type: "boolean", nullable: false),
+                    FtpMoveToSubFolder = table.Column<bool>(type: "boolean", nullable: false),
                     FtpMainFolder = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     FtpSubFolder = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    FtpFolderLoop = table.Column<bool>(type: "boolean", nullable: false),
                     FtpRemoveFiles = table.Column<bool>(type: "boolean", nullable: false),
-                    FtpMoveToSubFolder = table.Column<bool>(type: "boolean", nullable: false),
                     CustomerDetailsId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>

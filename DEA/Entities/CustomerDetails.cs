@@ -22,8 +22,6 @@ public class CustomerDetails
     [MaxLength(10)]
     public string DocumentEncoding { get; init; } = "UTF-8";
     public int MaxBatchSize { get; init; } = 1;
-    public bool SendEmail { get; init; }
-    public bool SendSubject { get; init; }
     [MaxLength(100)]
     public string FieldOneValue { get; init; } = string.Empty;
     [MaxLength(100)]
@@ -36,9 +34,9 @@ public class CustomerDetails
     public required string Domain { get; init; }
     [MaxLength(10)]
     public string FileDeliveryMethod { get; init; } = string.Empty;
-    public DateTime CreatedDate { get; init; } = DateTime.UtcNow;
-    public DateTime ModifiedDate { get; init; } = DateTime.UtcNow;
     public List<DocumentDetails> DocumentDetails { get; init; } = [];
     public List<FtpDetails> FtpDetails { get; init; } = [];
     public List<EmailDetails> EmailDetails { get; init; } = [];
+    public DateTime CreatedDate { get; init; } = DateTime.UtcNow;
+    public DateTime ModifiedDate { get; init; } = DateTime.UtcNow;
 }

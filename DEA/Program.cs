@@ -2,9 +2,10 @@
 using DEA.Next.Data;
 using DEA.Next.Extensions;
 using DEA.Next.HelperClasses.InternetLineChecker;
-using DisplayLogoClass;
+using DEA.Next.Versioning;
 using ErrorFolderChecker;
 using FolderFunctions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -16,11 +17,7 @@ using WriteLog;
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddApplicationServices(builder.Configuration.AddJsonFile(@".\Config\appsettings.json").Build());
-
 var app = builder.Build();
-
-var dbContext = app.Services.GetService<DataContext>();
-if (dbContext != null) builder.Services.AddSingleton(dbContext);
 
 // Increments the version number
 VersionIncrementer.IncrementVersion();
@@ -43,6 +40,20 @@ if (errorFolderItemCount > maxErrorFolders)
 
 if (await InternetLineChecker.InternetLineCheckerAsync())
 {
+    using var scope = app.Services.CreateScope();
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<DataContext>();
+        await context.Database.MigrateAsync();
+        await Seed.SeedData(context);
+    }
+    catch (Exception e)
+    {
+        WriteLogClass.WriteToLog(0, $"Exception at seed data: {e.Message} ....", 0);
+        throw;
+    }
+
     WriteLogClass.WriteToLog(1, "Working internet connection found ....", 1);
     // Start the download process
     WriteLogClass.WriteToLog(1, "Starting download process ....", 1);

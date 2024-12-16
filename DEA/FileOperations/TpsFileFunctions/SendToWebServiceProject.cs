@@ -25,11 +25,12 @@ internal class SendToWebServiceProject
 
             var clientDetails = await UserConfigRetriever.RetrieveUserConfigById(customerId);
             var ftpDetails = await UserConfigRetriever.RetrieveFtpConfigById(customerId);
+            var emailDetails = await UserConfigRetriever.RetrieveEmailConfigById(customerId);
 
             // Get the correct org number depending on what type of download method is used.
             var clientOrg = SendToWebServiceHelpertFunctions.SetCustomerOrg(ftpDetails.FtpFolderLoop,
-                clientDetails.SendEmail,
-                clientDetails.SendSubject,
+                emailDetails.SendEmail,
+                emailDetails.SendSubject,
                 clientDetails.FieldOneValue,
                 ftpFolderName,
                 recipientEmail,

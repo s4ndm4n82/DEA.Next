@@ -10,7 +10,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="33275f24-18e6-4ba3-81b4-a2ab1183ffd0" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/DEA/Data/Seed.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Config/CustomerConfig.Debug.json" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Config/CustomerConfig.Debug.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Config/CustomerConfig.Release.json" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Config/CustomerConfig.Release.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/DEA.Next.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/DEA.Next.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/20241212073524_Migration12122024.Designer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/20241212073524_Migration12122024.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/DataContextModelSnapshot.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Entities/CustomerDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Entities/CustomerDetails.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Entities/EmailDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Entities/EmailDetails.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Entities/FtpDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Entities/FtpDetails.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Extensions/ApplicationServiceExtension.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Extensions/ApplicationServiceExtension.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceProject.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceProject.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/UserConfigSetter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/UserConfigSetter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Versioning/DisplayLogo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Versioning/DisplayLogo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Versioning/VersionIncrementer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Versioning/VersionIncrementer.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,6 +65,7 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/595e4f2361fd31cb66c7e9303f46cf8f2fe77d96eea9d0e42c17cae783aa74/ServiceCollection.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/a0b45f29f34f594814a7b1fbc25fe5ef3c18257956ed4f4fbfa68717db58/DbContext.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/ba3f23566a5654bfd8c7a49a51dc813be89635b01cf819485c5a61f61e4f53/TimeSpanParse.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f53868e293d4af914f24c3e72181cca5136758f5d8ed89e4a38e452cb12847e2/HostApplicationBuilder.cs" root0="FORCE_HIGHLIGHTING" />
@@ -291,6 +309,13 @@
       <workItem from="1734079958482" duration="239000" />
       <workItem from="1734083730049" duration="290000" />
       <workItem from="1734084079795" duration="207000" />
+      <workItem from="1734317871543" duration="93000" />
+      <workItem from="1734324165907" duration="2122000" />
+      <workItem from="1734326371133" duration="899000" />
+      <workItem from="1734328364060" duration="224000" />
+      <workItem from="1734328995387" duration="143000" />
+      <workItem from="1734329188462" duration="322000" />
+      <workItem from="1734329522151" duration="4554000" />
     </task>
     <servers />
   </component>
@@ -314,6 +339,23 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/DEA/Program.cs</url>
+          <line>56</line>
+          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\Program.cs" containingFunctionPresentation="">
+            <startOffsets>
+              <option value="1990" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2063" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="Type#DEA.Next.FileOperations.TpsJsonStringClasses.TpsJsonLinesUploadString+Tables" memberName="Table" />

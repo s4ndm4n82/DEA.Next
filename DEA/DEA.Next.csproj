@@ -77,6 +77,9 @@
 		  <IsTransformFile>true</IsTransformFile>
 		  <DependentUpon>CustomerConfig.json</DependentUpon>
 		</None>
+		<None Update="Config\CustomerConfig.json">
+		  <TransformOnBuild>true</TransformOnBuild>
+		</None>
 		<None Update="Config\CustomerConfig.Release.json">
 		  <IsTransformFile>true</IsTransformFile>
 		  <DependentUpon>CustomerConfig.json</DependentUpon>
@@ -89,10 +92,6 @@
 		</None>
 		<None Update="Config\_CustomerConfig.json.bkp">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Config\CustomerConfig.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<TransformOnBuild>true</TransformOnBuild>
 		</None>	
 	</ItemGroup>
 	

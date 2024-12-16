@@ -86,8 +86,7 @@ public class UserConfigSetter
             using StreamReader fileData = new(userConfigFilePath);
             var userConfigData = await fileData.ReadToEndAsync();
             var jsonData = string.IsNullOrEmpty(userConfigData)
-                ? default(T) :
-                JsonConvert.DeserializeObject<T>(userConfigData);
+                ? default(T) : JsonConvert.DeserializeObject<T>(userConfigData);
                 
             return jsonData ?? default(T)!;
         }

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DEA.Next.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241212073524_Migration12122024")]
-    partial class Migration12122024
+    [Migration("20241216061259_Migration16122024")]
+    partial class Migration16122024
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -93,12 +93,6 @@ namespace DEA.Next.Data.Migrations
                     b.Property<int>("Queue")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("SendEmail")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("SendSubject")
-                        .HasColumnType("boolean");
-
                     b.Property<bool>("Status")
                         .HasColumnType("boolean");
 
@@ -161,6 +155,12 @@ namespace DEA.Next.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<bool>("SendEmail")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("SendSubject")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 

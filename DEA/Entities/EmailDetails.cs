@@ -9,6 +9,8 @@ public class EmailDetails
     public required string Email { get; set; }
     [MaxLength(100)]
     public required string EmailInboxPath { get; set; }
+    public bool SendEmail { get; init; }
+    public bool SendSubject { get; init; }
     
     // Navigation properties
     public Guid CustomerDetailsId { get; set; }

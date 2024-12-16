@@ -1,15 +1,16 @@
 ﻿using System.Reflection;
 using WriteLog;
 
-namespace DisplayLogoClass;
+namespace DEA.Next.Versioning;
 
 internal class DisplayLogo
 {
     public static void Logo()
     {
-        Version programVersion = Assembly.GetExecutingAssembly().GetName().Version;
-        string programName = Assembly.GetExecutingAssembly().GetName().Name;
+        var programVersion = Assembly.GetExecutingAssembly().GetName().Version;
+        var programName = Assembly.GetExecutingAssembly().GetName().Name;
 
+        if (programName == null || programVersion == null) return;
         ShowLogo(programName);
         ShowLogo(programVersion.ToString());
 
@@ -18,8 +19,8 @@ internal class DisplayLogo
 
     private static void ShowLogo(string textToSet)
     {            
-        int windowWidth = Console.WindowWidth;
-        int windowPadding = (windowWidth - textToSet.Length) / 2;
+        var windowWidth = Console.WindowWidth;
+        var windowPadding = (windowWidth - textToSet.Length) / 2;
         Console.WriteLine(new string(' ', windowPadding) + textToSet);
     }
 }

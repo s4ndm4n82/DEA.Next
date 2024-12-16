@@ -1,5 +1,6 @@
 using DEA.Next.Classes;
 using DEA.Next.Data;
+using DEA.Next.Entities;
 using DEA.Next.HelperClasses.ConfigFileFunctions;
 using DEA.Next.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,8 @@ public static class ApplicationServiceExtension
         
         services.AddScoped<CustomerDataClass>();
         services.AddScoped<IUserConfigRepository, CustomerDetailsRepository>();
-        
+
+        services.AddSingleton<CustomerDetails>();
         var repository = services.BuildServiceProvider().GetService<IUserConfigRepository>();
         if (repository != null) UserConfigRetriever.Initialize(repository);
 

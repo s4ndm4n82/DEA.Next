@@ -90,12 +90,6 @@ namespace DEA.Next.Data.Migrations
                     b.Property<int>("Queue")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("SendEmail")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("SendSubject")
-                        .HasColumnType("boolean");
-
                     b.Property<bool>("Status")
                         .HasColumnType("boolean");
 
@@ -158,6 +152,12 @@ namespace DEA.Next.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<bool>("SendEmail")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("SendSubject")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
