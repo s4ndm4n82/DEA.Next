@@ -33,7 +33,7 @@ public class CustomerDetailsRepository : IUserConfigRepository
     public async Task<FtpDetails> GetFtpDetailsById(Guid id)
     {
         var customerFtp = await _context.CustomerDetails
-            .SelectMany(f => f.FtpDetails)
+            .Select(f => f.FtpDetails)
             .FirstOrDefaultAsync(g => g.CustomerDetailsId.Equals(id));
         
         if (customerFtp != null) return customerFtp;
@@ -45,7 +45,7 @@ public class CustomerDetailsRepository : IUserConfigRepository
     public async Task<EmailDetails> GetEmailDetailsById(Guid id)
     {
         var customerEmail = await _context.CustomerDetails
-            .SelectMany(e => e.EmailDetails)
+            .Select(e => e.EmailDetails)
             .FirstOrDefaultAsync(g => g.CustomerDetailsId.Equals(id));
         
         if (customerEmail != null) return customerEmail;

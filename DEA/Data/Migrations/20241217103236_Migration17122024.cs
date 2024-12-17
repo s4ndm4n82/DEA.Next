@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DEA.Next.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Migration16122024 : Migration
+    public partial class Migration17122024 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -118,12 +118,14 @@ namespace DEA.Next.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_EmailDetails_CustomerDetailsId",
                 table: "EmailDetails",
-                column: "CustomerDetailsId");
+                column: "CustomerDetailsId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_FtpDetails_CustomerDetailsId",
                 table: "FtpDetails",
-                column: "CustomerDetailsId");
+                column: "CustomerDetailsId",
+                unique: true);
         }
 
         /// <inheritdoc />

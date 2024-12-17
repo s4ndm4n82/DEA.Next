@@ -6,7 +6,6 @@ using DEA.Next.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ProcessSartupFunctions;
 
 namespace DEA.Next.Extensions;
 
@@ -24,7 +23,9 @@ public static class ApplicationServiceExtension
         services.AddScoped<IUserConfigRepository, CustomerDetailsRepository>();
 
         services.AddSingleton<CustomerDetails>();
-        var repository = services.BuildServiceProvider().GetService<IUserConfigRepository>();
+
+        using var serviceProvider = services.BuildServiceProvider(); 
+        var repository = serviceProvider.GetService<IUserConfigRepository>();
         if (repository != null) UserConfigRetriever.Initialize(repository);
 
         return services;

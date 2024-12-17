@@ -35,8 +35,8 @@ public class CustomerDetails
     [MaxLength(10)]
     public string FileDeliveryMethod { get; init; } = string.Empty;
     public List<DocumentDetails> DocumentDetails { get; init; } = [];
-    public List<FtpDetails> FtpDetails { get; init; } = [];
-    public List<EmailDetails> EmailDetails { get; init; } = [];
+    public FtpDetails? FtpDetails { get; init; } 
+    public EmailDetails? EmailDetails { get; init; } 
     public DateTime CreatedDate { get; init; } = DateTime.UtcNow;
     public DateTime ModifiedDate { get; init; } = DateTime.UtcNow;
 }

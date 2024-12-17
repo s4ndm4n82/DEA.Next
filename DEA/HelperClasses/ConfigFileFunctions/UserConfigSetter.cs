@@ -4,7 +4,7 @@ using WriteLog;
 
 namespace UserConfigSetterClass;
 
-public class UserConfigSetter
+public class UserConfigSetterOld
 {
     public class CustomerDetailsObject
     {

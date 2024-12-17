@@ -1,7 +1,5 @@
-﻿using DEA.Next.FileOperations.TpsJsonStringClasses;
-using DEA.Next.HelperClasses.ConfigFileFunctions;
+﻿using DEA.Next.HelperClasses.ConfigFileFunctions;
 using TpsJsonProjectUploadString;
-using static UserConfigSetterClass.UserConfigSetter;
 
 namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions;
 

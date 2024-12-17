@@ -161,7 +161,8 @@ namespace DEA.Next.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerDetailsId");
+                    b.HasIndex("CustomerDetailsId")
+                        .IsUnique();
 
                     b.ToTable("EmailDetails");
                 });
@@ -224,7 +225,8 @@ namespace DEA.Next.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerDetailsId");
+                    b.HasIndex("CustomerDetailsId")
+                        .IsUnique();
 
                     b.ToTable("FtpDetails");
                 });
@@ -243,8 +245,8 @@ namespace DEA.Next.Data.Migrations
             modelBuilder.Entity("DEA.Next.Entities.EmailDetails", b =>
                 {
                     b.HasOne("DEA.Next.Entities.CustomerDetails", "CustomerDetails")
-                        .WithMany("EmailDetails")
-                        .HasForeignKey("CustomerDetailsId")
+                        .WithOne("EmailDetails")
+                        .HasForeignKey("DEA.Next.Entities.EmailDetails", "CustomerDetailsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -254,8 +256,8 @@ namespace DEA.Next.Data.Migrations
             modelBuilder.Entity("DEA.Next.Entities.FtpDetails", b =>
                 {
                     b.HasOne("DEA.Next.Entities.CustomerDetails", "CustomerDetails")
-                        .WithMany("FtpDetails")
-                        .HasForeignKey("CustomerDetailsId")
+                        .WithOne("FtpDetails")
+                        .HasForeignKey("DEA.Next.Entities.FtpDetails", "CustomerDetailsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

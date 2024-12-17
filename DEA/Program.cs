@@ -35,7 +35,9 @@ var errorFolderItemCount = ErrorFolderCheckerClass.ErrorFolderChecker().Item1.Co
 if (errorFolderItemCount > maxErrorFolders)
 {
     RunTimedFunctionsClass.CallDeaTimedProcesses("deamailer");
-    WriteLogClass.WriteToLog(2, $"Error folder contains {errorFolderItemCount} folders. Check and empty the error folder ....", 1);
+    WriteLogClass.WriteToLog(2,
+        $"Error folder contains {errorFolderItemCount} folders. Check and empty the error folder ....",
+        1);
 }
 
 if (await InternetLineChecker.InternetLineCheckerAsync())
@@ -68,9 +70,3 @@ else
     WriteLogClass.WriteToLog(0, "No working internet connection. Exiting ....", 0);
     Environment.Exit(0);
 }
-
-var appLife = app.Services.GetService<IHostApplicationLifetime>();
-appLife.ApplicationStopping.Register(() =>
-{
-    dbContext.Dispose();
-});

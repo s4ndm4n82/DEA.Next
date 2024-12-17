@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DEA.Next.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241216061259_Migration16122024")]
-    partial class Migration16122024
+    [Migration("20241217103236_Migration17122024")]
+    partial class Migration17122024
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -164,7 +164,8 @@ namespace DEA.Next.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerDetailsId");
+                    b.HasIndex("CustomerDetailsId")
+                        .IsUnique();
 
                     b.ToTable("EmailDetails");
                 });
@@ -227,7 +228,8 @@ namespace DEA.Next.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerDetailsId");
+                    b.HasIndex("CustomerDetailsId")
+                        .IsUnique();
 
                     b.ToTable("FtpDetails");
                 });
@@ -246,8 +248,8 @@ namespace DEA.Next.Data.Migrations
             modelBuilder.Entity("DEA.Next.Entities.EmailDetails", b =>
                 {
                     b.HasOne("DEA.Next.Entities.CustomerDetails", "CustomerDetails")
-                        .WithMany("EmailDetails")
-                        .HasForeignKey("CustomerDetailsId")
+                        .WithOne("EmailDetails")
+                        .HasForeignKey("DEA.Next.Entities.EmailDetails", "CustomerDetailsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -257,8 +259,8 @@ namespace DEA.Next.Data.Migrations
             modelBuilder.Entity("DEA.Next.Entities.FtpDetails", b =>
                 {
                     b.HasOne("DEA.Next.Entities.CustomerDetails", "CustomerDetails")
-                        .WithMany("FtpDetails")
-                        .HasForeignKey("CustomerDetailsId")
+                        .WithOne("FtpDetails")
+                        .HasForeignKey("DEA.Next.Entities.FtpDetails", "CustomerDetailsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -20,12 +20,6 @@
       "DocumentDetails": [
         {
           "Extension": ".pdf"
-        },
-        {
-          "Extension": ".csv"
-        },
-        {
-          "Extension": ".jpg"
         }
       ],
       "FtpDetails": {
