@@ -2,6 +2,7 @@
 using DEA.Next.Data;
 using DEA.Next.Extensions;
 using DEA.Next.HelperClasses.InternetLineChecker;
+using DEA.Next.HelperClasses.OtherFunctions;
 using DEA.Next.Versioning;
 using ErrorFolderChecker;
 using FolderFunctions;
@@ -9,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ProcessSartupFunctions;
 using RunTimedFunctions;
 using VersionIncrementerClass;
 using WriteLog;
@@ -17,6 +17,7 @@ using WriteLog;
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddApplicationServices(builder.Configuration.AddJsonFile(@".\Config\appsettings.json").Build());
+
 var app = builder.Build();
 
 // Increments the version number
@@ -60,7 +61,7 @@ if (await InternetLineChecker.InternetLineCheckerAsync())
     // Start the download process
     WriteLogClass.WriteToLog(1, "Starting download process ....", 1);
     var processStartupFunctions = app.Services.GetService<ProcessStartupFunctionsClass>();
-    if (processStartupFunctions != null) await processStartupFunctions.StartupProcess();
+    if (processStartupFunctions != null) await ProcessStartupFunctionsClass.StartupProcess();
     // Start the timed processes deacleaner.
     RunTimedFunctionsClass.CallDeaTimedProcesses("deacleaner");
     Environment.Exit(0);

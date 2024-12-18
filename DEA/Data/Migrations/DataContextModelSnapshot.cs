@@ -161,8 +161,7 @@ namespace DEA.Next.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerDetailsId")
-                        .IsUnique();
+                    b.HasIndex("CustomerDetailsId");
 
                     b.ToTable("EmailDetails");
                 });
@@ -225,8 +224,7 @@ namespace DEA.Next.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerDetailsId")
-                        .IsUnique();
+                    b.HasIndex("CustomerDetailsId");
 
                     b.ToTable("FtpDetails");
                 });
@@ -245,8 +243,8 @@ namespace DEA.Next.Data.Migrations
             modelBuilder.Entity("DEA.Next.Entities.EmailDetails", b =>
                 {
                     b.HasOne("DEA.Next.Entities.CustomerDetails", "CustomerDetails")
-                        .WithOne("EmailDetails")
-                        .HasForeignKey("DEA.Next.Entities.EmailDetails", "CustomerDetailsId")
+                        .WithMany()
+                        .HasForeignKey("CustomerDetailsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -256,8 +254,8 @@ namespace DEA.Next.Data.Migrations
             modelBuilder.Entity("DEA.Next.Entities.FtpDetails", b =>
                 {
                     b.HasOne("DEA.Next.Entities.CustomerDetails", "CustomerDetails")
-                        .WithOne("FtpDetails")
-                        .HasForeignKey("DEA.Next.Entities.FtpDetails", "CustomerDetailsId")
+                        .WithMany()
+                        .HasForeignKey("CustomerDetailsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -267,10 +265,6 @@ namespace DEA.Next.Data.Migrations
             modelBuilder.Entity("DEA.Next.Entities.CustomerDetails", b =>
                 {
                     b.Navigation("DocumentDetails");
-
-                    b.Navigation("EmailDetails");
-
-                    b.Navigation("FtpDetails");
                 });
 #pragma warning restore 612, 618
         }

@@ -11,17 +11,19 @@
   <component name="ChangeListManager">
     <list default="true" id="33275f24-18e6-4ba3-81b4-a2ab1183ffd0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Config/CustomerConfig.Debug.json" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Config/CustomerConfig.Debug.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Data/CustomerDetailsRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Data/CustomerDetailsRepository.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Data/DataContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Data/DataContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/20241216061259_Migration16122024.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/20241216061259_Migration16122024.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/20241217103236_Migration17122024.Designer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/20241217103236_Migration17122024.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/DataContextModelSnapshot.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Data/Seed.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Data/Seed.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Entities/CustomerDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Entities/CustomerDetails.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Entities/FtpDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Entities/FtpDetails.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Extensions/ApplicationServiceExtension.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Extensions/ApplicationServiceExtension.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestHelperClass.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestHelperClass.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/UserConfigSetter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/UserConfigSetter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Graph/GraphEmailInboxFunctions/GetDeletedItemsId.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GraphEmailInboxFunctions/GetDeletedItemsId.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/FolderFunctions/FolderFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/FolderFunctions/FolderFunctions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/MagicWordLibrary.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/MagicWordLibrary.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/ProcessStartupFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/ProcessStartupFunctions.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Versioning/AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Versioning/AssemblyInfo.cs" afterDir="false" />
     </list>
@@ -78,29 +80,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Executable.DEA.Next.executor&quot;: &quot;Run&quot;,
-    &quot;.NET Project.DEA.Next.executor&quot;: &quot;Debug&quot;,
-    &quot;Notification.DisplayName-DoNotAsk-Vcs Notifications&quot;: &quot;VCS notifications&quot;,
-    &quot;Notification.DoNotAsk-Vcs Notifications&quot;: &quot;true&quot;,
-    &quot;Publish to IIS.DEA.Next: FolderProfile.executor&quot;: &quot;Run&quot;,
-    &quot;Publish to folder.DEA.Next Publish.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;com.codeium.enabled&quot;: &quot;true&quot;,
-    &quot;database.data.extractors.current.export.id&quot;: &quot;JSON-Groovy.json.groovy&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;card__1&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;,
-    &quot;zielu.gittoolbox.prj.config.selected.tab.id&quot;: &quot;zielu.gittoolbox.config.prj.diagnostic&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Executable.DEA.Next.executor": "Run",
+    ".NET Project.DEA.Next.executor": "Debug",
+    "Notification.DisplayName-DoNotAsk-Vcs Notifications": "VCS notifications",
+    "Notification.DoNotAsk-Vcs Notifications": "true",
+    "Publish to IIS.DEA.Next: FolderProfile.executor": "Run",
+    "Publish to folder.DEA.Next Publish.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "com.codeium.enabled": "true",
+    "database.data.extractors.current.export.id": "JSON-Groovy.json.groovy",
+    "git-widget-placeholder": "card__1",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "com.github.copilot.settings.ApplicationConfigurable",
+    "vue.rearranger.settings.migration": "true",
+    "zielu.gittoolbox.prj.config.selected.tab.id": "zielu.gittoolbox.config.prj.diagnostic"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
+    ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Project.DEA.Next">
     <configuration name="DEA.Next Publish" type="DotNetFolderPublish" factoryName="Publish to folder">
       <riderPublish configuration="Release" platform="Any CPU" runtime="Portable" target_folder="$PROJECT_DIR$/DEA/bin/Release/net6.0/publish/FolderPublish" target_framework="net6.0" uuid_high="-7580840089019791257" uuid_low="-7026497347669342426" />
@@ -324,6 +331,16 @@
       <workItem from="1734424993281" duration="191000" />
       <workItem from="1734425211088" duration="516000" />
       <workItem from="1734425982464" duration="6416000" />
+      <workItem from="1734493321608" duration="339000" />
+      <workItem from="1734493774560" duration="373000" />
+      <workItem from="1734494253628" duration="325000" />
+      <workItem from="1734494597056" duration="3721000" />
+      <workItem from="1734501167545" duration="1359000" />
+      <workItem from="1734502567149" duration="80000" />
+      <workItem from="1734502690018" duration="2120000" />
+      <workItem from="1734507499824" duration="660000" />
+      <workItem from="1734508235297" duration="3123000" />
+      <workItem from="1734511628118" duration="8082000" />
     </task>
     <servers />
   </component>
@@ -347,49 +364,6 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/DEA/Program.cs</url>
-          <line>58</line>
-          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\Program.cs" containingFunctionPresentation="">
-            <startOffsets>
-              <option value="2006" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2079" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/DEA/Data/Seed.cs</url>
-          <line>46</line>
-          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\Data\Seed.cs" containingFunctionPresentation="Method 'SeedData'">
-            <startOffsets>
-              <option value="1450" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1483" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/DEA/Program.cs</url>
-          <line>50</line>
-          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\Program.cs" containingFunctionPresentation="">
-            <startOffsets>
-              <option value="1829" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1858" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="Type#DEA.Next.FileOperations.TpsJsonStringClasses.TpsJsonLinesUploadString+Tables" memberName="Table" />

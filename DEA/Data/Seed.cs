@@ -1,4 +1,5 @@
 using DEA.Next.Entities;
+using DEA.Next.HelperClasses.OtherFunctions;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -42,6 +43,54 @@ public class Seed
             foreach (var customer in customerDetails)
             {
                 context.CustomerDetails.Add(customer);
+                
+                switch (customer.FileDeliveryMethod.ToLower())
+                {
+                    case MagicWords.Ftp:
+                        if (customer.FtpDetails != null)
+                        {
+                            var ftpDetails = new FtpDetails
+                            {
+                                FtpType = customer.FtpDetails.FtpType,
+                                FtpProfile = customer.FtpDetails.FtpProfile,
+                                FtpHost = customer.FtpDetails.FtpHost,
+                                FtpUser = customer.FtpDetails.FtpUser,
+                                FtpPassword = customer.FtpDetails.FtpPassword,
+                                FtpPort = customer.FtpDetails.FtpPort,
+                                FtpFolderLoop = customer.FtpDetails.FtpFolderLoop,
+                                FtpMoveToSubFolder = customer.FtpDetails.FtpMoveToSubFolder,
+                                FtpMainFolder = customer.FtpDetails.FtpMainFolder,
+                                FtpSubFolder = customer.FtpDetails.FtpSubFolder,
+                                FtpRemoveFiles = customer.FtpDetails.FtpRemoveFiles,
+                                CustomerDetailsId = customer.Id
+                            };
+
+                            context.FtpDetails.Add(ftpDetails);
+                        }
+
+                        break;
+
+                    case MagicWords.Email:
+                        if (customer.EmailDetails != null)
+                        {
+                            var emailDetails = new EmailDetails
+                            {
+                                Email = customer.EmailDetails.Email,
+                                EmailInboxPath = customer.EmailDetails.EmailInboxPath,
+                                SendSubject = customer.EmailDetails.SendSubject,
+                                SendEmail = customer.EmailDetails.SendEmail,
+                                CustomerDetailsId = customer.Id
+                            };
+
+                            context.EmailDetails.Add(emailDetails);
+                        }
+
+                        break;
+                    
+                    default:
+                        WriteLogClass.WriteToLog(0, "File delivery method not found ....", 1);
+                        break;
+                }
             }
 
             await context.SaveChangesAsync();

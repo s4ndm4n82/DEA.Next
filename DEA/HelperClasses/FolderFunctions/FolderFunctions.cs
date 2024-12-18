@@ -14,13 +14,13 @@ public class FolderFunctionsClass
     public static string CheckFolders(string folderSwitch)
     {
         string pathRootFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
-        string[] folderNames = { MagicWords.Download, MagicWords.Attachments, MagicWords.Ftpfiles, MagicWords.Logs, MagicWords.Error };
+        string[] folderNames = { MagicWords.Download, MagicWords.Attachments, MagicWords.FtpFiles, MagicWords.Logs, MagicWords.Error };
         string folderPath;
         string returnFolderPath = string.Empty;
 
         foreach (string folderName in folderNames)
         {
-            if (folderName != MagicWords.Attachments && folderName != MagicWords.Ftpfiles)
+            if (folderName != MagicWords.Attachments && folderName != MagicWords.FtpFiles)
             {
                 folderPath = Path.Combine(pathRootFolder!, folderName);
             }
@@ -47,7 +47,7 @@ public class FolderFunctionsClass
             string folderName = folderNames.FirstOrDefault(fn =>
                 fn.IndexOf(folderSwitch, StringComparison.CurrentCultureIgnoreCase) != -1);
 
-            if (folderName != MagicWords.Attachments && folderName != MagicWords.Ftpfiles)
+            if (folderName != MagicWords.Attachments && folderName != MagicWords.FtpFiles)
             {
                 returnFolderPath = Path.Combine(pathRootFolder!, folderName);
             }

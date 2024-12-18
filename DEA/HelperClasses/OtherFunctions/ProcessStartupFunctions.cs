@@ -1,16 +1,15 @@
 ﻿using DEA.Next.FTP.FtpFileRelatedFunctions;
 using DEA.Next.HelperClasses.ConfigFileFunctions;
-using DEA.Next.HelperClasses.OtherFunctions;
 using GraphHelper;
 using ProcessStatusMessageSetter;
 using WriteLog;
 
-namespace ProcessSartupFunctions;
+namespace DEA.Next.HelperClasses.OtherFunctions;
 
 internal class ProcessStartupFunctionsClass
 {
 
-    public async Task StartupProcess()
+    public static async Task StartupProcess()
     {
         foreach (var client in await UserConfigRetriever.RetrieveAllUserConfig())
         {

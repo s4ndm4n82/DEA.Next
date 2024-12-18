@@ -36,6 +36,6 @@ internal class GetDeletedItemsId
         }
 
         // Get the deleted items id.
-        return emailFolders.FirstOrDefault(folder => folder.DisplayName == MagicWords.Deleteditems).Id;
+        return emailFolders.FirstOrDefault(folder => folder.DisplayName == MagicWords.DeletedItems).Id;
     }
 }

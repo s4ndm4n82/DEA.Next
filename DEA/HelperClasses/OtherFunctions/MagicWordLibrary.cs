@@ -8,15 +8,15 @@ public static class MagicWords
     public const string Ftp = "ftp";
     public const string Ftps = "ftps";
     public const string Sftp = "sftp";
-    public const string Email = "Email";
-    public const string Exported = "Exported";
-    public const string Imported = "Imported";
-    public const string Inbox = "Inbox";
-    public const string Error = "Error";
-    public const string Deleteditems = "Deleted Items";
-    public const string Download = "Download";
-    public const string Attachments = "Attachments";
-    public const string Ftpfiles = "FTPFiles";
-    public const string Logs = "Logs";
+    public const string Email = "email";
+    public const string Exported = "exported";
+    public const string Imported = "imported";
+    public const string Inbox = "inbox";
+    public const string Error = "error";
+    public const string DeletedItems = "deleted items";
+    public const string Download = "download";
+    public const string Attachments = "attachments";
+    public const string FtpFiles = "ftpfiles";
+    public const string Logs = "logs";
     public const string Pdf = "pdf";
 }

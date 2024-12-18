@@ -34,7 +34,7 @@ public class CustomerDetails
     public required string Domain { get; init; }
     [MaxLength(10)]
     public string FileDeliveryMethod { get; init; } = string.Empty;
-    public List<DocumentDetails> DocumentDetails { get; init; } = [];
+    public required List<DocumentDetails> DocumentDetails { get; init; } = [];
     public FtpDetails? FtpDetails { get; init; } 
     public EmailDetails? EmailDetails { get; init; } 
     public DateTime CreatedDate { get; init; } = DateTime.UtcNow;
