@@ -31,11 +31,11 @@ public class CustomerDetailsRepository(DataContext context) : IUserConfigReposit
         throw new NullReferenceException($"Customer with id {id} not found ....");
     }
 
-    public async Task<FtpDetails> GetFtpDetailsById(Guid id)
+    public async Task<CustomerDetails> GetFtpDetailsById(Guid id)
     {
         var customerFtp = await context.CustomerDetails
-            .Select(f => f.FtpDetails)
-            .FirstOrDefaultAsync(g => g != null && g.CustomerDetailsId.Equals(id));
+            .Include(f => f.FtpDetails)
+            .FirstOrDefaultAsync(g => g.Id.Equals(id));
         
         if (customerFtp != null) return customerFtp;
         
@@ -43,11 +43,11 @@ public class CustomerDetailsRepository(DataContext context) : IUserConfigReposit
         throw new NullReferenceException($"Customer with id {id} not found ....");
     }
 
-    public async Task<EmailDetails> GetEmailDetailsById(Guid id)
+    public async Task<CustomerDetails> GetEmailDetailsById(Guid id)
     {
         var customerEmail = await context.CustomerDetails
-            .Select(e => e.EmailDetails)
-            .FirstOrDefaultAsync(g => g != null && g.CustomerDetailsId.Equals(id));
+            .Include(e => e.EmailDetails)
+            .FirstOrDefaultAsync(g => g.Id.Equals(id));
         
         if (customerEmail != null) return customerEmail;
         

@@ -161,7 +161,8 @@ namespace DEA.Next.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerDetailsId");
+                    b.HasIndex("CustomerDetailsId")
+                        .IsUnique();
 
                     b.ToTable("EmailDetails");
                 });
@@ -243,8 +244,8 @@ namespace DEA.Next.Data.Migrations
             modelBuilder.Entity("DEA.Next.Entities.EmailDetails", b =>
                 {
                     b.HasOne("DEA.Next.Entities.CustomerDetails", "CustomerDetails")
-                        .WithMany()
-                        .HasForeignKey("CustomerDetailsId")
+                        .WithOne("EmailDetails")
+                        .HasForeignKey("DEA.Next.Entities.EmailDetails", "CustomerDetailsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -265,6 +266,8 @@ namespace DEA.Next.Data.Migrations
             modelBuilder.Entity("DEA.Next.Entities.CustomerDetails", b =>
                 {
                     b.Navigation("DocumentDetails");
+
+                    b.Navigation("EmailDetails");
                 });
 #pragma warning restore 612, 618
         }

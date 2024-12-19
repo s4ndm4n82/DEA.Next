@@ -27,7 +27,10 @@ public class GraphHelperClass
     public static async Task<int> InitializeGetAttachment(Guid customerId)
     {
         var result = 0;
-        var emailDetails = await UserConfigRetriever.RetrieveEmailConfigById(customerId);
+        var customerDetailsDetails = await UserConfigRetriever.RetrieveEmailConfigById(customerId);
+        var emailDetails = customerDetailsDetails.EmailDetails;
+        
+        if (emailDetails is null) return result;
 
         GetInboxFolderNames getInboxFolderNames = new(emailDetails.EmailInboxPath);
         var mainInbox = getInboxFolderNames.GetNextInboxName();

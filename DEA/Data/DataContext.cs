@@ -13,7 +13,13 @@ public class DataContext(DbContextOptions options) : DbContext(options)
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<CustomerDetails>()
-            .Ignore(cd => cd.FtpDetails)
-            .Ignore(cd => cd.EmailDetails);
+            .HasOne(cd => cd.FtpDetails)
+            .WithOne(fd => fd.CustomerDetails)
+            .HasForeignKey<FtpDetails>(fd => fd.CustomerDetailsId);
+        
+        modelBuilder.Entity<CustomerDetails>()
+            .HasOne(cd => cd.EmailDetails)
+            .WithOne(ed => ed.CustomerDetails)
+            .HasForeignKey<EmailDetails>(ed => ed.CustomerDetailsId);
     }
 }

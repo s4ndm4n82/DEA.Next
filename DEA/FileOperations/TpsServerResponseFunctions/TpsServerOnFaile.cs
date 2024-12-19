@@ -47,7 +47,13 @@ internal class TpsServerOnFaile
         {
             var deleteResult = 2;
 
-            var ftpDetails = await UserConfigRetriever.RetrieveFtpConfigById(customerId);
+            var customerDetailsDetails = await UserConfigRetriever.RetrieveFtpConfigById(customerId);
+            var ftpDetails = customerDetailsDetails.FtpDetails;
+            if (ftpDetails is null)
+            {
+                WriteLogClass.WriteToLog(0, "FTP details not found ....", 0);
+                return -1;
+            }
 
             WriteLogClass.WriteToLog(0,
                 $"Server status code: {serverStatusCode}, Server Response Error: {serverResponseContent}",
@@ -145,7 +151,13 @@ internal class TpsServerOnFaile
         try
         {
             // User configs.
-            var ftpDetails = await UserConfigRetriever.RetrieveFtpConfigById(customerId);
+            var customerDetails = await UserConfigRetriever.RetrieveFtpConfigById(customerId);
+            var ftpDetails = customerDetails.FtpDetails;
+            if (ftpDetails is null)
+            {
+                WriteLogClass.WriteToLog(0, "FTP details not found ....", 0);
+                return -1;
+            }
                 
             WriteLogClass.WriteToLog(0, 
                 $"Server status code: {statusCode}, Server Response Error: {serverResponseContent}",

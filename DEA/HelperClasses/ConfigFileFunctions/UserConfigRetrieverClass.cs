@@ -25,14 +25,14 @@ internal class UserConfigRetriever
         return await _repository.GetClientDetailsById(cid);
     }
 
-    public static async Task<FtpDetails> RetrieveFtpConfigById(Guid cid)
+    public static async Task<CustomerDetails> RetrieveFtpConfigById(Guid cid)
     {
         if (_repository is null) throw new InvalidOperationException("Service provider not registered ...");
         
         return await _repository.GetFtpDetailsById(cid);
     }
     
-    public static async Task<EmailDetails> RetrieveEmailConfigById(Guid cid)
+    public static async Task<CustomerDetails> RetrieveEmailConfigById(Guid cid)
     {
         if (_repository is null) throw new InvalidOperationException("Service provider not registered ...");
         

@@ -49,8 +49,10 @@ internal class TpsServerOnSuccess
     {
         try
         {
-            var ftpDetails = await UserConfigRetriever.RetrieveFtpConfigById(customerId);
+            var customerDetails = await UserConfigRetriever.RetrieveFtpConfigById(customerId);
+            var ftpDetails = customerDetails.FtpDetails;
 
+            // Writes to log.
             WriteLogClass.WriteToLog(1, $"Uploaded {fileCount} file to project {projectId} using queue {queue} ....", 4);
             WriteLogClass.WriteToLog(1, $"Uploaded filenames: {WriteNamesToLogClass.GetFileNames(jsonFileList)}", 4);
 
@@ -129,7 +131,14 @@ internal class TpsServerOnSuccess
         try
         {
             // User config details.
-            var ftpDetails = await UserConfigRetriever.RetrieveFtpConfigById(customerId);
+            var customerDetails = await UserConfigRetriever.RetrieveFtpConfigById(customerId);
+            var ftpDetails = customerDetails.FtpDetails;
+
+            if (ftpDetails is null)
+            {
+                WriteLogClass.WriteToLog(0, "FTP details not found ....", 1);
+                return -1;
+            }
                 
             WriteLogClass.WriteToLog(1, $"Uploaded data file: {fileName}", 1);
 

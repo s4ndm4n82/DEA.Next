@@ -24,8 +24,13 @@ internal class SendToWebServiceProject
             WriteLogClass.WriteToLog(1, "Starting file upload process .... ", 4);
 
             var clientDetails = await UserConfigRetriever.RetrieveUserConfigById(customerId);
-            var ftpDetails = await UserConfigRetriever.RetrieveFtpConfigById(customerId);
-            var emailDetails = await UserConfigRetriever.RetrieveEmailConfigById(customerId);
+            var ftp = await UserConfigRetriever.RetrieveFtpConfigById(customerId);
+            var ftpDetails = ftp.FtpDetails;
+            if (ftpDetails == null) return -1;
+            
+            var email = await UserConfigRetriever.RetrieveEmailConfigById(customerId);
+            var emailDetails = email.EmailDetails;
+            if (emailDetails == null) return -1;
 
             // Get the correct org number depending on what type of download method is used.
             var clientOrg = SendToWebServiceHelpertFunctions.SetCustomerOrg(ftpDetails.FtpFolderLoop,

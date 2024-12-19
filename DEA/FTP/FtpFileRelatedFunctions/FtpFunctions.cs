@@ -24,7 +24,7 @@ internal class FtpFunctionsClass
     public static async Task<int> GetFtpFiles(Guid customerId)
     {
         // Starts the file download process if the client details are not empty.
-        if (customerId != default)
+        if (customerId != Guid.Empty)
         {
             return await InitiateFtpDownload(customerId);
         }
@@ -45,7 +45,14 @@ internal class FtpFunctionsClass
         // SFTP connection token
         SftpClient? sftpConnectToken = null;
 
-        var ftpDetails = await UserConfigRetriever.RetrieveFtpConfigById(clientId);
+        var customerDetails = await UserConfigRetriever.RetrieveFtpConfigById(clientId);
+        var ftpDetails = customerDetails.FtpDetails;
+        
+        if (ftpDetails == null)
+        {
+            WriteLogClass.WriteToLog(0, $"FTP details not found for client: {clientId} ....", 3);
+            return downloadResult;
+        }
 
         var downloadFolder = Path.Combine(FolderFunctionsClass.CheckFolders(MagicWords.Ftp)
             , ftpDetails.FtpMainFolder.Trim('/').Replace('/', '\\'));
@@ -92,7 +99,7 @@ internal class FtpFunctionsClass
         }
 
         // If the connection token equals null then returns early terminating the execution.
-        if (ftpConnectToken == null && (ftpDetails.FtpType == MagicWords.Ftp || ftpDetails.FtpType == MagicWords.Ftps))
+        if (ftpConnectToken == null && ftpDetails.FtpType is MagicWords.Ftp or MagicWords.Ftps)
         {
             WriteLogClass.WriteToLog(1, "Connection to FTP server failed ....", 3);
         }
@@ -113,7 +120,14 @@ internal class FtpFunctionsClass
         var downloadResult = 0;
         
         // Get the FTP details from the config file.
-        var ftpDetails = await UserConfigRetriever.RetrieveFtpConfigById(clientId);
+        var customerDetails = await UserConfigRetriever.RetrieveFtpConfigById(clientId);
+        var ftpDetails = customerDetails.FtpDetails;
+        
+        if (ftpDetails == null)
+        {
+            WriteLogClass.WriteToLog(0, $"FTP details not found for client: {clientId} ....", 3);
+            return downloadResult;
+        }
 
         try
         {
@@ -149,7 +163,14 @@ internal class FtpFunctionsClass
         var downloadResult = 0;
         
         // Get the FTP details from the config file.
-        var ftpDetails = await UserConfigRetriever.RetrieveFtpConfigById(clientId);
+        var customerDetails = await UserConfigRetriever.RetrieveFtpConfigById(clientId);
+        var ftpDetails = customerDetails.FtpDetails;
+        
+        if (ftpDetails == null)
+        {
+            WriteLogClass.WriteToLog(0, $"FTP details not found for client: {clientId} ....", 3);
+            return downloadResult;
+        }
         
         try
         {
@@ -190,7 +211,14 @@ internal class FtpFunctionsClass
         Guid clientId,
         List<string> ftpFilesList)
     {
-        var ftpDetails = await UserConfigRetriever.RetrieveFtpConfigById(clientId);
+        var customerDetails = await UserConfigRetriever.RetrieveFtpConfigById(clientId);
+        var ftpDetails = customerDetails.FtpDetails;
+        
+        if (ftpDetails == null)
+        {
+            WriteLogClass.WriteToLog(0, $"FTP details not found for client: {clientId} ....", 3);
+            return false;
+        }
 
         try
         {
@@ -248,7 +276,7 @@ internal class FtpFunctionsClass
             var ftpFileName = Path.GetFileName(ftpFile);
             var ftpDestinationPath = ftpDetails.FtpSubFolder;
 
-            if (ftpDetails.FtpFolderLoop && ftpDetails.FtpMoveToSubFolder)
+            if (ftpDetails is { FtpFolderLoop: true, FtpMoveToSubFolder: true })
             {
                 var loopFolderName = Path.GetFileName(Path.GetDirectoryName(ftpFile));
                 ftpDestinationPath = string.Concat(ftpDetails.FtpSubFolder, "/", loopFolderName);
@@ -274,7 +302,7 @@ internal class FtpFunctionsClass
             }
         }
 
-        if (loopCount == ftpFilesList.Count())
+        if (loopCount == ftpFilesList.Count)
         {
             return true;
         }

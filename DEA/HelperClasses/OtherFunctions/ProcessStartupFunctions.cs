@@ -13,7 +13,8 @@ internal class ProcessStartupFunctionsClass
     {
         foreach (var client in await UserConfigRetriever.RetrieveAllUserConfig())
         {
-            switch (client.FileDeliveryMethod)
+
+            switch (client.FileDeliveryMethod.ToLower())
             {
                 case MagicWords.Ftp:
                     WriteLastStatusMessage(0, await FtpFunctionsClass.GetFtpFiles(client.Id));
@@ -23,6 +24,7 @@ internal class ProcessStartupFunctionsClass
                     break;
             }
         }
+        Console.ReadKey();
     }
 
     private static void WriteLastStatusMessage(int emailResultStatus, int ftpResultStatus)
