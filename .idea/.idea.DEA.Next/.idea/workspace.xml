@@ -10,23 +10,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="33275f24-18e6-4ba3-81b4-a2ab1183ffd0" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/DEA/Extensions/ReadDataFromJson.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/dataSources/dc71e931-d740-4bd5-a7f5-ea6eaa5916f4.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/dataSources/dc71e931-d740-4bd5-a7f5-ea6eaa5916f4.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/dataSources/dc71e931-d740-4bd5-a7f5-ea6eaa5916f4/storage_v2/_src_/database/DeaDataBase.mxUcig/schema/information_schema.FNRwLQ.zip" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/dataSources/dc71e931-d740-4bd5-a7f5-ea6eaa5916f4/storage_v2/_src_/database/DeaDataBase.mxUcig/schema/information_schema.FNRwLQ.zip" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/dataSources/dc71e931-d740-4bd5-a7f5-ea6eaa5916f4/storage_v2/_src_/database/DeaDataBase.mxUcig/schema/pg_catalog.0S1ZNQ.zip" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/dataSources/dc71e931-d740-4bd5-a7f5-ea6eaa5916f4/storage_v2/_src_/database/DeaDataBase.mxUcig/schema/pg_catalog.0S1ZNQ.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/dataSources/dc71e931-d740-4bd5-a7f5-ea6eaa5916f4/storage_v2/_src_/database/DeaDataBase.mxUcig/schema/information_schema.FNRwLQ.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/dataSources/dc71e931-d740-4bd5-a7f5-ea6eaa5916f4/storage_v2/_src_/database/DeaDataBase.mxUcig/schema/pg_catalog.0S1ZNQ.zip" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Data/CustomerDetailsRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Data/CustomerDetailsRepository.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Data/DataContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Data/DataContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/20241218101053_Migration18122024.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/20241218101053_Migration18122024.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/20241219103245_Migration19122024.Designer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/20241219103245_Migration19122024.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/DataContextModelSnapshot.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/FTP/FtpFileRelatedFunctions/FtpFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FTP/FtpFileRelatedFunctions/FtpFunctions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceProject.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceProject.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsServerResponseFunctions/TpsServerOnFaile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsServerResponseFunctions/TpsServerOnFaile.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsServerResponseFunctions/TpsServerOnSuccess.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsServerResponseFunctions/TpsServerOnSuccess.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Graph/GraphClientrelatedFunctions/GraphHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GraphClientrelatedFunctions/GraphHelper.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/UserConfigRetrieverClass.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/UserConfigRetrieverClass.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/ProcessStartupFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/ProcessStartupFunctions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Interfaces/IUserConfigRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Interfaces/IUserConfigRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Data/Seed.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Entities/CustomerDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Entities/CustomerDetails.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Entities/FtpDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Entities/FtpDetails.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Versioning/AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Versioning/AssemblyInfo.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -51,13 +48,6 @@
     &quot;assignee&quot;: &quot;s4ndm4n82&quot;
   }
 }</component>
-  <component name="GithubProjectSettings">
-    <option name="branchProtectionPatterns">
-      <list>
-        <option value="master" />
-      </list>
-    </option>
-  </component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/s4ndm4n82/DEA.Next&quot;,
@@ -65,13 +55,9 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/29ea32a76b2a6b8eb246f247df6a6a86d887384b4c31db2a35effccdd86c24/JsonSerializerInternalReader.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/595e4f2361fd31cb66c7e9303f46cf8f2fe77d96eea9d0e42c17cae783aa74/ServiceCollection.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/a0b45f29f34f594814a7b1fbc25fe5ef3c18257956ed4f4fbfa68717db58/DbContext.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/b1978e5b918ec1387750dbcda22ac817cf96bf2e148ea8bc6c6d536746f5cfd0/QueryableMethodTranslatingExpressionVisitor.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/ba3f23566a5654bfd8c7a49a51dc813be89635b01cf819485c5a61f61e4f53/TimeSpanParse.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/32af53f9addbd8407e5f571f6439ce341f8ba46c7f085f2d1c1aa4c2bd1d35/ModelValidator.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/564d11e3c8cbbd636fa9aa3a7b73d9ef576176dfee78aff1abcc84c359c266a/InvalidOperationException.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/bd1d5c50194fea68ff3559c160230b0ab50f5acf4ce3061bffd6d62958e2182/ExceptionDispatchInfo.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f53868e293d4af914f24c3e72181cca5136758f5d8ed89e4a38e452cb12847e2/HostApplicationBuilder.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/DEA/Extensions/ApplicationServiceExtension.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
@@ -83,35 +69,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Executable.DEA.Next.executor": "Run",
-    ".NET Project.DEA.Next.executor": "Debug",
-    "Notification.DisplayName-DoNotAsk-Vcs Notifications": "VCS notifications",
-    "Notification.DoNotAsk-Vcs Notifications": "true",
-    "Publish to IIS.DEA.Next: FolderProfile.executor": "Run",
-    "Publish to folder.DEA.Next Publish.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "com.codeium.enabled": "true",
-    "com.codeium.snoozedEndTime": "1734605942586",
-    "database.data.extractors.current.export.id": "JSON-Groovy.json.groovy",
-    "git-widget-placeholder": "card__1",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.github.copilot.settings.ApplicationConfigurable",
-    "vue.rearranger.settings.migration": "true",
-    "zielu.gittoolbox.prj.config.selected.tab.id": "zielu.gittoolbox.config.prj.diagnostic"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Executable.DEA.Next.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Project.DEA.Next.executor&quot;: &quot;Debug&quot;,
+    &quot;Notification.DisplayName-DoNotAsk-Vcs Notifications&quot;: &quot;VCS notifications&quot;,
+    &quot;Notification.DoNotAsk-Vcs Notifications&quot;: &quot;true&quot;,
+    &quot;Publish to IIS.DEA.Next: FolderProfile.executor&quot;: &quot;Run&quot;,
+    &quot;Publish to folder.DEA.Next Publish.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;com.codeium.enabled&quot;: &quot;true&quot;,
+    &quot;com.codeium.snoozedEndTime&quot;: &quot;1734605942586&quot;,
+    &quot;database.data.extractors.current.export.id&quot;: &quot;JSON-Groovy.json.groovy&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;card__1&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;,
+    &quot;zielu.gittoolbox.prj.config.selected.tab.id&quot;: &quot;zielu.gittoolbox.config.prj.diagnostic&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Project.DEA.Next">
     <configuration name="DEA.Next Publish" type="DotNetFolderPublish" factoryName="Publish to folder">
       <riderPublish configuration="Release" platform="Any CPU" runtime="Portable" target_folder="$PROJECT_DIR$/DEA/bin/Release/net6.0/publish/FolderPublish" target_framework="net6.0" uuid_high="-7580840089019791257" uuid_low="-7026497347669342426" />
@@ -348,6 +334,16 @@
       <workItem from="1734599005123" duration="597000" />
       <workItem from="1734599733319" duration="311000" />
       <workItem from="1734600103287" duration="6018000" />
+      <workItem from="1734661289656" duration="1912000" />
+      <workItem from="1734671227648" duration="118000" />
+      <workItem from="1734672709145" duration="132000" />
+      <workItem from="1734673661641" duration="726000" />
+      <workItem from="1734676876455" duration="69000" />
+      <workItem from="1734680855066" duration="286000" />
+      <workItem from="1734681247700" duration="1302000" />
+      <workItem from="1734682606986" duration="413000" />
+      <workItem from="1734683052278" duration="26000" />
+      <workItem from="1734683124977" duration="8417000" />
     </task>
     <servers />
   </component>
@@ -414,13 +410,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/DEA/Program.cs</url>
-          <line>59</line>
+          <line>58</line>
           <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\Program.cs" containingFunctionPresentation="">
             <startOffsets>
-              <option value="2022" />
+              <option value="1984" />
             </startOffsets>
             <endOffsets>
-              <option value="2095" />
+              <option value="2057" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="7" />

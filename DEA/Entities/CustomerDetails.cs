@@ -4,7 +4,7 @@ namespace DEA.Next.Entities;
 
 public class CustomerDetails
 {
-    public Guid Id { get; init; }
+    public Guid Id { get; set; }
     public bool Status { get; init; } // True = Active, False = Inactive Used to be known as CustomerStatus.
     [MaxLength(100)]
     public required string CustomerName { get; init; } // Used to be known as MainCustomerName.
@@ -34,7 +34,7 @@ public class CustomerDetails
     public required string Domain { get; init; }
     [MaxLength(10)]
     public string FileDeliveryMethod { get; init; } = string.Empty;
-    public required List<DocumentDetails> DocumentDetails { get; init; } = [];
+    public List<DocumentDetails> DocumentDetails { get; set; } = [];
     public FtpDetails? FtpDetails { get; init; } 
     public EmailDetails? EmailDetails { get; init; } 
     public DateTime CreatedDate { get; init; } = DateTime.UtcNow;

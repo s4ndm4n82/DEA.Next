@@ -4,7 +4,7 @@ namespace DEA.Next.Entities;
 
 public class FtpDetails
 {
-    public Guid Id { get; init; }
+    public Guid Id { get; set; }
     [MaxLength(50)]
     public required string FtpType { get; init; }
     [MaxLength(50)]
@@ -25,6 +25,6 @@ public class FtpDetails
     public required bool FtpRemoveFiles { get; init; }
     
     // Navigation properties
-    public Guid CustomerDetailsId { get; init; }
+    public Guid CustomerDetailsId { get; set; }
     public CustomerDetails CustomerDetails { get; init; } = null!;
 }
