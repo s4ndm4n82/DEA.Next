@@ -10,19 +10,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="33275f24-18e6-4ba3-81b4-a2ab1183ffd0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/DEA/Extensions/ReadDataFromJson.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DEA/Data/Seed.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DEA/Extensions/ApplicationBuilderExtension.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DEA/Extensions/DatabaseInitializer.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/dataSources/dc71e931-d740-4bd5-a7f5-ea6eaa5916f4.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/dataSources/dc71e931-d740-4bd5-a7f5-ea6eaa5916f4.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/dataSources/dc71e931-d740-4bd5-a7f5-ea6eaa5916f4/storage_v2/_src_/database/DeaDataBase.mxUcig/schema/information_schema.FNRwLQ.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/dataSources/dc71e931-d740-4bd5-a7f5-ea6eaa5916f4/storage_v2/_src_/database/DeaDataBase.mxUcig/schema/pg_catalog.0S1ZNQ.zip" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Data/CustomerDetailsRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Data/CustomerDetailsRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Config/CustomerConfig.Debug.json" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Config/CustomerConfig.Debug.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Config/CustomerConfig.Release.json" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Config/CustomerConfig.Release.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Data/DataContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Data/DataContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/20241219103245_Migration19122024.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/20241219103245_Migration19122024.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/DataContextModelSnapshot.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Data/Seed.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Entities/CustomerDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Entities/CustomerDetails.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Entities/DocumentDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Entities/DocumentDetails.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Entities/EmailDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Entities/EmailDetails.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Entities/FtpDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Entities/FtpDetails.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Extensions/ReadDataFromJson.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Extensions/ReadDataFromJson.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FTP/FtpFileRelatedFunctions/FtpFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FTP/FtpFileRelatedFunctions/FtpFunctions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FTP/FtpUploadDownloadFunctions/FtpFilesDownload.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FTP/FtpUploadDownloadFunctions/FtpFilesDownload.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FTP/FtpUploadDownloadFunctions/FtpFilesUpload.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FTP/FtpUploadDownloadFunctions/FtpFilesUpload.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceProject.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceProject.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsFileUploadFunctions/SendFilesToRestApiProject.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsFileUploadFunctions/SendFilesToRestApiProject.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestProjectsFunction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestProjectsFunction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsServerResponseFunctions/TpsServerOnFaile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsServerResponseFunctions/TpsServerOnFaile.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsServerResponseFunctions/TpsServerOnSuccess.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsServerResponseFunctions/TpsServerOnSuccess.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Graph/GraphAttachmentRelatedActions/GraphAttachmentFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GraphAttachmentRelatedActions/GraphAttachmentFunctions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/InternetLineChecker/InternetLineChecker.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/InternetLineChecker/InternetLineChecker.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/ProcessStartupFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/ProcessStartupFunctions.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Versioning/AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Versioning/AssemblyInfo.cs" afterDir="false" />
     </list>
@@ -55,6 +66,7 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/ILViewer/4413b6f742814d0d84becc519328b15341200/e1/c92dc88c/02000054pdb7.il" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/32af53f9addbd8407e5f571f6439ce341f8ba46c7f085f2d1c1aa4c2bd1d35/ModelValidator.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/564d11e3c8cbbd636fa9aa3a7b73d9ef576176dfee78aff1abcc84c359c266a/InvalidOperationException.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/bd1d5c50194fea68ff3559c160230b0ab50f5acf4ce3061bffd6d62958e2182/ExceptionDispatchInfo.cs" root0="FORCE_HIGHLIGHTING" />
@@ -69,35 +81,36 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Executable.DEA.Next.executor&quot;: &quot;Run&quot;,
-    &quot;.NET Project.DEA.Next.executor&quot;: &quot;Debug&quot;,
-    &quot;Notification.DisplayName-DoNotAsk-Vcs Notifications&quot;: &quot;VCS notifications&quot;,
-    &quot;Notification.DoNotAsk-Vcs Notifications&quot;: &quot;true&quot;,
-    &quot;Publish to IIS.DEA.Next: FolderProfile.executor&quot;: &quot;Run&quot;,
-    &quot;Publish to folder.DEA.Next Publish.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;com.codeium.enabled&quot;: &quot;true&quot;,
-    &quot;com.codeium.snoozedEndTime&quot;: &quot;1734605942586&quot;,
-    &quot;database.data.extractors.current.export.id&quot;: &quot;JSON-Groovy.json.groovy&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;card__1&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;,
-    &quot;zielu.gittoolbox.prj.config.selected.tab.id&quot;: &quot;zielu.gittoolbox.config.prj.diagnostic&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Executable.DEA.Next.executor": "Run",
+    ".NET Project.DEA.Next.executor": "Debug",
+    "Notification.DisplayName-DoNotAsk-Vcs Notifications": "VCS notifications",
+    "Notification.DoNotAsk-Vcs Notifications": "true",
+    "Publish to IIS.DEA.Next: FolderProfile.executor": "Run",
+    "Publish to folder.DEA.Next Publish.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "com.codeium.enabled": "true",
+    "com.codeium.snoozedEndTime": "1734605942586",
+    "database.data.extractors.current.export.id": "JSON-Groovy.json.groovy",
+    "git-widget-placeholder": "card__1",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "rider.code.cleanup.on.save": "true",
+    "settings.editor.selected.configurable": "actions.on.save",
+    "vue.rearranger.settings.migration": "true",
+    "zielu.gittoolbox.prj.config.selected.tab.id": "zielu.gittoolbox.config.prj.diagnostic"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Project.DEA.Next">
     <configuration name="DEA.Next Publish" type="DotNetFolderPublish" factoryName="Publish to folder">
       <riderPublish configuration="Release" platform="Any CPU" runtime="Portable" target_folder="$PROJECT_DIR$/DEA/bin/Release/net6.0/publish/FolderPublish" target_framework="net6.0" uuid_high="-7580840089019791257" uuid_low="-7026497347669342426" />
@@ -344,6 +357,8 @@
       <workItem from="1734682606986" duration="413000" />
       <workItem from="1734683052278" duration="26000" />
       <workItem from="1734683124977" duration="8417000" />
+      <workItem from="1734918514143" duration="561000" />
+      <workItem from="1734919458834" duration="17551000" />
     </task>
     <servers />
   </component>
@@ -371,55 +386,81 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/ProcessStartupFunctions.cs</url>
-          <line>19</line>
+          <line>21</line>
           <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\HelperClasses\OtherFunctions\ProcessStartupFunctions.cs" containingFunctionPresentation="Method 'StartupProcess'">
             <startOffsets>
-              <option value="534" />
+              <option value="783" />
             </startOffsets>
             <endOffsets>
-              <option value="608" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/ProcessStartupFunctions.cs</url>
-          <line>22</line>
-          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\HelperClasses\OtherFunctions\ProcessStartupFunctions.cs" containingFunctionPresentation="Method 'StartupProcess'">
-            <startOffsets>
-              <option value="695" />
-            </startOffsets>
-            <endOffsets>
-              <option value="780" />
+              <option value="868" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/DEA/FTP/FtpFileRelatedFunctions/FtpFunctions.cs</url>
-          <line>28</line>
-          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\FTP\FtpFileRelatedFunctions\FtpFunctions.cs" containingFunctionPresentation="Method 'GetFtpFiles'">
+          <url>file://$PROJECT_DIR$/DEA/Extensions/DatabaseInitializer.cs</url>
+          <line>38</line>
+          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\Extensions\DatabaseInitializer.cs" containingFunctionPresentation="Method 'InitializeAsync'">
             <startOffsets>
-              <option value="846" />
+              <option value="1381" />
             </startOffsets>
             <endOffsets>
-              <option value="891" />
+              <option value="1440" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="6" />
+          <option name="timeStamp" value="11" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/DEA/Program.cs</url>
-          <line>58</line>
-          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\Program.cs" containingFunctionPresentation="">
+          <url>file://$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceProject.cs</url>
+          <line>81</line>
+          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\FileOperations\TpsFileFunctions\SendToWebServiceProject.cs" containingFunctionPresentation="Method 'SendToWebServiceProjectAsync'">
             <startOffsets>
-              <option value="1984" />
+              <option value="3000" />
             </startOffsets>
             <endOffsets>
-              <option value="2057" />
+              <option value="3010" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="7" />
+          <option name="timeStamp" value="36" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceHelpertFunctions.cs</url>
+          <line>51</line>
+          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\FileOperations\TpsFileFunctions\SendToWebServiceHelpertFunctions.cs" containingFunctionPresentation="Method 'RenameFileList'">
+            <startOffsets>
+              <option value="1897" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1931" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="38" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/DEA/Graph/GraphEmailActions/GraphEmailActionsStart.cs</url>
+          <line>39</line>
+          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\Graph\GraphEmailActions\GraphEmailActionsStart.cs" containingFunctionPresentation="Method 'StartAttachmentDownload'">
+            <startOffsets>
+              <option value="1407" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1606" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="43" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/DEA/Graph/GraphEmailActions/GraphEmailActionsStart.cs</url>
+          <line>60</line>
+          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\Graph\GraphEmailActions\GraphEmailActionsStart.cs" containingFunctionPresentation="Method 'StartAttachmentDownload'">
+            <startOffsets>
+              <option value="2301" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2514" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="44" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

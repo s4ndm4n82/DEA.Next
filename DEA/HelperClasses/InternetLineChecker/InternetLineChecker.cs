@@ -1,145 +1,84 @@
-﻿using AppConfigReader;
-using System.Net;
-using System.Net.NetworkInformation;
+﻿using System.Net.NetworkInformation;
+using AppConfigReader;
 using WriteLog;
 
 namespace DEA.Next.HelperClasses.InternetLineChecker;
 
-internal class InternetLineChecker
+internal static class InternetLineChecker
 {
     /// <summary>
-    /// Try to find if the internet connection is working or not.
+    ///     Checks for an active internet connection by pinging a list of public DNS servers.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>
+    ///     A task that represents the asynchronous operation. The task result contains a boolean indicating whether an
+    ///     active internet connection was found.
+    /// </returns>
     public static async Task<bool> InternetLineCheckerAsync()
     {
+        // Log the start of the internet connection check.
         WriteLogClass.WriteToLog(1, "Checking for active internet connection .....", 1);
 
-        AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
-        IEnumerable<string> publicDns = jsonData.ProgramSettings.PublicDns;
-        IEnumerable<string> checkUrls = jsonData.ProgramSettings.CheckUrls;
+        // Read the application configuration.
+        var jsonData = AppConfigReaderClass.ReadAppDotConfig();
+        var publicDns = jsonData.ProgramSettings.PublicDns;
 
-        int maxRetry = jsonData.ProgramSettings.RetryLine;
-        int currentRetry = 0;
+        // Get the maximum number of retry attempts from the configuration.
+        var maxRetry = jsonData.ProgramSettings.RetryLine;
+        var currentRetry = 0;
 
-        // Loops until the end of configured retrys.
+        // Loop until the maximum number of retry attempts is reached.
         while (currentRetry < maxRetry)
         {
             currentRetry++;
-            // Check if the interface is up or not.
-            if (!await GetIsInterfaceAvailableAsync())
-            {
-                WriteLogClass.WriteToLog(1, "Trying to reconnect ....", 1);
-                if (currentRetry >= maxRetry)
-                {                        
-                    return false;
-                }
 
-                // Wait 2 second before retrying.
-                await Task.Delay(2000 * currentRetry);                    
-                continue;
-            }
+            // Check if the internet connection is active by pinging the public DNS servers.
+            if (await CheckInternetPingAsync(publicDns)) return true;
 
-            // If interface is up HTTP request is used.
-            if (!await CheckInternetHttpRequestAsync(checkUrls))
-            {
-                // If the HTTP request fails, ping is used.
-                if (!await CheckInternetPingAsync(publicDns))
-                {
-                    currentRetry++;
-                    if (currentRetry >= maxRetry)
-                    {
-                        return false;
-                    }
+            currentRetry++;
+            if (currentRetry >= maxRetry) return false;
 
-                    // Wait 2 second before retrying.
-                    await Task.Delay(2000 * currentRetry);
-                    continue;
-                }
-            }
-
-            return true;
+            // Wait for a period before retrying.
+            await Task.Delay(2000 * currentRetry);
         }
 
+        // Return false if no active internet connection was found after the maximum number of retry attempts.
         return false;
     }
 
     /// <summary>
-    /// Use the built in .NET GetIsNetworkAvailable() function determine if the network interface is up or not.
+    ///     Checks the internet connection by pinging a list of public DNS servers.
     /// </summary>
-    /// <returns>Return true if working.</returns>
-    private static async Task<bool> GetIsInterfaceAvailableAsync()
-    {
-        try
-        {
-            return NetworkInterface.GetIsNetworkAvailable();
-        }
-        catch (Exception ex)
-        {
-            WriteLogClass.WriteToLog(0, $"GetIsInterfaceAvailableAsync Error: {ex.Message}", 0);
-            return false;
-        }
-    }
-
-    /// <summary>
-    /// Use a HHTP web request to find if the internet connection is working or not.
-    /// </summary>
-    /// <param name="checkUrls">The list of urls to send the request to.</param>
-    /// <returns>Return true if woring.</returns>
-    private static async Task<bool> CheckInternetHttpRequestAsync(IEnumerable<string> checkUrls)
-    {
-        foreach (string url in checkUrls)
-        {
-            try
-            {
-                HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
-                httpRequest.KeepAlive = false;
-                httpRequest.Timeout = 10000;
-
-                using HttpWebResponse httpResponse = (HttpWebResponse)await httpRequest.GetResponseAsync();
-
-                // Considered successful if the status code is in the range of 2xx
-                if ((int)httpResponse.StatusCode >= 200 && (int)httpResponse.StatusCode < 300)
-                {
-                    return true;
-                }
-            }
-            catch (WebException ex)
-            {
-                WriteLogClass.WriteToLog(0, $"CheckInternetHttpRequesAsync Error: {ex.Message}", 0);
-            }
-        }
-        return false;
-    }
-
-    /// <summary>
-    /// Use a ping to find if the internet connection is working or not.
-    /// </summary>
-    /// <param name="publicDns">The list of DNS addresses to ping.</param>
-    /// <returns>Return true if working</returns>
+    /// <param name="publicDns">A list of public DNS server addresses to ping.</param>
+    /// <returns>
+    ///     A task that represents the asynchronous operation. The task result contains a boolean indicating whether an
+    ///     active internet connection was found.
+    /// </returns>
     private static async Task<bool> CheckInternetPingAsync(IEnumerable<string> publicDns)
     {
-        foreach (string dns in publicDns)
+        // Iterate through each DNS server address in the list.
+        foreach (var dns in publicDns)
         {
             using Ping deaPing = new();
             try
             {
-                string pingHost = dns;
-                byte[] buffer = new byte[32];
-                int timeout = 1000;
-                PingReply pingReply = await deaPing.SendPingAsync(pingHost, timeout, buffer);
+                var pingHost = dns;
+                var buffer = new byte[32];
+                var timeout = 1000;
 
-                if (pingReply.Status == IPStatus.Success)
-                {
-                    return true;
-                }
+                // Send a ping request to the DNS server.
+                var pingReply = await deaPing.SendPingAsync(pingHost, timeout, buffer);
+
+                // If the ping is successful, return true.
+                if (pingReply.Status == IPStatus.Success) return true;
             }
             catch (Exception ex)
             {
+                // Log any exceptions that occur during the ping request.
                 WriteLogClass.WriteToLog(0, $"CheckInternetPingAsync Error: {ex.Message}", 0);
             }
         }
 
+        // Return false if no successful ping response was received.
         return false;
     }
 }

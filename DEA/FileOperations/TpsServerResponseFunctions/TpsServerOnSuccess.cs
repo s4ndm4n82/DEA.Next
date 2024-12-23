@@ -12,12 +12,12 @@ using WriteNamesToLog;
 namespace DEA.Next.FileOperations.TpsServerResponseFunctions;
 
 /// <summary>
-/// Handles the operations after a successful TPS server response.
+///     Handles the operations after a successful TPS server response.
 /// </summary>
 internal class TpsServerOnSuccess
 {
     /// <summary>
-    /// Normal project upload.
+    ///     Normal project upload.
     /// </summary>
     /// <param name="projectId"></param>
     /// <param name="queue"></param>
@@ -42,8 +42,8 @@ internal class TpsServerOnSuccess
         string[] jsonFileList,
         Guid customerId,
         string clientOrgNo,
-        AsyncFtpClient ftpConnect,
-        SftpClient sftpConnect,
+        AsyncFtpClient? ftpConnect,
+        SftpClient? sftpConnect,
         string[] ftpFileList,
         string[] localFileList)
     {
@@ -53,7 +53,8 @@ internal class TpsServerOnSuccess
             var ftpDetails = customerDetails.FtpDetails;
 
             // Writes to log.
-            WriteLogClass.WriteToLog(1, $"Uploaded {fileCount} file to project {projectId} using queue {queue} ....", 4);
+            WriteLogClass.WriteToLog(1, $"Uploaded {fileCount} file to project {projectId} using queue {queue} ....",
+                4);
             WriteLogClass.WriteToLog(1, $"Uploaded filenames: {WriteNamesToLogClass.GetFileNames(jsonFileList)}", 4);
 
             switch (deliveryType)
@@ -110,7 +111,7 @@ internal class TpsServerOnSuccess
     }
 
     /// <summary>
-    /// Data file upload.
+    ///     Data file upload.
     /// </summary>
     /// <param name="ftpConnect"></param>
     /// <param name="sftpConnect"></param>
@@ -139,21 +140,19 @@ internal class TpsServerOnSuccess
                 WriteLogClass.WriteToLog(0, "FTP details not found ....", 1);
                 return -1;
             }
-                
+
             WriteLogClass.WriteToLog(1, $"Uploaded data file: {fileName}", 1);
 
             // Converts the filename to an array. Needed by the FolderCleanerClass.
             var jsonFileList = new[] { fileName };
 
             // Remove the files from FTP server.
-            if (ftpDetails.FtpRemoveFiles == true
+            if (ftpDetails.FtpRemoveFiles
                 && !await FolderCleanerClass.StartFtpFileDelete(ftpConnect,
                     sftpConnect,
                     ftpFileList,
                     localFileList))
-            {
                 return -1;
-            }
 
             // Remove the files from the local folder.
             if (!await FolderCleanerClass.GetFolders(downloadFolderPath,
@@ -161,9 +160,7 @@ internal class TpsServerOnSuccess
                     customerId,
                     null,
                     MagicWords.Ftp))
-            {
                 return -1;
-            }
             return 1;
         }
         catch (Exception ex)
@@ -176,9 +173,8 @@ internal class TpsServerOnSuccess
     }
 
     /// <summary>
-    /// Sending body text to TPS server success.
+    ///     Sending body text to TPS server success.
     /// </summary>
-    /// 
     public static async Task<int> ServerOnSuccessBodyTextAsync(IMailFolderRequestBuilder requestBuilder,
         string messageId,
         string messageSubject)
@@ -208,5 +204,4 @@ internal class TpsServerOnSuccess
             return 2;
         }
     }
-
 }

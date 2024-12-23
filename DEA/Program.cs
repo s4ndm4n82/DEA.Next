@@ -1,23 +1,19 @@
 ﻿using AppConfigReader;
-using DEA.Next.Data;
 using DEA.Next.Extensions;
 using DEA.Next.HelperClasses.InternetLineChecker;
 using DEA.Next.HelperClasses.OtherFunctions;
 using DEA.Next.Versioning;
 using ErrorFolderChecker;
 using FolderFunctions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using RunTimedFunctions;
 using VersionIncrementerClass;
 using WriteLog;
 
-var builder = Host.CreateApplicationBuilder(args);
+// Create and configure the application builder.
+var builder = ApplicationBuilderExtension.CreateApplicationBuilder(args);
 
-builder.Services.AddApplicationServices(builder.Configuration.AddJsonFile(@".\Config\appsettings.json").Build());
-
+// Build the application.
 var app = builder.Build();
 
 // Increments the version number
@@ -43,26 +39,18 @@ if (errorFolderItemCount > maxErrorFolders)
 
 if (await InternetLineChecker.InternetLineCheckerAsync())
 {
-    using var scope = app.Services.CreateScope();
-    var services = scope.ServiceProvider;
-    try
-    {
-        var context = services.GetRequiredService<DataContext>();
-        await context.Database.MigrateAsync();
-    }
-    catch (Exception e)
-    {
-        WriteLogClass.WriteToLog(0, $"Exception at seed data: {e.Message} ....", 0);
-        throw;
-    }
-
+    // Log that a working internet connection was found.
     WriteLogClass.WriteToLog(1, "Working internet connection found ....", 1);
-    // Start the download process
-    WriteLogClass.WriteToLog(1, "Starting download process ....", 1);
-    var processStartupFunctions = app.Services.GetService<ProcessStartupFunctionsClass>();
-    if (processStartupFunctions != null) await ProcessStartupFunctionsClass.StartupProcess();
-    // Start the timed processes deacleaner.
-    RunTimedFunctionsClass.CallDeaTimedProcesses("deacleaner");
+
+    // Create a new scope for dependency injection.
+    using var scope = app.Services.CreateScope();
+
+    // Get the service provider from the scope.
+    var services = scope.ServiceProvider;
+
+    await DatabaseInitializer.InitializeAsync(services);
+
+    // Exit the application.
     Environment.Exit(0);
 }
 else

@@ -10,8 +10,8 @@ namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions;
 
 internal class MakeJsonRequestProjectsFunction
 {
-    public static async Task<int> MakeJsonRequestProjects(AsyncFtpClient ftpConnect,
-        SftpClient sftpConnect,
+    public static async Task<int> MakeJsonRequestProjects(AsyncFtpClient? ftpConnect,
+        SftpClient? sftpConnect,
         Guid customerId,
         string clientOrgNo,
         string[] filesToSend,

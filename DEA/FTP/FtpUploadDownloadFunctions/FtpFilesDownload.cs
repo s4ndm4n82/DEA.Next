@@ -12,14 +12,8 @@ namespace DownloadFtpFilesClass;
 
 internal class FtpFilesDownload
 {
-    public class FtpFileInfo
-    {
-        public string FileName { get; init; } = string.Empty;
-        public string RemoteFilePath { get; init; } = string.Empty;
-    }
-
     /// <summary>
-    /// Download the files from the FTP server in batches cofigured in the appsettings.json file.
+    ///     Download the files from the FTP server in batches cofigured in the appsettings.json file.
     /// </summary>
     /// <param name="ftpConnect">FTP connection token.</param>
     /// <param name="sftpConnect"></param>
@@ -43,7 +37,7 @@ internal class FtpFilesDownload
             // Reads the ClientConfigs.
             var documentDetails = await UserConfigRetriever.RetrieveDocumentConfigById(clientId);
             var clientDetails = await UserConfigRetriever.RetrieveUserConfigById(clientId);
-                
+
             // Allowed file extensions
             var allowedFileExtensions = documentDetails.Select(e => e.Extension.ToLower()).ToList();
 
@@ -51,18 +45,14 @@ internal class FtpFilesDownload
             var downloadFolder = Path.Combine(downloadFolderPath, GraphHelperClass.FolderNameRnd(10));
 
             List<FtpFileInfo> downloadResult = [];
-            
+
             // Gets the FTP file list.
             if (ftpConnect != null)
-            {
                 downloadResult = await CreateFtpFileList(ftpConnect, ftpPath, downloadFolder, allowedFileExtensions);
-            }
 
             // Gets the SFTP file list.
             if (sftpConnect != null)
-            {
                 downloadResult = await CreateSftpFileList(sftpConnect, ftpPath, downloadFolder, allowedFileExtensions);
-            }
 
             if (downloadResult.Count == 0)
             {
@@ -95,14 +85,12 @@ internal class FtpFilesDownload
                     ftpFolderName,
                     clientId);
 
-                if (result == 3 || result == 4)
-                {
-                    return result;
-                }
+                if (result is 3 or 4) return result;
 
                 // Increment the batch index
                 batchCurrentIndex += batchSize;
             }
+
             return result;
         }
         catch (Exception ex)
@@ -124,7 +112,9 @@ internal class FtpFilesDownload
 
             // Filter the FTP file list. And add it to the filesToDownload list.
             var filesToDownload = ftpFileNameList
-                .Where(f => f.Type == FtpObjectType.File && allowedFileExtensions.Any(ext => f.FullName.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
+                .Where(f => f.Type == FtpObjectType.File &&
+                            allowedFileExtensions.Any(ext =>
+                                f.FullName.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
                 .Select(f => f.FullName);
 
             // Initiate the download file list variable.
@@ -132,13 +122,13 @@ internal class FtpFilesDownload
                 filesToDownload,
                 FtpLocalExists.Resume,
                 FtpVerify.Retry);
-            
+
             // Creating the new list to return.
             List<FtpFileInfo> ftpFileList = [];
-            
+
             ftpFileList.AddRange(downloadResult
                 .Select(fileInfo =>
-                    new FtpFileInfo() { RemoteFilePath = fileInfo.RemotePath, FileName = fileInfo.Name }));
+                    new FtpFileInfo { RemoteFilePath = fileInfo.RemotePath, FileName = fileInfo.Name }));
 
             return ftpFileList;
         }
@@ -157,10 +147,7 @@ internal class FtpFilesDownload
         try
         {
             // Creat the download folder if it's not there.
-            if (!Directory.Exists(downloaFolder))
-            {
-                Directory.CreateDirectory(downloaFolder);
-            }
+            if (!Directory.Exists(downloaFolder)) Directory.CreateDirectory(downloaFolder);
 
             // Creating the file stream.
             FileStream fileStream = null;
@@ -173,10 +160,10 @@ internal class FtpFilesDownload
             List<FtpFileInfo> ftpFileList = new();
 
             // Initiate the file download.
-            foreach (ISftpFile sftpFile in sftpFileNameList)
+            foreach (var sftpFile in sftpFileNameList)
             {
                 // Creating the local file path.
-                string localFilePath = Path.Combine(downloaFolder, sftpFile.Name);
+                var localFilePath = Path.Combine(downloaFolder, sftpFile.Name);
 
                 // Creating or opening the file stream for each file.
                 fileStream = File.Create(localFilePath);
@@ -204,5 +191,11 @@ internal class FtpFilesDownload
             WriteLogClass.WriteToLog(0, $"Exception at CreateSftpFileList: {ex.Message}", 0);
             return null;
         }
+    }
+
+    public class FtpFileInfo
+    {
+        public string FileName { get; init; } = string.Empty;
+        public string RemoteFilePath { get; init; } = string.Empty;
     }
 }
