@@ -94,7 +94,7 @@
     "com.codeium.enabled": "true",
     "com.codeium.snoozedEndTime": "1734605942586",
     "database.data.extractors.current.export.id": "JSON-Groovy.json.groovy",
-    "git-widget-placeholder": "card__1",
+    "git-widget-placeholder": "<unknown>",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -359,6 +359,7 @@
       <workItem from="1734683124977" duration="8417000" />
       <workItem from="1734918514143" duration="561000" />
       <workItem from="1734919458834" duration="17551000" />
+      <workItem from="1736908408181" duration="291000" />
     </task>
     <servers />
   </component>
@@ -385,19 +386,6 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/ProcessStartupFunctions.cs</url>
-          <line>21</line>
-          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\HelperClasses\OtherFunctions\ProcessStartupFunctions.cs" containingFunctionPresentation="Method 'StartupProcess'">
-            <startOffsets>
-              <option value="783" />
-            </startOffsets>
-            <endOffsets>
-              <option value="868" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/DEA/Extensions/DatabaseInitializer.cs</url>
           <line>38</line>
           <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\Extensions\DatabaseInitializer.cs" containingFunctionPresentation="Method 'InitializeAsync'">
@@ -412,13 +400,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceProject.cs</url>
-          <line>81</line>
+          <line>80</line>
           <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\FileOperations\TpsFileFunctions\SendToWebServiceProject.cs" containingFunctionPresentation="Method 'SendToWebServiceProjectAsync'">
             <startOffsets>
-              <option value="3000" />
+              <option value="2908" />
             </startOffsets>
             <endOffsets>
-              <option value="3010" />
+              <option value="2987" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="36" />
@@ -435,32 +423,6 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="38" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/DEA/Graph/GraphEmailActions/GraphEmailActionsStart.cs</url>
-          <line>39</line>
-          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\Graph\GraphEmailActions\GraphEmailActionsStart.cs" containingFunctionPresentation="Method 'StartAttachmentDownload'">
-            <startOffsets>
-              <option value="1407" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1606" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="43" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/DEA/Graph/GraphEmailActions/GraphEmailActionsStart.cs</url>
-          <line>60</line>
-          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\Graph\GraphEmailActions\GraphEmailActionsStart.cs" containingFunctionPresentation="Method 'StartAttachmentDownload'">
-            <startOffsets>
-              <option value="2301" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2514" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="44" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
