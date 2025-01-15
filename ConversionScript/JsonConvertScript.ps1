@@ -17,6 +17,12 @@ $newCustomerDetails = New-Object System.Collections.Generic.List[PSObject]
 
 # Loop through each customer in the old JSON
 foreach ($customer in $oldJson.CustomerDetails) {
+
+    # Check if the customer status is 0. If so, skip the customer
+    if ($customer.CustomerStatus -eq 0) {
+        continue
+    }
+
     # Create a new customer detail JSON object
     $newCustomer = [PSCustomObject]@{
         Status = if ($customer.CustomerStatus -eq 1) { $true } else { $false }

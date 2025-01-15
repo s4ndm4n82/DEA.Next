@@ -372,6 +372,6 @@ MetadataSamples/
 /DEA/Config/CustomerConfig.json
 /DEA/Config/CustomerConfig.Debug.json
 /DEA/Config/CustomerConfig.Release.json
-CoversionScript/CustomerConfig_New.json
-CoversionScript/CustomerConfig.json
-CoversionScript/CustomerConfigConverted.json
+ConversionScript/CustomerConfig_New.json
+ConversionScript/CustomerConfig.json
+ConversionScript/CustomerConfigConverted.json
