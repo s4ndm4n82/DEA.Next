@@ -65,7 +65,7 @@ internal class TpsServerOnSuccess
                     null,
                     clientOrgNo,
                     MagicWords.Email):
-                    return -1;
+                    return 1;
                 // Removes the files from FTP server. If the files not needed to be moved to another FTP sub folder.
                 case MagicWords.Ftp when ftpDetails is { FtpMoveToSubFolder: false, FtpRemoveFiles: true }
                                          && !await FolderCleanerClass.StartFtpFileDelete(ftpConnect,

@@ -61,8 +61,8 @@ foreach ($customer in $oldJson.CustomerDetails) {
             SendEmail = if ($customer.SendEmail -eq 1) { $true } else { $false }
             SendSubject = $customer.SendSubject
         }
-        CreatedDate = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssz");
-        ModifiedDate = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssz");
+        CreatedDate = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ");
+        ModifiedDate = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ");
     }
 
     # Map the document details

@@ -39,7 +39,7 @@ public class FtpDetails
     /// <summary>
     ///     Gets or sets the password of the FTP.
     /// </summary>
-    [MaxLength(50)]
+    [MaxLength(250)]
     public required string FtpPassword { get; init; }
 
     /// <summary>

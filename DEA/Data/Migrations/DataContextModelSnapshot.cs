@@ -38,8 +38,8 @@ namespace DEA.Next.Data.Migrations
 
                     b.Property<string>("DocumentEncoding")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("DocumentId")
                         .IsRequired()
@@ -73,8 +73,8 @@ namespace DEA.Next.Data.Migrations
 
                     b.Property<string>("FileDeliveryMethod")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<int>("MaxBatchSize")
                         .HasColumnType("integer");
@@ -100,8 +100,8 @@ namespace DEA.Next.Data.Migrations
 
                     b.Property<string>("Token")
                         .IsRequired()
-                        .HasMaxLength(800)
-                        .HasColumnType("character varying(800)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -194,8 +194,8 @@ namespace DEA.Next.Data.Migrations
 
                     b.Property<string>("FtpPassword")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
 
                     b.Property<int>("FtpPort")
                         .HasColumnType("integer");

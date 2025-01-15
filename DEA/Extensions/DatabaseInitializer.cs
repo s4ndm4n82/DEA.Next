@@ -17,8 +17,8 @@ public static class DatabaseInitializer
             var context = services.GetRequiredService<DataContext>();
             await context.Database.MigrateAsync();
 
-            // Seed the database with initial data.
-            await Seed.SeedData(context);
+            // Seed the database with initial data. If the data already exists, skip the seeding process.
+            if (!context.CustomerDetails.Any()) await Seed.SeedData(context);
 
             if (!context.CustomerDetails.Any())
             {

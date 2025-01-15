@@ -27,12 +27,6 @@ internal class SendToWebServiceProject
             var ftpDetails = clientDetails.FtpDetails;
             var emailDetails = clientDetails.EmailDetails;
 
-            if (localFileList == null)
-            {
-                WriteLogClass.WriteToLog(0, "No local file list found ....", 0);
-                return -1;
-            }
-
             if (ftpDetails == null && emailDetails == null)
             {
                 WriteLogClass.WriteToLog(0, "No email or ftp details found ....", 0);

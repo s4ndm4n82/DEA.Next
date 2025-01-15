@@ -123,13 +123,38 @@ public static class Seed
             }
 
             // Save all changes to the database.
-            await context.SaveChangesAsync();
+            var saveResult = await context.SaveChangesAsync();
+
+            if (saveResult > 0)
+            {
+                // Log that the customer data was successfully seeded.
+                WriteLogClass.WriteToLog(1, "Customer data seeded successfully ....", 1);
+
+                // Rename the config file to prevent reseeding.
+                RenameConfigFile();
+            }
         }
         catch (Exception e)
         {
             // Log any exceptions that occur during the seeding process.
             WriteLogClass.WriteToLog(0, $"Exception at seed data: {e.Message} ....", 0);
             throw;
+        }
+    }
+
+    private static void RenameConfigFile()
+    {
+        const string oldConfigFile = "./Config/CustomerConfig.json";
+        var newConfigFile = $"./Config/CustomerConfig_{DateTime.Now:yyyyMMddHHmmss}.bkp";
+        try
+        {
+            if (!File.Exists(oldConfigFile)) return;
+            File.Move(oldConfigFile, newConfigFile);
+            File.Delete(oldConfigFile);
+        }
+        catch (Exception e)
+        {
+            WriteLogClass.WriteToLog(0, $"Exception at renaming config file: {e.Message} ....", 0);
         }
     }
 }

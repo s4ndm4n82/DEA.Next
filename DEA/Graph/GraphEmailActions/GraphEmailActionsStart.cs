@@ -1,22 +1,20 @@
-﻿using Microsoft.Graph;
-using GetMailFolderIds;
-using WriteLog;
-using AppConfigReader;
+﻿using AppConfigReader;
 using DEA.Next.Graph.GraphAttachmentRelatedActions;
-using ProcessStatusMessageSetter;
-using DEA.Next.Graph.GraphHelperClasses;
 using DEA.Next.Graph.GraphEmailInboxFunctions;
+using DEA.Next.Graph.GraphHelperClasses;
 using DEA.Next.HelperClasses.OtherFunctions;
-using DEA.Next.Interfaces;
+using GetMailFolderIds;
+using Microsoft.Graph;
+using ProcessStatusMessageSetter;
+using WriteLog;
 
 namespace DEA.Next.Graph.GraphEmailActons;
 
 internal class GraphGetAttachmentsClass
 {
     /// <summary>
-    /// Mainly this will start the email download process and the process to submit files to the web service.
+    ///     Mainly this will start the email download process and the process to submit files to the web service.
     /// </summary>
-    /// <param name="configRepository"></param>
     /// <param name="graphClient"></param>
     /// <param name="clientEmail"></param>
     /// <param name="mainMailFolder"></param>
@@ -42,7 +40,7 @@ internal class GraphGetAttachmentsClass
             mainMailFolder,
             subFolder1,
             subFolder2);
-            
+
         try
         {
             // Write the mailbox path.
@@ -72,6 +70,7 @@ internal class GraphGetAttachmentsClass
         {
             WriteLogClass.WriteToLog(0, $"Exception at start email attachment download: {ex.Message}", 0);
         }
+
         return result;
     }
 
@@ -87,9 +86,8 @@ internal class GraphGetAttachmentsClass
             folderList.RemoveAll(string.IsNullOrEmpty);
 
             if (folderList.Count != 0)
-            {
-                WriteLogClass.WriteToLog(1, $"Starting attachment download process from inbox /{string.Join("/", folderList)} ....", 2);
-            }
+                WriteLogClass.WriteToLog(1,
+                    $"Starting attachment download process from inbox /{string.Join("/", folderList)} ....", 2);
         }
         else
         {

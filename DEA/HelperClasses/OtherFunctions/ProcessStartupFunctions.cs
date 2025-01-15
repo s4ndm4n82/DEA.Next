@@ -22,8 +22,6 @@ internal class ProcessStartupFunctionsClass
                     WriteLastStatusMessage(await GraphHelperClass.InitializeGetAttachment(client.Id), 0);
                     break;
             }
-
-        Console.ReadKey();
     }
 
     private static void WriteLastStatusMessage(int emailResultStatus, int ftpResultStatus)

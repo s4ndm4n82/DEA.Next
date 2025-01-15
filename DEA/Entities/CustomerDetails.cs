@@ -33,7 +33,7 @@ public class CustomerDetails
     /// <summary>
     ///     Gets the token associated with the customer.
     /// </summary>
-    [MaxLength(800)]
+    [MaxLength(1000)]
     public required string Token { get; init; }
 
     /// <summary>
@@ -62,7 +62,7 @@ public class CustomerDetails
     /// <summary>
     ///     Gets the document encoding associated with the customer.
     /// </summary>
-    [MaxLength(10)]
+    [MaxLength(20)]
     public string DocumentEncoding { get; init; } = "UTF-8";
 
     /// <summary>
@@ -103,7 +103,7 @@ public class CustomerDetails
     /// <summary>
     ///     Gets the file delivery method for the customer.
     /// </summary>
-    [MaxLength(10)]
+    [MaxLength(20)]
     public required string FileDeliveryMethod { get; init; } = string.Empty;
 
     /// <summary>
