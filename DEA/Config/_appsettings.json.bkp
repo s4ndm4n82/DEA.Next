@@ -42,6 +42,9 @@
     "PreviousRunTime": "",
     "PreviousRunDate": ""
   },
+  "ConnectionStrings": {
+    "defaultConnection": "Host=<DB Host>;Port=<DB Port>;Database=<DB Name>;User Id=<DB User Name>;Password=<DB Password>;"
+},
   "GraphConfig": {
     "TenantId": "",
     "Instance": "",
