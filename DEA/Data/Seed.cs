@@ -52,8 +52,8 @@ public static class Seed
                     Domain = customer.Domain,
                     FileDeliveryMethod = customer.FileDeliveryMethod,
                     DocumentDetails = customer.DocumentDetails,
-                    CreatedDate = customer.CreatedDate,
-                    ModifiedDate = customer.ModifiedDate
+                    CreatedDate = customer.CreatedDate.Ticks != 0 ? customer.CreatedDate : DateTime.UtcNow,
+                    ModifiedDate = customer.ModifiedDate.Ticks != 0 ? customer.ModifiedDate : DateTime.UtcNow
                 };
 
                 // Add the CustomerDetails object to the context.

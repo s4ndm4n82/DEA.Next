@@ -1,4 +1,5 @@
 using DEA.Next.Entities;
+using DEA.Next.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DEA.Next.Data;
@@ -20,11 +21,23 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
     /// <param name="modelBuilder">The model builder used to configure the entities.</param>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // Apply configuration for CustomerDetails entity
+        modelBuilder.ApplyConfiguration(new CustomerDetailsModel());
+
+        // Apply configuration for FtpDetails entity
+        modelBuilder.ApplyConfiguration(new FtpDetailsModel());
+
+        // Apply configuration for EmailDetails entity
+        modelBuilder.ApplyConfiguration(new EmailDetailsModel());
+
+        // Apply configuration for DocumentDetails entity
+        modelBuilder.ApplyConfiguration(new DocumentDetailsModel());
+
         // Configure primary key for CustomerDetails
         modelBuilder.Entity<CustomerDetails>()
             .HasKey(cd => cd.Id);
 
-        // Configure Id property to be generated on add for CustomerDetails
+        // Configure ID property to be generated on add for CustomerDetails
         modelBuilder.Entity<CustomerDetails>()
             .Property(cd => cd.Id)
             .ValueGeneratedOnAdd();

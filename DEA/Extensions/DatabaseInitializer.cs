@@ -13,8 +13,9 @@ public static class DatabaseInitializer
     {
         try
         {
-            // Get the DataContext service and apply any pending migrations.
             var context = services.GetRequiredService<DataContext>();
+
+            // Apply any pending migrations.
             await context.Database.MigrateAsync();
 
             // Seed the database with initial data. If the data already exists, skip the seeding process.
@@ -26,21 +27,16 @@ public static class DatabaseInitializer
                 return;
             }
 
-            // Log that the download process is starting.
             WriteLogClass.WriteToLog(1, "Starting download process ....", 1);
 
-            // Get the ProcessStartupFunctionsClass service.
             var processStartupFunctions = services.GetService<ProcessStartupFunctionsClass>();
 
-            // If the service is available, start the process.
             if (processStartupFunctions != null) await ProcessStartupFunctionsClass.StartupProcess();
 
-            // Call the DEA cleaner timed processes.
             RunTimedFunctionsClass.CallDeaTimedProcesses("deacleaner");
         }
         catch (Exception e)
         {
-            // Log any exceptions that occur during the migration or seeding process.
             WriteLogClass.WriteToLog(0, $"Exception at seed data: {e.Message} ....", 0);
             throw;
         }
