@@ -1,32 +1,99 @@
 -- Insert into CustomerDetails
-INSERT INTO CustomerDetails (CustomerStatus, Token, UserName, TemplateKey, Queue, ProjectID, DocumentId, DocumentEncoding, MaxBatchSize, MainCustomer, ClientName, SendEmail, SendSubject, ClientOrgNo, ClientIdField, IdField2Value, ClientIdField2, FileDeliveryMethod)
-VALUES
-(false, 'eyJhbGciOiJ...', 'import_efacto', '', '0', 'd33f2483-c79f-4110-a0ab-e234fbcf37a0', '', '', 1, 'Aksesspunkt', 'Duett', 0, FALSE, '932971917', 'Internal ID', '', '', 'FTP')
-RETURNING id INTO :customer_id;
-
--- Use the generated ID for related tables
-DO $$ BEGIN
-    -- Insert into FtpDetails
-    INSERT INTO FtpDetails (CustomerUUID, FtpType, FtpProfile, FtpHostName, FtpUser, FtpPassword, FtpPort, FtpFolderLoop, FtpMainFolder, FtpMoveToSubFolder, FtpSubFolder, FtpRemoveFiles)
+DO $$
+DECLARE
+    customer_id UUID;
+BEGIN
+    INSERT INTO public."CustomerDetails" ("Status",
+    "CustomerName",
+    "UserName",
+    "Token",
+    "Queue",
+    "ProjectId",
+    "TemplateKey",
+    "DocumentId",
+    "DocumentEncoding",
+    "MaxBatchSize",
+    "FieldOneValue",
+    "FieldOneName",
+    "FieldTwoValue",
+    "FieldTwoName",
+    "Domain",
+    "FileDeliveryMethod",
+    "CreatedDate",
+    "ModifiedDate")
     VALUES
-    (:customer_id, 'FTP', 'profileepe', 'ftp.digiacc.no', 'ftp.digiacc.no|EHFPortalConvert', 'Nt*N-9&z!V9]mPve', 21, 0, '/Navitro_importvic/932971917', FALSE, '', TRUE);
+    (FALSE,
+    '<CustomerName>',
+    '<UserName>',
+    '<Token>',
+    '<Queue>',
+    '<ProjectId>',
+    '<TemplateKey>',
+    '<DocumentId>',
+    '<DocumentEncoding>',
+    '<MaxBatchSize>',
+    '<FieldOneValue>',
+    '<FieldOneName>',
+    '<FieldTwoValue>',
+    '<FieldTwoName>',
+    '<Domain>',
+    '<FileDeliveryMethod>',
+    CURRENT_TIMESTAMP,
+    CURRENT_TIMESTAMP)
+    RETURNING "Id" INTO customer_id;
 
-    -- Insert into EmailDetails
-    INSERT INTO EmailDetails (EmailAddress, EmailInboxPath, SendEmail, SendSubject, CustomerDetailsId)
-    VALUES
-    ('', '', false, false, :customer_id);
+    -- Use the generated ID for related tables
+    IF LOWER((SELECT "FileDeliveryMethod" FROM public."CustomerDetails" WHERE "Id" = customer_id)) = 'ftp' THEN
+        -- Insert into FtpDetails
+        INSERT INTO public."FtpDetails" ("FtpType",
+        "FtpProfile",
+        "FtpHost",
+        "FtpUser",
+        "FtpPassword",
+        "FtpPort",
+        "FtpFolderLoop",
+        "FtpMoveToSubFolder",
+        "FtpMainFolder",
+        "FtpSubFolder",
+        "FtpRemoveFiles",
+        "CustomerDetailsId")
+        VALUES
+        ('<FtpType>',
+        '<FtpProfile>',
+        '<FtpHost>',
+        '<FtpUser>',
+        '<FtpPassword>',
+        '<FtpPort>',
+        FALSE,
+        FALSE,
+        '<FtpMainFolder>',
+        '',
+        TRUE,
+        customer_id);
+    ELSE
+        -- Insert into EmailDetails
+        INSERT INTO public."EmailDetails" ("Email",
+        "EmailInboxPath",
+        "SendEmail",
+        "SendSubject",
+        "CustomerDetailsId")
+        VALUES
+        ('<Email>',
+        '<EmailInboxPath>',
+        FALSE,
+        FALSE,
+        customer_id);
+    END IF;
 
     -- Insert into DocumentDetails
-    INSERT INTO DocumentDetails (CustomerUUID, DocumentType)
+    -- Only add the extensions that are supported.
+    -- If client is only going to be sending PDFs, then only add the PDF extension.
+    -- Remove the other extensions.
+    INSERT INTO public."DocumentDetails" ("Extension", "CustomerDetailsId")
     VALUES
-    (:customer_id, 'MULTI');
-
-    -- Insert into DocumentExtensions
-    INSERT INTO DocumentExtensions (CustomerUUID, Extension)
-    VALUES
-    (:customer_id, '.pdf'),
-    (:customer_id, '.jpg'),
-    (:customer_id, '.jpeg'),
-    (:customer_id, '.tif'),
-    (:customer_id, '.tiff');
+    ( '.pdf', customer_id),
+    ('.jpg', customer_id),
+    ('.jpeg', customer_id),
+    ('.tif', customer_id),
+    ('.tiff', customer_id);
 END $$;
