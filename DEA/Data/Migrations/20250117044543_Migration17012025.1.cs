@@ -6,11 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DEA.Next.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Migration160120252 : Migration
+    public partial class Migration170120251 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";");
+            
             migrationBuilder.AlterColumn<Guid>(
                 name: "Id",
                 table: "FtpDetails",
@@ -51,6 +53,8 @@ namespace DEA.Next.Data.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql("DROP EXTENSION IF EXISTS \"uuid-ossp\";");
+            
             migrationBuilder.AlterColumn<Guid>(
                 name: "Id",
                 table: "FtpDetails",

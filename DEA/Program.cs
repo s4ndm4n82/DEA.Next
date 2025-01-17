@@ -1,7 +1,6 @@
 ﻿using AppConfigReader;
 using DEA.Next.Extensions;
 using DEA.Next.HelperClasses.InternetLineChecker;
-using DEA.Next.HelperClasses.OtherFunctions;
 using DEA.Next.Versioning;
 using ErrorFolderChecker;
 using FolderFunctions;
