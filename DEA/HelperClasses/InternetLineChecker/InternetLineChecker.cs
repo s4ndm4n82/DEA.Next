@@ -61,12 +61,11 @@ internal static class InternetLineChecker
             using Ping deaPing = new();
             try
             {
-                var pingHost = dns;
                 var buffer = new byte[32];
-                var timeout = 1000;
+                const int timeout = 1000;
 
                 // Send a ping request to the DNS server.
-                var pingReply = await deaPing.SendPingAsync(pingHost, timeout, buffer);
+                var pingReply = await deaPing.SendPingAsync(dns, timeout, buffer);
 
                 // If the ping is successful, return true.
                 if (pingReply.Status == IPStatus.Success) return true;

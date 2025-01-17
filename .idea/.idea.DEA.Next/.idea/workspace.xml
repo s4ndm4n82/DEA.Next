@@ -10,17 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="33275f24-18e6-4ba3-81b4-a2ab1183ffd0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ConversionScript/JsonConvertScript.ps1" beforeDir="false" afterPath="$PROJECT_DIR$/ConversionScript/JsonConvertScript.ps1" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Data/AddUuidOsspExtension.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/20250116093855_Migration16012025.1.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/20250116093855_Migration16012025.1.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/20250116100620_Migration16012025.2.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/20250116100620_Migration16012025.2.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/20250116105440_Migration16012025.3.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/20250116105440_Migration16012025.3.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Versioning/AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Versioning/AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/InternetLineChecker/InternetLineChecker.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/InternetLineChecker/InternetLineChecker.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -375,6 +365,7 @@
       <workItem from="1737083395987" duration="307000" />
       <workItem from="1737083820618" duration="6090000" />
       <workItem from="1737091944461" duration="241000" />
+      <workItem from="1737092514933" duration="3102000" />
     </task>
     <servers />
   </component>
