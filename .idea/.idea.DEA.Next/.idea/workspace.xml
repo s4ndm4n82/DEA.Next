@@ -10,8 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="33275f24-18e6-4ba3-81b4-a2ab1183ffd0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/projectSettingsUpdater.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/projectSettingsUpdater.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/dataSources/dc71e931-d740-4bd5-a7f5-ea6eaa5916f4/storage_v2/_src_/database/DeaDataBase.mxUcig/schema/pg_catalog.0S1ZNQ.zip" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/dataSources/dc71e931-d740-4bd5-a7f5-ea6eaa5916f4/storage_v2/_src_/database/DeaDataBase.mxUcig/schema/pg_catalog.0S1ZNQ.zip" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,7 +18,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="DpaMonitoringSettings">
-    <option name="autoShow" value="false" />
+    <option name="firstShow" value="false" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -29,11 +28,47 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/ba3f23566a5654bfd8c7a49a51dc813be89635b01cf819485c5a61f61e4f53/TimeSpanParse.cs" root0="FORCE_HIGHLIGHTING" />
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;s4ndm4n82&quot;
+  }
+}</component>
+  <component name="GitToolBoxStore">
+    <option name="branchesCleanupHistory">
+      <BranchesCleanupHistory>
+        <option name="history">
+          <list>
+            <BranchCleanupEntry>
+              <option name="deletions">
+                <list>
+                  <BranchDeletion>
+                    <option name="hash" value="11a679d246bfb8b153eb3b1da04ab901da59103c" />
+                    <option name="name" value="issue_57" />
+                  </BranchDeletion>
+                </list>
+              </option>
+              <option name="timestamp" value="1737021372139" />
+            </BranchCleanupEntry>
+          </list>
+        </option>
+      </BranchesCleanupHistory>
+    </option>
   </component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/s4ndm4n82/DEA.Next&quot;,
+    &quot;accountId&quot;: &quot;2c14f9a1-2d6a-4253-8bf5-15836f27a58f&quot;
+  }
+}</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/ILViewer/4413b6f742814d0d84becc519328b15341200/e1/c92dc88c/02000054pdb7.il" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/32af53f9addbd8407e5f571f6439ce341f8ba46c7f085f2d1c1aa4c2bd1d35/ModelValidator.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/564d11e3c8cbbd636fa9aa3a7b73d9ef576176dfee78aff1abcc84c359c266a/InvalidOperationException.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/bd1d5c50194fea68ff3559c160230b0ab50f5acf4ce3061bffd6d62958e2182/ExceptionDispatchInfo.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/DEA/Extensions/ApplicationServiceExtension.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -42,29 +77,39 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Executable.DEA.Next.executor&quot;: &quot;Run&quot;,
-    &quot;.NET Project.DEA.Next.executor&quot;: &quot;Debug&quot;,
-    &quot;Publish to IIS.DEA.Next: FolderProfile.executor&quot;: &quot;Run&quot;,
-    &quot;Publish to folder.DEA.Next Publish.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;com.codeium.enabled&quot;: &quot;true&quot;,
-    &quot;database.data.extractors.current.export.id&quot;: &quot;JSON-Groovy.json.groovy&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;issue__54&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;settings.json.schema&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Executable.DEA.Next.executor": "Run",
+    ".NET Project.DEA.Next.executor": "Debug",
+    "Notification.DisplayName-DoNotAsk-Vcs Notifications": "VCS notifications",
+    "Notification.DoNotAsk-Vcs Notifications": "true",
+    "Publish to IIS.DEA.Next: FolderProfile.executor": "Run",
+    "Publish to folder.DEA.Next Publish.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "com.codeium.enabled": "true",
+    "com.codeium.snoozedEndTime": "1734605942586",
+    "database.data.extractors.current.export.id": "JSON-Groovy.json.groovy",
+    "git-widget-placeholder": "DeaProduction",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "rider.code.cleanup.on.save": "true",
+    "settings.editor.selected.configurable": "preferences.keymap",
+    "vue.rearranger.settings.migration": "true",
+    "zielu.gittoolbox.prj.config.selected.tab.id": "zielu.gittoolbox.config.prj.diagnostic"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
+    ]
   }
-}</component>
-  <component name="RunManager" selected=".NET Project.DEA.Next">
+}]]></component>
+  <component name="RunManager" selected="Publish to folder.DEA.Next Publish">
     <configuration name="DEA.Next Publish" type="DotNetFolderPublish" factoryName="Publish to folder">
-      <riderPublish configuration="Release" platform="Any CPU" runtime="Portable" target_folder="$PROJECT_DIR$/DEA/bin/Release/net6.0/publish/FolderPublish" target_framework="net6.0" uuid_high="-7580840089019791257" uuid_low="-7026497347669342426" />
+      <riderPublish configuration="Release" delete_existing_files="true" platform="Any CPU" runtime="Portable" target_folder="$PROJECT_DIR$/DEA/bin/Release/net8.0/publish/FolderPublish" target_framework="net8.0" uuid_high="-7580840089019791257" uuid_low="-7026497347669342426" />
       <method v="2" />
     </configuration>
     <configuration default="true" type="DotNetFolderPublish" factoryName="Publish to folder">
@@ -113,6 +158,9 @@
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration>G:\Users\S4NDM4N\AppData\Roaming\Subversion</configuration>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="33275f24-18e6-4ba3-81b4-a2ab1183ffd0" name="Changes" comment="" />
@@ -202,17 +250,177 @@
       <workItem from="1732170328287" duration="54000" />
       <workItem from="1732170708325" duration="24000" />
       <workItem from="1732185678880" duration="158000" />
+      <workItem from="1732261885145" duration="3890000" />
+      <workItem from="1732266199973" duration="2423000" />
+      <workItem from="1732691062150" duration="2260000" />
+      <workItem from="1732693458244" duration="673000" />
+      <workItem from="1732694218165" duration="167000" />
+      <workItem from="1732695299153" duration="298000" />
+      <workItem from="1732695697957" duration="338000" />
+      <workItem from="1732696113481" duration="2770000" />
+      <workItem from="1732758001760" duration="1438000" />
+      <workItem from="1732759622874" duration="2939000" />
+      <workItem from="1733112982311" duration="653000" />
+      <workItem from="1733115693645" duration="2770000" />
+      <workItem from="1733126321811" duration="179000" />
+      <workItem from="1733126709279" duration="7426000" />
+      <workItem from="1733194184892" duration="720000" />
+      <workItem from="1733195405132" duration="367000" />
+      <workItem from="1733195801263" duration="60000" />
+      <workItem from="1733196087042" duration="4268000" />
+      <workItem from="1733204555106" duration="178000" />
+      <workItem from="1733204809293" duration="1471000" />
+      <workItem from="1733207653217" duration="83000" />
+      <workItem from="1733207785329" duration="3897000" />
+      <workItem from="1733214518006" duration="1803000" />
+      <workItem from="1733216798061" duration="1678000" />
+      <workItem from="1733218777545" duration="2317000" />
+      <workItem from="1733222842373" duration="100000" />
+      <workItem from="1733222992194" duration="445000" />
+      <workItem from="1733285384988" duration="631000" />
+      <workItem from="1733288709175" duration="574000" />
+      <workItem from="1733291709740" duration="340000" />
+      <workItem from="1733292544919" duration="9271000" />
+      <workItem from="1733383201782" duration="138000" />
+      <workItem from="1733383387047" duration="109000" />
+      <workItem from="1733383521127" duration="3609000" />
+      <workItem from="1733388090326" duration="848000" />
+      <workItem from="1733394351422" duration="784000" />
+      <workItem from="1733464845210" duration="1954000" />
+      <workItem from="1733473026745" duration="175000" />
+      <workItem from="1733473242431" duration="285000" />
+      <workItem from="1733473696070" duration="2370000" />
+      <workItem from="1733478692677" duration="262000" />
+      <workItem from="1733479001737" duration="2809000" />
+      <workItem from="1733713863143" duration="125000" />
+      <workItem from="1733722539458" duration="214000" />
+      <workItem from="1733722819293" duration="1967000" />
+      <workItem from="1733724873277" duration="12951000" />
+      <workItem from="1733800440648" duration="318000" />
+      <workItem from="1733800878874" duration="494000" />
+      <workItem from="1733801456356" duration="7601000" />
+      <workItem from="1733810091298" duration="10574000" />
+      <workItem from="1733826903992" duration="298000" />
+      <workItem from="1733827343457" duration="886000" />
+      <workItem from="1733897733144" duration="154000" />
+      <workItem from="1733898396717" duration="354000" />
+      <workItem from="1733898802389" duration="12579000" />
+      <workItem from="1733980078937" duration="2559000" />
+      <workItem from="1733983065375" duration="4572000" />
+      <workItem from="1733990461428" duration="2549000" />
+      <workItem from="1734076613333" duration="114000" />
+      <workItem from="1734078588245" duration="256000" />
+      <workItem from="1734078941392" duration="187000" />
+      <workItem from="1734079958482" duration="239000" />
+      <workItem from="1734083730049" duration="290000" />
+      <workItem from="1734084079795" duration="207000" />
+      <workItem from="1734317871543" duration="93000" />
+      <workItem from="1734324165907" duration="2122000" />
+      <workItem from="1734326371133" duration="899000" />
+      <workItem from="1734328364060" duration="224000" />
+      <workItem from="1734328995387" duration="143000" />
+      <workItem from="1734329188462" duration="322000" />
+      <workItem from="1734329522151" duration="4554000" />
+      <workItem from="1734403677244" duration="186000" />
+      <workItem from="1734407627421" duration="655000" />
+      <workItem from="1734411090010" duration="242000" />
+      <workItem from="1734415991250" duration="3321000" />
+      <workItem from="1734423611390" duration="1095000" />
+      <workItem from="1734424745585" duration="209000" />
+      <workItem from="1734424993281" duration="191000" />
+      <workItem from="1734425211088" duration="516000" />
+      <workItem from="1734425982464" duration="6416000" />
+      <workItem from="1734493321608" duration="339000" />
+      <workItem from="1734493774560" duration="373000" />
+      <workItem from="1734494253628" duration="325000" />
+      <workItem from="1734494597056" duration="3721000" />
+      <workItem from="1734501167545" duration="1359000" />
+      <workItem from="1734502567149" duration="80000" />
+      <workItem from="1734502690018" duration="2120000" />
+      <workItem from="1734507499824" duration="660000" />
+      <workItem from="1734508235297" duration="3123000" />
+      <workItem from="1734511628118" duration="8082000" />
+      <workItem from="1734599005123" duration="597000" />
+      <workItem from="1734599733319" duration="311000" />
+      <workItem from="1734600103287" duration="6018000" />
+      <workItem from="1734661289656" duration="1912000" />
+      <workItem from="1734671227648" duration="118000" />
+      <workItem from="1734672709145" duration="132000" />
+      <workItem from="1734673661641" duration="726000" />
+      <workItem from="1734676876455" duration="69000" />
+      <workItem from="1734680855066" duration="286000" />
+      <workItem from="1734681247700" duration="1302000" />
+      <workItem from="1734682606986" duration="413000" />
+      <workItem from="1734683052278" duration="26000" />
+      <workItem from="1734683124977" duration="8417000" />
+      <workItem from="1734918514143" duration="561000" />
+      <workItem from="1734919458834" duration="17551000" />
+      <workItem from="1736908408181" duration="291000" />
+      <workItem from="1736914253001" duration="1628000" />
+      <workItem from="1736916004933" duration="12672000" />
+      <workItem from="1736932671857" duration="2266000" />
+      <workItem from="1737018018619" duration="213000" />
+      <workItem from="1737018771283" duration="131000" />
+      <workItem from="1737018989936" duration="5734000" />
+      <workItem from="1737083395987" duration="307000" />
+      <workItem from="1737083820618" duration="6090000" />
+      <workItem from="1737091944461" duration="241000" />
+      <workItem from="1737092514933" duration="3102000" />
+      <workItem from="1737340372041" duration="1734000" />
+      <workItem from="1737342240283" duration="8161000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/ProcessStatusMessageSetter.cs</url>
+          <line>32</line>
+          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\HelperClasses\OtherFunctions\ProcessStatusMessageSetter.cs" containingFunctionPresentation="Method 'SetProcessStatusMain'">
+            <startOffsets>
+              <option value="727" />
+            </startOffsets>
+            <endOffsets>
+              <option value="808" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="57" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/ProcessStatusMessageSetter.cs</url>
+          <line>34</line>
+          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\HelperClasses\OtherFunctions\ProcessStatusMessageSetter.cs" containingFunctionPresentation="Method 'SetProcessStatusMain'">
+            <startOffsets>
+              <option value="818" />
+            </startOffsets>
+            <endOffsets>
+              <option value="846" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="58" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="Type#DEA.Next.FileOperations.TpsJsonStringClasses.TpsJsonLinesUploadString+Tables" memberName="Table" />

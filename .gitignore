@@ -368,5 +368,10 @@ SSH.NETHelpFile/
 MetadataSamples/
 
 # Settings json
-/DEA/Config/appsettings.json
-/DEA/Config/CustomerConfig.json
+DEA/Config/
+ConversionScript/
+
+# Files not to ignore under the settings folders
+!DEA/Config/_appsettings.json.bkp
+!DEA/Config/_CustomerConfig.json.bkp
+!ConversionScript/JsonConvertScript.ps1

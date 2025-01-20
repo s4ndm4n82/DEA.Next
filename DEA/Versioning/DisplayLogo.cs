@@ -1,26 +1,26 @@
 ﻿using System.Reflection;
 using WriteLog;
 
-namespace DisplayLogoClass
+namespace DEA.Next.Versioning;
+
+internal class DisplayLogo
 {
-    internal class DisplayLogo
+    public static void Logo()
     {
-        public static void Logo()
-        {
-            Version programVersion = Assembly.GetExecutingAssembly().GetName().Version;
-            string programName = Assembly.GetExecutingAssembly().GetName().Name;
+        var programVersion = Assembly.GetExecutingAssembly().GetName().Version;
+        var programName = Assembly.GetExecutingAssembly().GetName().Name;
 
-            ShowLogo(programName);
-            ShowLogo(programVersion.ToString());
+        if (programName == null || programVersion == null) return;
+        ShowLogo(programName);
+        ShowLogo(programVersion.ToString());
 
-            WriteLogClass.WriteToLog(1, $"{programName} .... v{programVersion} ....", 1);
-        }
+        WriteLogClass.WriteToLog(1, $"{programName} .... v{programVersion} ....", 1);
+    }
 
-        private static void ShowLogo(string textToSet)
-        {            
-            int windowWidth = Console.WindowWidth;
-            int windowPadding = (windowWidth - textToSet.Length) / 2;
-            Console.WriteLine(new string(' ', windowPadding) + textToSet);
-        }
+    private static void ShowLogo(string textToSet)
+    {            
+        var windowWidth = Console.WindowWidth;
+        var windowPadding = (windowWidth - textToSet.Length) / 2;
+        Console.WriteLine(new string(' ', windowPadding) + textToSet);
     }
 }

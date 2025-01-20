@@ -1,77 +1,79 @@
-﻿using DEA.Next.FileOperations.TpsServerReponseFunctions;
+﻿using System.Net;
+using DEA.Next.Extensions;
+using DEA.Next.FileOperations.TpsServerResponseFunctions;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using FluentFTP;
 using Renci.SshNet;
 using RestSharp;
-using System.Net;
-using UserConfigRetriverClass;
-using UserConfigSetterClass;
 using WriteLog;
 
-namespace DEA.Next.FileOperations.TpsFileUploadFunctions
+namespace DEA.Next.FileOperations.TpsFileUploadFunctions;
+
+internal class SendFilesToRestApiProject
 {
-    internal class SendFilesToRestApiProject
+    public static async Task<int> SendFilesToRestProjectAsync(Guid customerId,
+        AsyncFtpClient? ftpConnect,
+        SftpClient? sftpConnect,
+        string jsonResult,
+        string fullFilePath,
+        int fileCount,
+        string[] ftpFileList,
+        string[] localFileList,
+        string[] jsonFileList,
+        string clientOrgNo)
     {
-        public static async Task<int> SendFilesToRestProjectAsync(AsyncFtpClient ftpConnect,
-                                                                  SftpClient sftpConnect,
-                                                                  string jsonResult,
-                                                                  string fullFilePath,
-                                                                  int customerId,
-                                                                  int fileCount,
-                                                                  string[] ftpFileList,
-                                                                  string[] localFileList,
-                                                                  string[] jsonFileList,
-                                                                  string clientOrgNo)
+        try
         {
-            try
+            var customerDetails = await UserConfigRetriever.RetrieveUserConfigById(customerId);
+            var (mainDomain, query) = await customerId.SplitUrl();
+
+            // Creating rest api request.
+            var client = new RestClient(mainDomain);
+            var tpsRequest = new RestRequest(query)
             {
-                UserConfigSetter.Customerdetail customerDetails = await UserConfigRetriver.RetriveUserConfigById(customerId);
+                Method = Method.Post,
+                RequestFormat = DataFormat.Json
+            };
 
-                // Creating rest api request.
-                RestClient client = new($"{customerDetails.DomainDetails.MainDomain}");
-                RestRequest tpsRequest = new($"{customerDetails.DomainDetails.TpsRequestUrl}")
-                {
-                    Method = Method.Post,
-                    RequestFormat = DataFormat.Json
-                };
+            tpsRequest.AddBody(jsonResult);
+            var serverResponse = await client.ExecuteAsync(tpsRequest); // Executes the request and send to the server.
 
-                tpsRequest.AddBody(jsonResult);
+            var dirPath = Directory.GetParent(fullFilePath)?.FullName; // Gets the directory path of the file.
 
-                RestResponse serverResponse = await client.ExecuteAsync(tpsRequest); // Executes the request and send to the server.
-                string dirPath = Directory.GetParent(fullFilePath).FullName; // Gets the directory path of the file.
+            if (serverResponse.StatusCode != HttpStatusCode.OK)
+                return await TpsServerOnFaile.ServerOnFailProjectsAsync(customerDetails.FileDeliveryMethod.ToLower(),
+                    fullFilePath,
+                    customerId,
+                    clientOrgNo,
+                    ftpConnect,
+                    sftpConnect,
+                    ftpFileList,
+                    localFileList,
+                    serverResponse.StatusCode,
+                    serverResponse.Content);
 
-                if (serverResponse.StatusCode != HttpStatusCode.OK)
-                {
-                    return await TpsServerOnFaile.ServerOnFailProjectsAsync(customerDetails.FileDeliveryMethod.ToLower(),
-                                                                            fullFilePath,
-                                                                            customerId,
-                                                                            clientOrgNo,
-                                                                            ftpConnect,
-                                                                            sftpConnect,
-                                                                            ftpFileList,
-                                                                            localFileList,
-                                                                            serverResponse.StatusCode,
-                                                                            serverResponse.Content);
-                }
+            if (!string.IsNullOrEmpty(dirPath))
+                return await TpsServerOnSuccess.ServerOnSuccessProjectAsync(customerDetails.ProjectId,
+                    customerDetails.Queue,
+                    fileCount,
+                    customerDetails.FileDeliveryMethod.ToLower(),
+                    fullFilePath,
+                    dirPath,
+                    jsonFileList,
+                    customerId,
+                    clientOrgNo,
+                    ftpConnect,
+                    sftpConnect,
+                    ftpFileList,
+                    localFileList);
 
-                return await TpsServerOnSuccess.ServerOnSuccessProjectAsync(customerDetails.ProjectID,
-                                                                            customerDetails.Queue,
-                                                                            fileCount,
-                                                                            customerDetails.FileDeliveryMethod.ToLower(),
-                                                                            fullFilePath,
-                                                                            dirPath,
-                                                                            jsonFileList,
-                                                                            customerId,
-                                                                            clientOrgNo,
-                                                                            ftpConnect,
-                                                                            sftpConnect,
-                                                                            ftpFileList,
-                                                                            localFileList);
-            }
-            catch (Exception ex)
-            {
-                WriteLogClass.WriteToLog(0, $"Exception at SendFilesToRest function: {ex.Message}", 0);
-                return 0;
-            }
+            WriteLogClass.WriteToLog(0, "Directory path is empty ....", 0);
+            return 0;
+        }
+        catch (Exception ex)
+        {
+            WriteLogClass.WriteToLog(0, $"Exception at SendFilesToRest function: {ex.Message}", 0);
+            return 0;
         }
     }
 }

@@ -1,153 +1,161 @@
 ﻿using System.Text.RegularExpressions;
 using WriteLog;
 
-namespace VersionIncrementerClass
+namespace VersionIncrementerClass;
+
+public static partial class VersionIncrementer
 {
-    public static class VersionIncrementer
+    public static void IncrementVersion()
     {
-        public static void IncrementVersion()
+        try
         {
-            try
-            {
-                // Get the current working directory
-                string workingDirectory = Environment.CurrentDirectory;
-                // Get the app root directory
-                string appRootDirectory = workingDirectory.Split("\\bin")[0];
-                // Get the path to the AssemblyInfo.cs file
-                string assemplyInfoFilePath = Path.Combine(appRootDirectory, "Versioning", "AssemblyInfo.cs");
+            // Get the current working directory
+            var workingDirectory = Environment.CurrentDirectory;
+            // Get the app root directory
+            var appRootDirectory = workingDirectory.Split("\\bin")[0];
+            // Get the path to the AssemblyInfo.cs file
+            var assemplyInfoFilePath = Path.Combine(appRootDirectory, "Versioning", "AssemblyInfo.cs");
 
-                // Check if the file exists
-                if (!File.Exists(assemplyInfoFilePath))
-                {
-                    return;
-                }
-
-                // Read the AssemblyInfo.cs file
-                string assemblyInfo = File.ReadAllText(assemplyInfoFilePath);
-                // Update the numbers
-                UpdateNumbers(assemblyInfo,
-                             assemplyInfoFilePath,
-                             ExtractAssemblyNumbers(assemblyInfo).Item1,
-                             ExtractAssemblyNumbers(assemblyInfo).Item2);
-            }
-            catch (Exception ex)
+            // Check if the file exists
+            if (!File.Exists(assemplyInfoFilePath))
             {
-                WriteLogClass.WriteToLog(0, $"Error at IncrementVersion: {ex.Message}", 0);
+                return;
             }
+
+            // Read the AssemblyInfo.cs file
+            string assemblyInfo = File.ReadAllText(assemplyInfoFilePath);
+            // Update the numbers
+            UpdateNumbers(assemblyInfo,
+                assemplyInfoFilePath,
+                ExtractAssemblyNumbers(assemblyInfo).Item1,
+                ExtractAssemblyNumbers(assemblyInfo).Item2);
         }
-
-        private static (int,int) ExtractAssemblyNumbers(string assemblyInfo)
+        catch (Exception ex)
         {
-            int buildNumber = 0;
-            int revisionNumber = 0;
-
-            try
-            {
-                // Extract the current version number.
-                Match matchNumber = Regex.Match(assemblyInfo, @"AssemblyVersion\(""\d+\.\d+\.\d+\.\d+""\)");
-
-                if (matchNumber.Success)
-                {
-                    // Extract the version numbers.
-                    string[] versionNumbers = matchNumber.Value
-                                              .Trim('(', ')', '"')
-                                              .Split('.')
-                                              .Skip(1)
-                                              .ToArray();
-                    buildNumber = int.Parse(versionNumbers[1]);
-                    revisionNumber = int.Parse(versionNumbers[2]);                    
-                }
-                // Return the version numbers
-                return (buildNumber, revisionNumber);
-            }
-            catch (Exception ex)
-            {
-                WriteLogClass.WriteToLog(0, $"Error at ExtractAssemblyNumbers: {ex.Message}", 0);
-                return (buildNumber,revisionNumber);
-            }
-        }
-        private static void UpdateNumbers(string assemblyInfo,
-                                         string assemblyInfoFilePath,
-                                         int buildNumber,
-                                         int revisionNumber)
-        {
-            try
-            {
-                // Increment the revision number.
-                revisionNumber++;
-                // Check if the revision number is greater than 1000
-                // If it is, increment the build number and reset the revision number.
-                if (revisionNumber == 1000)
-                {
-                    buildNumber++;
-                    revisionNumber = 0;
-                }
-                // Update the numbers
-                if (buildNumber == 10)
-                {
-                    UpdateMinorNumber(assemblyInfo, assemblyInfoFilePath);
-                }
-                else
-                {
-                    UpdateBuildAndRevisonNumber(assemblyInfo, assemblyInfoFilePath, buildNumber, revisionNumber);
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteLogClass.WriteToLog(0, $"Error at updateMinorNumber: {ex.Message}", 0);
-            }
-        }
-
-        private static void UpdateMinorNumber(string assemblyInfo, string assemblyInfoFilePath)
-        {
-            try
-            {
-                // Increment the minor number and reset the build number
-                string updatedAssemblyInfo = Regex.Replace(assemblyInfo, @"AssemblyVersion\(""\d+\.\d+\.(\d+)\.\d+""\)", m =>
-                {
-                    int newMinorNumber = int.Parse(m.Groups[1].Value) + 1;
-                    return $"AssemblyVersion(\"2.{newMinorNumber}.0.0\")"; // Adjust the version format as needed
-                });
-
-                // Write the updated content back to AssemblyInfo.cs
-                File.WriteAllText(assemblyInfoFilePath, updatedAssemblyInfo);
-            }
-            catch (Exception ex)
-            {
-                WriteLogClass.WriteToLog(0, $"Error at updateMinorNumber: {ex.Message}", 0);
-            }
-        }
-
-        private static void UpdateBuildAndRevisonNumber(string assemblyInfo,
-                                                        string assemblyInfoFilePath,
-                                                        int buildNumber,
-                                                        int revisionNumber)
-        {
-            try
-            {
-                // Update the build and revision numbers
-                string updatedAssemblyInfo = Regex.Replace(assemblyInfo, @"AssemblyVersion\(""\d+\.\d+\.(\d+)\.\d+""\)", m =>
-                {
-                    return $"AssemblyVersion(\"2.0.{buildNumber}.{revisionNumber}\")"; // Adjust the version format as needed
-                });
-
-                updatedAssemblyInfo = Regex.Replace(updatedAssemblyInfo, @"AssemblyFileVersion\(""\d+\.\d+\.\d+\.\d+""\)", m =>
-                {
-                    return $"AssemblyFileVersion(\"2.0.{buildNumber}.{revisionNumber}\")"; // Adjust the version format as needed
-                });
-
-                updatedAssemblyInfo = Regex.Replace(updatedAssemblyInfo, @"AssemblyInformationalVersion\(""\d+\.\d+\.\d+\.\d+""\)", m =>
-                {
-                    return $"AssemblyInformationalVersion(\"2.0.{buildNumber}.{revisionNumber}\")"; // Adjust the version format as needed
-                });
-
-                // Write the updated content back to AssemblyInfo.cs
-                File.WriteAllText(assemblyInfoFilePath, updatedAssemblyInfo);
-            }
-            catch (Exception ex)
-            {
-                WriteLogClass.WriteToLog(0, $"Error at updateBuildAndRevisonNumber: {ex.Message}", 0);
-            }
+            WriteLogClass.WriteToLog(0, $"Error at IncrementVersion: {ex.Message}", 0);
         }
     }
+
+    private static (int,int) ExtractAssemblyNumbers(string assemblyInfo)
+    {
+        var buildNumber = 0;
+        var revisionNumber = 0;
+
+        try
+        {
+            // Extract the current version number.
+            var matchNumber = MyRegex().Match(assemblyInfo);
+
+            if (!matchNumber.Success) return (buildNumber, revisionNumber);
+            // Extract the version numbers.
+            var versionNumbers = matchNumber.Value
+                .Trim('(', ')', '"')
+                .Split('.')
+                .Skip(1)
+                .ToArray();
+            buildNumber = int.Parse(versionNumbers[1]);
+            revisionNumber = int.Parse(versionNumbers[2]);
+            // Return the version numbers
+            return (buildNumber, revisionNumber);
+        }
+        catch (Exception ex)
+        {
+            WriteLogClass.WriteToLog(0, $"Error at ExtractAssemblyNumbers: {ex.Message}", 0);
+            return (buildNumber,revisionNumber);
+        }
+    }
+    private static void UpdateNumbers(string assemblyInfo,
+        string assemblyInfoFilePath,
+        int buildNumber,
+        int revisionNumber)
+    {
+        try
+        {
+            // Increment the revision number.
+            revisionNumber++;
+            // Check if the revision number is greater than 1000
+            // If it is, increment the build number and reset the revision number.
+            if (revisionNumber == 1000)
+            {
+                buildNumber++;
+                revisionNumber = 0;
+            }
+            // Update the numbers
+            if (buildNumber == 10)
+            {
+                UpdateMinorNumber(assemblyInfo, assemblyInfoFilePath);
+            }
+            else
+            {
+                UpdateBuildAndRevisionNumber(assemblyInfo, assemblyInfoFilePath, buildNumber, revisionNumber);
+            }
+        }
+        catch (Exception ex)
+        {
+            WriteLogClass.WriteToLog(0, $"Error at updateMinorNumber: {ex.Message}", 0);
+        }
+    }
+
+    private static void UpdateMinorNumber(string assemblyInfo, string assemblyInfoFilePath)
+    {
+        try
+        {
+            // Increment the minor number and reset the build number
+            var updatedAssemblyInfo = MyRegex1().Replace(assemblyInfo, m =>
+            {
+                var newMinorNumber = int.Parse(m.Groups[1].Value) + 1;
+                return $"AssemblyVersion(\"2.{newMinorNumber}.0.0\")"; // Adjust the version format as needed
+            });
+
+            // Write the updated content back to AssemblyInfo.cs
+            File.WriteAllText(assemblyInfoFilePath, updatedAssemblyInfo);
+        }
+        catch (Exception ex)
+        {
+            WriteLogClass.WriteToLog(0, $"Error at updateMinorNumber: {ex.Message}", 0);
+        }
+    }
+
+    private static void UpdateBuildAndRevisionNumber(string assemblyInfo,
+        string assemblyInfoFilePath,
+        int buildNumber,
+        int revisionNumber)
+    {
+        try
+        {
+            // Update the build and revision numbers
+            var updatedAssemblyInfo = MyRegex2().Replace(assemblyInfo, m =>
+            {
+                return $"AssemblyVersion(\"2.0.{buildNumber}.{revisionNumber}\")"; // Adjust the version format as needed
+            });
+
+            updatedAssemblyInfo = MyRegex3().Replace(updatedAssemblyInfo, m =>
+            {
+                return $"AssemblyFileVersion(\"2.0.{buildNumber}.{revisionNumber}\")"; // Adjust the version format as needed
+            });
+
+            updatedAssemblyInfo = MyRegex4().Replace(updatedAssemblyInfo, m =>
+            {
+                return $"AssemblyInformationalVersion(\"2.0.{buildNumber}.{revisionNumber}\")"; // Adjust the version format as needed
+            });
+
+            // Write the updated content back to AssemblyInfo.cs
+            File.WriteAllText(assemblyInfoFilePath, updatedAssemblyInfo);
+        }
+        catch (Exception ex)
+        {
+            WriteLogClass.WriteToLog(0, $"Error at updateBuildAndRevisionNumber: {ex.Message}", 0);
+        }
+    }
+
+    [GeneratedRegex("""AssemblyVersion\("\d+\.\d+\.\d+\.\d+"\)""")]
+    private static partial Regex MyRegex();
+    [GeneratedRegex("""AssemblyVersion\("\d+\.\d+\.(\d+)\.\d+"\)""")]
+    private static partial Regex MyRegex1();
+    [GeneratedRegex("""AssemblyVersion\("\d+\.\d+\.(\d+)\.\d+"\)""")]
+    private static partial Regex MyRegex2();
+    [GeneratedRegex("""AssemblyFileVersion\("\d+\.\d+\.\d+\.\d+"\)""")]
+    private static partial Regex MyRegex3();
+    [GeneratedRegex("""AssemblyInformationalVersion\("\d+\.\d+\.\d+\.\d+"\)""")]
+    private static partial Regex MyRegex4();
 }

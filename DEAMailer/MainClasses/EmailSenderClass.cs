@@ -2,45 +2,44 @@
 using WriteLog;
 using AppConfigReader;
 
-namespace Emailer
+namespace Emailer;
+
+internal class EmailerClass
 {
-    internal class EmailerClass
+    public static bool EmailSenderHandler(string emailBody)
     {
-        public static bool EmailSenderHandler(string emailBody)
+        AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
+        AppConfigReaderClass.Emailserversettings emailSettings = jsonData.EmailServerSettings;
+
+        string senderEmail = emailSettings.EmailSettings.FromEmail;
+        string[] recipientEmails = emailSettings.EmailSettings.ToEmail;
+
+        MailMessage emailMessage = new();
+        emailMessage.From = new(senderEmail);
+
+        foreach (string recipientEmail in recipientEmails)
         {
-            AppConfigReaderClass.AppSettingsRoot jsonData = AppConfigReaderClass.ReadAppDotConfig();
-            AppConfigReaderClass.Emailserversettings emailSettings = jsonData.EmailServerSettings;
+            emailMessage.To.Add(recipientEmail);
+        }
 
-            string senderEmail = emailSettings.EmailSettings.FromEmail;
-            string[] recipientEmails = emailSettings.EmailSettings.ToEmail;
+        emailMessage.Subject = emailSettings.EmailSettings.Subject;
+        emailMessage.Body = emailBody;
 
-            MailMessage emailMessage = new();
-            emailMessage.From = new(senderEmail);
+        SmtpClient smtpClient = new(emailSettings.ServerSettings.SmtpServer, emailSettings.ServerSettings.Port)
+        {
+            EnableSsl = false
+        };
 
-            foreach (string recipientEmail in recipientEmails)
-            {
-                emailMessage.To.Add(recipientEmail);
-            }
-
-            emailMessage.Subject = emailSettings.EmailSettings.Subject;
-            emailMessage.Body = emailBody;
-
-            SmtpClient smtpClient = new(emailSettings.ServerSettings.SmtpServer, emailSettings.ServerSettings.Port)
-            {
-                EnableSsl = false
-            };
-
-            try
-            {
-                smtpClient.Send(emailMessage);
-                WriteLogClass.WriteToLog(1,"Message sent successfully.",1);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                WriteLogClass.WriteToLog(0,$"Error sending email: {ex.Message}",0);
-                return false;
-            }
+        try
+        {
+            smtpClient.Send(emailMessage);
+            WriteLogClass.WriteToLog(1,"Message sent successfully.",1);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            WriteLogClass.WriteToLog(0,$"Error sending email: {ex.Message}",0);
+            return false;
         }
     }
 }
