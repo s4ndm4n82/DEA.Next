@@ -86,7 +86,10 @@ internal class TpsServerOnFaile
                                              sftpConnect,
                                              ftpFileList,
                                              localFileList):
-                    WriteLogClass.WriteToLog(0, "Deleting files from FTP server failed ....", 1);
+                    WriteLogClass.WriteToLog(0,
+                        "Deleting files from FTP server failed ....",
+                        1);
+
                     return 0;
 
                 // Deleting the files from local.

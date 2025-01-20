@@ -53,9 +53,13 @@ internal class TpsServerOnSuccess
             var ftpDetails = customerDetails.FtpDetails;
 
             // Writes to log.
-            WriteLogClass.WriteToLog(1, $"Uploaded {fileCount} file to project {projectId} using queue {queue} ....",
+            WriteLogClass.WriteToLog(1,
+                $"Uploaded {fileCount} file to project {projectId} using queue {queue} ....",
                 4);
-            WriteLogClass.WriteToLog(1, $"Uploaded filenames: {WriteNamesToLogClass.GetFileNames(jsonFileList)}", 4);
+
+            WriteLogClass.WriteToLog(1,
+                $"Uploaded filenames: {WriteNamesToLogClass.GetFileNames(jsonFileList)}",
+                4);
 
             switch (deliveryType)
             {
@@ -64,8 +68,8 @@ internal class TpsServerOnSuccess
                     jsonFileList,
                     null,
                     clientOrgNo,
-                    MagicWords.Email):
-                    return 1;
+                    MagicWords.Email): return 0;
+
                 // Removes the files from FTP server. If the files not needed to be moved to another FTP sub folder.
                 case MagicWords.Ftp when ftpDetails is { FtpMoveToSubFolder: false, FtpRemoveFiles: true }
                                          && !await FolderCleanerClass.StartFtpFileDelete(ftpConnect,
@@ -76,8 +80,10 @@ internal class TpsServerOnSuccess
                         "Deleting files from FTP failed ....",
                         1);
                     return -1;
+
                 // Moving files to another FTP sub folder.
-                case MagicWords.Ftp when ftpDetails.FtpMoveToSubFolder
+                case MagicWords.Ftp when ftpDetails != null
+                                         && ftpDetails.FtpMoveToSubFolder
                                          && !await FtpFunctionsClass.MoveFtpFiles(ftpConnect,
                                              sftpConnect,
                                              customerId,
@@ -90,13 +96,14 @@ internal class TpsServerOnSuccess
                         ftpFileList,
                         localFileList);
                     return -1;
+
                 // Deletes the file from local hold folder when sending is successful.
                 case MagicWords.Ftp when !await FolderCleanerClass.GetFolders(downloadFolderPath,
                     jsonFileList,
                     customerId,
                     null,
-                    MagicWords.Ftp):
-                    return -1;
+                    MagicWords.Ftp): return -1;
+
                 default:
                     return 1;
             }

@@ -18,7 +18,7 @@ public static class ApplicationServiceExtension
         services.AddDbContext<DataContext>(opt =>
         {
             opt.UseNpgsql(config.GetConnectionString("DefaultConnection"));
-        });
+        }, ServiceLifetime.Scoped);
         
         services.AddScoped<CustomerDataClass>();
         services.AddScoped<IUserConfigRepository, CustomerDetailsRepository>();

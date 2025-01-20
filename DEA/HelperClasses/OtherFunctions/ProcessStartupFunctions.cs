@@ -15,11 +15,11 @@ internal class ProcessStartupFunctionsClass
             {
                 case MagicWords.Ftp:
                     if (!client.Status) continue;
-                    WriteLastStatusMessage(0, await FtpFunctionsClass.GetFtpFiles(client.Id));
+                    WriteLastStatusMessage(1, await FtpFunctionsClass.GetFtpFiles(client.Id));
                     break;
                 case MagicWords.Email:
                     if (!client.Status) continue;
-                    WriteLastStatusMessage(await GraphHelperClass.InitializeGetAttachment(client.Id), 0);
+                    WriteLastStatusMessage(await GraphHelperClass.InitializeGetAttachment(client.Id), 1);
                     break;
             }
     }

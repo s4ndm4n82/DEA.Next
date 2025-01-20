@@ -2,7 +2,6 @@ using DEA.Next.Data;
 using DEA.Next.HelperClasses.OtherFunctions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using RunTimedFunctions;
 using WriteLog;
 
 namespace DEA.Next.Extensions;
@@ -33,7 +32,7 @@ public static class DatabaseInitializer
 
             if (processStartupFunctions != null) await ProcessStartupFunctionsClass.StartupProcess();
 
-            RunTimedFunctionsClass.CallDeaTimedProcesses("deacleaner");
+            //RunTimedFunctionsClass.CallDeaTimedProcesses("deacleaner");
         }
         catch (Exception e)
         {

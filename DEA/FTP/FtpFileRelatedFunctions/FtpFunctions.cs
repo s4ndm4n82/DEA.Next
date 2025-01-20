@@ -138,7 +138,7 @@ internal class FtpFunctionsClass
                         ftpDetails.FtpMainFolder, downloadFolder, string.Empty, clientId);
 
                 WriteLogClass.WriteToLog(ProcessStatusMessageSetterClass.SetMessageTypeOther(downloadResult),
-                    $"{ProcessStatusMessageSetterClass.SetProcessStatusOther(downloadResult, MagicWords.Ftp)}\n", 3);
+                    $"{ProcessStatusMessageSetterClass.SetProcessStatusOther(downloadResult, MagicWords.Ftp)}", 3);
 
                 return downloadResult;
             }
@@ -182,7 +182,7 @@ internal class FtpFunctionsClass
                 };
 
                 WriteLogClass.WriteToLog(ProcessStatusMessageSetterClass.SetMessageTypeOther(downloadResult),
-                    $"{ProcessStatusMessageSetterClass.SetProcessStatusOther(downloadResult, MagicWords.Ftp)}\n", 3);
+                    $"{ProcessStatusMessageSetterClass.SetProcessStatusOther(downloadResult, MagicWords.Ftp)}", 3);
                 return downloadResult;
             }
         }
