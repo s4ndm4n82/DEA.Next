@@ -10,7 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="33275f24-18e6-4ba3-81b4-a2ab1183ffd0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/dataSources/dc71e931-d740-4bd5-a7f5-ea6eaa5916f4/storage_v2/_src_/database/DeaDataBase.mxUcig/schema/pg_catalog.0S1ZNQ.zip" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/dataSources/dc71e931-d740-4bd5-a7f5-ea6eaa5916f4/storage_v2/_src_/database/DeaDataBase.mxUcig/schema/pg_catalog.0S1ZNQ.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,36 +77,36 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Executable.DEA.Next.executor": "Run",
-    ".NET Project.DEA.Next.executor": "Debug",
-    "Notification.DisplayName-DoNotAsk-Vcs Notifications": "VCS notifications",
-    "Notification.DoNotAsk-Vcs Notifications": "true",
-    "Publish to IIS.DEA.Next: FolderProfile.executor": "Run",
-    "Publish to folder.DEA.Next Publish.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "com.codeium.enabled": "true",
-    "com.codeium.snoozedEndTime": "1734605942586",
-    "database.data.extractors.current.export.id": "JSON-Groovy.json.groovy",
-    "git-widget-placeholder": "DeaProduction",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "rider.code.cleanup.on.save": "true",
-    "settings.editor.selected.configurable": "preferences.keymap",
-    "vue.rearranger.settings.migration": "true",
-    "zielu.gittoolbox.prj.config.selected.tab.id": "zielu.gittoolbox.config.prj.diagnostic"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Executable.DEA.Next.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Project.DEA.Next.executor&quot;: &quot;Debug&quot;,
+    &quot;Notification.DisplayName-DoNotAsk-Vcs Notifications&quot;: &quot;VCS notifications&quot;,
+    &quot;Notification.DoNotAsk-Vcs Notifications&quot;: &quot;true&quot;,
+    &quot;Publish to IIS.DEA.Next: FolderProfile.executor&quot;: &quot;Run&quot;,
+    &quot;Publish to folder.DEA.Next Publish.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;com.codeium.enabled&quot;: &quot;true&quot;,
+    &quot;com.codeium.snoozedEndTime&quot;: &quot;1734605942586&quot;,
+    &quot;database.data.extractors.current.export.id&quot;: &quot;JSON-Groovy.json.groovy&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;DeaProduction&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;rider.code.cleanup.on.save&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;,
+    &quot;zielu.gittoolbox.prj.config.selected.tab.id&quot;: &quot;zielu.gittoolbox.config.prj.diagnostic&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Publish to folder.DEA.Next Publish">
     <configuration name="DEA.Next Publish" type="DotNetFolderPublish" factoryName="Publish to folder">
       <riderPublish configuration="Release" delete_existing_files="true" platform="Any CPU" runtime="Portable" target_folder="$PROJECT_DIR$/DEA/bin/Release/net8.0/publish/FolderPublish" target_framework="net8.0" uuid_high="-7580840089019791257" uuid_low="-7026497347669342426" />
@@ -368,6 +368,7 @@
       <workItem from="1737092514933" duration="3102000" />
       <workItem from="1737340372041" duration="1734000" />
       <workItem from="1737342240283" duration="8161000" />
+      <workItem from="1737368259762" duration="253000" />
     </task>
     <servers />
   </component>
@@ -395,26 +396,13 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/ProcessStatusMessageSetter.cs</url>
-          <line>32</line>
-          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\HelperClasses\OtherFunctions\ProcessStatusMessageSetter.cs" containingFunctionPresentation="Method 'SetProcessStatusMain'">
+          <line>56</line>
+          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\HelperClasses\OtherFunctions\ProcessStatusMessageSetter.cs" containingFunctionPresentation="Method 'GetFtpStatus'">
             <startOffsets>
-              <option value="727" />
+              <option value="1769" />
             </startOffsets>
             <endOffsets>
-              <option value="808" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="57" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/ProcessStatusMessageSetter.cs</url>
-          <line>34</line>
-          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\HelperClasses\OtherFunctions\ProcessStatusMessageSetter.cs" containingFunctionPresentation="Method 'SetProcessStatusMain'">
-            <startOffsets>
-              <option value="818" />
-            </startOffsets>
-            <endOffsets>
-              <option value="846" />
+              <option value="1804" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="58" />
