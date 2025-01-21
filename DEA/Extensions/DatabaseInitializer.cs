@@ -31,8 +31,6 @@ public static class DatabaseInitializer
             var processStartupFunctions = services.GetService<ProcessStartupFunctionsClass>();
 
             if (processStartupFunctions != null) await ProcessStartupFunctionsClass.StartupProcess();
-
-            //RunTimedFunctionsClass.CallDeaTimedProcesses("deacleaner");
         }
         catch (Exception e)
         {

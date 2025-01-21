@@ -44,7 +44,14 @@
   },
   "ConnectionStrings": {
     "defaultConnection": "Host=<DB Host>;Port=<DB Port>;Database=<DB Name>;User Id=<DB User Name>;Password=<DB Password>;"
-},
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.EntityFrameworkCore.Database.Command": "Warning",
+      "Microsoft.EntityFrameworkCore.Migrations": "Warning"
+   }
+  },
   "GraphConfig": {
     "TenantId": "",
     "Instance": "",
