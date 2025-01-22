@@ -34,7 +34,7 @@ public partial class StartupForm : Form
         addClienstForm.Show();
 
         // Load the Edit Customers form
-        var editCustomersForm = new EditCustomers
+        var editCustomersForm = new EditCustomers(services.GetRequiredService<DataContext>())
         {
             TopLevel = false,
             FormBorderStyle = FormBorderStyle.None,
@@ -79,15 +79,15 @@ public partial class StartupForm : Form
         mainTabControler.Location = new Point(12, 2);
         mainTabControler.Name = "mainTabControler";
         mainTabControler.SelectedIndex = 0;
-        mainTabControler.Size = new Size(1940, 1047);
+        mainTabControler.Size = new Size(1436, 813);
         mainTabControler.TabIndex = 0;
         // 
         // AddClients
-        //
+        // 
         AddClients.Location = new Point(4, 24);
         AddClients.Name = "AddClients";
         AddClients.Padding = new Padding(3);
-        AddClients.Size = new Size(1932, 1019);
+        AddClients.Size = new Size(1428, 785);
         AddClients.TabIndex = 0;
         AddClients.Text = "Add Clients";
         AddClients.UseVisualStyleBackColor = true;
@@ -98,7 +98,7 @@ public partial class StartupForm : Form
         EditCustomers.Location = new Point(4, 24);
         EditCustomers.Name = "EditCustomers";
         EditCustomers.Padding = new Padding(3);
-        EditCustomers.Size = new Size(1932, 1019);
+        EditCustomers.Size = new Size(1418, 785);
         EditCustomers.TabIndex = 1;
         EditCustomers.Text = "Edit Customers";
         EditCustomers.UseVisualStyleBackColor = true;
@@ -109,7 +109,7 @@ public partial class StartupForm : Form
         RemoveCustomers.Location = new Point(4, 24);
         RemoveCustomers.Name = "RemoveCustomers";
         RemoveCustomers.Padding = new Padding(3);
-        RemoveCustomers.Size = new Size(1932, 1019);
+        RemoveCustomers.Size = new Size(1418, 785);
         RemoveCustomers.TabIndex = 2;
         RemoveCustomers.Text = "Remove Customers";
         RemoveCustomers.UseVisualStyleBackColor = true;
@@ -119,8 +119,9 @@ public partial class StartupForm : Form
         AccessibleDescription = "Main window for the application.";
         AccessibleName = "DEA.UI";
         BackColor = SystemColors.Control;
-        ClientSize = new Size(1964, 1061);
+        ClientSize = new Size(1460, 827);
         Controls.Add(mainTabControler);
+        FormBorderStyle = FormBorderStyle.FixedSingle;
         MaximizeBox = false;
         Name = "StartupForm";
         StartPosition = FormStartPosition.CenterScreen;
