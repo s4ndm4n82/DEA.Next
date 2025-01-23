@@ -1,6 +1,6 @@
 ﻿using DEA.Next.FTP.FtpFileRelatedFunctions;
+using DEA.Next.Graph.GraphClientRelatedFunctions;
 using DEA.Next.HelperClasses.ConfigFileFunctions;
-using GraphHelper;
 using ProcessStatusMessageSetter;
 using WriteLog;
 
@@ -19,7 +19,7 @@ internal class ProcessStartupFunctionsClass
                     break;
                 case MagicWords.Email:
                     if (!client.Status) continue;
-                    WriteLastStatusMessage(await GraphHelperClass.InitializeGetAttachment(client.Id), 1);
+                    WriteLastStatusMessage(await GraphHelper.InitializeGetAttachment(client.Id), 1);
                     break;
             }
     }

@@ -1,7 +1,7 @@
 ﻿using DEA.Next.FTP.FtpUploadDownloadFunctions;
+using DEA.Next.Graph.GraphClientRelatedFunctions;
 using DEA.Next.HelperClasses.ConfigFileFunctions;
 using FluentFTP;
-using GraphHelper;
 using Renci.SshNet;
 using Renci.SshNet.Async;
 using Renci.SshNet.Sftp;
@@ -42,7 +42,7 @@ internal class FtpFilesDownload
             var allowedFileExtensions = documentDetails.Select(e => e.Extension.ToLower()).ToList();
 
             // Download folder path.
-            var downloadFolder = Path.Combine(downloadFolderPath, GraphHelperClass.FolderNameRnd(10));
+            var downloadFolder = Path.Combine(downloadFolderPath, GraphHelper.FolderNameRnd(10));
 
             List<FtpFileInfo> downloadResult = [];
 
