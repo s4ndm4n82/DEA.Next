@@ -13,12 +13,10 @@ internal partial class GetRecipientEmailClass
     /// <param name="messageId"></param>
     /// <returns></returns>
     public static async Task<string> GetRecipientEmail(IMailFolderRequestBuilder requestBuilder,
-        string messageId,
-        string msgName)
+        string messageId)
     {
         try
         {
-            Console.Write(msgName);
             // Get message details.
             var emailMessages = await requestBuilder
                 .Messages[messageId]

@@ -17,21 +17,18 @@ internal class GraphDownloadAttachmentFiles
     /// <summary>
     ///     Extract the recipient email from the message.
     /// </summary>
-    /// <param name="configRepository"></param>
     /// <param name="requestBuilder"></param>
     /// <param name="messageId"></param>
     /// <param name="customerId"></param>
     /// <returns></returns>
     public static async Task<string> DetermineRecipientEmail(IMailFolderRequestBuilder requestBuilder,
         string messageId,
-        string msgName,
         Guid customerId)
     {
         var clientDetails = await UserConfigRetriever.RetrieveUserConfigById(customerId);
 
         if (clientDetails.FileDeliveryMethod.Equals(MagicWords.Email, StringComparison.CurrentCultureIgnoreCase))
-            return await GetRecipientEmailClass.GetRecipientEmail(requestBuilder,
-                messageId, msgName);
+            return await GetRecipientEmailClass.GetRecipientEmail(requestBuilder, messageId);
         return string.Empty;
     }
 
@@ -65,7 +62,8 @@ internal class GraphDownloadAttachmentFiles
             {
                 var extension = Path.GetExtension(attachment.Name).ToLower();
                 return (lowerCaseExtensions.Contains(extension) && attachment.Size > 10240)
-                       || (extension.Equals(MagicWords.Pdf, StringComparison.CurrentCultureIgnoreCase)
+                       || (extension.Equals(string.Concat(".", MagicWords.Pdf),
+                               StringComparison.CurrentCultureIgnoreCase)
                            && attachment.Size < 10240);
             });
     }

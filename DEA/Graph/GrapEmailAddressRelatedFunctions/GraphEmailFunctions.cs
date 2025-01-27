@@ -1,21 +1,19 @@
-﻿using DEA.Next.Graph.ResourceFiles;
+﻿using System.Net.Mail;
+using DEA.Next.Graph.ResourceFiles;
 using Microsoft.Graph;
 using WriteLog;
 
 namespace GraphEmailFunctions;
 
 /// <summary>
-/// Mainly contains all the function for email actions like sending emails and forwarding errored emails.
+///     Mainly contains all the function for email actions like sending emails and forwarding errored emails.
 /// </summary>
 internal class GraphEmailFunctionsClass
 {
     /// <summary>
-    /// Get's all needed details from the recived email. So, the process can forward the email to the appropriate sender.
+    ///     Get's all needed details from the received email. So, the process can forward the email to the appropriate sender.
     /// </summary>
-    /// <param name="graphClient"></param>
-    /// <param name="mainFolderId"></param>
-    /// <param name="subFolderId1"></param>
-    /// <param name="subFolderId2"></param>
+    /// <param name="requestBuilder"></param>
     /// <param name="messageId"></param>
     /// <param name="clientEmail"></param>
     /// <param name="attachmentStatus"></param>
@@ -24,39 +22,23 @@ internal class GraphEmailFunctionsClass
         string messageId,
         string clientEmail,
         int attachmentStatus)
-    {            
-        bool returnResult;
-
-        // Check for null or whitespace/
-        if (requestBuilder == null)
-        {
-            return (false, "Main folder ID cannot be null or whitespace.");
-        }
-
+    {
         try
         {
             // Get message details
-            Message messageDetails = await GetEmailMessageDetails(requestBuilder,
-                messageId);
-            // Return if message details is null
-            if (messageDetails == null)
-            {
-                return (false, "Failed to retrieve message details.");
-            }
+            var messageDetails = await GetEmailMessageDetails(requestBuilder, messageId);
 
             // Get sender details
-            string fromName = messageDetails.From.EmailAddress.Name; 
-            string fromEmail = messageDetails.From.EmailAddress.Address;
-            string replyEmail = ExtractReplyEmail(messageDetails);
+            var fromName = messageDetails.From.EmailAddress.Name;
+            var fromEmail = messageDetails.From.EmailAddress.Address;
+            var replyEmail = ExtractReplyEmail(messageDetails);
 
             // Check for null or whitespace
             if (string.IsNullOrEmpty(fromName) && string.IsNullOrEmpty(fromEmail) && string.IsNullOrEmpty(replyEmail))
-            {
                 return (false, "From name, email or reply email cannot be null or whitespace.");
-            }
 
             // Forward the email
-            returnResult = await SendForwardEmail(requestBuilder,
+            var returnResult = await SendForwardEmail(requestBuilder,
                 fromName,
                 fromEmail,
                 clientEmail,
@@ -66,19 +48,15 @@ internal class GraphEmailFunctionsClass
             return (returnResult, replyEmail);
         }
         catch (Exception ex)
-        {   
+        {
             return (false, $"Exception error thrown: {ex.Message}");
         }
     }
 
     /// <summary>
-    /// Get's the email message details.
+    ///     Get's the email message details.
     /// </summary>
-    /// <param name="graphClient"></param>
-    /// <param name="clientEmail"></param>
-    /// <param name="mainFolderId"></param>
-    /// <param name="subFolderId1"></param>
-    /// <param name="subFolderId2"></param>
+    /// <param name="requestBuilder"></param>
     /// <param name="messageId"></param>
     /// <returns>Returns all the email message details.</returns>
     private static async Task<Message> GetEmailMessageDetails(IMailFolderRequestBuilder requestBuilder,
@@ -92,14 +70,14 @@ internal class GraphEmailFunctionsClass
         catch (Exception ex)
         {
             WriteLogClass.WriteToLog(0, $"Exception at GetEmailMessageDetails: {ex.Message}", 0);
-            return null;
+            throw;
         }
 
         return messagesDetails;
     }
 
     /// <summary>
-    /// Extracts the reply email.
+    ///     Extracts the reply email.
     /// </summary>
     /// <param name="messageDetails"></param>
     /// <returns>Return the extracted reply email.</returns>
@@ -107,20 +85,16 @@ internal class GraphEmailFunctionsClass
     {
         return messageDetails.ToRecipients
             .Select(e => e.EmailAddress.Address)
-            .FirstOrDefault(email => email.Contains("@efakturamottak.no"));
+            .FirstOrDefault(email => email.Contains("@efakturamottak.no")) ?? string.Empty;
     }
 
     /// <summary>
-    /// Forwards the email and flags the email to be moved to the error folder.
+    ///     Forwards the email and flags the email to be moved to the error folder.
     /// </summary>
-    /// <param name="graphClient"></param>
-    /// <param name="mainFolderId"></param>
-    /// <param name="subFolderId1"></param>
-    /// <param name="subFolderId2"></param>
+    /// <param name="requestBuilder"></param>
     /// <param name="fromName"></param>
     /// <param name="fromEmail"></param>
-    /// <param name="clientEmail"></param>
-    /// <param name="inEmail"></param>
+    /// <param name="recipientEmail"></param>
     /// <param name="messageId"></param>
     /// <param name="attachmentStatus"></param>
     /// <returns></returns>
@@ -132,16 +106,13 @@ internal class GraphEmailFunctionsClass
         int attachmentStatus)
     {
         // Validate the parameters
-        if (!ValiDateParameters(fromName, fromEmail, recipientEmail, messageId))
-        {
-            return false;
-        }
+        if (!ValidDateParameters(fromName, fromEmail, recipientEmail, messageId)) return false;
 
         // Create the body of the mail
-        string mailBody = CreateMailBody(attachmentStatus, recipientEmail);
-            
+        var mailBody = CreateMailBody(attachmentStatus, recipientEmail);
+
         // List of recipients emails.
-        List<Recipient> recipients = GetRecipeintEmail(fromName, fromEmail);
+        var recipients = GetRecipientEmail(fromName, fromEmail);
 
         // Send the email
         return await SendEmailAsync(requestBuilder,
@@ -152,14 +123,15 @@ internal class GraphEmailFunctionsClass
     }
 
     /// <summary>
-    /// Validate the parameters. Sent to EmailForwarder.
+    ///     Validate the parameters. Sent to EmailForwarder.
     /// </summary>
     /// <param name="senderName"></param>
     /// <param name="senderEmail"></param>
     /// <param name="recipientEmail"></param>
     /// <param name="messageId"></param>
     /// <returns>Return true or false according to the results.</returns>
-    private static bool ValiDateParameters(string senderName, string senderEmail, string recipientEmail, string messageId)
+    private static bool ValidDateParameters(string senderName, string senderEmail, string recipientEmail,
+        string messageId)
     {
         // Validate the parameters
         if (string.IsNullOrEmpty(senderName) || string.IsNullOrEmpty(senderEmail) ||
@@ -168,18 +140,15 @@ internal class GraphEmailFunctionsClass
             WriteLogClass.WriteToLog(0, "One of the parameters is null or whitespace", 0);
             return false;
         }
-        // Validate the email
-        if (!IsValidEmail(senderEmail) || !IsValidEmail(recipientEmail))
-        {
-            WriteLogClass.WriteToLog(0, "One of the parameters is not a valid email", 0);
-            return false;
-        }
 
-        return true;
+        // Validate the email
+        if (IsValidEmail(senderEmail) && IsValidEmail(recipientEmail)) return true;
+        WriteLogClass.WriteToLog(0, "One of the parameters is not a valid email", 0);
+        return false;
     }
 
     /// <summary>
-    /// Validate the email and return true or false
+    ///     Validate the email and return true or false
     /// </summary>
     /// <param name="email"></param>
     /// <returns>Return true if email is legit,</returns>
@@ -187,7 +156,7 @@ internal class GraphEmailFunctionsClass
     {
         try
         {
-            var addr = new System.Net.Mail.MailAddress(email);
+            var addr = new MailAddress(email);
             return addr.Address == email;
         }
         catch
@@ -197,31 +166,35 @@ internal class GraphEmailFunctionsClass
     }
 
     /// <summary>
-    /// Creates the forward email message body.
+    ///     Creates the forward email message body.
     /// </summary>
     /// <param name="attachmentStatus"></param>
     /// <param name="recipientEmail"></param>
     /// <returns>Return the email body.</returns>
     private static string CreateMailBody(int attachmentStatus, string recipientEmail)
     {
-        string creatingMailBody = attachmentStatus != 1
-            ? EmailMessageBodyText.EmailTemplateWithoutAttachment
-            : EmailMessageBodyText.EmailTemplateInvalidAttachment;
+        try
+        {
+            var creatingMailBody = attachmentStatus != 1
+                ? EmailMessageBodyText.EmailTemplateWithoutAttachment
+                : EmailMessageBodyText.EmailTemplateInvalidAttachment;
 
-        string mailBody = string.Format(creatingMailBody, recipientEmail);
+            var mailBody = string.Format(creatingMailBody, recipientEmail);
 
-        return mailBody;
+            return mailBody;
+        }
+        catch (Exception ex)
+        {
+            WriteLogClass.WriteToLog(0, $"Exception at CreateMailBody: {ex.Message}", 0);
+            return string.Empty;
+        }
     }
 
     /// <summary>
-    /// Send the email back to the sender.
+    ///     Send the email back to the sender.
     /// </summary>
-    /// <param name="graphClient"></param>
-    /// <param name="mainFolderId"></param>
-    /// <param name="subFolderId1"></param>
-    /// <param name="subFolderId2"></param>
+    /// <param name="requestBuilder"></param>
     /// <param name="recipientEmail"></param>
-    /// <param name="clientEmail"></param>
     /// <param name="messageId"></param>
     /// <param name="mailBody"></param>
     /// <returns>Return tru or false.</returns>
@@ -236,7 +209,7 @@ internal class GraphEmailFunctionsClass
                 .Messages[$"{messageId}"]
                 .Forward(recipientEmail, null, mailBody)
                 .Request()
-                .PostAsync(); // Send the messag
+                .PostAsync(); // Send the message
             return true;
         }
         catch (Exception ex)
@@ -247,12 +220,12 @@ internal class GraphEmailFunctionsClass
     }
 
     /// <summary>
-    /// Create the recipient email list.
+    ///     Create the recipient email list.
     /// </summary>
     /// <param name="senderName"></param>
     /// <param name="senderEmail"></param>
     /// <returns>Returns the recipient email.</returns>
-    private static List<Recipient> GetRecipeintEmail(string senderName, string senderEmail)
+    private static List<Recipient> GetRecipientEmail(string senderName, string senderEmail)
     {
         List<Recipient> recipientEmails = new()
         {
@@ -261,7 +234,7 @@ internal class GraphEmailFunctionsClass
                 EmailAddress = new EmailAddress
                 {
                     Name = senderName,
-                    Address = senderEmail,
+                    Address = senderEmail
                 }
             }
         };

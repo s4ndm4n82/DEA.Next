@@ -1,4 +1,4 @@
-﻿using System.Net.NetworkInformation;
+﻿using System.Net;
 using AppConfigReader;
 using WriteLog;
 
@@ -6,6 +6,8 @@ namespace DEA.Next.HelperClasses.InternetLineChecker;
 
 internal static class InternetLineChecker
 {
+    private static readonly HttpClient HttpClient = new();
+
     /// <summary>
     ///     Checks for an active internet connection by pinging a list of public DNS servers.
     /// </summary>
@@ -20,7 +22,7 @@ internal static class InternetLineChecker
 
         // Read the application configuration.
         var jsonData = AppConfigReaderClass.ReadAppDotConfig();
-        var publicDns = jsonData.ProgramSettings.PublicDns;
+        var publicDns = jsonData.ProgramSettings.TestUrls;
 
         // Get the maximum number of retry attempts from the configuration.
         var maxRetry = jsonData.ProgramSettings.RetryLine;
@@ -32,7 +34,7 @@ internal static class InternetLineChecker
             currentRetry++;
 
             // Check if the internet connection is active by pinging the public DNS servers.
-            if (await CheckInternetPingAsync(publicDns)) return true;
+            if (await CheckInternetHttpAsync(publicDns)) return true;
 
             currentRetry++;
             if (currentRetry >= maxRetry) return false;
@@ -46,38 +48,30 @@ internal static class InternetLineChecker
     }
 
     /// <summary>
-    ///     Checks the internet connection by pinging a list of public DNS servers.
+    ///     Checks the internet connection by using a GET request to a list of public DNS servers.
     /// </summary>
-    /// <param name="publicDns">A list of public DNS server addresses to ping.</param>
     /// <returns>
     ///     A task that represents the asynchronous operation. The task result contains a boolean indicating whether an
     ///     active internet connection was found.
     /// </returns>
-    private static async Task<bool> CheckInternetPingAsync(IEnumerable<string> publicDns)
+    private static async Task<bool> CheckInternetHttpAsync(IEnumerable<string> publicUrl)
     {
         // Iterate through each DNS server address in the list.
-        foreach (var dns in publicDns)
-        {
-            using Ping deaPing = new();
+        foreach (var url in publicUrl)
             try
             {
-                var buffer = new byte[32];
-                const int timeout = 1000;
-
-                // Send a ping request to the DNS server.
-                var pingReply = await deaPing.SendPingAsync(dns, timeout, buffer);
-
-                // If the ping is successful, return true.
-                if (pingReply.Status == IPStatus.Success) return true;
+                var response = await HttpClient.GetAsync(url);
+                if (response.StatusCode != HttpStatusCode.OK) continue;
+                return true;
             }
             catch (Exception ex)
             {
-                // Log any exceptions that occur during the ping request.
-                WriteLogClass.WriteToLog(0, $"CheckInternetPingAsync Error: {ex.Message}", 0);
+                WriteLogClass.WriteToLog(0,
+                    $"Exception at checking internet connection: {ex.Message}",
+                    0);
+                return false;
             }
-        }
 
-        // Return false if no successful ping response was received.
         return false;
     }
 }

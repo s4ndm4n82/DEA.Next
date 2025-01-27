@@ -11,6 +11,12 @@ internal class ProcessStartupFunctionsClass
     public static async Task StartupProcess()
     {
         foreach (var client in await UserConfigRetriever.RetrieveAllUserConfig())
+        {
+            if (client.Status is true)
+                WriteLogClass.WriteToLog(1,
+                    $"Processing client Id: {client.Id} ....",
+                    client.FileDeliveryMethod.Equals(MagicWords.Ftp, StringComparison.OrdinalIgnoreCase) ? 3 : 5);
+
             switch (client.FileDeliveryMethod.ToLower())
             {
                 case MagicWords.Ftp:
@@ -22,6 +28,7 @@ internal class ProcessStartupFunctionsClass
                     WriteLastStatusMessage(await GraphHelper.InitializeGetAttachment(client.Id), 1);
                     break;
             }
+        }
     }
 
     private static void WriteLastStatusMessage(int emailResultStatus, int ftpResultStatus)

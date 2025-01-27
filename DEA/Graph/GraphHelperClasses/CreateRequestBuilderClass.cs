@@ -1,5 +1,4 @@
-﻿using DEA.Next.Graph.GraphClientRelatedFunctions;
-using Microsoft.Graph;
+﻿using Microsoft.Graph;
 using WriteLog;
 
 namespace DEA.Next.Graph.GraphHelperClasses;
@@ -14,7 +13,7 @@ internal class CreateRequestBuilderClass
     /// <param name="thirdFolderId"></param>
     /// <param name="emailId"></param>
     /// <returns></returns>
-    public static async Task<IMailFolderRequestBuilder> CreatRequestBuilder(
+    public static async Task<IMailFolderRequestBuilder> CreatRequestBuilder(GraphServiceClient graphClient,
         string firstFolderId,
         string secondFolderId,
         string thirdFolderId,
@@ -22,25 +21,20 @@ internal class CreateRequestBuilderClass
     {
         try
         {
-            var graphClient = await GraphHelper.InitializeGraphClient();
-
             // List of inbox names.
-            List<string> folderIdList = [firstFolderId, secondFolderId, thirdFolderId];
+            var folderIdList = new List<string> { firstFolderId, secondFolderId, thirdFolderId };
 
             // Removes any empty variable.
             folderIdList.RemoveAll(string.IsNullOrEmpty);
 
             // Creates the request builder.
-            var requestBuilder = graphClient!.Users[$"{emailId}"].MailFolders["Inbox"];
+            var requestBuilder = graphClient!.Users[emailId].MailFolders["Inbox"];
 
-            // foreach (var folderId in folderIdList)
-            // {
-            //     requestBuilder = requestBuilder.ChildFolders[$"{folderId}"];
-            // }
-
-            return folderIdList.Aggregate(
+            var finalRequestBuilder = folderIdList.Aggregate(
                 requestBuilder, (current, folderId) =>
-                    current.ChildFolders[$"{folderId}"]);
+                    current.ChildFolders[folderId]);
+
+            return await Task.FromResult(finalRequestBuilder);
         }
         catch (Exception ex)
         {

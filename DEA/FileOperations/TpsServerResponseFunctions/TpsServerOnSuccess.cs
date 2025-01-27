@@ -68,7 +68,7 @@ internal class TpsServerOnSuccess
                     jsonFileList,
                     null,
                     clientOrgNo,
-                    MagicWords.Email): return 0;
+                    MagicWords.Email): return 1;
 
                 // Removes the files from FTP server. If the files not needed to be moved to another FTP sub folder.
                 case MagicWords.Ftp when ftpDetails is { FtpMoveToSubFolder: false, FtpRemoveFiles: true }

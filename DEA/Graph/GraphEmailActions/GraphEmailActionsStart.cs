@@ -47,7 +47,7 @@ internal class GraphGetAttachmentsClass
             WriteTheMailBoxPath(mainMailFolder, subFolder1, subFolder2);
 
             // Create the request builder.
-            var requestBuilder = await CreateRequestBuilderClass.CreatRequestBuilder(
+            var requestBuilder = await CreateRequestBuilderClass.CreatRequestBuilder(graphClient,
                 folderIds.ClientMainFolderId,
                 folderIds.ClientSubFolderId1,
                 folderIds.ClientSubFolderId2,

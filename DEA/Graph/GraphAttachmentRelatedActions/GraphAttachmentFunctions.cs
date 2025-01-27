@@ -60,9 +60,6 @@ internal class GraphAttachmentFunctionsClass
                 results.Add(result);
             }
 
-            // Wait for all the tasks to complete.
-            // var results = await Task.WhenAll(taskReturns);
-
             // Error code list.
             int[] errorCodes = [5, 4, 3, 1];
 
@@ -103,8 +100,7 @@ internal class GraphAttachmentFunctionsClass
         var extensions = await UserConfigRetriever.RetrieveDocumentConfigById(customerId);
 
         // Filter the attachments.
-        var attachmentList =
-            GraphDownloadAttachmentFiles.FilterAttachments(message.Attachments, extensions).ToList();
+        var attachmentList = GraphDownloadAttachmentFiles.FilterAttachments(message.Attachments, extensions).ToList();
 
         // If there are attachments.
         if (attachmentList.Count != 0)
@@ -115,7 +111,6 @@ internal class GraphAttachmentFunctionsClass
                     attachmentList,
                     message,
                     message.Id,
-                    message.Subject,
                     customerId);
             }
             catch (Exception ex)
@@ -192,7 +187,6 @@ internal class GraphAttachmentFunctionsClass
         List<Attachment> attachmentList,
         Message inMessage,
         string messageId,
-        string msgName,
         Guid customerId)
     {
         try
@@ -201,7 +195,6 @@ internal class GraphAttachmentFunctionsClass
 
             var recipientEmail = await GraphDownloadAttachmentFiles.DetermineRecipientEmail(requestBuilder,
                 messageId,
-                msgName,
                 customerId);
 
             var downloadFolderPath = GraphDownloadAttachmentFiles.CreateDownloadPath(recipientEmail);
