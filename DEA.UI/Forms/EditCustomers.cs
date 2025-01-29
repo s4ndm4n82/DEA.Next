@@ -33,6 +33,11 @@ namespace DEA.UI
 
         private void InitalizeToolTips()
         {
+            _toolTipHelper.SetToolTip(searchCusId, "Use the customer ID to search.");
+            _toolTipHelper.SetToolTip(searchProjectId, "Use the Project ID to search.");
+            _toolTipHelper.SetToolTip(searchCusName, "Use the customer name to search.");
+            _toolTipHelper.SetToolTip(cusEditSearchTxt, "Enter search text.");
+            _toolTipHelper.SetToolTip(btnEditCustomerSearch, "Search for a customer.");
             _toolTipHelper.SetToolTip(cusEditStatusGrp, "Set the customer status.");
             _toolTipHelper.SetToolTip(cusEditOn, "Enable the cutomer configuration.");
             _toolTipHelper.SetToolTip(cusEditOff, "Disable the cutomer configuration.");

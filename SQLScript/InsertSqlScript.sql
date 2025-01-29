@@ -66,8 +66,8 @@ BEGIN
         '<FtpPort>',
         FALSE,
         FALSE,
+        '<FtpSubolder>',
         '<FtpMainFolder>',
-        '',
         TRUE,
         customer_id);
     ELSE

@@ -107,6 +107,12 @@
             ftpEditRemoveFileCombo = new GroupBox();
             ftpEditRemoveOn = new RadioButton();
             ftpEditDetails = new GroupBox();
+            searchGrp = new GroupBox();
+            btnEditCustomerSearch = new Button();
+            cusEditSearchTxt = new TextBox();
+            searchProjectId = new RadioButton();
+            searchCusName = new RadioButton();
+            searchCusId = new RadioButton();
             ftpEditMoveToSubGrp.SuspendLayout();
             ftpEditLoopGrp.SuspendLayout();
             cmdBoxGrp.SuspendLayout();
@@ -117,6 +123,7 @@
             cusEditStatusGrp.SuspendLayout();
             ftpEditRemoveFileCombo.SuspendLayout();
             ftpEditDetails.SuspendLayout();
+            searchGrp.SuspendLayout();
             SuspendLayout();
             // 
             // ftpEditSubPathTxt
@@ -324,7 +331,7 @@
             cmdBoxGrp.Controls.Add(btnEditSave);
             cmdBoxGrp.Controls.Add(btnEditReset);
             cmdBoxGrp.Controls.Add(btnEditCancel);
-            cmdBoxGrp.Location = new Point(621, 464);
+            cmdBoxGrp.Location = new Point(621, 538);
             cmdBoxGrp.Name = "cmdBoxGrp";
             cmdBoxGrp.Size = new Size(608, 100);
             cmdBoxGrp.TabIndex = 13;
@@ -436,7 +443,7 @@
             emlEditDetailsGrp.Controls.Add(emlEditInboxPathLbl);
             emlEditDetailsGrp.Controls.Add(emlEditAddressTxt);
             emlEditDetailsGrp.Controls.Add(emlEditEmailLbl);
-            emlEditDetailsGrp.Location = new Point(621, 311);
+            emlEditDetailsGrp.Location = new Point(621, 385);
             emlEditDetailsGrp.Name = "emlEditDetailsGrp";
             emlEditDetailsGrp.Size = new Size(608, 148);
             emlEditDetailsGrp.TabIndex = 12;
@@ -517,7 +524,7 @@
             grpBoxEditCustomer.Controls.Add(cusEditUnameLbl);
             grpBoxEditCustomer.Controls.Add(cusEditNameTxt);
             grpBoxEditCustomer.Controls.Add(cusEditNameLbl);
-            grpBoxEditCustomer.Location = new Point(12, 12);
+            grpBoxEditCustomer.Location = new Point(12, 86);
             grpBoxEditCustomer.Name = "grpBoxEditCustomer";
             grpBoxEditCustomer.Size = new Size(603, 552);
             grpBoxEditCustomer.TabIndex = 10;
@@ -865,19 +872,83 @@
             ftpEditDetails.Controls.Add(ftpEditProfileLbl);
             ftpEditDetails.Controls.Add(ftpEditTypCombo);
             ftpEditDetails.Controls.Add(ftpEditTypeLbl);
-            ftpEditDetails.Location = new Point(621, 12);
+            ftpEditDetails.Location = new Point(621, 86);
             ftpEditDetails.Name = "ftpEditDetails";
             ftpEditDetails.Size = new Size(608, 296);
             ftpEditDetails.TabIndex = 11;
             ftpEditDetails.TabStop = false;
             ftpEditDetails.Text = "Ftp Details";
             // 
+            // searchGrp
+            // 
+            searchGrp.Controls.Add(btnEditCustomerSearch);
+            searchGrp.Controls.Add(cusEditSearchTxt);
+            searchGrp.Controls.Add(searchProjectId);
+            searchGrp.Controls.Add(searchCusName);
+            searchGrp.Controls.Add(searchCusId);
+            searchGrp.Location = new Point(12, 12);
+            searchGrp.Name = "searchGrp";
+            searchGrp.Size = new Size(1217, 68);
+            searchGrp.TabIndex = 14;
+            searchGrp.TabStop = false;
+            searchGrp.Text = "Search Customer";
+            // 
+            // btnEditCustomerSearch
+            // 
+            btnEditCustomerSearch.Location = new Point(932, 15);
+            btnEditCustomerSearch.Name = "btnEditCustomerSearch";
+            btnEditCustomerSearch.Size = new Size(119, 42);
+            btnEditCustomerSearch.TabIndex = 4;
+            btnEditCustomerSearch.Text = "Search";
+            btnEditCustomerSearch.UseVisualStyleBackColor = true;
+            // 
+            // cusEditSearchTxt
+            // 
+            cusEditSearchTxt.Location = new Point(304, 26);
+            cusEditSearchTxt.Name = "cusEditSearchTxt";
+            cusEditSearchTxt.Size = new Size(621, 23);
+            cusEditSearchTxt.TabIndex = 3;
+            // 
+            // searchProjectId
+            // 
+            searchProjectId.AutoSize = true;
+            searchProjectId.Location = new Point(102, 27);
+            searchProjectId.Name = "searchProjectId";
+            searchProjectId.Size = new Size(75, 19);
+            searchProjectId.TabIndex = 2;
+            searchProjectId.TabStop = true;
+            searchProjectId.Text = "Project Id";
+            searchProjectId.UseVisualStyleBackColor = true;
+            // 
+            // searchCusName
+            // 
+            searchCusName.AutoSize = true;
+            searchCusName.Location = new Point(186, 27);
+            searchCusName.Name = "searchCusName";
+            searchCusName.Size = new Size(112, 19);
+            searchCusName.TabIndex = 1;
+            searchCusName.TabStop = true;
+            searchCusName.Text = "Customer Name";
+            searchCusName.UseVisualStyleBackColor = true;
+            // 
+            // searchCusId
+            // 
+            searchCusId.AutoSize = true;
+            searchCusId.Location = new Point(6, 27);
+            searchCusId.Name = "searchCusId";
+            searchCusId.Size = new Size(90, 19);
+            searchCusId.TabIndex = 0;
+            searchCusId.TabStop = true;
+            searchCusId.Text = "Customer Id";
+            searchCusId.UseVisualStyleBackColor = true;
+            // 
             // EditCustomers
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.AppWorkspace;
-            ClientSize = new Size(1242, 576);
+            ClientSize = new Size(1242, 648);
+            Controls.Add(searchGrp);
             Controls.Add(cmdBoxGrp);
             Controls.Add(emlEditDetailsGrp);
             Controls.Add(grpBoxEditCustomer);
@@ -903,6 +974,8 @@
             ftpEditRemoveFileCombo.PerformLayout();
             ftpEditDetails.ResumeLayout(false);
             ftpEditDetails.PerformLayout();
+            searchGrp.ResumeLayout(false);
+            searchGrp.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -986,5 +1059,11 @@
         public GroupBox ftpEditRemoveFileCombo;
         public RadioButton ftpEditRemoveOn;
         public GroupBox ftpEditDetails;
+        private GroupBox searchGrp;
+        private RadioButton searchCusId;
+        private RadioButton searchCusName;
+        private TextBox cusEditSearchTxt;
+        private RadioButton searchProjectId;
+        private Button btnEditCustomerSearch;
     }
 }
