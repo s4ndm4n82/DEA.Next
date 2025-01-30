@@ -34,7 +34,7 @@ public partial class StartupForm : Form
         addClienstForm.Show();
 
         // Load the Edit Customers form
-        var editCustomersForm = new EditCustomers(services.GetRequiredService<DataContext>())
+        var editCustomersForm = new EditCustomersList(services.GetRequiredService<DataContext>())
         {
             TopLevel = false,
             FormBorderStyle = FormBorderStyle.None,
@@ -44,7 +44,7 @@ public partial class StartupForm : Form
         editCustomersForm.Show();
 
         // Load the Remove Customers form
-        var removeCustomersForm = new RemoveCustomers
+        var removeCustomersForm = new RemoveCustomers(services.GetRequiredService<DataContext>())
         {
             TopLevel = false,
             FormBorderStyle = FormBorderStyle.None,

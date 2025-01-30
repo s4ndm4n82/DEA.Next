@@ -883,7 +883,7 @@
             Controls.Add(ftpDetails);
             Controls.Add(grpBoxCustomer);
             Name = "AddCustomers";
-            Text = "AddCustomers";
+            Text = "Add Customers";
             grpBoxCustomer.ResumeLayout(false);
             grpBoxCustomer.PerformLayout();
             cusStatusGrp.ResumeLayout(false);

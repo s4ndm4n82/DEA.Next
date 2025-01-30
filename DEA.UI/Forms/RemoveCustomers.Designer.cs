@@ -29,28 +29,30 @@
         private void InitializeComponent()
         {
             grpRemove = new GroupBox();
+            rmBtnCancel = new Button();
+            rmBtnReset = new Button();
+            rmBtnRemove = new Button();
             dataGridView1 = new DataGridView();
-            rmSearchUsing = new GroupBox();
-            rmSearchName = new RadioButton();
-            rmSearchProjId = new RadioButton();
-            rmSearchId = new RadioButton();
             btnRmIdSearch = new Button();
             rmSerchIdTxt = new TextBox();
-            rmBtnRemove = new Button();
-            rmBtnReset = new Button();
-            rmBtnCancel = new Button();
+            rmSearchId = new RadioButton();
+            rmSearchProjId = new RadioButton();
+            rmSearchName = new RadioButton();
+            searchOptions = new Label();
             grpRemove.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
-            rmSearchUsing.SuspendLayout();
             SuspendLayout();
             // 
             // grpRemove
             // 
+            grpRemove.Controls.Add(searchOptions);
+            grpRemove.Controls.Add(rmSearchName);
+            grpRemove.Controls.Add(rmSearchProjId);
             grpRemove.Controls.Add(rmBtnCancel);
+            grpRemove.Controls.Add(rmSearchId);
             grpRemove.Controls.Add(rmBtnReset);
             grpRemove.Controls.Add(rmBtnRemove);
             grpRemove.Controls.Add(dataGridView1);
-            grpRemove.Controls.Add(rmSearchUsing);
             grpRemove.Controls.Add(btnRmIdSearch);
             grpRemove.Controls.Add(rmSerchIdTxt);
             grpRemove.Location = new Point(12, 12);
@@ -60,6 +62,33 @@
             grpRemove.TabStop = false;
             grpRemove.Text = "Customer Remove";
             // 
+            // rmBtnCancel
+            // 
+            rmBtnCancel.Location = new Point(849, 499);
+            rmBtnCancel.Name = "rmBtnCancel";
+            rmBtnCancel.Size = new Size(117, 42);
+            rmBtnCancel.TabIndex = 6;
+            rmBtnCancel.Text = "Cancel";
+            rmBtnCancel.UseVisualStyleBackColor = true;
+            // 
+            // rmBtnReset
+            // 
+            rmBtnReset.Location = new Point(972, 499);
+            rmBtnReset.Name = "rmBtnReset";
+            rmBtnReset.Size = new Size(117, 42);
+            rmBtnReset.TabIndex = 5;
+            rmBtnReset.Text = "Reset";
+            rmBtnReset.UseVisualStyleBackColor = true;
+            // 
+            // rmBtnRemove
+            // 
+            rmBtnRemove.Location = new Point(1095, 499);
+            rmBtnRemove.Name = "rmBtnRemove";
+            rmBtnRemove.Size = new Size(117, 42);
+            rmBtnRemove.TabIndex = 4;
+            rmBtnRemove.Text = "Remove";
+            rmBtnRemove.UseVisualStyleBackColor = true;
+            // 
             // dataGridView1
             // 
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -67,51 +96,6 @@
             dataGridView1.Name = "dataGridView1";
             dataGridView1.Size = new Size(1206, 376);
             dataGridView1.TabIndex = 3;
-            // 
-            // rmSearchUsing
-            // 
-            rmSearchUsing.Controls.Add(rmSearchName);
-            rmSearchUsing.Controls.Add(rmSearchProjId);
-            rmSearchUsing.Controls.Add(rmSearchId);
-            rmSearchUsing.Location = new Point(453, 22);
-            rmSearchUsing.Name = "rmSearchUsing";
-            rmSearchUsing.Size = new Size(299, 53);
-            rmSearchUsing.TabIndex = 2;
-            rmSearchUsing.TabStop = false;
-            rmSearchUsing.Text = "Search Using:";
-            // 
-            // rmSearchName
-            // 
-            rmSearchName.AutoSize = true;
-            rmSearchName.Location = new Point(183, 22);
-            rmSearchName.Name = "rmSearchName";
-            rmSearchName.Size = new Size(112, 19);
-            rmSearchName.TabIndex = 2;
-            rmSearchName.TabStop = true;
-            rmSearchName.Text = "Customer Name";
-            rmSearchName.UseVisualStyleBackColor = true;
-            // 
-            // rmSearchProjId
-            // 
-            rmSearchProjId.AutoSize = true;
-            rmSearchProjId.Location = new Point(102, 22);
-            rmSearchProjId.Name = "rmSearchProjId";
-            rmSearchProjId.Size = new Size(75, 19);
-            rmSearchProjId.TabIndex = 1;
-            rmSearchProjId.TabStop = true;
-            rmSearchProjId.Text = "Project Id";
-            rmSearchProjId.UseVisualStyleBackColor = true;
-            // 
-            // rmSearchId
-            // 
-            rmSearchId.AutoSize = true;
-            rmSearchId.Location = new Point(6, 22);
-            rmSearchId.Name = "rmSearchId";
-            rmSearchId.Size = new Size(90, 19);
-            rmSearchId.TabIndex = 0;
-            rmSearchId.TabStop = true;
-            rmSearchId.Text = "Customer Id";
-            rmSearchId.UseVisualStyleBackColor = true;
             // 
             // btnRmIdSearch
             // 
@@ -128,34 +112,48 @@
             rmSerchIdTxt.Name = "rmSerchIdTxt";
             rmSerchIdTxt.Size = new Size(422, 23);
             rmSerchIdTxt.TabIndex = 0;
-            rmSerchIdTxt.Text = "Search Using Customer Id ...";
             // 
-            // rmBtnRemove
+            // rmSearchId
             // 
-            rmBtnRemove.Location = new Point(1095, 499);
-            rmBtnRemove.Name = "rmBtnRemove";
-            rmBtnRemove.Size = new Size(117, 42);
-            rmBtnRemove.TabIndex = 4;
-            rmBtnRemove.Text = "Remove";
-            rmBtnRemove.UseVisualStyleBackColor = true;
+            rmSearchId.AutoSize = true;
+            rmSearchId.Location = new Point(492, 56);
+            rmSearchId.Name = "rmSearchId";
+            rmSearchId.Size = new Size(90, 19);
+            rmSearchId.TabIndex = 0;
+            rmSearchId.TabStop = true;
+            rmSearchId.Text = "Customer Id";
+            rmSearchId.UseVisualStyleBackColor = true;
             // 
-            // rmBtnReset
+            // rmSearchProjId
             // 
-            rmBtnReset.Location = new Point(972, 499);
-            rmBtnReset.Name = "rmBtnReset";
-            rmBtnReset.Size = new Size(117, 42);
-            rmBtnReset.TabIndex = 5;
-            rmBtnReset.Text = "Reset";
-            rmBtnReset.UseVisualStyleBackColor = true;
+            rmSearchProjId.AutoSize = true;
+            rmSearchProjId.Location = new Point(588, 56);
+            rmSearchProjId.Name = "rmSearchProjId";
+            rmSearchProjId.Size = new Size(75, 19);
+            rmSearchProjId.TabIndex = 1;
+            rmSearchProjId.TabStop = true;
+            rmSearchProjId.Text = "Project Id";
+            rmSearchProjId.UseVisualStyleBackColor = true;
             // 
-            // rmBtnCancel
+            // rmSearchName
             // 
-            rmBtnCancel.Location = new Point(849, 499);
-            rmBtnCancel.Name = "rmBtnCancel";
-            rmBtnCancel.Size = new Size(117, 42);
-            rmBtnCancel.TabIndex = 6;
-            rmBtnCancel.Text = "Cancel";
-            rmBtnCancel.UseVisualStyleBackColor = true;
+            rmSearchName.AutoSize = true;
+            rmSearchName.Location = new Point(669, 56);
+            rmSearchName.Name = "rmSearchName";
+            rmSearchName.Size = new Size(112, 19);
+            rmSearchName.TabIndex = 2;
+            rmSearchName.TabStop = true;
+            rmSearchName.Text = "Customer Name";
+            rmSearchName.UseVisualStyleBackColor = true;
+            // 
+            // searchOptions
+            // 
+            searchOptions.AutoSize = true;
+            searchOptions.Location = new Point(408, 58);
+            searchOptions.Name = "searchOptions";
+            searchOptions.Size = new Size(78, 15);
+            searchOptions.TabIndex = 7;
+            searchOptions.Text = "Search Using:";
             // 
             // RemoveCustomers
             // 
@@ -165,27 +163,25 @@
             ClientSize = new Size(1242, 576);
             Controls.Add(grpRemove);
             Name = "RemoveCustomers";
-            Text = "RemoveCustomers";
+            Text = "Remove Customers";
             grpRemove.ResumeLayout(false);
             grpRemove.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
-            rmSearchUsing.ResumeLayout(false);
-            rmSearchUsing.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private GroupBox grpRemove;
-        private Button btnRmIdSearch;
-        private TextBox rmSerchIdTxt;
-        private GroupBox rmSearchUsing;
-        private RadioButton rmSearchName;
-        private RadioButton rmSearchProjId;
-        private RadioButton rmSearchId;
-        private DataGridView dataGridView1;
-        private Button rmBtnCancel;
-        private Button rmBtnReset;
-        private Button rmBtnRemove;
+        public GroupBox grpRemove;
+        public Button btnRmIdSearch;
+        public TextBox rmSerchIdTxt;
+        public DataGridView dataGridView1;
+        public Button rmBtnCancel;
+        public Button rmBtnReset;
+        public Button rmBtnRemove;
+        private Label searchOptions;
+        public RadioButton rmSearchName;
+        public RadioButton rmSearchProjId;
+        public RadioButton rmSearchId;
     }
 }

@@ -1,16 +1,21 @@
-﻿namespace DEA.UI.HelperClasses
+﻿using DEA.UI.Forms;
+
+namespace DEA.UI.HelperClasses
 {
     internal class DefaultValueSetter
     {
-        public void SetDefaultValues(Form form)
+        public static void SetDefaultValues(Form form)
         {
             switch (form)
             {
                 case AddCustomers addCustomersForm:
                     SetDefaultValuesAddCustomers(addCustomersForm);
                     break;
-                case EditCustomers editCustomersForm:
-                    SetDefaultValuesEditCustomers(editCustomersForm);
+                case EditCustomersList editCustomersListForm:
+                    SetDefaultValuesEditCustomersList(editCustomersListForm);
+                    break;
+                case EditCustomerForm editCustomerForm:
+                    SetDefaultValuesEditCustomersForm(editCustomerForm);
                     break;
                 case RemoveCustomers removeCustomersForm:
                     SetDefaultValuesRemoveCustomers(removeCustomersForm);
@@ -25,7 +30,7 @@
             // Setting the default value for the FTP profile combo box
             form.ftpProfileCombo.SelectedIndex = 0;
 
-            // Setting default values for the checkboxes
+            // Setting default values for the radio buttons
             form.cusOn.Checked = true;
             form.ftpLoopOff.Checked = true;
             form.ftpMoveToSubOff.Checked = true;
@@ -34,23 +39,30 @@
             form.emlSndSubjectOff.Checked = true;
         }
 
-        private static void SetDefaultValuesEditCustomers(EditCustomers form)
+        private static void SetDefaultValuesEditCustomersList(EditCustomersList form)
+        {
+            // Setting default values for the radio buttons
+            form.searchCusId.Checked = true;
+        }
+
+        private static void SetDefaultValuesEditCustomersForm(EditCustomerForm form)
         {
             // Setting the default value for the FTP profile combo box
-            form.ftpEditProfileCombo.SelectedIndex = 0;
+            form.ftpProfileComboEdFrm.SelectedIndex = 0;
 
-            // Setting default values for the checkboxes
-            form.cusEditOn.Checked = true;
-            form.ftpEditLoopOff.Checked = true;
-            form.ftpEditMoveToSubOff.Checked = true;
-            form.ftpEditRemoveOn.Checked = true;
-            form.emlEditSenAdressOff.Checked = true;
-            form.emlEditSndSubjectOff.Checked = true;
+            // Setting default values for the radio buttons
+            form.cusOnEdFrm.Checked = true;
+            form.ftpLoopOffEdFrm.Checked = true;
+            form.ftpMoveToSubOffEdFrm.Checked = true;
+            form.ftpRemoveOnEdFrm.Checked = true;
+            form.emlSenAdressOffEdFrm.Checked = true;
+            form.emlSndSubjectOffEdFrm.Checked = true;
         }
 
         private static void SetDefaultValuesRemoveCustomers(RemoveCustomers form)
         {
-            // Add logic for default values for RemoveCustomers
+            // Setting default values for the radio buttons
+            form.rmSearchId.Checked = true;
         }
     }
 }

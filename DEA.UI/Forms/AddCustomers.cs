@@ -23,19 +23,19 @@ namespace DEA.UI
         private void InitializeControls()
         {
             // Set the default values
-            _defaultValueSetter.SetDefaultValues(this);
+            DefaultValueSetter.SetDefaultValues(this);
 
-            // Initilizing tool tips
+            // Initializing tool tips
             InitalizeToolTips();
         }
 
         private void InitalizeToolTips()
         {
             _toolTipHelper.SetToolTip(cusStatusGrp, "Set the customer status.");
-            _toolTipHelper.SetToolTip(cusOn, "Enable the cutomer configuration.");
-            _toolTipHelper.SetToolTip(cusOff, "Disable the cutomer configuration.");
+            _toolTipHelper.SetToolTip(cusOn, "Enable the customer configuration.");
+            _toolTipHelper.SetToolTip(cusOff, "Disable the customer configuration.");
             _toolTipHelper.SetToolTip(cusNameTxt, "Set the customer name.");
-            _toolTipHelper.SetToolTip(cusUnameTxt, "Set the customer TPS username.");
+            _toolTipHelper.SetToolTip(cusUnameTxt, "Set the customer TPS user name.");
             _toolTipHelper.SetToolTip(cusApiTokenTxt, "Set the customer API token.");
             _toolTipHelper.SetToolTip(cusQueuTxt, "Set the customer queue number.");
             _toolTipHelper.SetToolTip(cusProjIdTxt, "Set the customer project ID.");

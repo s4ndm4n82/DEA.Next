@@ -3,15 +3,17 @@ using DEA.UI.HelperClasses;
 
 namespace DEA.UI
 {
-    public partial class RemoveCustomers : Form
+    public partial class EditCustomersList : Form
     {
         private readonly DataContext _conttext;
         private readonly ToolTipHelper _toolTipHelper;
         private readonly DefaultValueSetter _defaultValueSetter;
 
-        public RemoveCustomers(DataContext context)
+        public EditCustomersList(DataContext context)
         {
             InitializeComponent();
+
+            // Initializing the context
             _conttext = context;
             _toolTipHelper = new ToolTipHelper();
             _defaultValueSetter = new DefaultValueSetter();
@@ -31,7 +33,11 @@ namespace DEA.UI
 
         private void InitalizeToolTips()
         {
-            // Add tool tips here
+            _toolTipHelper.SetToolTip(searchCusId, "Use the customer ID to search.");
+            _toolTipHelper.SetToolTip(searchProjectId, "Use the Project ID to search.");
+            _toolTipHelper.SetToolTip(searchCusName, "Use the customer name to search.");
+            _toolTipHelper.SetToolTip(cusEditSearchTxt, "Enter search text.");
+            _toolTipHelper.SetToolTip(btnEditCustomerSearch, "Search for a customer.");
         }
     }
 }
