@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
             ftpSubPathEdFrmTxt = new TextBox();
             ftpSubPathEdfrmLbl = new Label();
             ftpMoveToSubEdFrmGrp = new GroupBox();
@@ -49,7 +48,6 @@
             ftpHostEdFrmLbl = new Label();
             btnCancelEdFrm = new Button();
             ftpProfileComboEdFrm = new ComboBox();
-            toolTipGlobal = new ToolTip(components);
             btnSaveEdFrm = new Button();
             btnResetEdFrm = new Button();
             cmdBoxGrpEdFrm = new GroupBox();
@@ -71,8 +69,8 @@
             cusOnEdFrm = new RadioButton();
             cusOffEdFrm = new RadioButton();
             grpBoxCustomer = new GroupBox();
-            custFtwoValEdFrmTxt = new TextBox();
             custFtwoValEdFrmLbl = new Label();
+            custFtwoValEdFrmTxt = new TextBox();
             cusStatusEdFrmGrp = new GroupBox();
             cusDelMethodEdFrmCombo = new ComboBox();
             cusDelMethodEdFrmLbl = new Label();
@@ -555,10 +553,9 @@
             // 
             // custFtwoValEdFrmTxt
             // 
-            custFtwoValEdFrmTxt.AutoSize = true;
             custFtwoValEdFrmTxt.Location = new Point(315, 154);
             custFtwoValEdFrmTxt.Name = "custFtwoValEdFrmTxt";
-            custFtwoValEdFrmTxt.Size = new Size(145, 15);
+            custFtwoValEdFrmTxt.Size = new Size(145, 23);
             custFtwoValEdFrmTxt.TabIndex = 33;
             custFtwoValEdFrmTxt.Text = "Customer Field Two Value:";
             // 
@@ -622,7 +619,7 @@
             cusDocExtensionsEdFrmLbl.AutoSize = true;
             cusDocExtensionsEdFrmLbl.Location = new Point(315, 286);
             cusDocExtensionsEdFrmLbl.Name = "cusDocExtensionsEdFrmLbl";
-            cusDocExtensionsEdFrmLbl.Size = new Size(179, 15);
+            cusDocExtensionsEdFrmLbl.Size = new Size(180, 15);
             cusDocExtensionsEdFrmLbl.TabIndex = 27;
             cusDocExtensionsEdFrmLbl.Text = "Customer Document Extensions:";
             // 
@@ -928,7 +925,6 @@
         public Label ftpHostEdFrmLbl;
         public Button btnCancelEdFrm;
         public ComboBox ftpProfileComboEdFrm;
-        public ToolTip toolTipGlobal;
         public Button btnSaveEdFrm;
         public Button btnResetEdFrm;
         public GroupBox cmdBoxGrpEdFrm;

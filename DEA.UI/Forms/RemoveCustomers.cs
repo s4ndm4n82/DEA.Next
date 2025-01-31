@@ -31,7 +31,14 @@ namespace DEA.UI
 
         private void InitalizeToolTips()
         {
-            // Add tool tips here
+            _toolTipHelper.SetToolTip(rmSearchId, "Use the customer ID to search.");
+            _toolTipHelper.SetToolTip(rmSearchName, "Use the customer name to search.");
+            _toolTipHelper.SetToolTip(rmSearchProjId, "Use the Project ID to search.");
+            _toolTipHelper.SetToolTip(rmSearchTxt, "Enter search text.");
+            _toolTipHelper.SetToolTip(btnRmSearch, "Search for a customer.");
+            _toolTipHelper.SetToolTip(rmBtnRemove, "Remove a customer.");
+            _toolTipHelper.SetToolTip(rmBtnCancel, "Cancel.");
+            _toolTipHelper.SetToolTip(rmBtnReset, "Reset the form.");
         }
     }
 }

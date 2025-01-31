@@ -28,17 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            toolTipGlobal = new ToolTip(components);
             searchGrp = new GroupBox();
+            btnEditCustomerCancel = new Button();
+            btnEditCutomerReset = new Button();
             btnEditCustomerSearch = new Button();
             cusEditSearchTxt = new TextBox();
             searchProjectId = new RadioButton();
             searchCusName = new RadioButton();
             searchCusId = new RadioButton();
             grdEditCustomer = new DataGridView();
-            btnEditCutomerReset = new Button();
-            btnEditCustomerCancel = new Button();
             searchGrp.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)grdEditCustomer).BeginInit();
             SuspendLayout();
@@ -58,6 +56,24 @@
             searchGrp.TabIndex = 14;
             searchGrp.TabStop = false;
             searchGrp.Text = "Search Customer";
+            // 
+            // btnEditCustomerCancel
+            // 
+            btnEditCustomerCancel.Location = new Point(1092, 15);
+            btnEditCustomerCancel.Name = "btnEditCustomerCancel";
+            btnEditCustomerCancel.Size = new Size(119, 42);
+            btnEditCustomerCancel.TabIndex = 6;
+            btnEditCustomerCancel.Text = "Cancel";
+            btnEditCustomerCancel.UseVisualStyleBackColor = true;
+            // 
+            // btnEditCutomerReset
+            // 
+            btnEditCutomerReset.Location = new Point(967, 15);
+            btnEditCutomerReset.Name = "btnEditCutomerReset";
+            btnEditCutomerReset.Size = new Size(119, 42);
+            btnEditCutomerReset.TabIndex = 5;
+            btnEditCutomerReset.Text = "Reset";
+            btnEditCutomerReset.UseVisualStyleBackColor = true;
             // 
             // btnEditCustomerSearch
             // 
@@ -116,24 +132,6 @@
             grdEditCustomer.Size = new Size(1217, 478);
             grdEditCustomer.TabIndex = 15;
             // 
-            // btnEditCutomerReset
-            // 
-            btnEditCutomerReset.Location = new Point(967, 15);
-            btnEditCutomerReset.Name = "btnEditCutomerReset";
-            btnEditCutomerReset.Size = new Size(119, 42);
-            btnEditCutomerReset.TabIndex = 5;
-            btnEditCutomerReset.Text = "Reset";
-            btnEditCutomerReset.UseVisualStyleBackColor = true;
-            // 
-            // btnEditCustomerCancel
-            // 
-            btnEditCustomerCancel.Location = new Point(1092, 15);
-            btnEditCustomerCancel.Name = "btnEditCustomerCancel";
-            btnEditCustomerCancel.Size = new Size(119, 42);
-            btnEditCustomerCancel.TabIndex = 6;
-            btnEditCustomerCancel.Text = "Cancel";
-            btnEditCustomerCancel.UseVisualStyleBackColor = true;
-            // 
             // EditCustomersList
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -151,7 +149,6 @@
         }
 
         #endregion
-        public ToolTip toolTipGlobal;
         public GroupBox searchGrp;
         public RadioButton searchCusId;
         public RadioButton searchCusName;

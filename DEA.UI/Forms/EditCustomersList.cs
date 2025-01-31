@@ -38,6 +38,8 @@ namespace DEA.UI
             _toolTipHelper.SetToolTip(searchCusName, "Use the customer name to search.");
             _toolTipHelper.SetToolTip(cusEditSearchTxt, "Enter search text.");
             _toolTipHelper.SetToolTip(btnEditCustomerSearch, "Search for a customer.");
+            _toolTipHelper.SetToolTip(btnEditCutomerReset, "Reset the form.");
+            _toolTipHelper.SetToolTip(btnEditCustomerCancel, "Cancel the form.");
         }
     }
 }

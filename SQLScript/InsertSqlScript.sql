@@ -53,8 +53,8 @@ BEGIN
         "FtpPort",
         "FtpFolderLoop",
         "FtpMoveToSubFolder",
-        "FtpMainFolder",
-        "FtpSubFolder",
+		"FtpMainFolder",
+		"FtpSubFolder",                
         "FtpRemoveFiles",
         "CustomerDetailsId")
         VALUES
@@ -65,9 +65,9 @@ BEGIN
         '<FtpPassword>',
         '<FtpPort>',
         FALSE,
-        FALSE,
-        '<FtpSubolder>',
+        FALSE,        
         '<FtpMainFolder>',
+		'<FtpSubolder>',
         TRUE,
         customer_id);
     ELSE

@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
             cusOn = new RadioButton();
             cusOff = new RadioButton();
             cusNameLbl = new Label();
@@ -106,7 +105,6 @@
             btnSave = new Button();
             btnReset = new Button();
             btnCancel = new Button();
-            toolTipGlobal = new ToolTip(components);
             grpBoxCustomer.SuspendLayout();
             cusStatusGrp.SuspendLayout();
             ftpDetails.SuspendLayout();
@@ -981,7 +979,6 @@
         public Button btnSave;
         public Button btnReset;
         public Button btnCancel;
-        public ToolTip toolTipGlobal;
         public ComboBox ftpProfileCombo;
         public TextBox custFtwoValTxt;
         public Label cusFtwoValLbl;
