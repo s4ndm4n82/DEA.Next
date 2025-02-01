@@ -8,6 +8,8 @@ namespace DEA.UI
         private readonly DataContext _conttext;
         private readonly ToolTipHelper _toolTipHelper;
         private readonly DefaultValueSetter _defaultValueSetter;
+        private readonly ErrorProvider _errorProvider;
+        private readonly FormFunctionHelper _formFunctionHelper;
 
         public AddCustomers(DataContext context)
         {
@@ -15,9 +17,17 @@ namespace DEA.UI
             _conttext = context;
             _toolTipHelper = new ToolTipHelper();
             _defaultValueSetter = new DefaultValueSetter();
+            _errorProvider = new ErrorProvider();
+            _formFunctionHelper = new FormFunctionHelper();
 
             // Initialize the controls
             InitializeControls();
+
+            // Button click events
+            btnSave.Click += BtnSave_Click;
+
+            // Handles the item events
+            cusDocExtList.ItemCheck += _formFunctionHelper.CheckBoxListHandler;
         }
 
         private void InitializeControls()
@@ -72,6 +82,50 @@ namespace DEA.UI
             _toolTipHelper.SetToolTip(btnCancel, "Close the form without saving.");
             _toolTipHelper.SetToolTip(btnReset, "Reset the form.");
             _toolTipHelper.SetToolTip(btnSave, "Save the form.");
+        }
+
+        private void BtnSave_Click(object sender, EventArgs e)
+        {
+            if (sender is not Button) return;
+
+            if (ValidateInputs())
+            {
+                // Save the customer
+                SaveCustomer();
+            }
+        }
+
+        private bool ValidateInputs()
+        {
+            var isValid = true;
+
+            // Check if the required fields are filled
+            isValid &= FormValidator.ValidateCustomerName(cusNameTxt, _errorProvider);
+            isValid &= FormValidator.ValidateCustomerUserName(cusUnameTxt, _errorProvider);
+            isValid &= FormValidator.ValidateCustomerApiToken(cusApiTokenTxt, _errorProvider);
+            isValid &= FormValidator.ValidateCustomerQueue(cusQueuTxt, _errorProvider);
+            isValid &= FormValidator.ValidateCustomerMaxBatch(cusMaxBatchTxt, _errorProvider);
+            isValid &= FormValidator.ValidateCustomerDocumentEncoding(cusDocencTxt, _errorProvider);
+            isValid &= FormValidator.ValidateCustomerDomain(cusDomainTxt, _errorProvider);
+            isValid &= FormValidator.ValidateCustomerDeliveryMethod(cusDelMethodCombo, _errorProvider);
+            isValid &= FormValidator.ValidateCustomerExtensions(cusDocExtList, _errorProvider);
+            isValid &= FormValidator.ValidateCustomerFtpType(ftpTypCombo, _errorProvider);
+            isValid &= FormValidator.ValidateCustomerFtpProfile(ftpProfileCombo, _errorProvider);
+            isValid &= FormValidator.ValidateCustomerFtpHost(ftpHostTxt, _errorProvider);
+            isValid &= FormValidator.ValidateCustomerFtpUser(ftpUserNameTxt, _errorProvider);
+            isValid &= FormValidator.ValidateCustomerFtpPassword(ftpPasswordTxt, _errorProvider);
+            isValid &= FormValidator.ValidateCustomerFtpPort(ftpPortTxt, _errorProvider);
+            isValid &= FormValidator.ValidateCustomerFtpMainPath(ftpMainPathTxt, _errorProvider);
+            isValid &= FormValidator.ValidateCustomerFtpSubPath(ftpSubPathTxt, ftpMoveToSubOn, _errorProvider);
+            isValid &= FormValidator.ValidateCustomerEmail(emlAddressTxt, _errorProvider);
+            isValid &= FormValidator.ValidateCustomerEmailInboxPath(emlInboxPathTxt, _errorProvider);
+
+            return isValid;
+        }
+
+        private void SaveCustomer()
+        {
+            // Add the save method here.
         }
     }
 }
