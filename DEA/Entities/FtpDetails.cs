@@ -45,7 +45,7 @@ public class FtpDetails
     /// <summary>
     ///     Gets or sets the port of the FTP.
     /// </summary>
-    public int FtpPort { get; init; }
+    public required int FtpPort { get; init; }
 
     /// <summary>
     ///     Gets or sets a value indicating whether the FTP folder loop is enabled.

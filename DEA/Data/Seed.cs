@@ -14,7 +14,7 @@ public static class Seed
     public static async Task SeedData(DataContext context)
     {
         // Read customer data from the JSON configuration file.
-        var customerData = ReadDataFromJson.ReadDataFromJsonConfig().Result;
+        var customerData = await ReadDataFromJson.ReadDataFromJsonConfig();
 
         // Check if the customer data is empty and log an error if it is.
         if (customerData.Count == 0)

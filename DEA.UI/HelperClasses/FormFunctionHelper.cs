@@ -29,5 +29,11 @@
             // Resubscribe to the ItemCheck event
             checkedListBox.ItemCheck += CheckBoxListHandler;
         }
+
+        public static void CheckAllItems(CheckedListBox checkedListBox)
+        {
+            // Check the first item and trigger the event handler
+            checkedListBox.SetItemChecked(0, false);
+        }
     }
 }

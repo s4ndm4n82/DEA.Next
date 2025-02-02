@@ -90,15 +90,9 @@ namespace DEA.UI.HelperClasses
 
         public static bool ValidateCustomerDomain(TextBox text, ErrorProvider errorProvider)
         {
-            var regex = @"^https:\/\/.*\/Import\?$";
             if (string.IsNullOrWhiteSpace(text.Text))
             {
                 errorProvider.SetError(text, "Customer domain is required.");
-                return false;
-            }
-            else if (!Regex.IsMatch(text.Text, regex))
-            {
-                errorProvider.SetError(text, "Invalid URL format. Expected format: https://<domain>/<path>/Import?");
                 return false;
             }
             else

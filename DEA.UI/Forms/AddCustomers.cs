@@ -1,4 +1,5 @@
 ﻿using DEA.Next.Data;
+using DEA.Next.HelperClasses.OtherFunctions;
 using DEA.UI.HelperClasses;
 
 namespace DEA.UI
@@ -10,6 +11,7 @@ namespace DEA.UI
         private readonly DefaultValueSetter _defaultValueSetter;
         private readonly ErrorProvider _errorProvider;
         private readonly FormFunctionHelper _formFunctionHelper;
+        private readonly SaveCustomerData _saveCustomerData;
 
         public AddCustomers(DataContext context)
         {
@@ -19,6 +21,7 @@ namespace DEA.UI
             _defaultValueSetter = new DefaultValueSetter();
             _errorProvider = new ErrorProvider();
             _formFunctionHelper = new FormFunctionHelper();
+            _saveCustomerData = new SaveCustomerData(context);
 
             // Initialize the controls
             InitializeControls();
@@ -28,6 +31,9 @@ namespace DEA.UI
 
             // Handles the item events
             cusDocExtList.ItemCheck += _formFunctionHelper.CheckBoxListHandler;
+
+            // Check all items on load
+            CheckAllitemsOnLoad();
         }
 
         private void InitializeControls()
@@ -91,13 +97,28 @@ namespace DEA.UI
             if (ValidateInputs())
             {
                 // Save the customer
-                SaveCustomer();
+                _saveCustomerData.SaveCustomerDetails(this);
             }
+        }
+
+        private async void CheckAllitemsOnLoad()
+        {
+            await Task.Run(() =>
+            {
+                // Check all items
+                FormFunctionHelper.CheckAllItems(cusDocExtList);
+            });
         }
 
         private bool ValidateInputs()
         {
             var isValid = true;
+            var deliveryMethod = cusDelMethodCombo.SelectedItem?.ToString();
+
+            if (string.IsNullOrEmpty(deliveryMethod))
+                MessageBox.Show("Delivery method is required", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            MessageBox.Show(cusUnameTxt.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             // Check if the required fields are filled
             isValid &= FormValidator.ValidateCustomerName(cusNameTxt, _errorProvider);
@@ -109,23 +130,25 @@ namespace DEA.UI
             isValid &= FormValidator.ValidateCustomerDomain(cusDomainTxt, _errorProvider);
             isValid &= FormValidator.ValidateCustomerDeliveryMethod(cusDelMethodCombo, _errorProvider);
             isValid &= FormValidator.ValidateCustomerExtensions(cusDocExtList, _errorProvider);
-            isValid &= FormValidator.ValidateCustomerFtpType(ftpTypCombo, _errorProvider);
-            isValid &= FormValidator.ValidateCustomerFtpProfile(ftpProfileCombo, _errorProvider);
-            isValid &= FormValidator.ValidateCustomerFtpHost(ftpHostTxt, _errorProvider);
-            isValid &= FormValidator.ValidateCustomerFtpUser(ftpUserNameTxt, _errorProvider);
-            isValid &= FormValidator.ValidateCustomerFtpPassword(ftpPasswordTxt, _errorProvider);
-            isValid &= FormValidator.ValidateCustomerFtpPort(ftpPortTxt, _errorProvider);
-            isValid &= FormValidator.ValidateCustomerFtpMainPath(ftpMainPathTxt, _errorProvider);
-            isValid &= FormValidator.ValidateCustomerFtpSubPath(ftpSubPathTxt, ftpMoveToSubOn, _errorProvider);
-            isValid &= FormValidator.ValidateCustomerEmail(emlAddressTxt, _errorProvider);
-            isValid &= FormValidator.ValidateCustomerEmailInboxPath(emlInboxPathTxt, _errorProvider);
+
+            if (deliveryMethod.ToLower() == MagicWords.Ftp)
+            {
+                isValid &= FormValidator.ValidateCustomerFtpType(ftpTypCombo, _errorProvider);
+                isValid &= FormValidator.ValidateCustomerFtpProfile(ftpProfileCombo, _errorProvider);
+                isValid &= FormValidator.ValidateCustomerFtpHost(ftpHostTxt, _errorProvider);
+                isValid &= FormValidator.ValidateCustomerFtpUser(ftpUserNameTxt, _errorProvider);
+                isValid &= FormValidator.ValidateCustomerFtpPassword(ftpPasswordTxt, _errorProvider);
+                isValid &= FormValidator.ValidateCustomerFtpPort(ftpPortTxt, _errorProvider);
+                isValid &= FormValidator.ValidateCustomerFtpMainPath(ftpMainPathTxt, _errorProvider);
+                isValid &= FormValidator.ValidateCustomerFtpSubPath(ftpSubPathTxt, ftpMoveToSubOn, _errorProvider);
+            }
+            else
+            {
+                isValid &= FormValidator.ValidateCustomerEmail(emlAddressTxt, _errorProvider);
+                isValid &= FormValidator.ValidateCustomerEmailInboxPath(emlInboxPathTxt, _errorProvider);
+            }
 
             return isValid;
-        }
-
-        private void SaveCustomer()
-        {
-            // Add the save method here.
         }
     }
 }
