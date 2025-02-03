@@ -33,7 +33,7 @@
             cusNameLbl = new Label();
             cusNameTxt = new TextBox();
             cusUnameLbl = new Label();
-            grpBoxCustomer = new GroupBox();
+            cusDetailsGrp = new GroupBox();
             custFtwoValTxt = new TextBox();
             cusFtwoValLbl = new Label();
             cusStatusGrp = new GroupBox();
@@ -64,7 +64,7 @@
             cusApiTokenTxt = new TextBox();
             cusTokeLbl = new Label();
             cusUnameTxt = new TextBox();
-            ftpDetails = new GroupBox();
+            ftpDetailsGrp = new GroupBox();
             ftpRemoveFileCombo = new GroupBox();
             ftpRemoveOff = new RadioButton();
             ftpRemoveOn = new RadioButton();
@@ -105,9 +105,9 @@
             btnSave = new Button();
             btnReset = new Button();
             btnCancel = new Button();
-            grpBoxCustomer.SuspendLayout();
+            cusDetailsGrp.SuspendLayout();
             cusStatusGrp.SuspendLayout();
-            ftpDetails.SuspendLayout();
+            ftpDetailsGrp.SuspendLayout();
             ftpRemoveFileCombo.SuspendLayout();
             ftpMoveToSubGrp.SuspendLayout();
             ftpLoopGrp.SuspendLayout();
@@ -153,7 +153,7 @@
             cusNameTxt.Location = new Point(6, 76);
             cusNameTxt.Name = "cusNameTxt";
             cusNameTxt.Size = new Size(280, 23);
-            cusNameTxt.TabIndex = 4;
+            cusNameTxt.TabIndex = 3;
             // 
             // cusUnameLbl
             // 
@@ -164,54 +164,54 @@
             cusUnameLbl.TabIndex = 5;
             cusUnameLbl.Text = "Customer User Name:";
             // 
-            // grpBoxCustomer
+            // cusDetailsGrp
             // 
-            grpBoxCustomer.Controls.Add(custFtwoValTxt);
-            grpBoxCustomer.Controls.Add(cusFtwoValLbl);
-            grpBoxCustomer.Controls.Add(cusStatusGrp);
-            grpBoxCustomer.Controls.Add(cusDelMethodCombo);
-            grpBoxCustomer.Controls.Add(cusDelMethodLbl);
-            grpBoxCustomer.Controls.Add(cusDomainTxt);
-            grpBoxCustomer.Controls.Add(cusDomainLbl);
-            grpBoxCustomer.Controls.Add(cusDocExtList);
-            grpBoxCustomer.Controls.Add(cusDocExtensionsLbl);
-            grpBoxCustomer.Controls.Add(custFtwoNameTxt);
-            grpBoxCustomer.Controls.Add(cusFtwoNameLbl);
-            grpBoxCustomer.Controls.Add(cusFonValTxt);
-            grpBoxCustomer.Controls.Add(cusFoneValLbl);
-            grpBoxCustomer.Controls.Add(cusFonNameTxt);
-            grpBoxCustomer.Controls.Add(cusFoneNameLbl);
-            grpBoxCustomer.Controls.Add(cusDocencTxt);
-            grpBoxCustomer.Controls.Add(cusDocEncoLbl);
-            grpBoxCustomer.Controls.Add(cusMaxBatchTxt);
-            grpBoxCustomer.Controls.Add(cusMaxBatchLbl);
-            grpBoxCustomer.Controls.Add(cusDocIdTxt);
-            grpBoxCustomer.Controls.Add(cusDocIdLbl);
-            grpBoxCustomer.Controls.Add(cusTempIdTxt);
-            grpBoxCustomer.Controls.Add(cusTempKeyLbl);
-            grpBoxCustomer.Controls.Add(cusProjIdTxt);
-            grpBoxCustomer.Controls.Add(cusProjectLbl);
-            grpBoxCustomer.Controls.Add(cusQueuTxt);
-            grpBoxCustomer.Controls.Add(cusQueueLbl);
-            grpBoxCustomer.Controls.Add(cusApiTokenTxt);
-            grpBoxCustomer.Controls.Add(cusTokeLbl);
-            grpBoxCustomer.Controls.Add(cusUnameTxt);
-            grpBoxCustomer.Controls.Add(cusUnameLbl);
-            grpBoxCustomer.Controls.Add(cusNameTxt);
-            grpBoxCustomer.Controls.Add(cusNameLbl);
-            grpBoxCustomer.Location = new Point(12, 12);
-            grpBoxCustomer.Name = "grpBoxCustomer";
-            grpBoxCustomer.Size = new Size(603, 552);
-            grpBoxCustomer.TabIndex = 6;
-            grpBoxCustomer.TabStop = false;
-            grpBoxCustomer.Text = "Customer Details";
+            cusDetailsGrp.Controls.Add(custFtwoValTxt);
+            cusDetailsGrp.Controls.Add(cusFtwoValLbl);
+            cusDetailsGrp.Controls.Add(cusStatusGrp);
+            cusDetailsGrp.Controls.Add(cusDelMethodCombo);
+            cusDetailsGrp.Controls.Add(cusDelMethodLbl);
+            cusDetailsGrp.Controls.Add(cusDomainTxt);
+            cusDetailsGrp.Controls.Add(cusDomainLbl);
+            cusDetailsGrp.Controls.Add(cusDocExtList);
+            cusDetailsGrp.Controls.Add(cusDocExtensionsLbl);
+            cusDetailsGrp.Controls.Add(custFtwoNameTxt);
+            cusDetailsGrp.Controls.Add(cusFtwoNameLbl);
+            cusDetailsGrp.Controls.Add(cusFonValTxt);
+            cusDetailsGrp.Controls.Add(cusFoneValLbl);
+            cusDetailsGrp.Controls.Add(cusFonNameTxt);
+            cusDetailsGrp.Controls.Add(cusFoneNameLbl);
+            cusDetailsGrp.Controls.Add(cusDocencTxt);
+            cusDetailsGrp.Controls.Add(cusDocEncoLbl);
+            cusDetailsGrp.Controls.Add(cusMaxBatchTxt);
+            cusDetailsGrp.Controls.Add(cusMaxBatchLbl);
+            cusDetailsGrp.Controls.Add(cusDocIdTxt);
+            cusDetailsGrp.Controls.Add(cusDocIdLbl);
+            cusDetailsGrp.Controls.Add(cusTempIdTxt);
+            cusDetailsGrp.Controls.Add(cusTempKeyLbl);
+            cusDetailsGrp.Controls.Add(cusProjIdTxt);
+            cusDetailsGrp.Controls.Add(cusProjectLbl);
+            cusDetailsGrp.Controls.Add(cusQueuTxt);
+            cusDetailsGrp.Controls.Add(cusQueueLbl);
+            cusDetailsGrp.Controls.Add(cusApiTokenTxt);
+            cusDetailsGrp.Controls.Add(cusTokeLbl);
+            cusDetailsGrp.Controls.Add(cusUnameTxt);
+            cusDetailsGrp.Controls.Add(cusUnameLbl);
+            cusDetailsGrp.Controls.Add(cusNameTxt);
+            cusDetailsGrp.Controls.Add(cusNameLbl);
+            cusDetailsGrp.Location = new Point(12, 12);
+            cusDetailsGrp.Name = "cusDetailsGrp";
+            cusDetailsGrp.Size = new Size(603, 552);
+            cusDetailsGrp.TabIndex = 44;
+            cusDetailsGrp.TabStop = false;
+            cusDetailsGrp.Text = "Customer Details";
             // 
             // custFtwoValTxt
             // 
             custFtwoValTxt.Location = new Point(315, 172);
             custFtwoValTxt.Name = "custFtwoValTxt";
             custFtwoValTxt.Size = new Size(280, 23);
-            custFtwoValTxt.TabIndex = 34;
+            custFtwoValTxt.TabIndex = 16;
             // 
             // cusFtwoValLbl
             // 
@@ -229,7 +229,7 @@
             cusStatusGrp.Location = new Point(6, 19);
             cusStatusGrp.Name = "cusStatusGrp";
             cusStatusGrp.Size = new Size(174, 38);
-            cusStatusGrp.TabIndex = 9;
+            cusStatusGrp.TabIndex = 0;
             cusStatusGrp.TabStop = false;
             cusStatusGrp.Text = "Customer Status:";
             // 
@@ -240,7 +240,7 @@
             cusDelMethodCombo.Location = new Point(315, 260);
             cusDelMethodCombo.Name = "cusDelMethodCombo";
             cusDelMethodCombo.Size = new Size(179, 23);
-            cusDelMethodCombo.TabIndex = 32;
+            cusDelMethodCombo.TabIndex = 18;
             cusDelMethodCombo.Text = "Select Delivery Method ...";
             // 
             // cusDelMethodLbl
@@ -257,7 +257,7 @@
             cusDomainTxt.Location = new Point(315, 216);
             cusDomainTxt.Name = "cusDomainTxt";
             cusDomainTxt.Size = new Size(280, 23);
-            cusDomainTxt.TabIndex = 30;
+            cusDomainTxt.TabIndex = 17;
             // 
             // cusDomainLbl
             // 
@@ -275,7 +275,7 @@
             cusDocExtList.Location = new Point(315, 304);
             cusDocExtList.Name = "cusDocExtList";
             cusDocExtList.Size = new Size(179, 130);
-            cusDocExtList.TabIndex = 28;
+            cusDocExtList.TabIndex = 19;
             // 
             // cusDocExtensionsLbl
             // 
@@ -291,7 +291,7 @@
             custFtwoNameTxt.Location = new Point(315, 125);
             custFtwoNameTxt.Name = "custFtwoNameTxt";
             custFtwoNameTxt.Size = new Size(280, 23);
-            custFtwoNameTxt.TabIndex = 26;
+            custFtwoNameTxt.TabIndex = 15;
             // 
             // cusFtwoNameLbl
             // 
@@ -307,7 +307,7 @@
             cusFonValTxt.Location = new Point(315, 81);
             cusFonValTxt.Name = "cusFonValTxt";
             cusFonValTxt.Size = new Size(280, 23);
-            cusFonValTxt.TabIndex = 24;
+            cusFonValTxt.TabIndex = 14;
             // 
             // cusFoneValLbl
             // 
@@ -323,7 +323,7 @@
             cusFonNameTxt.Location = new Point(315, 37);
             cusFonNameTxt.Name = "cusFonNameTxt";
             cusFonNameTxt.Size = new Size(280, 23);
-            cusFonNameTxt.TabIndex = 22;
+            cusFonNameTxt.TabIndex = 13;
             // 
             // cusFoneNameLbl
             // 
@@ -339,7 +339,7 @@
             cusDocencTxt.Location = new Point(6, 519);
             cusDocencTxt.Name = "cusDocencTxt";
             cusDocencTxt.Size = new Size(123, 23);
-            cusDocencTxt.TabIndex = 20;
+            cusDocencTxt.TabIndex = 12;
             cusDocencTxt.Text = "UTF-8";
             // 
             // cusDocEncoLbl
@@ -356,7 +356,7 @@
             cusMaxBatchTxt.Location = new Point(6, 475);
             cusMaxBatchTxt.Name = "cusMaxBatchTxt";
             cusMaxBatchTxt.Size = new Size(123, 23);
-            cusMaxBatchTxt.TabIndex = 18;
+            cusMaxBatchTxt.TabIndex = 10;
             cusMaxBatchTxt.Text = "1";
             // 
             // cusMaxBatchLbl
@@ -373,7 +373,7 @@
             cusDocIdTxt.Location = new Point(6, 431);
             cusDocIdTxt.Name = "cusDocIdTxt";
             cusDocIdTxt.Size = new Size(280, 23);
-            cusDocIdTxt.TabIndex = 16;
+            cusDocIdTxt.TabIndex = 9;
             // 
             // cusDocIdLbl
             // 
@@ -389,7 +389,7 @@
             cusTempIdTxt.Location = new Point(6, 387);
             cusTempIdTxt.Name = "cusTempIdTxt";
             cusTempIdTxt.Size = new Size(280, 23);
-            cusTempIdTxt.TabIndex = 14;
+            cusTempIdTxt.TabIndex = 8;
             // 
             // cusTempKeyLbl
             // 
@@ -405,7 +405,7 @@
             cusProjIdTxt.Location = new Point(6, 343);
             cusProjIdTxt.Name = "cusProjIdTxt";
             cusProjIdTxt.Size = new Size(280, 23);
-            cusProjIdTxt.TabIndex = 12;
+            cusProjIdTxt.TabIndex = 7;
             // 
             // cusProjectLbl
             // 
@@ -421,7 +421,7 @@
             cusQueuTxt.Location = new Point(6, 299);
             cusQueuTxt.Name = "cusQueuTxt";
             cusQueuTxt.Size = new Size(123, 23);
-            cusQueuTxt.TabIndex = 10;
+            cusQueuTxt.TabIndex = 6;
             // 
             // cusQueueLbl
             // 
@@ -439,7 +439,7 @@
             cusApiTokenTxt.Name = "cusApiTokenTxt";
             cusApiTokenTxt.ScrollBars = ScrollBars.Vertical;
             cusApiTokenTxt.Size = new Size(280, 114);
-            cusApiTokenTxt.TabIndex = 8;
+            cusApiTokenTxt.TabIndex = 5;
             // 
             // cusTokeLbl
             // 
@@ -455,35 +455,35 @@
             cusUnameTxt.Location = new Point(6, 120);
             cusUnameTxt.Name = "cusUnameTxt";
             cusUnameTxt.Size = new Size(280, 23);
-            cusUnameTxt.TabIndex = 6;
+            cusUnameTxt.TabIndex = 4;
             // 
-            // ftpDetails
+            // ftpDetailsGrp
             // 
-            ftpDetails.Controls.Add(ftpRemoveFileCombo);
-            ftpDetails.Controls.Add(ftpSubPathTxt);
-            ftpDetails.Controls.Add(ftpSubPathLbl);
-            ftpDetails.Controls.Add(ftpMoveToSubGrp);
-            ftpDetails.Controls.Add(ftpLoopGrp);
-            ftpDetails.Controls.Add(ftpMainPathTxt);
-            ftpDetails.Controls.Add(ftpMainPathLbl);
-            ftpDetails.Controls.Add(ftpPortTxt);
-            ftpDetails.Controls.Add(ftpPortLbl);
-            ftpDetails.Controls.Add(ftpPasswordTxt);
-            ftpDetails.Controls.Add(ftpPasswordLbl);
-            ftpDetails.Controls.Add(ftpUserNameTxt);
-            ftpDetails.Controls.Add(ftpUserNameLbl);
-            ftpDetails.Controls.Add(ftpHostTxt);
-            ftpDetails.Controls.Add(ftpHostlbl);
-            ftpDetails.Controls.Add(ftpProfileCombo);
-            ftpDetails.Controls.Add(ftpProfileLbl);
-            ftpDetails.Controls.Add(ftpTypCombo);
-            ftpDetails.Controls.Add(ftpTypeLbl);
-            ftpDetails.Location = new Point(621, 12);
-            ftpDetails.Name = "ftpDetails";
-            ftpDetails.Size = new Size(608, 296);
-            ftpDetails.TabIndex = 7;
-            ftpDetails.TabStop = false;
-            ftpDetails.Text = "Ftp Details";
+            ftpDetailsGrp.Controls.Add(ftpRemoveFileCombo);
+            ftpDetailsGrp.Controls.Add(ftpSubPathTxt);
+            ftpDetailsGrp.Controls.Add(ftpSubPathLbl);
+            ftpDetailsGrp.Controls.Add(ftpMoveToSubGrp);
+            ftpDetailsGrp.Controls.Add(ftpLoopGrp);
+            ftpDetailsGrp.Controls.Add(ftpMainPathTxt);
+            ftpDetailsGrp.Controls.Add(ftpMainPathLbl);
+            ftpDetailsGrp.Controls.Add(ftpPortTxt);
+            ftpDetailsGrp.Controls.Add(ftpPortLbl);
+            ftpDetailsGrp.Controls.Add(ftpPasswordTxt);
+            ftpDetailsGrp.Controls.Add(ftpPasswordLbl);
+            ftpDetailsGrp.Controls.Add(ftpUserNameTxt);
+            ftpDetailsGrp.Controls.Add(ftpUserNameLbl);
+            ftpDetailsGrp.Controls.Add(ftpHostTxt);
+            ftpDetailsGrp.Controls.Add(ftpHostlbl);
+            ftpDetailsGrp.Controls.Add(ftpProfileCombo);
+            ftpDetailsGrp.Controls.Add(ftpProfileLbl);
+            ftpDetailsGrp.Controls.Add(ftpTypCombo);
+            ftpDetailsGrp.Controls.Add(ftpTypeLbl);
+            ftpDetailsGrp.Location = new Point(621, 12);
+            ftpDetailsGrp.Name = "ftpDetailsGrp";
+            ftpDetailsGrp.Size = new Size(608, 296);
+            ftpDetailsGrp.TabIndex = 45;
+            ftpDetailsGrp.TabStop = false;
+            ftpDetailsGrp.Text = "Ftp Details";
             // 
             // ftpRemoveFileCombo
             // 
@@ -492,7 +492,7 @@
             ftpRemoveFileCombo.Location = new Point(317, 234);
             ftpRemoveFileCombo.Name = "ftpRemoveFileCombo";
             ftpRemoveFileCombo.Size = new Size(203, 53);
-            ftpRemoveFileCombo.TabIndex = 24;
+            ftpRemoveFileCombo.TabIndex = 53;
             ftpRemoveFileCombo.TabStop = false;
             ftpRemoveFileCombo.Text = "Ftp Remove Files From Ftp:";
             // 
@@ -502,7 +502,7 @@
             ftpRemoveOff.Location = new Point(79, 22);
             ftpRemoveOff.Name = "ftpRemoveOff";
             ftpRemoveOff.Size = new Size(70, 19);
-            ftpRemoveOff.TabIndex = 1;
+            ftpRemoveOff.TabIndex = 33;
             ftpRemoveOff.TabStop = true;
             ftpRemoveOff.Text = "Disabled";
             ftpRemoveOff.UseVisualStyleBackColor = true;
@@ -513,7 +513,7 @@
             ftpRemoveOn.Location = new Point(6, 22);
             ftpRemoveOn.Name = "ftpRemoveOn";
             ftpRemoveOn.Size = new Size(67, 19);
-            ftpRemoveOn.TabIndex = 0;
+            ftpRemoveOn.TabIndex = 32;
             ftpRemoveOn.TabStop = true;
             ftpRemoveOn.Text = "Enabled";
             ftpRemoveOn.UseVisualStyleBackColor = true;
@@ -524,7 +524,7 @@
             ftpSubPathTxt.Location = new Point(317, 202);
             ftpSubPathTxt.Name = "ftpSubPathTxt";
             ftpSubPathTxt.Size = new Size(280, 23);
-            ftpSubPathTxt.TabIndex = 23;
+            ftpSubPathTxt.TabIndex = 31;
             // 
             // ftpSubPathLbl
             // 
@@ -542,7 +542,7 @@
             ftpMoveToSubGrp.Location = new Point(317, 128);
             ftpMoveToSubGrp.Name = "ftpMoveToSubGrp";
             ftpMoveToSubGrp.Size = new Size(203, 53);
-            ftpMoveToSubGrp.TabIndex = 21;
+            ftpMoveToSubGrp.TabIndex = 51;
             ftpMoveToSubGrp.TabStop = false;
             ftpMoveToSubGrp.Text = "Ftp Move To Sub Folder:";
             // 
@@ -552,7 +552,7 @@
             ftpMoveToSubOn.Location = new Point(6, 22);
             ftpMoveToSubOn.Name = "ftpMoveToSubOn";
             ftpMoveToSubOn.Size = new Size(67, 19);
-            ftpMoveToSubOn.TabIndex = 18;
+            ftpMoveToSubOn.TabIndex = 29;
             ftpMoveToSubOn.TabStop = true;
             ftpMoveToSubOn.Text = "Enabled";
             ftpMoveToSubOn.UseVisualStyleBackColor = true;
@@ -563,7 +563,7 @@
             ftpMoveToSubOff.Location = new Point(79, 22);
             ftpMoveToSubOff.Name = "ftpMoveToSubOff";
             ftpMoveToSubOff.Size = new Size(70, 19);
-            ftpMoveToSubOff.TabIndex = 19;
+            ftpMoveToSubOff.TabIndex = 30;
             ftpMoveToSubOff.TabStop = true;
             ftpMoveToSubOff.Text = "Disabled";
             ftpMoveToSubOff.UseVisualStyleBackColor = true;
@@ -575,7 +575,7 @@
             ftpLoopGrp.Location = new Point(317, 66);
             ftpLoopGrp.Name = "ftpLoopGrp";
             ftpLoopGrp.Size = new Size(203, 56);
-            ftpLoopGrp.TabIndex = 20;
+            ftpLoopGrp.TabIndex = 50;
             ftpLoopGrp.TabStop = false;
             ftpLoopGrp.Text = "Ftp Loop Through Sub Folders:";
             // 
@@ -585,7 +585,7 @@
             ftpLoopOff.Location = new Point(79, 22);
             ftpLoopOff.Name = "ftpLoopOff";
             ftpLoopOff.Size = new Size(70, 19);
-            ftpLoopOff.TabIndex = 14;
+            ftpLoopOff.TabIndex = 28;
             ftpLoopOff.TabStop = true;
             ftpLoopOff.Text = "Disabled";
             ftpLoopOff.UseVisualStyleBackColor = true;
@@ -596,7 +596,7 @@
             ftpLoopOn.Location = new Point(6, 22);
             ftpLoopOn.Name = "ftpLoopOn";
             ftpLoopOn.Size = new Size(67, 19);
-            ftpLoopOn.TabIndex = 13;
+            ftpLoopOn.TabIndex = 27;
             ftpLoopOn.TabStop = true;
             ftpLoopOn.Text = "Enabled";
             ftpLoopOn.UseVisualStyleBackColor = true;
@@ -606,7 +606,7 @@
             ftpMainPathTxt.Location = new Point(317, 37);
             ftpMainPathTxt.Name = "ftpMainPathTxt";
             ftpMainPathTxt.Size = new Size(280, 23);
-            ftpMainPathTxt.TabIndex = 16;
+            ftpMainPathTxt.TabIndex = 26;
             // 
             // ftpMainPathLbl
             // 
@@ -622,7 +622,7 @@
             ftpPortTxt.Location = new Point(6, 257);
             ftpPortTxt.Name = "ftpPortTxt";
             ftpPortTxt.Size = new Size(123, 23);
-            ftpPortTxt.TabIndex = 11;
+            ftpPortTxt.TabIndex = 25;
             // 
             // ftpPortLbl
             // 
@@ -639,7 +639,7 @@
             ftpPasswordTxt.Name = "ftpPasswordTxt";
             ftpPasswordTxt.PasswordChar = '•';
             ftpPasswordTxt.Size = new Size(280, 23);
-            ftpPasswordTxt.TabIndex = 9;
+            ftpPasswordTxt.TabIndex = 24;
             // 
             // ftpPasswordLbl
             // 
@@ -655,7 +655,7 @@
             ftpUserNameTxt.Location = new Point(6, 169);
             ftpUserNameTxt.Name = "ftpUserNameTxt";
             ftpUserNameTxt.Size = new Size(280, 23);
-            ftpUserNameTxt.TabIndex = 7;
+            ftpUserNameTxt.TabIndex = 23;
             // 
             // ftpUserNameLbl
             // 
@@ -671,7 +671,7 @@
             ftpHostTxt.Location = new Point(6, 125);
             ftpHostTxt.Name = "ftpHostTxt";
             ftpHostTxt.Size = new Size(280, 23);
-            ftpHostTxt.TabIndex = 5;
+            ftpHostTxt.TabIndex = 22;
             // 
             // ftpHostlbl
             // 
@@ -689,7 +689,7 @@
             ftpProfileCombo.Location = new Point(6, 81);
             ftpProfileCombo.Name = "ftpProfileCombo";
             ftpProfileCombo.Size = new Size(174, 23);
-            ftpProfileCombo.TabIndex = 3;
+            ftpProfileCombo.TabIndex = 21;
             // 
             // ftpProfileLbl
             // 
@@ -707,7 +707,7 @@
             ftpTypCombo.Location = new Point(6, 37);
             ftpTypCombo.Name = "ftpTypCombo";
             ftpTypCombo.Size = new Size(174, 23);
-            ftpTypCombo.TabIndex = 1;
+            ftpTypCombo.TabIndex = 20;
             ftpTypCombo.Text = "Select The Ftp Type ...";
             // 
             // ftpTypeLbl
@@ -730,7 +730,7 @@
             emlDetailsGrp.Location = new Point(621, 311);
             emlDetailsGrp.Name = "emlDetailsGrp";
             emlDetailsGrp.Size = new Size(608, 148);
-            emlDetailsGrp.TabIndex = 8;
+            emlDetailsGrp.TabIndex = 46;
             emlDetailsGrp.TabStop = false;
             emlDetailsGrp.Text = "Email Details";
             // 
@@ -741,7 +741,7 @@
             emlSendSubjectGrp.Location = new Point(317, 73);
             emlSendSubjectGrp.Name = "emlSendSubjectGrp";
             emlSendSubjectGrp.Size = new Size(203, 48);
-            emlSendSubjectGrp.TabIndex = 5;
+            emlSendSubjectGrp.TabIndex = 55;
             emlSendSubjectGrp.TabStop = false;
             emlSendSubjectGrp.Text = "Email Send Subject:";
             // 
@@ -751,7 +751,7 @@
             emlSndSubjectOff.Location = new Point(79, 22);
             emlSndSubjectOff.Name = "emlSndSubjectOff";
             emlSndSubjectOff.Size = new Size(70, 19);
-            emlSndSubjectOff.TabIndex = 1;
+            emlSndSubjectOff.TabIndex = 39;
             emlSndSubjectOff.TabStop = true;
             emlSndSubjectOff.Text = "Disabled";
             emlSndSubjectOff.UseVisualStyleBackColor = true;
@@ -762,7 +762,7 @@
             emlSndSubjectOn.Location = new Point(6, 22);
             emlSndSubjectOn.Name = "emlSndSubjectOn";
             emlSndSubjectOn.Size = new Size(67, 19);
-            emlSndSubjectOn.TabIndex = 0;
+            emlSndSubjectOn.TabIndex = 38;
             emlSndSubjectOn.TabStop = true;
             emlSndSubjectOn.Text = "Enabled";
             emlSndSubjectOn.UseVisualStyleBackColor = true;
@@ -774,7 +774,7 @@
             emlSendEmailGrp.Location = new Point(317, 19);
             emlSendEmailGrp.Name = "emlSendEmailGrp";
             emlSendEmailGrp.Size = new Size(203, 48);
-            emlSendEmailGrp.TabIndex = 4;
+            emlSendEmailGrp.TabIndex = 54;
             emlSendEmailGrp.TabStop = false;
             emlSendEmailGrp.Text = "Email Send Address:";
             // 
@@ -784,7 +784,7 @@
             emlSenAdressOff.Location = new Point(79, 22);
             emlSenAdressOff.Name = "emlSenAdressOff";
             emlSenAdressOff.Size = new Size(70, 19);
-            emlSenAdressOff.TabIndex = 1;
+            emlSenAdressOff.TabIndex = 37;
             emlSenAdressOff.TabStop = true;
             emlSenAdressOff.Text = "Disabled";
             emlSenAdressOff.UseVisualStyleBackColor = true;
@@ -795,7 +795,7 @@
             emlSenAdressOn.Location = new Point(6, 22);
             emlSenAdressOn.Name = "emlSenAdressOn";
             emlSenAdressOn.Size = new Size(67, 19);
-            emlSenAdressOn.TabIndex = 0;
+            emlSenAdressOn.TabIndex = 36;
             emlSenAdressOn.TabStop = true;
             emlSenAdressOn.Text = "Enabled";
             emlSenAdressOn.UseVisualStyleBackColor = true;
@@ -805,7 +805,7 @@
             emlInboxPathTxt.Location = new Point(6, 81);
             emlInboxPathTxt.Name = "emlInboxPathTxt";
             emlInboxPathTxt.Size = new Size(280, 23);
-            emlInboxPathTxt.TabIndex = 3;
+            emlInboxPathTxt.TabIndex = 35;
             // 
             // emlInboxPathLbl
             // 
@@ -821,7 +821,7 @@
             emlAddressTxt.Location = new Point(6, 37);
             emlAddressTxt.Name = "emlAddressTxt";
             emlAddressTxt.Size = new Size(280, 23);
-            emlAddressTxt.TabIndex = 1;
+            emlAddressTxt.TabIndex = 34;
             // 
             // emlEmailLbl
             // 
@@ -840,7 +840,7 @@
             cmdBoxGrp.Location = new Point(621, 464);
             cmdBoxGrp.Name = "cmdBoxGrp";
             cmdBoxGrp.Size = new Size(608, 100);
-            cmdBoxGrp.TabIndex = 9;
+            cmdBoxGrp.TabIndex = 47;
             cmdBoxGrp.TabStop = false;
             // 
             // btnSave
@@ -848,7 +848,7 @@
             btnSave.Location = new Point(480, 35);
             btnSave.Name = "btnSave";
             btnSave.Size = new Size(117, 42);
-            btnSave.TabIndex = 2;
+            btnSave.TabIndex = 40;
             btnSave.Text = "Save";
             btnSave.UseVisualStyleBackColor = true;
             // 
@@ -857,7 +857,7 @@
             btnReset.Location = new Point(357, 35);
             btnReset.Name = "btnReset";
             btnReset.Size = new Size(117, 42);
-            btnReset.TabIndex = 1;
+            btnReset.TabIndex = 41;
             btnReset.Text = "Reset";
             btnReset.UseVisualStyleBackColor = true;
             // 
@@ -866,7 +866,7 @@
             btnCancel.Location = new Point(232, 35);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(119, 42);
-            btnCancel.TabIndex = 0;
+            btnCancel.TabIndex = 43;
             btnCancel.Text = "Cancel";
             btnCancel.UseVisualStyleBackColor = true;
             // 
@@ -878,16 +878,16 @@
             ClientSize = new Size(1242, 576);
             Controls.Add(cmdBoxGrp);
             Controls.Add(emlDetailsGrp);
-            Controls.Add(ftpDetails);
-            Controls.Add(grpBoxCustomer);
+            Controls.Add(ftpDetailsGrp);
+            Controls.Add(cusDetailsGrp);
             Name = "AddCustomers";
             Text = "Add Customers";
-            grpBoxCustomer.ResumeLayout(false);
-            grpBoxCustomer.PerformLayout();
+            cusDetailsGrp.ResumeLayout(false);
+            cusDetailsGrp.PerformLayout();
             cusStatusGrp.ResumeLayout(false);
             cusStatusGrp.PerformLayout();
-            ftpDetails.ResumeLayout(false);
-            ftpDetails.PerformLayout();
+            ftpDetailsGrp.ResumeLayout(false);
+            ftpDetailsGrp.PerformLayout();
             ftpRemoveFileCombo.ResumeLayout(false);
             ftpRemoveFileCombo.PerformLayout();
             ftpMoveToSubGrp.ResumeLayout(false);
@@ -910,7 +910,7 @@
         public Label cusNameLbl;
         public TextBox cusNameTxt;
         public Label cusUnameLbl;
-        public GroupBox grpBoxCustomer;
+        public GroupBox cusDetailsGrp;
         public Label cusTokeLbl;
         public TextBox cusUnameTxt;
         public TextBox cusApiTokenTxt;
@@ -938,7 +938,7 @@
         public TextBox cusDomainTxt;
         public Label cusDomainLbl;
         public ComboBox cusDelMethodCombo;
-        public GroupBox ftpDetails;
+        public GroupBox ftpDetailsGrp;
         public ComboBox ftpTypCombo;
         public Label ftpTypeLbl;
         public Label ftpProfileLbl;

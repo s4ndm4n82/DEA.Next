@@ -9,9 +9,9 @@ namespace DEA.UI
         private readonly DataContext _conttext;
         private readonly ToolTipHelper _toolTipHelper;
         private readonly DefaultValueSetter _defaultValueSetter;
-        private readonly ErrorProvider _errorProvider;
         private readonly FormFunctionHelper _formFunctionHelper;
         private readonly SaveCustomerData _saveCustomerData;
+        public readonly ErrorProvider _errorProvider;
 
         public AddCustomers(DataContext context)
         {
@@ -28,12 +28,28 @@ namespace DEA.UI
 
             // Button click events
             btnSave.Click += BtnSave_Click;
+            btnReset.Click += (sender, e) => ResetForms.RestAddCustomersForm(this);
+            btnCancel.Click += BtnCancel_Click;
 
             // Handles the item events
             cusDocExtList.ItemCheck += _formFunctionHelper.CheckBoxListHandler;
 
             // Check all items on load
             CheckAllitemsOnLoad();
+
+            // Disable fields on load
+            FormFunctionHelper.DisableFieldsOnLoad(ftpDetailsGrp, emlDetailsGrp, ftpSubPathTxt);
+
+            // Handle delivery method selection change
+            cusDelMethodCombo.SelectedIndexChanged += (sender, e) =>
+                FormFunctionHelper.HandleDeliveryMethodChanges(cusDelMethodCombo, ftpDetailsGrp, emlDetailsGrp, ftpSubPathTxt);
+
+            // Handle FTP move to subfolder option change
+            ftpMoveToSubOn.CheckedChanged += (sender, e) =>
+                FormFunctionHelper.HandleFtpSubPathChanges(ftpMoveToSubOn, ftpSubPathTxt);
+
+            ftpMoveToSubOff.CheckedChanged += (sender, e) =>
+                FormFunctionHelper.HandleFtpSubPathChanges(ftpMoveToSubOn, ftpSubPathTxt);
         }
 
         private void InitializeControls()
@@ -43,6 +59,79 @@ namespace DEA.UI
 
             // Initializing tool tips
             InitalizeToolTips();
+        }
+
+        private void BtnSave_Click(object sender, EventArgs e)
+        {
+            if (sender is not Button) return;
+
+            if (ValidateInputs())
+            {
+                // Save the customer
+                _saveCustomerData.SaveCustomerDetails(this);
+
+                // Rest the form after saving
+                ResetForms.RestAddCustomersForm(this);
+            }
+        }
+
+        private void BtnCancel_Click(object sender, EventArgs e)
+        {
+            if (sender is not Button) return;
+
+            var msgResult = MessageBox.Show("Are you sure you want to close the application?",
+                "Exit The Application",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2);
+
+            if (msgResult == DialogResult.Yes)
+                Application.Exit();
+        }
+
+        private void CheckAllitemsOnLoad()
+        {
+            // Check all items
+            FormFunctionHelper.CheckAllItems(cusDocExtList);
+        }
+
+        private bool ValidateInputs()
+        {
+            var isValid = true;
+            var deliveryMethod = cusDelMethodCombo.SelectedItem?.ToString();
+
+            if (string.IsNullOrEmpty(deliveryMethod))
+                MessageBox.Show("Delivery method is required", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            // Check if the required fields are filled
+            isValid &= FormValidator.ValidateCustomerName(cusNameTxt, _errorProvider);
+            isValid &= FormValidator.ValidateCustomerUserName(cusUnameTxt, _errorProvider);
+            isValid &= FormValidator.ValidateCustomerApiToken(cusApiTokenTxt, _errorProvider);
+            isValid &= FormValidator.ValidateCustomerQueue(cusQueuTxt, _errorProvider);
+            isValid &= FormValidator.ValidateCustomerMaxBatch(cusMaxBatchTxt, _errorProvider);
+            isValid &= FormValidator.ValidateCustomerDocumentEncoding(cusDocencTxt, _errorProvider);
+            isValid &= FormValidator.ValidateCustomerDomain(cusDomainTxt, _errorProvider);
+            isValid &= FormValidator.ValidateCustomerDeliveryMethod(cusDelMethodCombo, _errorProvider);
+            isValid &= FormValidator.ValidateCustomerExtensions(cusDocExtList, _errorProvider);
+
+            if (deliveryMethod.ToLower() == MagicWords.Ftp)
+            {
+                isValid &= FormValidator.ValidateCustomerFtpType(ftpTypCombo, _errorProvider);
+                isValid &= FormValidator.ValidateCustomerFtpProfile(ftpProfileCombo, _errorProvider);
+                isValid &= FormValidator.ValidateCustomerFtpHost(ftpHostTxt, _errorProvider);
+                isValid &= FormValidator.ValidateCustomerFtpUser(ftpUserNameTxt, _errorProvider);
+                isValid &= FormValidator.ValidateCustomerFtpPassword(ftpPasswordTxt, _errorProvider);
+                isValid &= FormValidator.ValidateCustomerFtpPort(ftpPortTxt, _errorProvider);
+                isValid &= FormValidator.ValidateCustomerFtpMainPath(ftpMainPathTxt, _errorProvider);
+                isValid &= FormValidator.ValidateCustomerFtpSubPath(ftpSubPathTxt, ftpMoveToSubOn, _errorProvider);
+            }
+            else
+            {
+                isValid &= FormValidator.ValidateCustomerEmail(emlAddressTxt, _errorProvider);
+                isValid &= FormValidator.ValidateCustomerEmailInboxPath(emlInboxPathTxt, _errorProvider);
+            }
+
+            return isValid;
         }
 
         private void InitalizeToolTips()
@@ -88,67 +177,6 @@ namespace DEA.UI
             _toolTipHelper.SetToolTip(btnCancel, "Close the form without saving.");
             _toolTipHelper.SetToolTip(btnReset, "Reset the form.");
             _toolTipHelper.SetToolTip(btnSave, "Save the form.");
-        }
-
-        private void BtnSave_Click(object sender, EventArgs e)
-        {
-            if (sender is not Button) return;
-
-            if (ValidateInputs())
-            {
-                // Save the customer
-                _saveCustomerData.SaveCustomerDetails(this);
-            }
-        }
-
-        private async void CheckAllitemsOnLoad()
-        {
-            await Task.Run(() =>
-            {
-                // Check all items
-                FormFunctionHelper.CheckAllItems(cusDocExtList);
-            });
-        }
-
-        private bool ValidateInputs()
-        {
-            var isValid = true;
-            var deliveryMethod = cusDelMethodCombo.SelectedItem?.ToString();
-
-            if (string.IsNullOrEmpty(deliveryMethod))
-                MessageBox.Show("Delivery method is required", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-            MessageBox.Show(cusUnameTxt.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-            // Check if the required fields are filled
-            isValid &= FormValidator.ValidateCustomerName(cusNameTxt, _errorProvider);
-            isValid &= FormValidator.ValidateCustomerUserName(cusUnameTxt, _errorProvider);
-            isValid &= FormValidator.ValidateCustomerApiToken(cusApiTokenTxt, _errorProvider);
-            isValid &= FormValidator.ValidateCustomerQueue(cusQueuTxt, _errorProvider);
-            isValid &= FormValidator.ValidateCustomerMaxBatch(cusMaxBatchTxt, _errorProvider);
-            isValid &= FormValidator.ValidateCustomerDocumentEncoding(cusDocencTxt, _errorProvider);
-            isValid &= FormValidator.ValidateCustomerDomain(cusDomainTxt, _errorProvider);
-            isValid &= FormValidator.ValidateCustomerDeliveryMethod(cusDelMethodCombo, _errorProvider);
-            isValid &= FormValidator.ValidateCustomerExtensions(cusDocExtList, _errorProvider);
-
-            if (deliveryMethod.ToLower() == MagicWords.Ftp)
-            {
-                isValid &= FormValidator.ValidateCustomerFtpType(ftpTypCombo, _errorProvider);
-                isValid &= FormValidator.ValidateCustomerFtpProfile(ftpProfileCombo, _errorProvider);
-                isValid &= FormValidator.ValidateCustomerFtpHost(ftpHostTxt, _errorProvider);
-                isValid &= FormValidator.ValidateCustomerFtpUser(ftpUserNameTxt, _errorProvider);
-                isValid &= FormValidator.ValidateCustomerFtpPassword(ftpPasswordTxt, _errorProvider);
-                isValid &= FormValidator.ValidateCustomerFtpPort(ftpPortTxt, _errorProvider);
-                isValid &= FormValidator.ValidateCustomerFtpMainPath(ftpMainPathTxt, _errorProvider);
-                isValid &= FormValidator.ValidateCustomerFtpSubPath(ftpSubPathTxt, ftpMoveToSubOn, _errorProvider);
-            }
-            else
-            {
-                isValid &= FormValidator.ValidateCustomerEmail(emlAddressTxt, _errorProvider);
-                isValid &= FormValidator.ValidateCustomerEmailInboxPath(emlInboxPathTxt, _errorProvider);
-            }
-
-            return isValid;
         }
     }
 }

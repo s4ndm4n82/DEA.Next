@@ -5,16 +5,40 @@ namespace DEA.UI;
 
 public partial class StartupForm : Form
 {
+    private readonly IServiceProvider _services;
+
     public StartupForm(IServiceProvider services)
     {
         InitializeComponent();
-        LoadForms(services);
+        _services = services;
+
+        // Check the database on load
+        Load += StartupForm_Load;
 
         // Set the Auto Size to true
         AutoSize = true;
 
         // Set the AutoSizeMode property to GrowAndShrink
         AutoSizeMode = AutoSizeMode.GrowAndShrink;
+    }
+
+    /// <summary>
+    /// Loads the forms on startup if the database exists
+    /// </summary>
+    private async void StartupForm_Load(object sender, EventArgs e)
+    {
+        var context = _services.GetRequiredService<DataContext>();
+        var databaseChecker = new HelperClasses.CheckDbConnection(context);
+        var result = await databaseChecker.CheckDataBaseExistsAsync("DeaDataBase");
+
+        if (!result)
+        {
+            Application.Exit();
+        }
+        else
+        {
+            LoadForms(_services);
+        }
     }
 
     ///

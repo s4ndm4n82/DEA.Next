@@ -1,4 +1,6 @@
-﻿namespace DEA.UI.HelperClasses
+﻿using DEA.Next.HelperClasses.OtherFunctions;
+
+namespace DEA.UI.HelperClasses
 {
     internal class FormFunctionHelper
     {
@@ -33,7 +35,86 @@
         public static void CheckAllItems(CheckedListBox checkedListBox)
         {
             // Check the first item and trigger the event handler
-            checkedListBox.SetItemChecked(0, false);
+            checkedListBox.SetItemChecked(0, true);
+        }
+
+        public static void DisableFieldsOnLoad(Control ftpDetailsGrp,
+            Control emlDetailsGrp,
+            Control ftpSubPathTxt)
+        {
+            // Disable the FTP details fields
+            foreach (Control control in ftpDetailsGrp.Controls)
+            {
+                control.Enabled = false;
+            }
+
+            // Disable the email details fields
+            foreach (Control control in emlDetailsGrp.Controls)
+            {
+                control.Enabled = false;
+            }
+
+            // Disable the FTP sub path text box
+            ftpSubPathTxt.Enabled = false;
+        }
+
+        public static void HandleDeliveryMethodChanges(ComboBox cusDelMethodCombo,
+            Control ftpDetails,
+            Control emlDetails,
+            Control ftpSubPathTxt)
+        {
+            var selectedMethod = cusDelMethodCombo.SelectedItem?.ToString();
+
+            if (string.IsNullOrWhiteSpace(selectedMethod)) return;
+
+            if (selectedMethod.Equals(MagicWords.Ftp, StringComparison.OrdinalIgnoreCase))
+            {
+                EnableFtpDetails(ftpDetails, ftpSubPathTxt);
+                DisableEmailDetails(emlDetails);
+            }
+            else if (selectedMethod.Equals(MagicWords.Email, StringComparison.OrdinalIgnoreCase))
+            {
+                EnableEmailDetails(emlDetails);
+                DisableFtpDetails(ftpDetails);
+            }
+        }
+
+        private static void EnableFtpDetails(Control ftpDetails, Control ftpSubPathTxt)
+        {
+            foreach (Control control in ftpDetails.Controls)
+            {
+                if (control != ftpSubPathTxt)
+                    control.Enabled = true;
+            }
+        }
+
+        private static void DisableFtpDetails(Control ftpDetails)
+        {
+            foreach (Control control in ftpDetails.Controls)
+            {
+                control.Enabled = false;
+            }
+        }
+
+        private static void EnableEmailDetails(Control emlDetails)
+        {
+            foreach (Control control in emlDetails.Controls)
+            {
+                control.Enabled = true;
+            }
+        }
+
+        private static void DisableEmailDetails(Control emlDetails)
+        {
+            foreach (Control control in emlDetails.Controls)
+            {
+                control.Enabled = false;
+            }
+        }
+
+        public static void HandleFtpSubPathChanges(RadioButton radioButton, TextBox textBox)
+        {
+            textBox.Enabled = radioButton.Checked;
         }
     }
 }
