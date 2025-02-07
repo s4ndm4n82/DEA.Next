@@ -1,20 +1,15 @@
-﻿using DEA.Next.FileOperations.TpsServerResponseFunctions;
-using Microsoft.Graph;
-using RestSharp;
-using System.Net;
+﻿using System.Net;
 using DEA.Next.Extensions;
+using DEA.Next.FileOperations.TpsServerResponseFunctions;
+using RestSharp;
 
 namespace DEA.Next.FileOperations.TpsFileUploadFunctions;
 
 internal class SendBodyTextToRestApi
 {
-    public static async Task<int> SendBodyTextToRestAsync(IMailFolderRequestBuilder requestBuilder,
-        string messageId,
-        string messageSubject,
-        string jsonString,
-        Guid clientId)
+    public static async Task<int> SendBodyTextToRestAsync(Guid customerId, string jsonString)
     {
-        var (mainDomain, query) = await clientId.SplitUrl();
+        var (mainDomain, query) = await customerId.SplitUrl();
 
         // Creating rest api request.
         RestClient client = new(mainDomain);
@@ -27,14 +22,12 @@ internal class SendBodyTextToRestApi
         tpsRequest.AddBody(jsonString);
 
         var serverResponse = await client.ExecuteAsync(tpsRequest); // Executes the request and send to the server.
-        
+
         if (serverResponse.StatusCode != HttpStatusCode.OK)
-        {
             return await TpsServerOnFaile.ServerOnFailBodyTextAsync(requestBuilder,
                 messageId,
                 serverResponse.Content,
                 serverResponse.StatusCode);
-        }
 
         return await TpsServerOnSuccess.ServerOnSuccessBodyTextAsync(requestBuilder,
             messageId,

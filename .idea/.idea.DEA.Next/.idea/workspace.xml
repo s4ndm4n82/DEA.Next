@@ -12,22 +12,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="33275f24-18e6-4ba3-81b4-a2ab1183ffd0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/dataSources.local.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceEmailBody.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestEmailBody.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DEA/Graph/GraphEmailActions/SendEmailBody.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsServerResponseFunctions/TpsServerOnSuccess.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsServerResponseFunctions/TpsServerOnSuccess.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Graph/GrapEmailAddressRelatedFunctions/GetRecipientEmail.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GrapEmailAddressRelatedFunctions/GetRecipientEmail.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Graph/GrapEmailAddressRelatedFunctions/GraphEmailFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GrapEmailAddressRelatedFunctions/GraphEmailFunctions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/DataContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Data/Migrations/DataContextModelSnapshot.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Data/Seed.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Data/Seed.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Entities/EmailDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Entities/EmailDetails.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsFileUploadFunctions/SendBodyTextToRestApi.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsFileUploadFunctions/SendBodyTextToRestApi.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringClasses/TpsJsonSendBodyText.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringClasses/TpsJsonSendBodyText.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestHelperClass.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestHelperClass.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Graph/GraphAttachmentRelatedActions/GraphAttachmentFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GraphAttachmentRelatedActions/GraphAttachmentFunctions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Graph/GraphAttachmentRelatedActions/GraphDownloadAttachmentFiles.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GraphAttachmentRelatedActions/GraphDownloadAttachmentFiles.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Graph/GraphEmailActions/GraphEmailActionsStart.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GraphEmailActions/GraphEmailActionsStart.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Graph/GraphHelperClasses/CreateRequestBuilderClass.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GraphHelperClasses/CreateRequestBuilderClass.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Graph/ResourceFiles/EmailMessageBodyText.Designer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/ResourceFiles/EmailMessageBodyText.Designer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Graph/ResourceFiles/EmailMessageBodyText.resx" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/ResourceFiles/EmailMessageBodyText.resx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/AppConfigReader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/ConfigFileFunctions/AppConfigReader.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/InternetLineChecker/InternetLineChecker.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/InternetLineChecker/InternetLineChecker.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/ProcessStartupFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/ProcessStartupFunctions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/HelperClasses/OtherFunctions/RunTimedFunctions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Versioning/AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Versioning/AssemblyInfo.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,6 +66,29 @@
         </option>
       </BranchesCleanupHistory>
     </option>
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="card_6" />
+                    <option name="lastUsedInstant" value="1738900202" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="card_5" />
+                    <option name="lastUsedInstant" value="1738900201" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
   </component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
@@ -108,7 +126,7 @@
     &quot;com.codeium.enabled&quot;: &quot;true&quot;,
     &quot;com.codeium.snoozedEndTime&quot;: &quot;1734605942586&quot;,
     &quot;database.data.extractors.current.export.id&quot;: &quot;JSON-Groovy.json.groovy&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;card__5&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;card__6&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -440,6 +458,8 @@
       <workItem from="1737705710249" duration="7879000" />
       <workItem from="1737965610994" duration="786000" />
       <workItem from="1737966731711" duration="1625000" />
+      <workItem from="1738899623816" duration="765000" />
+      <workItem from="1738900568086" duration="13548000" />
     </task>
     <servers />
   </component>
@@ -463,62 +483,6 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/DEA/HelperClasses/InternetLineChecker/InternetLineChecker.cs</url>
-          <line>42</line>
-          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\HelperClasses\InternetLineChecker\InternetLineChecker.cs" containingFunctionPresentation="Method 'InternetLineCheckerAsync'">
-            <startOffsets>
-              <option value="1570" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1608" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="110" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/DEA/Graph/GraphAttachmentRelatedActions/GraphDownloadAttachmentFiles.cs</url>
-          <line>63</line>
-          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\Graph\GraphAttachmentRelatedActions\GraphDownloadAttachmentFiles.cs" containingFunctionPresentation="Lambda expression inside Method 'FilterAttachments'">
-            <startOffsets>
-              <option value="2369" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2654" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="114" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/DEA/Graph/GraphAttachmentRelatedActions/GraphAttachmentFunctions.cs</url>
-          <line>102</line>
-          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\Graph\GraphAttachmentRelatedActions\GraphAttachmentFunctions.cs" containingFunctionPresentation="Method 'ProcessMessageAsync'">
-            <startOffsets>
-              <option value="3755" />
-            </startOffsets>
-            <endOffsets>
-              <option value="3865" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="115" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/DEA/Graph/GraphAttachmentRelatedActions/GraphAttachmentFunctions.cs</url>
-          <line>105</line>
-          <properties documentPath="G:\Users\S4NDM4N\Development\Repos\s4ndm4n82\DEA.Next\DEA\Graph\GraphAttachmentRelatedActions\GraphAttachmentFunctions.cs" containingFunctionPresentation="Method 'ProcessMessageAsync'">
-            <startOffsets>
-              <option value="3912" />
-            </startOffsets>
-            <endOffsets>
-              <option value="3942" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="116" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="Type#DEA.Next.FileOperations.TpsJsonStringClasses.TpsJsonLinesUploadString+Tables" memberName="Table" />

@@ -4,17 +4,24 @@ internal class TpsJsonSendBodyTextClass
 {
     public class TpsJsonSendBodyText
     {
-        public string Token { get; set; }
-        public string Username { get; set; }
-        public object TemplateKey { get; set; }
-        public string Queue { get; set; }
-        public string ProjectID { get; set; }
-        public List<Emailfieldlist> EmailFieldList { get; set; }
+        public required string Token { get; set; }
+        public required string Username { get; set; }
+        public string TemplateKey { get; set; } = string.Empty;
+        public required int Queue { get; set; }
+        public required string ProjectId { get; set; }
+        public List<FieldList> Fields { get; set; } = [];
+        public List<FileList> Files { get; set; } = [];
     }
 
-    public class Emailfieldlist
+    public class FieldList
     {
-        public string Name { get; set; }
-        public string Value { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Value { get; set; } = string.Empty;
+    }
+
+    public class FileList
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Data { get; set; } = string.Empty;
     }
 }

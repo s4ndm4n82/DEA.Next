@@ -1,4 +1,5 @@
 ﻿using DEA.Next.FileOperations.TpsFileFunctions;
+using DEA.Next.Graph.GraphEmailActions;
 using DEA.Next.Graph.GraphEmailActons;
 using DEA.Next.HelperClasses.ConfigFileFunctions;
 using FileNameCleanerClass;
@@ -98,6 +99,12 @@ internal class GraphAttachmentFunctionsClass
     {
         // Get the allowed file extensions.
         var extensions = await UserConfigRetriever.RetrieveDocumentConfigById(customerId);
+        var emailDetails = await UserConfigRetriever.RetrieveEmailConfigById(customerId);
+
+        if (emailDetails.EmailDetails != null && emailDetails.EmailDetails.SendBody)
+            await SendEmailBody.SendEmailBodyStartAsync(requestBuilder,
+                customerId,
+                message);
 
         // Filter the attachments.
         var attachmentList = GraphDownloadAttachmentFiles.FilterAttachments(message.Attachments, extensions).ToList();

@@ -108,7 +108,8 @@ public static class Seed
                             Email = customer.EmailDetails.Email,
                             EmailInboxPath = customer.EmailDetails.EmailInboxPath,
                             SendEmail = customer.EmailDetails.SendEmail,
-                            SendSubject = customer.EmailDetails.SendSubject
+                            SendSubject = customer.EmailDetails.SendSubject,
+                            SendBody = customer.EmailDetails.SendBody
                         };
 
                         // Add the EmailDetails object to the context.
