@@ -14,7 +14,6 @@ public class EmailDetails
 
     public bool SendSubject { get; init; }
 
-
     public bool SendBody { get; init; }
 
     // Navigation properties

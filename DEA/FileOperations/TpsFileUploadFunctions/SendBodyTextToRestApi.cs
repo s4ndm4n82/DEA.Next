@@ -1,13 +1,17 @@
 ﻿using System.Net;
 using DEA.Next.Extensions;
 using DEA.Next.FileOperations.TpsServerResponseFunctions;
+using Microsoft.Graph;
 using RestSharp;
 
 namespace DEA.Next.FileOperations.TpsFileUploadFunctions;
 
-internal class SendBodyTextToRestApi
+public static class SendBodyTextToRestApi
 {
-    public static async Task<int> SendBodyTextToRestAsync(Guid customerId, string jsonString)
+    public static async Task<bool> SendBodyTextToRestAsync(IMailFolderRequestBuilder requestBuilder,
+        Guid customerId,
+        Message message,
+        string jsonString)
     {
         var (mainDomain, query) = await customerId.SplitUrl();
 
@@ -25,12 +29,12 @@ internal class SendBodyTextToRestApi
 
         if (serverResponse.StatusCode != HttpStatusCode.OK)
             return await TpsServerOnFaile.ServerOnFailBodyTextAsync(requestBuilder,
-                messageId,
+                message.Id,
                 serverResponse.Content,
                 serverResponse.StatusCode);
 
         return await TpsServerOnSuccess.ServerOnSuccessBodyTextAsync(requestBuilder,
-            messageId,
-            messageSubject);
+            message.Id,
+            message.Subject);
     }
 }

@@ -1,98 +1,100 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-		<OutputType>Exe</OutputType>
-		<TargetFramework>net8.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-		<UserSecretsId>cda6a52f-8fe8-41fc-88e0-e9df3048fd95</UserSecretsId>
-		<SignAssembly>False</SignAssembly>
-		<Description>Email attachment downloader using Microsfot graph API as backend.</Description>
-		<Copyright>Digital Capture AS</Copyright>
-		<PackageProjectUrl>https://digitalcapture.no</PackageProjectUrl>
-		<Title>Download Email Attachments - DEA</Title>		
-	</PropertyGroup>
+    <PropertyGroup>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <UserSecretsId>cda6a52f-8fe8-41fc-88e0-e9df3048fd95</UserSecretsId>
+        <SignAssembly>False</SignAssembly>
+        <Description>Email attachment downloader using Microsfot graph API as backend.</Description>
+        <Copyright>Digital Capture AS</Copyright>
+        <PackageProjectUrl>https://digitalcapture.no</PackageProjectUrl>
+        <Title>Download Email Attachments - DEA</Title>
+    </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-	  <Deterministic>False</Deterministic>
-	</PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <Deterministic>False</Deterministic>
+    </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <Deterministic>False</Deterministic>
-	</PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <Deterministic>False</Deterministic>
+    </PropertyGroup>
 
-	<ItemGroup>
-	  <None Remove="Graph\GraphClientrelatedFunctions\GraphHelper.cs~RFc0edc5.TMP" />
-	</ItemGroup>
+    <ItemGroup>
+        <None Remove="Graph\GraphClientrelatedFunctions\GraphHelper.cs~RFc0edc5.TMP"/>
+    </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="FluentFTP" Version="52.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.1">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.1" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.1" />
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.1" />
-		<PackageReference Include="Microsoft.Graph" Version="4.54.0" />
-		<PackageReference Include="Microsoft.Identity.Client" Version="4.67.2" />
-		<PackageReference Include="Microsoft.VisualStudio.SlowCheetah" Version="4.0.50">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3" />
-		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
-		<PackageReference Include="Renci.SshNet.Async" Version="1.4.0" />
-		<PackageReference Include="RestSharp" Version="112.1.0" />
-		<PackageReference Include="Serilog" Version="4.2.0" />
-		<PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0" />
-		<PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
-		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
-		<PackageReference Include="SSH.NET" Version="2024.2.0" />
-		<PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.1" />
-		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.3.1" />
-		<PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
-		<PackageReference Include="TimeZoneConverter" Version="7.0.0" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="FluentFTP" Version="52.0.0"/>
+        <PackageReference Include="itext" Version="9.0.0"/>
+        <PackageReference Include="itext.bouncy-castle-adapter" Version="9.0.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.1"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.1"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.1"/>
+        <PackageReference Include="Microsoft.Graph" Version="4.54.0"/>
+        <PackageReference Include="Microsoft.Identity.Client" Version="4.67.2"/>
+        <PackageReference Include="Microsoft.VisualStudio.SlowCheetah" Version="4.0.50">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0"/>
+        <PackageReference Include="Renci.SshNet.Async" Version="1.4.0"/>
+        <PackageReference Include="RestSharp" Version="112.1.0"/>
+        <PackageReference Include="Serilog" Version="4.2.0"/>
+        <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0"/>
+        <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0"/>
+        <PackageReference Include="Serilog.Sinks.File" Version="6.0.0"/>
+        <PackageReference Include="SSH.NET" Version="2024.2.0"/>
+        <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.1"/>
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.3.1"/>
+        <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1"/>
+        <PackageReference Include="TimeZoneConverter" Version="7.0.0"/>
+    </ItemGroup>
 
-	<ItemGroup>
-	  <Compile Update="Graph\ResourceFiles\EmailMessageBodyText.Designer.cs">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>EmailMessageBodyText.resx</DependentUpon>
-	  </Compile>
-	</ItemGroup>
+    <ItemGroup>
+        <Compile Update="Graph\ResourceFiles\EmailMessageBodyText.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>EmailMessageBodyText.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
 
-	<ItemGroup>
-	  <EmbeddedResource Update="Graph\ResourceFiles\EmailMessageBodyText.resx">
-	    <Generator>ResXFileCodeGenerator</Generator>
-	    <LastGenOutput>EmailMessageBodyText.Designer.cs</LastGenOutput>
-	  </EmbeddedResource>
-	</ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Update="Graph\ResourceFiles\EmailMessageBodyText.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>EmailMessageBodyText.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+    </ItemGroup>
 
-	<ItemGroup>
-		<None Update="Config\CustomerConfig.Debug.json">
-		  <IsTransformFile>true</IsTransformFile>
-		  <DependentUpon>CustomerConfig.json</DependentUpon>
-		</None>
-		<None Update="Config\CustomerConfig.json">
-		  <TransformOnBuild>true</TransformOnBuild>
-		</None>
-		<None Update="Config\CustomerConfig.Release.json">
-		  <IsTransformFile>true</IsTransformFile>
-		  <DependentUpon>CustomerConfig.json</DependentUpon>
-		</None>
-		<None Update="Config\_appsettings.json.bkp">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Config\appsettings.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Config\_CustomerConfig.json.bkp">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>	
-	</ItemGroup>
-	
+    <ItemGroup>
+        <None Update="Config\CustomerConfig.Debug.json">
+            <IsTransformFile>true</IsTransformFile>
+            <DependentUpon>CustomerConfig.json</DependentUpon>
+        </None>
+        <None Update="Config\CustomerConfig.json">
+            <TransformOnBuild>true</TransformOnBuild>
+        </None>
+        <None Update="Config\CustomerConfig.Release.json">
+            <IsTransformFile>true</IsTransformFile>
+            <DependentUpon>CustomerConfig.json</DependentUpon>
+        </None>
+        <None Update="Config\_appsettings.json.bkp">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Config\appsettings.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Config\_CustomerConfig.json.bkp">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
 </Project>

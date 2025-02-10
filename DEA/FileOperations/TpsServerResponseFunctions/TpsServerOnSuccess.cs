@@ -182,7 +182,7 @@ internal class TpsServerOnSuccess
     /// <summary>
     ///     Sending body text to TPS server success.
     /// </summary>
-    public static async Task<int> ServerOnSuccessBodyTextAsync(IMailFolderRequestBuilder requestBuilder,
+    public static async Task<bool> ServerOnSuccessBodyTextAsync(IMailFolderRequestBuilder requestBuilder,
         string messageId,
         string messageSubject)
     {
@@ -195,20 +195,20 @@ internal class TpsServerOnSuccess
                 WriteLogClass.WriteToLog(0,
                     $"Moving email {messageSubject} to export unsuccessful ....",
                     2);
-                return 2;
+                return false;
             }
 
             WriteLogClass.WriteToLog(1,
                 $"Body text sent to system. Moved email {messageSubject} to export successfully ....",
                 2);
-            return 1;
+            return true;
         }
         catch (Exception ex)
         {
             WriteLogClass.WriteToLog(0,
                 $"Exception at ServerOnSuccessBodyTextAsync: {ex.Message}",
                 0);
-            return 2;
+            return false;
         }
     }
 }

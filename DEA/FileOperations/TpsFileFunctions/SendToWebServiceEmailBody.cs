@@ -1,6 +1,5 @@
 using DEA.Next.FileOperations.TpsJsonStringCreatorFunctions;
 using DEA.Next.Graph.GraphAttachmentRelatedActions;
-using DEA.Next.HelperClasses.ConfigFileFunctions;
 using Microsoft.Graph;
 
 namespace DEA.Next.FileOperations.TpsFileFunctions;
@@ -11,7 +10,6 @@ public static class SendToWebServiceEmailBody
         Guid customerId,
         Message message)
     {
-        var clientDetails = await UserConfigRetriever.RetrieveUserConfigById(customerId);
         var recipientEmail = await GraphDownloadAttachmentFiles.DetermineRecipientEmail(requestBuilder,
             message.Id,
             customerId);

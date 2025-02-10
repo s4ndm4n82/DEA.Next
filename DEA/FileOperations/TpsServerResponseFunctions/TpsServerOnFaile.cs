@@ -209,7 +209,7 @@ internal class TpsServerOnFaile
     /// <summary>
     ///     Handles the on fail for body text upload.
     /// </summary>
-    public static async Task<int> ServerOnFailBodyTextAsync(IMailFolderRequestBuilder requestBuilder,
+    public static async Task<bool> ServerOnFailBodyTextAsync(IMailFolderRequestBuilder requestBuilder,
         string messageId,
         string? serverResponseContent,
         HttpStatusCode serverStatusCode)
@@ -225,21 +225,21 @@ internal class TpsServerOnFaile
                 WriteLogClass.WriteToLog(0,
                     "Moving email to error folder failed ....",
                     2);
-                return 2;
+                return false;
             }
 
             WriteLogClass.WriteToLog(0,
                 $"Sending to server failed. Email moved to error folder." +
                 $"\nCode:{serverStatusCode}\nStatus:{serverResponseContent}",
                 2);
-            return 2;
+            return false;
         }
         catch (Exception ex)
         {
             WriteLogClass.WriteToLog(0,
                 $"Exception at ServerOnFailBodyTextAsync: {ex.Message}",
                 0);
-            return 2;
+            return true;
         }
     }
 }

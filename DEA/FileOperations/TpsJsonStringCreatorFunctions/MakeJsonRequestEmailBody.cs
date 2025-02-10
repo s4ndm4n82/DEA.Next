@@ -7,7 +7,7 @@ using WriteLog;
 
 namespace DEA.Next.FileOperations.TpsJsonStringCreatorFunctions;
 
-public class MakeJsonRequestEmailBody
+public static class MakeJsonRequestEmailBody
 {
     public static async Task<bool> MakeJsonRequestEmailBodyAsync(IMailFolderRequestBuilder requestBuilder,
         Guid customerId,
@@ -17,12 +17,13 @@ public class MakeJsonRequestEmailBody
         try
         {
             var clientDetails = await UserConfigRetriever.RetrieveUserConfigById(customerId);
+            var bodyText = message.Body.ContentType == BodyType.Text ? message.Body.Content : message.BodyPreview;
 
             var emailFieldList = await MakeJsonRequestHelperClass.ReturnEmailBodyFieldList(customerId,
                 recipientEmail,
-                message.Body.Content);
+                bodyText);
 
-            var emailFileList = MakeJsonRequestHelperClass.ReturnEmailBodyFileList();
+            var emailFileList = MakeJsonRequestHelperClass.ReturnEmailBodyFileList(message.Subject);
 
             TpsJsonSendBodyTextClass.TpsJsonSendBodyText tpsJsonRequest = new()
             {
@@ -34,9 +35,12 @@ public class MakeJsonRequestEmailBody
                 Files = emailFileList
             };
 
-            var jsonResult = JsonConvert.SerializeObject(tpsJsonRequest, Formatting.Indented);
+            var jsonString = JsonConvert.SerializeObject(tpsJsonRequest, Formatting.Indented);
 
-            return await SendBodyTextToRestApi.SendBodyTextToRestAsync()
+            return await SendBodyTextToRestApi.SendBodyTextToRestAsync(requestBuilder,
+                customerId,
+                message,
+                jsonString);
         }
         catch (Exception ex)
         {

@@ -12,17 +12,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="33275f24-18e6-4ba3-81b4-a2ab1183ffd0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceEmailBody.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestEmailBody.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DEA/Graph/GraphEmailActions/SendEmailBody.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DEA/HelperClasses/Pdf/CreateSamplePdf.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Data/Migrations/DataContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Data/Migrations/DataContextModelSnapshot.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/Data/Seed.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Data/Seed.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/DEA.Next.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/DEA.Next.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Entities/EmailDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Entities/EmailDetails.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceEmailBody.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceEmailBody.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsFileUploadFunctions/SendBodyTextToRestApi.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsFileUploadFunctions/SendBodyTextToRestApi.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringClasses/TpsJsonSendBodyText.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringClasses/TpsJsonSendBodyText.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestEmailBody.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestEmailBody.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestHelperClass.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestHelperClass.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsServerResponseFunctions/TpsServerOnFaile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsServerResponseFunctions/TpsServerOnFaile.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsServerResponseFunctions/TpsServerOnSuccess.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsServerResponseFunctions/TpsServerOnSuccess.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DEA/Graph/GraphAttachmentRelatedActions/GraphAttachmentFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GraphAttachmentRelatedActions/GraphAttachmentFunctions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Graph/GraphEmailActions/SendEmailBody.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GraphEmailActions/SendEmailBody.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Versioning/AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Versioning/AssemblyInfo.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,7 +148,7 @@
 }</component>
   <component name="RunManager" selected="Publish to folder.DEA.Next Publish">
     <configuration name="DEA.Next Publish" type="DotNetFolderPublish" factoryName="Publish to folder">
-      <riderPublish configuration="Release" delete_existing_files="true" platform="Any CPU" runtime="Portable" target_folder="$PROJECT_DIR$/DEA/bin/Release/net8.0/publish/FolderPublish" target_framework="net8.0" uuid_high="-7580840089019791257" uuid_low="-7026497347669342426" />
+      <riderPublish configuration="Release" platform="Any CPU" runtime="Portable" target_folder="$PROJECT_DIR$/DEA/bin/Release/net8.0/publish/FolderPublish" target_framework="net8.0" uuid_high="-7580840089019791257" uuid_low="-7026497347669342426" />
       <method v="2" />
     </configuration>
     <configuration default="true" type="DotNetFolderPublish" factoryName="Publish to folder">
@@ -460,6 +463,10 @@
       <workItem from="1737966731711" duration="1625000" />
       <workItem from="1738899623816" duration="765000" />
       <workItem from="1738900568086" duration="13548000" />
+      <workItem from="1739155347751" duration="301000" />
+      <workItem from="1739158614203" duration="6721000" />
+      <workItem from="1739168902942" duration="510000" />
+      <workItem from="1739170234225" duration="10195000" />
     </task>
     <servers />
   </component>

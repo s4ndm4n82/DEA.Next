@@ -1,23 +1,21 @@
 using DEA.Next.FileOperations.TpsFileFunctions;
-using DEA.Next.Graph.GraphAttachmentRelatedActions;
-using DEA.Next.HelperClasses.ConfigFileFunctions;
 using Microsoft.Graph;
+using WriteLog;
 
 namespace DEA.Next.Graph.GraphEmailActions;
 
 public static class SendEmailBody
 {
-    public static async Task<bool> SendEmailBodyStartAsync(IMailFolderRequestBuilder requestBuilder,
+    public static async Task<int> SendEmailBodyStartAsync(IMailFolderRequestBuilder requestBuilder,
         Guid customerId,
         Message message)
     {
-        var clientDetails = await UserConfigRetriever.RetrieveUserConfigById(customerId);
-        var recipientEmail = await GraphDownloadAttachmentFiles.DetermineRecipientEmail(requestBuilder,
-            message.Id,
-            customerId);
+        WriteLogClass.WriteToLog(1, $"Reading email body from {message.Subject} ....", 2);
 
-        return await SendToWebServiceEmailBody.SendEmailBodyStartAsync(requestBuilder,
+        var result = await SendToWebServiceEmailBody.SendEmailBodyStartAsync(requestBuilder,
             customerId,
             message);
+
+        return result ? 1 : 2;
     }
 }

@@ -101,10 +101,8 @@ internal class GraphAttachmentFunctionsClass
         var extensions = await UserConfigRetriever.RetrieveDocumentConfigById(customerId);
         var emailDetails = await UserConfigRetriever.RetrieveEmailConfigById(customerId);
 
-        if (emailDetails.EmailDetails != null && emailDetails.EmailDetails.SendBody)
-            await SendEmailBody.SendEmailBodyStartAsync(requestBuilder,
-                customerId,
-                message);
+        if (emailDetails.EmailDetails is { SendBody: true })
+            return await SendEmailBody.SendEmailBodyStartAsync(requestBuilder, customerId, message);
 
         // Filter the attachments.
         var attachmentList = GraphDownloadAttachmentFiles.FilterAttachments(message.Attachments, extensions).ToList();
