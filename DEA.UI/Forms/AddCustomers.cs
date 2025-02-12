@@ -174,6 +174,8 @@ namespace DEA.UI
             _toolTipHelper.SetToolTip(emlSenAdressOff, "Disable the sending the email address.");
             _toolTipHelper.SetToolTip(emlSndSubjectOn, "Enable the sending the email subject.");
             _toolTipHelper.SetToolTip(emlSndSubjectOff, "Disable the sending the email subject.");
+            _toolTipHelper.SetToolTip(emlSndBodyOn, "Enable the sending the email body.");
+            _toolTipHelper.SetToolTip(emlSndBodyOff, "Disable the sending the email body.");
             _toolTipHelper.SetToolTip(btnCancel, "Close the form without saving.");
             _toolTipHelper.SetToolTip(btnReset, "Reset the form.");
             _toolTipHelper.SetToolTip(btnSave, "Save the form.");

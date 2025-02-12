@@ -81,6 +81,9 @@
             form.emlSndSubjectOff.Checked = true;
             form.emlSndSubjectOff.Enabled = false;
 
+            form.emlSndBodyOff.Checked = true;
+            form.emlSndBodyOff.Enabled = false;
+
             // Reset all the listboxes
             FormFunctionHelper.CheckAllItems(form.cusDocExtList);
 

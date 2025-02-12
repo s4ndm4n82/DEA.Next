@@ -37,6 +37,7 @@ namespace DEA.UI.HelperClasses
             form.ftpRemoveOn.Checked = true;
             form.emlSenAdressOff.Checked = true;
             form.emlSndSubjectOff.Checked = true;
+            form.emlSndBodyOff.Checked = true;
         }
 
         private static void SetDefaultValuesEditCustomersList(EditCustomersList form)

@@ -62,6 +62,9 @@
             emlSndSubjectOnEdFrm = new RadioButton();
             emlSendSubjectEdFrmGrp = new GroupBox();
             emlDetailsEdFrmGrp = new GroupBox();
+            emlSendBodyGrpEdFrm = new GroupBox();
+            emlSndBodyOffEdFrm = new RadioButton();
+            emlSndBodyOnEdFrm = new RadioButton();
             ftpProfileEdFrmLbl = new Label();
             ftpTypComboEdFrm = new ComboBox();
             ftpTypeEdFrmLbl = new Label();
@@ -69,8 +72,6 @@
             cusOnEdFrm = new RadioButton();
             cusOffEdFrm = new RadioButton();
             grpBoxCustomer = new GroupBox();
-            custFtwoValEdFrmLbl = new Label();
-            custFtwoValEdFrmTxt = new TextBox();
             cusStatusEdFrmGrp = new GroupBox();
             cusDelMethodEdFrmCombo = new ComboBox();
             cusDelMethodEdFrmLbl = new Label();
@@ -105,12 +106,15 @@
             ftpRemoveFileEdFrmCombo = new GroupBox();
             ftpRemoveOnEdFrm = new RadioButton();
             ftpDetailsEdFrm = new GroupBox();
+            custFtwoValEdFrmLbl = new Label();
+            custFtwoValEdFrmTxt = new TextBox();
             ftpMoveToSubEdFrmGrp.SuspendLayout();
             ftpLoopGrpEdFrm.SuspendLayout();
             cmdBoxGrpEdFrm.SuspendLayout();
             emlSendEmailEdFrmGrp.SuspendLayout();
             emlSendSubjectEdFrmGrp.SuspendLayout();
             emlDetailsEdFrmGrp.SuspendLayout();
+            emlSendBodyGrpEdFrm.SuspendLayout();
             grpBoxCustomer.SuspendLayout();
             cusStatusEdFrmGrp.SuspendLayout();
             ftpRemoveFileEdFrmCombo.SuspendLayout();
@@ -283,7 +287,7 @@
             // 
             // btnCancelEdFrm
             // 
-            btnCancelEdFrm.Location = new Point(232, 35);
+            btnCancelEdFrm.Location = new Point(232, 21);
             btnCancelEdFrm.Name = "btnCancelEdFrm";
             btnCancelEdFrm.Size = new Size(119, 42);
             btnCancelEdFrm.TabIndex = 0;
@@ -301,7 +305,7 @@
             // 
             // btnSaveEdFrm
             // 
-            btnSaveEdFrm.Location = new Point(480, 35);
+            btnSaveEdFrm.Location = new Point(480, 21);
             btnSaveEdFrm.Name = "btnSaveEdFrm";
             btnSaveEdFrm.Size = new Size(117, 42);
             btnSaveEdFrm.TabIndex = 2;
@@ -310,7 +314,7 @@
             // 
             // btnResetEdFrm
             // 
-            btnResetEdFrm.Location = new Point(357, 35);
+            btnResetEdFrm.Location = new Point(357, 21);
             btnResetEdFrm.Name = "btnResetEdFrm";
             btnResetEdFrm.Size = new Size(117, 42);
             btnResetEdFrm.TabIndex = 1;
@@ -322,9 +326,9 @@
             cmdBoxGrpEdFrm.Controls.Add(btnSaveEdFrm);
             cmdBoxGrpEdFrm.Controls.Add(btnResetEdFrm);
             cmdBoxGrpEdFrm.Controls.Add(btnCancelEdFrm);
-            cmdBoxGrpEdFrm.Location = new Point(622, 464);
+            cmdBoxGrpEdFrm.Location = new Point(622, 487);
             cmdBoxGrpEdFrm.Name = "cmdBoxGrpEdFrm";
-            cmdBoxGrpEdFrm.Size = new Size(608, 100);
+            cmdBoxGrpEdFrm.Size = new Size(608, 77);
             cmdBoxGrpEdFrm.TabIndex = 13;
             cmdBoxGrpEdFrm.TabStop = false;
             // 
@@ -386,7 +390,7 @@
             // 
             emlSendEmailEdFrmGrp.Controls.Add(emlSenAdressOffEdFrm);
             emlSendEmailEdFrmGrp.Controls.Add(emlSenAdressOnEdFrm);
-            emlSendEmailEdFrmGrp.Location = new Point(317, 19);
+            emlSendEmailEdFrmGrp.Location = new Point(317, 13);
             emlSendEmailEdFrmGrp.Name = "emlSendEmailEdFrmGrp";
             emlSendEmailEdFrmGrp.Size = new Size(203, 48);
             emlSendEmailEdFrmGrp.TabIndex = 4;
@@ -419,7 +423,7 @@
             // 
             emlSendSubjectEdFrmGrp.Controls.Add(emlSndSubjectOffEdFrm);
             emlSendSubjectEdFrmGrp.Controls.Add(emlSndSubjectOnEdFrm);
-            emlSendSubjectEdFrmGrp.Location = new Point(317, 73);
+            emlSendSubjectEdFrmGrp.Location = new Point(317, 63);
             emlSendSubjectEdFrmGrp.Name = "emlSendSubjectEdFrmGrp";
             emlSendSubjectEdFrmGrp.Size = new Size(203, 48);
             emlSendSubjectEdFrmGrp.TabIndex = 5;
@@ -428,6 +432,7 @@
             // 
             // emlDetailsEdFrmGrp
             // 
+            emlDetailsEdFrmGrp.Controls.Add(emlSendBodyGrpEdFrm);
             emlDetailsEdFrmGrp.Controls.Add(emlSendSubjectEdFrmGrp);
             emlDetailsEdFrmGrp.Controls.Add(emlSendEmailEdFrmGrp);
             emlDetailsEdFrmGrp.Controls.Add(emlInboxPathEdFrmTxt);
@@ -436,10 +441,43 @@
             emlDetailsEdFrmGrp.Controls.Add(emlEmailEdFrmLbl);
             emlDetailsEdFrmGrp.Location = new Point(622, 311);
             emlDetailsEdFrmGrp.Name = "emlDetailsEdFrmGrp";
-            emlDetailsEdFrmGrp.Size = new Size(608, 148);
+            emlDetailsEdFrmGrp.Size = new Size(608, 170);
             emlDetailsEdFrmGrp.TabIndex = 12;
             emlDetailsEdFrmGrp.TabStop = false;
             emlDetailsEdFrmGrp.Text = "Email Details";
+            // 
+            // emlSendBodyGrpEdFrm
+            // 
+            emlSendBodyGrpEdFrm.Controls.Add(emlSndBodyOffEdFrm);
+            emlSendBodyGrpEdFrm.Controls.Add(emlSndBodyOnEdFrm);
+            emlSendBodyGrpEdFrm.Location = new Point(317, 114);
+            emlSendBodyGrpEdFrm.Name = "emlSendBodyGrpEdFrm";
+            emlSendBodyGrpEdFrm.Size = new Size(203, 48);
+            emlSendBodyGrpEdFrm.TabIndex = 57;
+            emlSendBodyGrpEdFrm.TabStop = false;
+            emlSendBodyGrpEdFrm.Text = "Email Send Body:";
+            // 
+            // emlSndBodyOffEdFrm
+            // 
+            emlSndBodyOffEdFrm.AutoSize = true;
+            emlSndBodyOffEdFrm.Location = new Point(79, 18);
+            emlSndBodyOffEdFrm.Name = "emlSndBodyOffEdFrm";
+            emlSndBodyOffEdFrm.Size = new Size(70, 19);
+            emlSndBodyOffEdFrm.TabIndex = 42;
+            emlSndBodyOffEdFrm.TabStop = true;
+            emlSndBodyOffEdFrm.Text = "Disabled";
+            emlSndBodyOffEdFrm.UseVisualStyleBackColor = true;
+            // 
+            // emlSndBodyOnEdFrm
+            // 
+            emlSndBodyOnEdFrm.AutoSize = true;
+            emlSndBodyOnEdFrm.Location = new Point(6, 18);
+            emlSndBodyOnEdFrm.Name = "emlSndBodyOnEdFrm";
+            emlSndBodyOnEdFrm.Size = new Size(67, 19);
+            emlSndBodyOnEdFrm.TabIndex = 40;
+            emlSndBodyOnEdFrm.TabStop = true;
+            emlSndBodyOnEdFrm.Text = "Enabled";
+            emlSndBodyOnEdFrm.UseVisualStyleBackColor = true;
             // 
             // ftpProfileEdFrmLbl
             // 
@@ -504,8 +542,8 @@
             // 
             // grpBoxCustomer
             // 
-            grpBoxCustomer.Controls.Add(custFtwoValEdFrmLbl);
             grpBoxCustomer.Controls.Add(custFtwoValEdFrmTxt);
+            grpBoxCustomer.Controls.Add(custFtwoValEdFrmLbl);
             grpBoxCustomer.Controls.Add(cusStatusEdFrmGrp);
             grpBoxCustomer.Controls.Add(cusDelMethodEdFrmCombo);
             grpBoxCustomer.Controls.Add(cusDelMethodEdFrmLbl);
@@ -543,21 +581,6 @@
             grpBoxCustomer.TabIndex = 10;
             grpBoxCustomer.TabStop = false;
             grpBoxCustomer.Text = "Customer Details";
-            // 
-            // custFtwoValEdFrmLbl
-            // 
-            custFtwoValEdFrmLbl.Location = new Point(315, 172);
-            custFtwoValEdFrmLbl.Name = "custFtwoValEdFrmLbl";
-            custFtwoValEdFrmLbl.Size = new Size(280, 23);
-            custFtwoValEdFrmLbl.TabIndex = 34;
-            // 
-            // custFtwoValEdFrmTxt
-            // 
-            custFtwoValEdFrmTxt.Location = new Point(315, 154);
-            custFtwoValEdFrmTxt.Name = "custFtwoValEdFrmTxt";
-            custFtwoValEdFrmTxt.Size = new Size(145, 23);
-            custFtwoValEdFrmTxt.TabIndex = 33;
-            custFtwoValEdFrmTxt.Text = "Customer Field Two Value:";
             // 
             // cusStatusEdFrmGrp
             // 
@@ -608,10 +631,10 @@
             // cusDocExtListEdFrm
             // 
             cusDocExtListEdFrm.FormattingEnabled = true;
-            cusDocExtListEdFrm.Items.AddRange(new object[] { "Select All", "Pdf", "Jpg", "Jpeg", "Tif", "Tiff", "Csv" });
+            cusDocExtListEdFrm.Items.AddRange(new object[] { "Select All", "pdf", "jpg", "jpeg", "tif", "tiff", "csv", "xls", "xlsx" });
             cusDocExtListEdFrm.Location = new Point(315, 304);
             cusDocExtListEdFrm.Name = "cusDocExtListEdFrm";
-            cusDocExtListEdFrm.Size = new Size(179, 130);
+            cusDocExtListEdFrm.Size = new Size(179, 166);
             cusDocExtListEdFrm.TabIndex = 28;
             // 
             // cusDocExtensionsEdFrmLbl
@@ -677,7 +700,6 @@
             cusDocencEdFrmTxt.Name = "cusDocencEdFrmTxt";
             cusDocencEdFrmTxt.Size = new Size(123, 23);
             cusDocencEdFrmTxt.TabIndex = 20;
-            cusDocencEdFrmTxt.Text = "UTF-8";
             // 
             // cusDocEncoEdFrmLbl
             // 
@@ -694,7 +716,6 @@
             cusMaxBatchEdFrmTxt.Name = "cusMaxBatchEdFrmTxt";
             cusMaxBatchEdFrmTxt.Size = new Size(123, 23);
             cusMaxBatchEdFrmTxt.TabIndex = 18;
-            cusMaxBatchEdFrmTxt.Text = "1";
             // 
             // cusMaxBatchEdFrmLbl
             // 
@@ -869,6 +890,22 @@
             ftpDetailsEdFrm.TabStop = false;
             ftpDetailsEdFrm.Text = "Ftp Details";
             // 
+            // custFtwoValEdFrmLbl
+            // 
+            custFtwoValEdFrmLbl.AutoSize = true;
+            custFtwoValEdFrmLbl.Location = new Point(315, 154);
+            custFtwoValEdFrmLbl.Name = "custFtwoValEdFrmLbl";
+            custFtwoValEdFrmLbl.Size = new Size(149, 15);
+            custFtwoValEdFrmLbl.TabIndex = 35;
+            custFtwoValEdFrmLbl.Text = "Customer Field Two Name:";
+            // 
+            // custFtwoValEdFrmTxt
+            // 
+            custFtwoValEdFrmTxt.Location = new Point(315, 172);
+            custFtwoValEdFrmTxt.Name = "custFtwoValEdFrmTxt";
+            custFtwoValEdFrmTxt.Size = new Size(280, 23);
+            custFtwoValEdFrmTxt.TabIndex = 36;
+            // 
             // EditCustomerForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -879,6 +916,7 @@
             Controls.Add(emlDetailsEdFrmGrp);
             Controls.Add(grpBoxCustomer);
             Controls.Add(ftpDetailsEdFrm);
+            MaximizeBox = false;
             Name = "EditCustomerForm";
             Text = "Edit Customer Form";
             ftpMoveToSubEdFrmGrp.ResumeLayout(false);
@@ -892,6 +930,8 @@
             emlSendSubjectEdFrmGrp.PerformLayout();
             emlDetailsEdFrmGrp.ResumeLayout(false);
             emlDetailsEdFrmGrp.PerformLayout();
+            emlSendBodyGrpEdFrm.ResumeLayout(false);
+            emlSendBodyGrpEdFrm.PerformLayout();
             grpBoxCustomer.ResumeLayout(false);
             grpBoxCustomer.PerformLayout();
             cusStatusEdFrmGrp.ResumeLayout(false);
@@ -947,7 +987,6 @@
         public RadioButton cusOffEdFrm;
         public GroupBox grpBoxCustomer;
         public TextBox custFtwoValEdFrmTxt;
-        public Label custFtwoValEdFrmLbl;
         public GroupBox cusStatusEdFrmGrp;
         public ComboBox cusDelMethodEdFrmCombo;
         public Label cusDelMethodEdFrmLbl;
@@ -982,5 +1021,9 @@
         public GroupBox ftpRemoveFileEdFrmCombo;
         public RadioButton ftpRemoveOnEdFrm;
         public GroupBox ftpDetailsEdFrm;
+        public GroupBox emlSendBodyGrpEdFrm;
+        public RadioButton emlSndBodyOffEdFrm;
+        public RadioButton emlSndBodyOnEdFrm;
+        private Label custFtwoValEdFrmLbl;
     }
 }

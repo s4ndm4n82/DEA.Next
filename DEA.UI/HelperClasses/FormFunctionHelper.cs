@@ -116,5 +116,25 @@ namespace DEA.UI.HelperClasses
         {
             textBox.Enabled = radioButton.Checked;
         }
+
+        public static void ToggleDetailsFields(Control ftpDetails,
+            Control emlDetails,
+            string fileDeliveryMethod)
+        {
+            var isFtp = fileDeliveryMethod.Equals(MagicWords.Ftp, StringComparison.OrdinalIgnoreCase);
+            var isEmail = fileDeliveryMethod.Equals(MagicWords.Email, StringComparison.OrdinalIgnoreCase);
+
+            // Toggle the FTP details fields
+            foreach (Control control in ftpDetails.Controls)
+            {
+                control.Enabled = isFtp;
+            }
+
+            // Toggle the email details fields
+            foreach (Control control in emlDetails.Controls)
+            {
+                control.Enabled = isEmail;
+            }
+        }
     }
 }

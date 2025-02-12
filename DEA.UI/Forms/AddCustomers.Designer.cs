@@ -91,6 +91,9 @@
             ftpTypCombo = new ComboBox();
             ftpTypeLbl = new Label();
             emlDetailsGrp = new GroupBox();
+            emlSendBodyGrp = new GroupBox();
+            emlSndBodyOff = new RadioButton();
+            emlSndBodyOn = new RadioButton();
             emlSendSubjectGrp = new GroupBox();
             emlSndSubjectOff = new RadioButton();
             emlSndSubjectOn = new RadioButton();
@@ -112,6 +115,7 @@
             ftpMoveToSubGrp.SuspendLayout();
             ftpLoopGrp.SuspendLayout();
             emlDetailsGrp.SuspendLayout();
+            emlSendBodyGrp.SuspendLayout();
             emlSendSubjectGrp.SuspendLayout();
             emlSendEmailGrp.SuspendLayout();
             cmdBoxGrp.SuspendLayout();
@@ -271,10 +275,10 @@
             // cusDocExtList
             // 
             cusDocExtList.FormattingEnabled = true;
-            cusDocExtList.Items.AddRange(new object[] { "Select All", "Pdf", "Jpg", "Jpeg", "Tif", "Tiff", "Csv" });
+            cusDocExtList.Items.AddRange(new object[] { "Select All", "pdf", "jpg", "jpeg", "tif", "tiff", "csv", "xls", "xlsx" });
             cusDocExtList.Location = new Point(315, 304);
             cusDocExtList.Name = "cusDocExtList";
-            cusDocExtList.Size = new Size(179, 130);
+            cusDocExtList.Size = new Size(179, 166);
             cusDocExtList.TabIndex = 19;
             // 
             // cusDocExtensionsLbl
@@ -721,6 +725,7 @@
             // 
             // emlDetailsGrp
             // 
+            emlDetailsGrp.Controls.Add(emlSendBodyGrp);
             emlDetailsGrp.Controls.Add(emlSendSubjectGrp);
             emlDetailsGrp.Controls.Add(emlSendEmailGrp);
             emlDetailsGrp.Controls.Add(emlInboxPathTxt);
@@ -729,16 +734,49 @@
             emlDetailsGrp.Controls.Add(emlEmailLbl);
             emlDetailsGrp.Location = new Point(621, 311);
             emlDetailsGrp.Name = "emlDetailsGrp";
-            emlDetailsGrp.Size = new Size(608, 148);
+            emlDetailsGrp.Size = new Size(608, 170);
             emlDetailsGrp.TabIndex = 46;
             emlDetailsGrp.TabStop = false;
             emlDetailsGrp.Text = "Email Details";
+            // 
+            // emlSendBodyGrp
+            // 
+            emlSendBodyGrp.Controls.Add(emlSndBodyOff);
+            emlSendBodyGrp.Controls.Add(emlSndBodyOn);
+            emlSendBodyGrp.Location = new Point(317, 114);
+            emlSendBodyGrp.Name = "emlSendBodyGrp";
+            emlSendBodyGrp.Size = new Size(203, 48);
+            emlSendBodyGrp.TabIndex = 56;
+            emlSendBodyGrp.TabStop = false;
+            emlSendBodyGrp.Text = "Email Send Body:";
+            // 
+            // emlSndBodyOff
+            // 
+            emlSndBodyOff.AutoSize = true;
+            emlSndBodyOff.Location = new Point(79, 18);
+            emlSndBodyOff.Name = "emlSndBodyOff";
+            emlSndBodyOff.Size = new Size(70, 19);
+            emlSndBodyOff.TabIndex = 42;
+            emlSndBodyOff.TabStop = true;
+            emlSndBodyOff.Text = "Disabled";
+            emlSndBodyOff.UseVisualStyleBackColor = true;
+            // 
+            // emlSndBodyOn
+            // 
+            emlSndBodyOn.AutoSize = true;
+            emlSndBodyOn.Location = new Point(6, 18);
+            emlSndBodyOn.Name = "emlSndBodyOn";
+            emlSndBodyOn.Size = new Size(67, 19);
+            emlSndBodyOn.TabIndex = 40;
+            emlSndBodyOn.TabStop = true;
+            emlSndBodyOn.Text = "Enabled";
+            emlSndBodyOn.UseVisualStyleBackColor = true;
             // 
             // emlSendSubjectGrp
             // 
             emlSendSubjectGrp.Controls.Add(emlSndSubjectOff);
             emlSendSubjectGrp.Controls.Add(emlSndSubjectOn);
-            emlSendSubjectGrp.Location = new Point(317, 73);
+            emlSendSubjectGrp.Location = new Point(317, 63);
             emlSendSubjectGrp.Name = "emlSendSubjectGrp";
             emlSendSubjectGrp.Size = new Size(203, 48);
             emlSendSubjectGrp.TabIndex = 55;
@@ -771,7 +809,7 @@
             // 
             emlSendEmailGrp.Controls.Add(emlSenAdressOff);
             emlSendEmailGrp.Controls.Add(emlSenAdressOn);
-            emlSendEmailGrp.Location = new Point(317, 19);
+            emlSendEmailGrp.Location = new Point(317, 12);
             emlSendEmailGrp.Name = "emlSendEmailGrp";
             emlSendEmailGrp.Size = new Size(203, 48);
             emlSendEmailGrp.TabIndex = 54;
@@ -837,36 +875,36 @@
             cmdBoxGrp.Controls.Add(btnSave);
             cmdBoxGrp.Controls.Add(btnReset);
             cmdBoxGrp.Controls.Add(btnCancel);
-            cmdBoxGrp.Location = new Point(621, 464);
+            cmdBoxGrp.Location = new Point(621, 487);
             cmdBoxGrp.Name = "cmdBoxGrp";
-            cmdBoxGrp.Size = new Size(608, 100);
+            cmdBoxGrp.Size = new Size(608, 77);
             cmdBoxGrp.TabIndex = 47;
             cmdBoxGrp.TabStop = false;
             // 
             // btnSave
             // 
-            btnSave.Location = new Point(480, 35);
+            btnSave.Location = new Point(480, 22);
             btnSave.Name = "btnSave";
             btnSave.Size = new Size(117, 42);
-            btnSave.TabIndex = 40;
+            btnSave.TabIndex = 43;
             btnSave.Text = "Save";
             btnSave.UseVisualStyleBackColor = true;
             // 
             // btnReset
             // 
-            btnReset.Location = new Point(357, 35);
+            btnReset.Location = new Point(357, 22);
             btnReset.Name = "btnReset";
             btnReset.Size = new Size(117, 42);
-            btnReset.TabIndex = 41;
+            btnReset.TabIndex = 44;
             btnReset.Text = "Reset";
             btnReset.UseVisualStyleBackColor = true;
             // 
             // btnCancel
             // 
-            btnCancel.Location = new Point(232, 35);
+            btnCancel.Location = new Point(232, 23);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(119, 42);
-            btnCancel.TabIndex = 43;
+            btnCancel.TabIndex = 45;
             btnCancel.Text = "Cancel";
             btnCancel.UseVisualStyleBackColor = true;
             // 
@@ -896,6 +934,8 @@
             ftpLoopGrp.PerformLayout();
             emlDetailsGrp.ResumeLayout(false);
             emlDetailsGrp.PerformLayout();
+            emlSendBodyGrp.ResumeLayout(false);
+            emlSendBodyGrp.PerformLayout();
             emlSendSubjectGrp.ResumeLayout(false);
             emlSendSubjectGrp.PerformLayout();
             emlSendEmailGrp.ResumeLayout(false);
@@ -982,5 +1022,8 @@
         public ComboBox ftpProfileCombo;
         public TextBox custFtwoValTxt;
         public Label cusFtwoValLbl;
+        public GroupBox emlSendBodyGrp;
+        public RadioButton emlSndBodyOn;
+        public RadioButton emlSndBodyOff;
     }
 }

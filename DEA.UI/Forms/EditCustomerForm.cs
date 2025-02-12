@@ -1,5 +1,7 @@
 ﻿using DEA.Next.Data;
+using DEA.Next.Entities;
 using DEA.UI.HelperClasses;
+using Microsoft.EntityFrameworkCore;
 
 namespace DEA.UI.Forms
 {
@@ -8,8 +10,10 @@ namespace DEA.UI.Forms
         private readonly DataContext _conttext;
         private readonly ToolTipHelper _toolTipHelper;
         private readonly DefaultValueSetter _defaultValueSetter;
+        private readonly UpdateCustomerDetails _updateCustomerDetails;
+        private CustomerDetails _customerDetails;
 
-        public EditCustomerForm(DataContext context)
+        public EditCustomerForm(DataContext context, Guid customerId)
         {
             InitializeComponent();
 
@@ -17,6 +21,10 @@ namespace DEA.UI.Forms
             _conttext = context;
             _toolTipHelper = new ToolTipHelper();
             _defaultValueSetter = new DefaultValueSetter();
+            _updateCustomerDetails = new UpdateCustomerDetails(context);
+
+            // Load the customer details
+            LoadCustomerData(customerId);
 
             // Initialize the controls
             InitializeControls();
@@ -27,8 +35,52 @@ namespace DEA.UI.Forms
             // Set the default values
             DefaultValueSetter.SetDefaultValues(this);
 
+            // Set diabled fields on load
+            cusStatusEdFrmGrp.Enabled = false;
+
             // Initializing tool tips
             InitalizeToolTips();
+
+            // Register the SelectedIndexChanged event for the delivery method combo box
+            cusDelMethodEdFrmCombo.SelectedIndexChanged += CusDelMethodEdFrmCombo_SelectedIndexChanged;
+
+            // Register the CheckedChanged event for the save button
+            btnSaveEdFrm.Click += btnSaveEdFrm_CheckedChanged;
+        }
+
+        private void LoadCustomerData(Guid customerId)
+        {
+            // Load the customer details along with the related entities
+            _customerDetails = _conttext.CustomerDetails
+                .Include(cd => cd.FtpDetails)
+                .Include(cd => cd.EmailDetails)
+                .Include(cd => cd.DocumentDetails)
+                .FirstOrDefault(cd => cd.Id == customerId)
+                ?? throw new InvalidOperationException("Customer not found.");
+
+            if (_customerDetails != null)
+            {
+                // Bind the customer details to the form
+                BindDataToForms.BindEditCustomerFormData(this, _customerDetails);
+                FormFunctionHelper.ToggleDetailsFields(ftpDetailsEdFrm,
+                    emlDetailsEdFrmGrp,
+                    _customerDetails.FileDeliveryMethod);
+            }
+        }
+
+        private void CusDelMethodEdFrmCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cusDelMethodEdFrmCombo.SelectedItem is string selectedMethod)
+            {
+                FormFunctionHelper.ToggleDetailsFields(ftpDetailsEdFrm,
+                    emlDetailsEdFrmGrp,
+                    selectedMethod);
+            }
+        }
+
+        private void btnSaveEdFrm_CheckedChanged(object sender, EventArgs e)
+        {
+            _updateCustomerDetails.UpdateCustomerData(this, _customerDetails);
         }
 
         private void InitalizeToolTips()
@@ -71,6 +123,8 @@ namespace DEA.UI.Forms
             _toolTipHelper.SetToolTip(emlSenAdressOffEdFrm, "Disable the sending the email address.");
             _toolTipHelper.SetToolTip(emlSndSubjectOnEdFrm, "Enable the sending the email subject.");
             _toolTipHelper.SetToolTip(emlSndSubjectOffEdFrm, "Disable the sending the email subject.");
+            _toolTipHelper.SetToolTip(emlSndBodyOnEdFrm, "Enable the sending the email body.");
+            _toolTipHelper.SetToolTip(emlSndBodyOffEdFrm, "Disable the sending the email body.");
             _toolTipHelper.SetToolTip(btnCancelEdFrm, "Close the form without saving.");
             _toolTipHelper.SetToolTip(btnResetEdFrm, "Reset the form.");
             _toolTipHelper.SetToolTip(btnSaveEdFrm, "Save the form.");

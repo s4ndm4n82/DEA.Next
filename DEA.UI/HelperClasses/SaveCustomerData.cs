@@ -78,6 +78,7 @@ namespace DEA.UI.HelperClasses
                             EmailInboxPath = form.emlInboxPathTxt.Text.Trim(),
                             SendEmail = form.emlSenAdressOn.Checked,
                             SendSubject = form.emlSndSubjectOn.Checked,
+                            SendBody = form.emlSndBodyOn.Checked,
                             CustomerDetailsId = cusId
                         };
 
