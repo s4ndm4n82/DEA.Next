@@ -45,7 +45,7 @@ namespace DEA.UI.Forms
             cusDelMethodEdFrmCombo.SelectedIndexChanged += CusDelMethodEdFrmCombo_SelectedIndexChanged;
 
             // Register the CheckedChanged event for the save button
-            btnSaveEdFrm.Click += btnSaveEdFrm_CheckedChanged;
+            btnSaveEdFrm.Click += BtnSaveEdFrm_CheckedChanged;
         }
 
         private void LoadCustomerData(Guid customerId)
@@ -78,9 +78,15 @@ namespace DEA.UI.Forms
             }
         }
 
-        private void btnSaveEdFrm_CheckedChanged(object sender, EventArgs e)
+        private void BtnSaveEdFrm_CheckedChanged(object sender, EventArgs e)
         {
-            _updateCustomerDetails.UpdateCustomerData(this, _customerDetails);
+            var result = _updateCustomerDetails.UpdateCustomerData(this, _customerDetails);
+
+            if (result)
+            {
+                // Close the form
+                this.Close();
+            }
         }
 
         private void InitalizeToolTips()
