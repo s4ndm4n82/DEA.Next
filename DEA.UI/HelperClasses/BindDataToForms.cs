@@ -8,7 +8,15 @@ namespace DEA.UI.HelperClasses
         public static void BindEditCustomerFormData(EditCustomerForm form, CustomerDetails customerDetails)
         {
             // Bind customer details
-            form.cusOnEdFrm.Checked = customerDetails.Status;
+            if (customerDetails.Status)
+            {
+                form.cusOnEdFrm.Checked = true;
+            }
+            else
+            {
+                form.cusOffEdFrm.Checked = true;
+            }
+
             form.cusNameEdFrmTxt.Text = customerDetails.CustomerName;
             form.cusUnameEdFrmTxt.Text = customerDetails.UserName;
             form.cusApiTokenEdFrmTxt.Text = customerDetails.Token;
@@ -66,10 +74,39 @@ namespace DEA.UI.HelperClasses
                 form.ftpPasswordEdFrmTxt.Text = ftpDetails.FtpPassword;
                 form.ftpPortEdFrmTxt.Text = ftpDetails.FtpPort.ToString();
                 form.ftpMainPathEdFrmTxt.Text = ftpDetails.FtpMainFolder;
-                form.ftpLoopOnEdFrm.Checked = ftpDetails.FtpFolderLoop;
-                form.ftpMoveToSubOnEdFrm.Checked = ftpDetails.FtpMoveToSubFolder;
+
+                if (ftpDetails.FtpFolderLoop)
+                {
+                    form.ftpLoopOnEdFrm.Checked = true;
+                }
+                else
+                {
+                    form.ftpLoopOffEdFrm.Checked = true;
+                }
+
+                var result = ftpDetails.FtpMoveToSubFolder;
+
+                if (ftpDetails.FtpMoveToSubFolder)
+                {
+                    form.ftpMoveToSubOnEdFrm.Checked = true;
+                }
+                else
+                {
+                    form.ftpMoveToSubOffEdFrm.Checked = true;
+                }
+                // Enable the sub folder text box
+                form.ftpSubPathEdFrmTxt.Enabled = result;
+
                 form.ftpSubPathEdFrmTxt.Text = ftpDetails.FtpSubFolder;
-                form.ftpRemoveOnEdFrm.Checked = ftpDetails.FtpRemoveFiles;
+
+                if (ftpDetails.FtpRemoveFiles)
+                {
+                    form.ftpRemoveOnEdFrm.Checked = true;
+                }
+                else
+                {
+                    form.ftpRemoveOffEdFrm.Checked = true;
+                }
             }
 
             // Bind email details
@@ -78,9 +115,34 @@ namespace DEA.UI.HelperClasses
                 var emailDetails = customerDetails.EmailDetails;
                 form.emlAddressEdFrmTxt.Text = emailDetails.Email;
                 form.emlInboxPathEdFrmTxt.Text = emailDetails.EmailInboxPath;
-                form.emlSenAdressOnEdFrm.Checked = emailDetails.SendEmail;
-                form.emlSndSubjectOnEdFrm.Checked = emailDetails.SendSubject;
-                form.emlSndBodyOnEdFrm.Checked = emailDetails.SendBody;
+                form.ftpSubPathEdFrmTxt.Enabled = false;
+
+                if (emailDetails.SendEmail)
+                {
+                    form.emlSenAdressOnEdFrm.Checked = true;
+                }
+                else
+                {
+                    form.emlSenAdressOffEdFrm.Checked = true;
+                }
+
+                if (emailDetails.SendEmail)
+                {
+                    form.emlSndSubjectOnEdFrm.Checked = true;
+                }
+                else
+                {
+                    form.emlSndSubjectOffEdFrm.Checked = true;
+                }
+
+                if (emailDetails.SendBody)
+                {
+                    form.emlSndBodyOnEdFrm.Checked = true;
+                }
+                else
+                {
+                    form.emlSndBodyOffEdFrm.Checked = true;
+                }
             }
         }
     }

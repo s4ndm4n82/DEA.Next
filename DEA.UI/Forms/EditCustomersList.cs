@@ -40,9 +40,12 @@ namespace DEA.UI
 
             // Load the customer data
             LoadCustomerData();
+
+            // Register the click event for the reset button
+            btnEditCustomerSearch.Click += BtnEditCustomerSearch_Click;
         }
 
-        private void LoadCustomerData()
+        public void LoadCustomerData()
         {
             // Get the customers
             var customers = GetCustomers();
@@ -90,7 +93,7 @@ namespace DEA.UI
                 var customerId = (Guid)selectedRow.Cells["Id"].Value;
 
                 // Open the edit customer form
-                var editCustomerForm = new EditCustomerForm(_conttext, customerId);
+                var editCustomerForm = new EditCustomerForm(_conttext, customerId, this);
                 editCustomerForm.ShowDialog();
             }
         }
@@ -110,35 +113,9 @@ namespace DEA.UI
                 var customer = _conttext.CustomerDetails.Find(customerId);
                 if (customer != null)
                 {
-                    // Create a new customer object with updated status
-                    var updatedCustomer = new CustomerDetails
-                    {
-                        Id = customer.Id,
-                        Status = newStatus,
-                        CustomerName = customer.CustomerName,
-                        UserName = customer.UserName,
-                        Token = customer.Token,
-                        Queue = customer.Queue,
-                        ProjectId = customer.ProjectId,
-                        TemplateKey = customer.TemplateKey,
-                        DocumentId = customer.DocumentId,
-                        DocumentEncoding = customer.DocumentEncoding,
-                        MaxBatchSize = customer.MaxBatchSize,
-                        FieldOneValue = customer.FieldOneValue,
-                        FieldOneName = customer.FieldOneName,
-                        FieldTwoValue = customer.FieldTwoValue,
-                        FieldTwoName = customer.FieldTwoName,
-                        Domain = customer.Domain,
-                        FileDeliveryMethod = customer.FileDeliveryMethod,
-                        DocumentDetails = customer.DocumentDetails,
-                        FtpDetails = customer.FtpDetails,
-                        EmailDetails = customer.EmailDetails,
-                        CreatedDate = customer.CreatedDate,
-                        ModifiedDate = customer.ModifiedDate
-                    };
+                    customer.Status = newStatus;
+                    customer.ModifiedDate = DateTime.UtcNow;
 
-                    // Update the customer in the context
-                    _conttext.Entry(customer).CurrentValues.SetValues(updatedCustomer);
                     var result = _conttext.SaveChanges();
 
                     if (result > 0)
@@ -151,6 +128,27 @@ namespace DEA.UI
                     }
                 }
             }
+        }
+
+        private void BtnEditCustomerSearch_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                SearchCustomers();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void SearchCustomers()
+        {
+            // Get the search text
+            var searchText = cusEditSearchTxt.Text.Trim();
+            var searchType = searchCusId.Checked ? "Id" :
+                searchProjectId.Checked ? "ProjectId" :
+                searchCusName.Checked ? "CustomerName" : string.Empty;
         }
 
         private void InitalizeToolTips()

@@ -119,6 +119,7 @@ namespace DEA.UI.HelperClasses
 
         public static void ToggleDetailsFields(Control ftpDetails,
             Control emlDetails,
+            Control ftpSubPathTxt,
             string fileDeliveryMethod)
         {
             var isFtp = fileDeliveryMethod.Equals(MagicWords.Ftp, StringComparison.OrdinalIgnoreCase);
@@ -127,7 +128,8 @@ namespace DEA.UI.HelperClasses
             // Toggle the FTP details fields
             foreach (Control control in ftpDetails.Controls)
             {
-                control.Enabled = isFtp;
+                if (control != ftpSubPathTxt)
+                    control.Enabled = isFtp;
             }
 
             // Toggle the email details fields

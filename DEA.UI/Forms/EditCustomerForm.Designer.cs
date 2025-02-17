@@ -122,8 +122,7 @@
             SuspendLayout();
             // 
             // ftpSubPathEdFrmTxt
-            // 
-            ftpSubPathEdFrmTxt.Enabled = false;
+            //
             ftpSubPathEdFrmTxt.Location = new Point(317, 202);
             ftpSubPathEdFrmTxt.Name = "ftpSubPathEdFrmTxt";
             ftpSubPathEdFrmTxt.Size = new Size(280, 23);

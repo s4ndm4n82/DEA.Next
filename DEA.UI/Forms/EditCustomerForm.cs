@@ -11,16 +11,22 @@ namespace DEA.UI.Forms
         private readonly ToolTipHelper _toolTipHelper;
         private readonly DefaultValueSetter _defaultValueSetter;
         private readonly UpdateCustomerDetails _updateCustomerDetails;
+        private readonly FormFunctionHelper _formFunctionHelper;
+        private readonly EditCustomersList _editCustomersList;
+        private readonly Guid _customerId;
         private CustomerDetails _customerDetails;
 
-        public EditCustomerForm(DataContext context, Guid customerId)
+        public EditCustomerForm(DataContext context, Guid customerId, EditCustomersList editCustomersList)
         {
             InitializeComponent();
 
             // Initializing the context
             _conttext = context;
+            _customerId = customerId;
+            _editCustomersList = editCustomersList;
             _toolTipHelper = new ToolTipHelper();
             _defaultValueSetter = new DefaultValueSetter();
+            _formFunctionHelper = new FormFunctionHelper();
             _updateCustomerDetails = new UpdateCustomerDetails(context);
 
             // Load the customer details
@@ -28,6 +34,16 @@ namespace DEA.UI.Forms
 
             // Initialize the controls
             InitializeControls();
+
+            // Handle FTP move to subfolder option change
+            ftpMoveToSubOnEdFrm.CheckedChanged += (sender, e) =>
+                FormFunctionHelper.HandleFtpSubPathChanges(ftpMoveToSubOnEdFrm, ftpSubPathEdFrmTxt);
+
+            ftpMoveToSubOffEdFrm.CheckedChanged += (sender, e) =>
+                FormFunctionHelper.HandleFtpSubPathChanges(ftpMoveToSubOnEdFrm, ftpSubPathEdFrmTxt);
+
+            // Handles the item events
+            cusDocExtListEdFrm.ItemCheck += _formFunctionHelper.CheckBoxListHandler;
         }
 
         private void InitializeControls()
@@ -46,6 +62,12 @@ namespace DEA.UI.Forms
 
             // Register the CheckedChanged event for the save button
             btnSaveEdFrm.Click += BtnSaveEdFrm_CheckedChanged;
+
+            // Register the click event for the reset button
+            btnResetEdFrm.Click += BtnResetEdFrm_Click;
+
+            // Register the click event for the cancel button
+            btnCancelEdFrm.Click += BtnCancelEdFrm_Click;
         }
 
         private void LoadCustomerData(Guid customerId)
@@ -64,6 +86,7 @@ namespace DEA.UI.Forms
                 BindDataToForms.BindEditCustomerFormData(this, _customerDetails);
                 FormFunctionHelper.ToggleDetailsFields(ftpDetailsEdFrm,
                     emlDetailsEdFrmGrp,
+                    ftpSubPathEdFrmTxt,
                     _customerDetails.FileDeliveryMethod);
             }
         }
@@ -74,6 +97,7 @@ namespace DEA.UI.Forms
             {
                 FormFunctionHelper.ToggleDetailsFields(ftpDetailsEdFrm,
                     emlDetailsEdFrmGrp,
+                    ftpSubPathEdFrmTxt,
                     selectedMethod);
             }
         }
@@ -84,11 +108,25 @@ namespace DEA.UI.Forms
 
             if (result)
             {
+                // Refresh the grid
+                _editCustomersList.LoadCustomerData();
+
                 // Close the form
                 this.Close();
             }
         }
 
+        private void BtnResetEdFrm_Click(object sender, EventArgs e)
+        {
+            // Reload the customer data
+            LoadCustomerData(_customerId);
+        }
+
+        private void BtnCancelEdFrm_Click(object sender, EventArgs e)
+        {
+            // Close the form
+            this.Close();
+        }
         private void InitalizeToolTips()
         {
             _toolTipHelper.SetToolTip(cusStatusEdFrmGrp, "Set the customer status.");

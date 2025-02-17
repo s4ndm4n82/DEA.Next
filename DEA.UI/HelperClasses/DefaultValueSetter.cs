@@ -48,16 +48,19 @@ namespace DEA.UI.HelperClasses
 
         private static void SetDefaultValuesEditCustomersForm(EditCustomerForm form)
         {
-            // Setting the default value for the FTP profile combo box
-            form.ftpProfileComboEdFrm.SelectedIndex = 0;
-
             // Setting default values for the radio buttons
-            form.cusOnEdFrm.Checked = true;
-            form.ftpLoopOffEdFrm.Checked = true;
-            form.ftpMoveToSubOffEdFrm.Checked = true;
-            form.ftpRemoveOnEdFrm.Checked = true;
-            form.emlSenAdressOffEdFrm.Checked = true;
-            form.emlSndSubjectOffEdFrm.Checked = true;
+            if (!form.cusOffEdFrm.Checked && !form.cusOnEdFrm.Checked)
+                form.cusOnEdFrm.Checked = true;
+            if (!form.ftpLoopOffEdFrm.Checked && !form.ftpLoopOnEdFrm.Checked)
+                form.ftpLoopOffEdFrm.Checked = true;
+            if (!form.ftpMoveToSubOffEdFrm.Checked && !form.ftpMoveToSubOnEdFrm.Checked)
+                form.ftpMoveToSubOffEdFrm.Checked = true;
+            if (!form.ftpRemoveOnEdFrm.Checked && !form.ftpRemoveOffEdFrm.Checked)
+                form.ftpRemoveOnEdFrm.Checked = true;
+            if (!form.emlSenAdressOffEdFrm.Checked && !form.emlSenAdressOnEdFrm.Checked)
+                form.emlSenAdressOffEdFrm.Checked = true;
+            if (!form.emlSndSubjectOffEdFrm.Checked && !form.emlSndSubjectOnEdFrm.Checked)
+                form.emlSndSubjectOffEdFrm.Checked = true;
         }
 
         private static void SetDefaultValuesRemoveCustomers(RemoveCustomers form)

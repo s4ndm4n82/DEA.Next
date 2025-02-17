@@ -34,7 +34,7 @@ namespace DEA.UI.HelperClasses
                     FieldTwoName = form.custFtwoNameTxt.Text.Trim(),
                     Domain = form.cusDomainTxt.Text.Trim(),
                     FileDeliveryMethod = form.cusDelMethodCombo.SelectedItem?.ToString()?.ToUpper() ?? "FTP",
-                    DocumentDetails = form.cusDocExtList.CheckedItems.Cast<string>().Skip(1).Select(ext => new DocumentDetails { Extension = ext }).ToList(),
+                    DocumentDetails = [.. form.cusDocExtList.CheckedItems.Cast<string>().Skip(1).Select(ext => new DocumentDetails { Extension = ext })],
                     CreatedDate = DateTime.UtcNow,
                     ModifiedDate = DateTime.UtcNow
                 };
