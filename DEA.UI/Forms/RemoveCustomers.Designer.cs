@@ -36,11 +36,11 @@
             rmSearchId = new RadioButton();
             rmBtnReset = new Button();
             rmBtnRemove = new Button();
-            dataGridView1 = new DataGridView();
+            grdRemoveCustomer = new DataGridView();
             btnRmSearch = new Button();
             rmSearchTxt = new TextBox();
             grpRemove.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)grdRemoveCustomer).BeginInit();
             SuspendLayout();
             // 
             // grpRemove
@@ -52,7 +52,7 @@
             grpRemove.Controls.Add(rmSearchId);
             grpRemove.Controls.Add(rmBtnReset);
             grpRemove.Controls.Add(rmBtnRemove);
-            grpRemove.Controls.Add(dataGridView1);
+            grpRemove.Controls.Add(grdRemoveCustomer);
             grpRemove.Controls.Add(btnRmSearch);
             grpRemove.Controls.Add(rmSearchTxt);
             grpRemove.Location = new Point(12, 12);
@@ -65,7 +65,7 @@
             // searchOptions
             // 
             searchOptions.AutoSize = true;
-            searchOptions.Location = new Point(397, 32);
+            searchOptions.Location = new Point(395, 32);
             searchOptions.Name = "searchOptions";
             searchOptions.Size = new Size(78, 15);
             searchOptions.TabIndex = 7;
@@ -74,7 +74,7 @@
             // rmSearchName
             // 
             rmSearchName.AutoSize = true;
-            rmSearchName.Location = new Point(658, 30);
+            rmSearchName.Location = new Point(656, 30);
             rmSearchName.Name = "rmSearchName";
             rmSearchName.Size = new Size(112, 19);
             rmSearchName.TabIndex = 2;
@@ -85,7 +85,7 @@
             // rmSearchProjId
             // 
             rmSearchProjId.AutoSize = true;
-            rmSearchProjId.Location = new Point(577, 30);
+            rmSearchProjId.Location = new Point(575, 30);
             rmSearchProjId.Name = "rmSearchProjId";
             rmSearchProjId.Size = new Size(75, 19);
             rmSearchProjId.TabIndex = 1;
@@ -105,7 +105,7 @@
             // rmSearchId
             // 
             rmSearchId.AutoSize = true;
-            rmSearchId.Location = new Point(481, 30);
+            rmSearchId.Location = new Point(479, 30);
             rmSearchId.Name = "rmSearchId";
             rmSearchId.Size = new Size(90, 19);
             rmSearchId.TabIndex = 0;
@@ -131,13 +131,13 @@
             rmBtnRemove.Text = "Remove";
             rmBtnRemove.UseVisualStyleBackColor = true;
             // 
-            // dataGridView1
+            // grdRemoveCustomer
             // 
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(6, 92);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(1206, 394);
-            dataGridView1.TabIndex = 3;
+            grdRemoveCustomer.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            grdRemoveCustomer.Location = new Point(6, 92);
+            grdRemoveCustomer.Name = "grdRemoveCustomer";
+            grdRemoveCustomer.Size = new Size(1206, 394);
+            grdRemoveCustomer.TabIndex = 3;
             // 
             // btnRmSearch
             // 
@@ -166,7 +166,7 @@
             Text = "Remove Customers";
             grpRemove.ResumeLayout(false);
             grpRemove.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)grdRemoveCustomer).EndInit();
             ResumeLayout(false);
         }
 
@@ -175,7 +175,7 @@
         public GroupBox grpRemove;
         public Button btnRmSearch;
         public TextBox rmSearchTxt;
-        public DataGridView dataGridView1;
+        public DataGridView grdRemoveCustomer;
         public Button rmBtnCancel;
         public Button rmBtnReset;
         public Button rmBtnRemove;

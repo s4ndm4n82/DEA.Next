@@ -28,6 +28,12 @@ namespace DEA.UI
 
             // Add even handler for DatagridView CellContentClick event
             grdEditCustomer.CellValueChanged += GrdEditCustomer_CellValueChanged;
+
+            // Set the selection mode to FullRowSelect
+            grdEditCustomer.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+
+            // Set the auto size mode for columns
+            grdEditCustomer.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         }
 
         private void InitializeControls()
@@ -43,6 +49,12 @@ namespace DEA.UI
 
             // Register the click event for the reset button
             btnEditCustomerSearch.Click += BtnEditCustomerSearch_Click;
+
+            // Register the click event for the reset button
+            btnEditCutomerReset.Click += BtnEditCutomerReset_Click;
+
+            // Register the click event for the cancel button
+            btnEditCustomerCancel.Click += BtnEditCustomerCancel_Click;
         }
 
         public void LoadCustomerData()
@@ -52,12 +64,34 @@ namespace DEA.UI
             // Bind the customers to the grid
             grdEditCustomer.DataSource = customers;
 
+            // Load the column settings
+            GridColumnSettings();
+        }
+
+        private List<CustomerDetails> GetCustomers()
+        {
+            // Get the customers from the database
+            return [.. _conttext.CustomerDetails];
+        }
+
+        private void GridColumnSettings()
+        {
             // Hide the ApiKey column
             grdEditCustomer.Columns["Token"].Visible = false;
             grdEditCustomer.Columns["FtpDetails"].Visible = false;
             grdEditCustomer.Columns["EmailDetails"].Visible = false;
             grdEditCustomer.Columns["CreatedDate"].Visible = false;
             grdEditCustomer.Columns["ModifiedDate"].Visible = false;
+            grdEditCustomer.Columns["TemplateKey"].Visible = false;
+            grdEditCustomer.Columns["DocumentId"].Visible = false;
+            grdEditCustomer.Columns["DocumentEncoding"].Visible = false;
+            grdEditCustomer.Columns["MaxBatchSize"].Visible = false;
+            grdEditCustomer.Columns["FieldOneName"].Visible = false;
+            grdEditCustomer.Columns["FieldOneValue"].Visible = false;
+            grdEditCustomer.Columns["FieldTwoName"].Visible = false;
+            grdEditCustomer.Columns["FieldTwoValue"].Visible = false;
+            grdEditCustomer.Columns["Domain"].Visible = false;
+            grdEditCustomer.Columns["FileDeliveryMethod"].Visible = false;
 
             // Make the columns read only
             grdEditCustomer.Columns["Id"].ReadOnly = true;
@@ -75,15 +109,9 @@ namespace DEA.UI
             grdEditCustomer.Columns["FieldTwoValue"].ReadOnly = true;
             grdEditCustomer.Columns["Domain"].ReadOnly = true;
             grdEditCustomer.Columns["FileDeliveryMethod"].ReadOnly = true;
-
         }
 
-        private List<CustomerDetails> GetCustomers()
-        {
-            // Get the customers from the database
-            return [.. _conttext.CustomerDetails];
-        }
-
+        // Event handler for the DataGridView CellDoubleClick event
         private void GrdEditCustomer_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -98,6 +126,7 @@ namespace DEA.UI
             }
         }
 
+        // Event handler for the DataGridView CellValueChanged event
         private void GrdEditCustomer_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0 && grdEditCustomer.Columns[e.ColumnIndex].Name == "Status")
@@ -120,16 +149,19 @@ namespace DEA.UI
 
                     if (result > 0)
                     {
-                        MessageBox.Show("Customer status updated successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("Customer status updated successfully.",
+                            "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {
-                        MessageBox.Show("Failed to update the customer status.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Failed to update the customer status.",
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
         }
 
+        // Event handler for the search button click event
         private void BtnEditCustomerSearch_Click(object sender, EventArgs e)
         {
             try
@@ -142,6 +174,28 @@ namespace DEA.UI
             }
         }
 
+        // Event handler for the reset button click event
+        private void BtnEditCutomerReset_Click(object sender, EventArgs e)
+        {
+            cusEditSearchTxt.Text = string.Empty;
+            searchCusId.Checked = true;
+            LoadCustomerData();
+        }
+
+        // Event handler for the cancel button click event
+        private void BtnEditCustomerCancel_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show("Are you sure you want to close the application?",
+                "Exit The Application",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2);
+
+            if (result == DialogResult.Yes)
+                Application.Exit();
+        }
+
+        // Method to search for customers
         private void SearchCustomers()
         {
             // Get the search text
@@ -149,8 +203,21 @@ namespace DEA.UI
             var searchType = searchCusId.Checked ? "Id" :
                 searchProjectId.Checked ? "ProjectId" :
                 searchCusName.Checked ? "CustomerName" : string.Empty;
+
+            if (string.IsNullOrEmpty(searchType))
+            {
+                MessageBox.Show("Please select a search type.",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            var customers = GetCustomers();
+            var filteredCustomers = SearchMethods.SearchCustomers(customers, searchText, searchType);
+
+            grdEditCustomer.DataSource = filteredCustomers;
         }
 
+        // Method to initialize the tool tips
         private void InitalizeToolTips()
         {
             _toolTipHelper.SetToolTip(searchCusId, "Use the customer ID to search.");

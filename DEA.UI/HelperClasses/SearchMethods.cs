@@ -8,8 +8,7 @@ namespace DEA.UI.HelperClasses
         {
             if (string.IsNullOrEmpty(searchText))
             {
-                MessageBox.Show("Please enter a search text.", "Search Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return customers;
+                throw new ArgumentException("Search text cannot be empty or null.", nameof(searchText));
             }
 
             searchText = searchText.Trim();
@@ -17,10 +16,14 @@ namespace DEA.UI.HelperClasses
             return searchType switch
             {
                 "Id" => Guid.TryParse(searchText, out Guid customerId)
-                        ? customers.Where(c => c.Id == customerId).ToList()
+                        ? [.. customers.Where(c => c.Id == customerId)]
                         : throw new ArgumentException("Invalid Customer ID format.", nameof(searchText)),
-                "ProjectId" => customers.Where(c => c.ProjectId.Contains(searchText, StringComparison.OrdinalIgnoreCase)).ToList(),
-                "CustomerName" => customers.Where(c => c.CustomerName.Contains(searchText, StringComparison.OrdinalIgnoreCase)).ToList(),
+                "ProjectId" => [.. customers
+                .Where(c => c.ProjectId
+                .Contains(searchText, StringComparison.OrdinalIgnoreCase))],
+                "CustomerName" => [.. customers
+                .Where(c => c.CustomerName
+                .Contains(searchText, StringComparison.OrdinalIgnoreCase))],
                 _ => throw new ArgumentException("Invalid search type.", nameof(searchType)),
             };
         }
