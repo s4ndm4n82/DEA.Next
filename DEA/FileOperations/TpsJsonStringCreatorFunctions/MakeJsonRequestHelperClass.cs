@@ -1,4 +1,5 @@
 ﻿using DEA.Next.FileOperations.TpsJsonStringClasses;
+using DEA.Next.Graph.GraphHelperClasses;
 using DEA.Next.HelperClasses.ConfigFileFunctions;
 using DEA.Next.HelperClasses.Pdf;
 using TpsJsonProjectUploadString;
@@ -82,8 +83,16 @@ internal class MakeJsonRequestHelperClass
         return emailFieldList;
     }
 
-    public static List<TpsJsonSendBodyTextClass.FileList> ReturnEmailBodyFileList(string subject)
+    public static List<TpsJsonSendBodyTextClass.FileList> ReturnEmailBodyFileList(List<AttachmentFile> fileList,
+        string subject)
     {
+        if (fileList.Count != 0)
+            return fileList.Select(f =>
+                new TpsJsonSendBodyTextClass.FileList
+                {
+                    Name = f.FileName, Data = Convert.ToBase64String(File.ReadAllBytes(f.FullPath))
+                }).ToList();
+
         // Creating an empty file to add to the JSON request.
         var fileName = subject + ".pdf";
         var documentBytes = CreateSamplePdf.CreateSamplePdfWithWatermarkAsync(subject).Result;

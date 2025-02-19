@@ -11,7 +11,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="33275f24-18e6-4ba3-81b4-a2ab1183ffd0" name="Changes" comment="" />
+    <list default="true" id="33275f24-18e6-4ba3-81b4-a2ab1183ffd0" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/DEA/Graph/GraphAttachmentRelatedActions/GraphDownloadMethods.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DEA/Graph/GraphAttachmentRelatedActions/GraphUploadMethods.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DEA/Graph/GraphHelperClasses/AttachmentFile.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DEA/HelperClasses/FolderFunctions/FolderCleanerBodyText.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DEA.Next/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceEmailBody.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsFileFunctions/SendToWebServiceEmailBody.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsFileUploadFunctions/SendBodyTextToRestApi.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsFileUploadFunctions/SendBodyTextToRestApi.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestEmailBody.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestEmailBody.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestHelperClass.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsJsonStringCreatorFunctions/MakeJsonRequestHelperClass.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsServerResponseFunctions/TpsServerOnFaile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsServerResponseFunctions/TpsServerOnFaile.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/FileOperations/TpsServerResponseFunctions/TpsServerOnSuccess.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/FileOperations/TpsServerResponseFunctions/TpsServerOnSuccess.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Graph/GraphEmailActions/SendEmailBody.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Graph/GraphEmailActions/SendEmailBody.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEA/Versioning/AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DEA/Versioning/AssemblyInfo.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -85,6 +99,8 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/ILViewer/4413b6f742814d0d84becc519328b15341200/e1/c92dc88c/02000054pdb7.il" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/17882c817c9f37cd820b5b71b707b31bb55679df9ba98e2e6f09a7b7e341b/ResourceManager.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/32af53f9addbd8407e5f571f6439ce341f8ba46c7f085f2d1c1aa4c2bd1d35/ModelValidator.cs" root0="FORCE_HIGHLIGHTING" />
@@ -131,7 +147,7 @@
     ]
   }
 }</component>
-  <component name="RunManager" selected="Publish to folder.DEA.Next Publish">
+  <component name="RunManager" selected=".NET Project.DEA.Next">
     <configuration name="DEA.Next Publish" type="DotNetFolderPublish" factoryName="Publish to folder">
       <riderPublish configuration="Release" platform="Any CPU" runtime="Portable" target_folder="$PROJECT_DIR$/DEA/bin/Release/net8.0/publish/FolderPublish" target_framework="net8.0" uuid_high="-7580840089019791257" uuid_low="-7026497347669342426" />
       <method v="2" />
@@ -452,6 +468,10 @@
       <workItem from="1739158614203" duration="6721000" />
       <workItem from="1739168902942" duration="510000" />
       <workItem from="1739170234225" duration="10461000" />
+      <workItem from="1739947591026" duration="583000" />
+      <workItem from="1739949861153" duration="6000" />
+      <workItem from="1739950193328" duration="750000" />
+      <workItem from="1739951103427" duration="11284000" />
     </task>
     <servers />
   </component>

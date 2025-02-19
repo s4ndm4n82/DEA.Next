@@ -1,4 +1,6 @@
 using DEA.Next.FileOperations.TpsFileFunctions;
+using DEA.Next.Graph.GraphAttachmentRelatedActions;
+using DEA.Next.HelperClasses.ConfigFileFunctions;
 using Microsoft.Graph;
 using WriteLog;
 
@@ -10,11 +12,23 @@ public static class SendEmailBody
         Guid customerId,
         Message message)
     {
+        var result = false;
+        var extensions = await UserConfigRetriever.RetrieveDocumentConfigById(customerId);
         WriteLogClass.WriteToLog(1, $"Reading email body from {message.Subject} ....", 2);
 
-        var result = await SendToWebServiceEmailBody.SendEmailBodyStartAsync(requestBuilder,
-            customerId,
-            message);
+        // Check for attachments
+        var attachments = GraphDownloadAttachmentFiles.FilterAttachments(message.Attachments, extensions).ToList();
+
+        if (attachments.Count == 0)
+            result = await SendToWebServiceEmailBody.SendEmailBodyStartAsync(requestBuilder,
+                customerId,
+                message);
+        else
+            result = await SendToWebServiceEmailBody.SendEmailBodyWithAttachmentsStartAsync(requestBuilder,
+                customerId,
+                message,
+                attachments);
+
 
         return result ? 1 : 2;
     }
