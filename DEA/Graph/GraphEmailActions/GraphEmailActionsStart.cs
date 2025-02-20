@@ -8,7 +8,7 @@ using Microsoft.Graph;
 using ProcessStatusMessageSetter;
 using WriteLog;
 
-namespace DEA.Next.Graph.GraphEmailActons;
+namespace DEA.Next.Graph.GraphEmailActions;
 
 internal class GraphGetAttachmentsClass
 {
@@ -22,7 +22,7 @@ internal class GraphGetAttachmentsClass
     /// <param name="subFolder2"></param>
     /// <param name="customerId"></param>
     /// <returns></returns>
-    public static async Task<int> StartAttachmentDownload(GraphServiceClient graphClient,
+    public static async Task<int> StartAttachmentDownload(GraphServiceClient? graphClient,
         string clientEmail,
         string mainMailFolder,
         string subFolder1,
@@ -68,7 +68,9 @@ internal class GraphGetAttachmentsClass
         }
         catch (Exception ex)
         {
-            WriteLogClass.WriteToLog(0, $"Exception at start email attachment download: {ex.Message}", 0);
+            WriteLogClass.WriteToLog(0,
+                $"Exception at start email attachment download: {ex.Message}",
+                0);
         }
 
         return result;
@@ -87,7 +89,8 @@ internal class GraphGetAttachmentsClass
 
             if (folderList.Count != 0)
                 WriteLogClass.WriteToLog(1,
-                    $"Starting attachment download process from inbox /{string.Join("/", folderList)} ....", 2);
+                    $"Starting attachment download process from inbox /{string.Join("/", folderList)} ....",
+                    2);
         }
         else
         {

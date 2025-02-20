@@ -1,25 +1,22 @@
 ﻿using DEA.Next.Entities;
+using DEA.Next.Graph.GraphClientRelatedFunctions;
 using DEA.Next.HelperClasses.ConfigFileFunctions;
 using DEA.Next.HelperClasses.OtherFunctions;
-using DEA.Next.Interfaces;
+using FileRenamerClass;
 using FolderFunctions;
 using GetRecipientEmail;
-using GraphHelper;
 using Microsoft.Graph;
-using UserConfigSetterClass;
+using WriteLog;
 using File = System.IO.File;
 using Directory = System.IO.Directory;
-using WriteLog;
-using FileRenamerClass;
 
-namespace GraphDownloadAttachmentFilesClass;
+namespace DEA.Next.Graph.GraphAttachmentRelatedActions;
 
 internal class GraphDownloadAttachmentFiles
 {
     /// <summary>
-    /// Extract the recipient email from the message.
+    ///     Extract the recipient email from the message.
     /// </summary>
-    /// <param name="configRepository"></param>
     /// <param name="requestBuilder"></param>
     /// <param name="messageId"></param>
     /// <param name="customerId"></param>
@@ -29,29 +26,26 @@ internal class GraphDownloadAttachmentFiles
         Guid customerId)
     {
         var clientDetails = await UserConfigRetriever.RetrieveUserConfigById(customerId);
-            
+
         if (clientDetails.FileDeliveryMethod.Equals(MagicWords.Email, StringComparison.CurrentCultureIgnoreCase))
-        {
-            return await GetRecipientEmailClass.GetRecipientEmail(requestBuilder,
-                messageId);
-        }
+            return await GetRecipientEmailClass.GetRecipientEmail(requestBuilder, messageId);
         return string.Empty;
     }
 
     /// <summary>
-    /// Creates the local download folder path.
+    ///     Creates the local download folder path.
     /// </summary>
     /// <param name="recipientEmail"></param>
     /// <returns></returns>
     public static string CreateDownloadPath(string recipientEmail)
     {
         var attachmentsRoot = FolderFunctionsClass.CheckFolders(MagicWords.Attachments);
-        var uniqueFolder = GraphHelperClass.FolderNameRnd(10);
+        var uniqueFolder = GraphHelper.FolderNameRnd(10);
         return Path.Combine(attachmentsRoot, recipientEmail, uniqueFolder);
     }
 
     /// <summary>
-    /// Filter the attachments according to the accepted extensions and files size.
+    ///     Filter the attachments according to the accepted extensions and files size.
     /// </summary>
     /// <param name="attachments"></param>
     /// <param name="acceptedExtensions"></param>
@@ -67,14 +61,15 @@ internal class GraphDownloadAttachmentFiles
             .Where(attachment =>
             {
                 var extension = Path.GetExtension(attachment.Name).ToLower();
-                return lowerCaseExtensions.Contains(extension) && attachment.Size > 10240
-                       || (extension.Equals(MagicWords.Pdf, StringComparison.CurrentCultureIgnoreCase)
+                return (lowerCaseExtensions.Contains(extension) && attachment.Size > 10240)
+                       || (extension.Equals(string.Concat(".", MagicWords.Pdf),
+                               StringComparison.CurrentCultureIgnoreCase)
                            && attachment.Size < 10240);
             });
     }
 
     /// <summary>
-    /// Fetch the attachment data to download.
+    ///     Fetch the attachment data to download.
     /// </summary>
     /// <param name="requestBuilder"></param>
     /// <param name="messageId"></param>
@@ -90,12 +85,12 @@ internal class GraphDownloadAttachmentFiles
             .Attachments[attachmentId]
             .Request()
             .GetAsync();
-            
+
         return attachmentData;
     }
 
     /// <summary>
-    /// Save the fetched attachment data as a file in to the local download folder.
+    ///     Save the fetched attachment data as a file in to the local download folder.
     /// </summary>
     /// <param name="attachmentData"></param>
     /// <param name="filePath"></param>
@@ -106,7 +101,6 @@ internal class GraphDownloadAttachmentFiles
         string fileName)
     {
         if (!Directory.Exists(filePath))
-        {
             try
             {
                 Directory.CreateDirectory(filePath);
@@ -118,15 +112,14 @@ internal class GraphDownloadAttachmentFiles
                     0);
                 return false;
             }
-        }
 
         if (attachmentData is not FileAttachment fileAttachment) return false;
-            
+
         try
         {
             await File.WriteAllBytesAsync(FileRenamer.FileRenamerFunction(filePath, fileName),
                 fileAttachment.ContentBytes);
-                
+
             return true;
         }
         catch (Exception ex)
@@ -137,5 +130,5 @@ internal class GraphDownloadAttachmentFiles
                 0);
             return false;
         }
-    }        
+    }
 }

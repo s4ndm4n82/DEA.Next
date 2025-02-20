@@ -14,7 +14,7 @@ internal class GetDeletedItemsId
     /// <param name="graphClient">Graph authentication.</param>
     /// <param name="clientEmail">Clients email.</param>
     /// <returns>Returns the ID.</returns>
-    public static async Task<string> GetDeletedItemsIdAsync([NotNull] GraphServiceClient graphClient,
+    public static async Task<string> GetDeletedItemsIdAsync([NotNull] GraphServiceClient? graphClient,
         string clientEmail)
     {
         // Max inbox folders to load.

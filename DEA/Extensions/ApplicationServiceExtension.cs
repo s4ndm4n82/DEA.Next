@@ -15,11 +15,8 @@ public static class ApplicationServiceExtension
     public static IServiceCollection AddApplicationServices(this IServiceCollection services,
         IConfiguration config)
     {
-        services.AddDbContext<DataContext>(opt =>
-        {
-            opt.UseNpgsql(config.GetConnectionString("DefaultConnection"));
-        }, ServiceLifetime.Scoped);
-        
+        services.AddDbContext<DataContext>(opt => { opt.UseNpgsql(config.GetConnectionString("DefaultConnection")); });
+
         services.AddScoped<CustomerDataClass>();
         services.AddScoped<IUserConfigRepository, CustomerDetailsRepository>();
 
@@ -27,7 +24,7 @@ public static class ApplicationServiceExtension
 
         services.AddTransient<ProcessStartupFunctionsClass>();
 
-        var serviceProvider = services.BuildServiceProvider(); 
+        var serviceProvider = services.BuildServiceProvider();
         var repository = serviceProvider.GetService<IUserConfigRepository>();
         if (repository != null) UserConfigRetriever.Initialize(repository);
 

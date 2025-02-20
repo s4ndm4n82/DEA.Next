@@ -1,10 +1,9 @@
-﻿using AppConfigReader;
-using DEA.Next.FileOperations.TpsFileFunctions;
+﻿using DEA.Next.FileOperations.TpsFileFunctions;
+using DEA.Next.Graph.GraphEmailActions;
 using DEA.Next.Graph.GraphEmailActons;
 using DEA.Next.HelperClasses.ConfigFileFunctions;
 using FileNameCleanerClass;
 using GetMailFolderIds;
-using GraphDownloadAttachmentFilesClass;
 using GraphEmailFunctions;
 using GraphMoveEmailsrClass;
 using GraphMoveEmailsToExportClass;
@@ -19,8 +18,8 @@ namespace DEA.Next.Graph.GraphAttachmentRelatedActions;
 internal class GraphAttachmentFunctionsClass
 {
     /// <summary>
-    ///     As the function name suggest this funcion is designed to get messages with attachments. And then pass it on to
-    ///     the next step which is downloading the.
+    ///     As the function name suggest this function is designed to get messages with attachments.
+    ///     And then pass it on to the next step which is downloading the attachments.
     /// </summary>
     /// <param name="requestBuilder"></param>
     /// <param name="inEmail"></param>
@@ -34,12 +33,10 @@ internal class GraphAttachmentFunctionsClass
         int maxMails,
         Guid customerId)
     {
-        IMailFolderMessagesCollectionPage messages;
-
         try
         {
             // Get the messages with attachments.
-            messages = await requestBuilder
+            var messages = await requestBuilder
                 .Messages
                 .Request()
                 .Expand("attachments")
@@ -48,37 +45,41 @@ internal class GraphAttachmentFunctionsClass
 
             // If there are no messages, then return 4.
             if (!messages.Any()) return 4;
+
+            // Process the messages. And adds all the returned results to a list.
+            // var results = await Task.WhenAll(messages
+            //     .Select(message =>
+            //         ProcessMessageAsync(requestBuilder,
+            //             message,
+            //             inEmail,
+            //             deletedItemsId,
+            //             customerId)));
+            var results = new List<int>();
+            foreach (var message in messages)
+            {
+                var result = await ProcessMessageAsync(requestBuilder, message, inEmail, deletedItemsId, customerId);
+                results.Add(result);
+            }
+
+            // Error code list.
+            int[] errorCodes = [5, 4, 3, 1];
+
+            // Get the first error code from the list.
+            var flag = errorCodes.LastOrDefault(code => results.Contains(code));
+
+            // If there is no error code, then return 0.
+            flag = flag != 0 ? flag : 0;
+
+            return flag;
         }
         catch (Exception ex)
         {
             // Log the failure and return the error code.
-            WriteLogClass.WriteToLog(0, $"Exception at GetMessagesWithAttachments: {ex.Message}", 0);
+            WriteLogClass.WriteToLog(0,
+                $"Exception at GetMessagesWithAttachments: {ex.Message}",
+                0);
             return 4; // 4 is an error code.
         }
-
-        // Process the messages. And adds all the returned results to a list.
-        var taskReturns = messages
-            .Select(message =>
-                ProcessMessageAsync(requestBuilder,
-                    message,
-                    inEmail,
-                    deletedItemsId,
-                    customerId))
-            .ToList();
-
-        // Wait for all the tasks to complete.
-        var results = await Task.WhenAll(taskReturns);
-
-        // Error code list.
-        int[] errorCodes = [5, 4, 3, 1];
-
-        // Get the first error code from the list.
-        var flag = errorCodes.LastOrDefault(code => results.Contains(code));
-
-        // If there is no error code, then return 0.
-        flag = flag != 0 ? flag : 0;
-
-        return flag;
     }
 
     /// <summary>
@@ -98,10 +99,13 @@ internal class GraphAttachmentFunctionsClass
     {
         // Get the allowed file extensions.
         var extensions = await UserConfigRetriever.RetrieveDocumentConfigById(customerId);
+        var emailDetails = await UserConfigRetriever.RetrieveEmailConfigById(customerId);
+
+        if (emailDetails.EmailDetails is { SendBody: true })
+            return await SendEmailBody.SendEmailBodyStartAsync(requestBuilder, customerId, message);
 
         // Filter the attachments.
-        var attachmentList =
-            GraphDownloadAttachmentFiles.FilterAttachments(message.Attachments, extensions).ToList();
+        var attachmentList = GraphDownloadAttachmentFiles.FilterAttachments(message.Attachments, extensions).ToList();
 
         // If there are attachments.
         if (attachmentList.Count != 0)
@@ -178,7 +182,6 @@ internal class GraphAttachmentFunctionsClass
     ///     This function would start downloading the attachments. But only download attachments which are above
     ///     10kB (10240 Bytes). But any PDF file will be downloaded regardless of the file size.
     /// </summary>
-    /// <param name="configRepository"></param>
     /// <param name="requestBuilder"></param>
     /// <param name="inMessage"></param>
     /// <param name="attachmentList"></param>
@@ -256,10 +259,9 @@ internal class GraphAttachmentFunctionsClass
     }
 
     /// <summary>
-    ///     Batch file upload function. The while loop will upload file untill it ends.
+    ///     Batch file upload function. The while loop will upload file until it ends.
     /// </summary>
     /// <param name="downloadFolderPath">Local download folder path.</param>
-    /// <param name="configRepository"></param>
     /// <param name="customerId">Customer ID</param>
     /// <param name="toEmail">Email the client has sent email to.</param>
     /// <param name="emailSubject">Clients email subject</param>
@@ -281,9 +283,6 @@ internal class GraphAttachmentFunctionsClass
 
             // Reads the ClientConfig.json file. 
             var clientDetails = await UserConfigRetriever.RetrieveUserConfigById(customerId);
-
-            // Reads the appsettings.json file. 
-            var appJsonData = AppConfigReaderClass.ReadAppDotConfig();
 
             // Setting the batch count index 
             var batchCurrentIndex = 0;
@@ -344,7 +343,7 @@ internal class GraphAttachmentFunctionsClass
     {
         Message messageUpdateStatus = new()
         {
-            IsRead = false // Set IsRead to false to mark the email as not read
+            IsRead = false // Set IsRead to false mark the email as not read
         };
 
         try

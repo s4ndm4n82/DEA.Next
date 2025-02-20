@@ -15,7 +15,7 @@ public class DocumentDetails
     /// <summary>
     ///     Gets or sets the file extension of the document.
     /// </summary>
-    [MaxLength(5)]
+    [MaxLength(10)]
     public required string Extension { get; set; }
 
     // Navigation properties

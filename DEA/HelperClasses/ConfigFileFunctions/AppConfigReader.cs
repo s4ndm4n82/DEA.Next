@@ -5,6 +5,20 @@ namespace AppConfigReader;
 
 public class AppConfigReaderClass
 {
+    public static AppSettingsRoot ReadAppDotConfig()
+    {
+        AppSettingsRoot? jsonAppData = default;
+        try
+        {
+            var jsonFileData = File.ReadAllText(@".\Config\appsettings.json");
+            return jsonAppData = JsonConvert.DeserializeObject<AppSettingsRoot>(jsonFileData)!;
+        }
+        catch (Exception ex)
+        {
+            WriteLogClass.WriteToLog(0, $"Exception at reading app dot config: {ex.Message}", 0);
+            return jsonAppData!;
+        }
+    }
 
     public class AppSettingsRoot
     {
@@ -15,7 +29,7 @@ public class AppConfigReaderClass
     }
 
     public class Programsettings
-    {            
+    {
         public int MaxEmails { get; set; }
         public int MaxMainEmailFolders { get; set; }
         public int MaxSubEmailFolders { get; set; }
@@ -23,8 +37,7 @@ public class AppConfigReaderClass
         public bool SendErrorEmail { get; set; }
         public bool CleanLogs { get; set; }
         public int RetryLine { get; set; }
-        public string[] PublicDns { get; set; }
-        public string[] CheckUrls { get; set; }
+        public string[] TestUrls { get; set; }
     }
 
     public class Emailserversettings
@@ -59,7 +72,7 @@ public class AppConfigReaderClass
         public int ErrorCheckInterval { get; set; }
         public int LogsDeleteAfter { get; set; }
         public string PreviousRunDate { get; set; }
-        public string PreviousRunTime { get; set; }            
+        public string PreviousRunTime { get; set; }
     }
 
     public class Graphconfig
@@ -70,20 +83,5 @@ public class AppConfigReaderClass
         public string ClientSecret { get; set; }
         public string ClientId { get; set; }
         public string[] Scopes { get; set; }
-    }
-
-    public static AppSettingsRoot ReadAppDotConfig()
-    {
-        AppSettingsRoot? jsonAppData = default;
-        try
-        {
-            var jsonFileData = File.ReadAllText(@".\Config\appsettings.json");
-            return jsonAppData = JsonConvert.DeserializeObject<AppSettingsRoot>(jsonFileData)!;
-        }
-        catch (Exception ex)
-        {
-            WriteLogClass.WriteToLog(0, $"Exception at reading app dot config: {ex.Message}", 0);
-            return jsonAppData!;
-        }
     }
 }

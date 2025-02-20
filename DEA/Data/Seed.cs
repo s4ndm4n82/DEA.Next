@@ -14,7 +14,7 @@ public static class Seed
     public static async Task SeedData(DataContext context)
     {
         // Read customer data from the JSON configuration file.
-        var customerData = ReadDataFromJson.ReadDataFromJsonConfig().Result;
+        var customerData = await ReadDataFromJson.ReadDataFromJsonConfig();
 
         // Check if the customer data is empty and log an error if it is.
         if (customerData.Count == 0)
@@ -108,7 +108,8 @@ public static class Seed
                             Email = customer.EmailDetails.Email,
                             EmailInboxPath = customer.EmailDetails.EmailInboxPath,
                             SendEmail = customer.EmailDetails.SendEmail,
-                            SendSubject = customer.EmailDetails.SendSubject
+                            SendSubject = customer.EmailDetails.SendSubject,
+                            SendBody = customer.EmailDetails.SendBody
                         };
 
                         // Add the EmailDetails object to the context.

@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using DEA.Next.Graph.GraphHelperClasses;
 using DEA.Next.HelperClasses.ConfigFileFunctions;
 using DEA.Next.HelperClasses.FolderFunctions;
 using DEA.Next.HelperClasses.OtherFunctions;
@@ -209,8 +210,10 @@ internal class TpsServerOnFaile
     /// <summary>
     ///     Handles the on fail for body text upload.
     /// </summary>
-    public static async Task<int> ServerOnFailBodyTextAsync(IMailFolderRequestBuilder requestBuilder,
+    public static async Task<bool> ServerOnFailBodyTextAsync(IMailFolderRequestBuilder requestBuilder,
+        List<AttachmentFile> attachments,
         string messageId,
+        string messageSubject,
         string? serverResponseContent,
         HttpStatusCode serverStatusCode)
     {
@@ -225,21 +228,37 @@ internal class TpsServerOnFaile
                 WriteLogClass.WriteToLog(0,
                     "Moving email to error folder failed ....",
                     2);
-                return 2;
+                return false;
+            }
+
+            if (attachments.Count == 0)
+            {
+                WriteLogClass.WriteToLog(1,
+                    $"Body text sent to system. No attachments found in email {messageSubject} ....",
+                    2);
+                return false;
+            }
+
+            if (!await FolderCleanerBodyText.DeleteDownloadedAttachments(attachments))
+            {
+                WriteLogClass.WriteToLog(0,
+                    "Deleting attachments from email unsuccessful ....",
+                    2);
+                return false;
             }
 
             WriteLogClass.WriteToLog(0,
                 $"Sending to server failed. Email moved to error folder." +
                 $"\nCode:{serverStatusCode}\nStatus:{serverResponseContent}",
                 2);
-            return 2;
+            return false;
         }
         catch (Exception ex)
         {
             WriteLogClass.WriteToLog(0,
                 $"Exception at ServerOnFailBodyTextAsync: {ex.Message}",
                 0);
-            return 2;
+            return false;
         }
     }
 }

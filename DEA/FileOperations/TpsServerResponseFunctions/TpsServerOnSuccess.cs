@@ -1,4 +1,5 @@
 ﻿using DEA.Next.FTP.FtpFileRelatedFunctions;
+using DEA.Next.Graph.GraphHelperClasses;
 using DEA.Next.HelperClasses.ConfigFileFunctions;
 using DEA.Next.HelperClasses.FolderFunctions;
 using DEA.Next.HelperClasses.OtherFunctions;
@@ -68,7 +69,7 @@ internal class TpsServerOnSuccess
                     jsonFileList,
                     null,
                     clientOrgNo,
-                    MagicWords.Email): return 0;
+                    MagicWords.Email): return 1;
 
                 // Removes the files from FTP server. If the files not needed to be moved to another FTP sub folder.
                 case MagicWords.Ftp when ftpDetails is { FtpMoveToSubFolder: false, FtpRemoveFiles: true }
@@ -182,7 +183,8 @@ internal class TpsServerOnSuccess
     /// <summary>
     ///     Sending body text to TPS server success.
     /// </summary>
-    public static async Task<int> ServerOnSuccessBodyTextAsync(IMailFolderRequestBuilder requestBuilder,
+    public static async Task<bool> ServerOnSuccessBodyTextAsync(IMailFolderRequestBuilder requestBuilder,
+        List<AttachmentFile> attachments,
         string messageId,
         string messageSubject)
     {
@@ -195,20 +197,36 @@ internal class TpsServerOnSuccess
                 WriteLogClass.WriteToLog(0,
                     $"Moving email {messageSubject} to export unsuccessful ....",
                     2);
-                return 2;
+                return false;
+            }
+
+            if (attachments.Count == 0)
+            {
+                WriteLogClass.WriteToLog(1,
+                    $"Body text sent to system. No attachments found in email {messageSubject} ....",
+                    2);
+                return true;
+            }
+
+            if (!await FolderCleanerBodyText.DeleteDownloadedAttachments(attachments))
+            {
+                WriteLogClass.WriteToLog(0,
+                    $"Deleting attachments from email {messageSubject} unsuccessful ....",
+                    2);
+                return false;
             }
 
             WriteLogClass.WriteToLog(1,
                 $"Body text sent to system. Moved email {messageSubject} to export successfully ....",
                 2);
-            return 1;
+            return true;
         }
         catch (Exception ex)
         {
             WriteLogClass.WriteToLog(0,
                 $"Exception at ServerOnSuccessBodyTextAsync: {ex.Message}",
                 0);
-            return 2;
+            return false;
         }
     }
 }

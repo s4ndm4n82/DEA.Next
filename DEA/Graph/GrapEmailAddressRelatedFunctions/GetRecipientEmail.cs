@@ -1,38 +1,29 @@
-﻿using WriteLog;
+﻿using System.Text.RegularExpressions;
 using Microsoft.Graph;
-using System.Text.RegularExpressions;
+using WriteLog;
 
 namespace GetRecipientEmail;
 
-internal class GetRecipientEmailClass
+internal partial class GetRecipientEmailClass
 {
     /// <summary>
-    /// Get the recipient email from the "InternetMessageHeaders".
+    ///     Get the recipient email from the "InternetMessageHeaders".
     /// </summary>
     /// <param name="requestBuilder"></param>
-    /// <param name="MessageID"></param>
+    /// <param name="messageId"></param>
     /// <returns></returns>
     public static async Task<string> GetRecipientEmail(IMailFolderRequestBuilder requestBuilder,
-        string MessageID)
+        string messageId)
     {
         try
         {
-            // Check for null or whitespace.
-            if (requestBuilder == null)
-            {
-                WriteLogClass.WriteToLog(0, "Main folder ID cannot be null or whitespace", 0);
-                return string.Empty;
-            }
-
             // Get message details.
-            Message emailMessages = await requestBuilder
-                .Messages[$"{MessageID}"]
+            var emailMessages = await requestBuilder
+                .Messages[messageId]
                 .Request()
-                .Select(eml => new
-                {
-                    eml.InternetMessageHeaders
-                })
-                .GetAsync();
+                .Select("InternetMessageHeaders")
+                .GetAsync()
+                .ConfigureAwait(false);
 
             if (!emailMessages.InternetMessageHeaders.Any())
             {
@@ -41,23 +32,19 @@ internal class GetRecipientEmailClass
             }
 
             // RegEx to get the recipient email.
-            Regex emailRegExPattern = new(@"[0-9a-z]+@efakturamottak\.no", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+            var emailRegExPattern = MyRegex();
 
             // Get the recipient email.
-            string recipientEmail = emailMessages
+            var recipientEmail = emailMessages
                 .InternetMessageHeaders
                 .SelectMany(header => emailRegExPattern.Matches(header.Value))
                 .Where(match => match.Success)
                 .Select(match => match.Value.ToLower())
-                .FirstOrDefault(email => email != null);
+                .FirstOrDefault();
 
-            if (string.IsNullOrEmpty(recipientEmail))
-            {
-                WriteLogClass.WriteToLog(0, "Recipient email is empty ....", 0);
-                return string.Empty;
-            }
-
-            return recipientEmail;
+            if (!string.IsNullOrEmpty(recipientEmail)) return recipientEmail;
+            WriteLogClass.WriteToLog(0, "Recipient email is empty ....", 0);
+            return string.Empty;
         }
         catch (Exception ex)
         {
@@ -65,4 +52,7 @@ internal class GetRecipientEmailClass
             return string.Empty;
         }
     }
+
+    [GeneratedRegex(@"[0-9a-z]+@efakturamottak\.no", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+    private static partial Regex MyRegex();
 }

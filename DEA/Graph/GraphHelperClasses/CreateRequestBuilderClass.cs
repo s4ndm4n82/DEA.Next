@@ -1,5 +1,4 @@
 ﻿using Microsoft.Graph;
-using System.Diagnostics.CodeAnalysis;
 using WriteLog;
 
 namespace DEA.Next.Graph.GraphHelperClasses;
@@ -7,15 +6,14 @@ namespace DEA.Next.Graph.GraphHelperClasses;
 internal class CreateRequestBuilderClass
 {
     /// <summary>
-    /// Builds the folder request to access email inboxes.
+    ///     Builds the folder request to access email inboxes.
     /// </summary>
-    /// <param name="graphClient"></param>
     /// <param name="firstFolderId"></param>
     /// <param name="secondFolderId"></param>
     /// <param name="thirdFolderId"></param>
     /// <param name="emailId"></param>
     /// <returns></returns>
-    public static async Task<IMailFolderRequestBuilder> CreatRequestBuilder([NotNull] GraphServiceClient graphClient,
+    public static async Task<IMailFolderRequestBuilder> CreatRequestBuilder(GraphServiceClient graphClient,
         string firstFolderId,
         string secondFolderId,
         string thirdFolderId,
@@ -24,25 +22,26 @@ internal class CreateRequestBuilderClass
         try
         {
             // List of inbox names.
-            List<string> folderIdList = new() { firstFolderId, secondFolderId, thirdFolderId };
-                
+            var folderIdList = new List<string> { firstFolderId, secondFolderId, thirdFolderId };
+
             // Removes any empty variable.
             folderIdList.RemoveAll(string.IsNullOrEmpty);
 
             // Creates the request builder.
-            IMailFolderRequestBuilder requestBuilder = graphClient!.Users[$"{emailId}"].MailFolders["Inbox"];
+            var requestBuilder = graphClient!.Users[emailId].MailFolders["Inbox"];
 
-            foreach (string folderId in folderIdList)
-            {
-                requestBuilder = requestBuilder.ChildFolders[$"{folderId}"];
-            }
+            var finalRequestBuilder = folderIdList.Aggregate(
+                requestBuilder, (current, folderId) =>
+                    current.ChildFolders[folderId]);
 
-            return requestBuilder;
+            return await Task.FromResult(finalRequestBuilder);
         }
         catch (Exception ex)
         {
-            WriteLogClass.WriteToLog(0, $"Exception at creating request builder: {ex.Message}", 0);
-            return null;
+            WriteLogClass.WriteToLog(0,
+                $"Exception at creating request builder: {ex.Message}",
+                0);
+            throw;
         }
     }
 }

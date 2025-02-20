@@ -4,16 +4,20 @@ namespace DEA.Next.Entities;
 
 public class EmailDetails
 {
-    public Guid Id { get; init; }
+    public Guid Id { get; set; }
 
-    [MaxLength(50)] public required string Email { get; init; }
+    [MaxLength(100)] public required string Email { get; set; }
 
-    [MaxLength(100)] public required string EmailInboxPath { get; init; }
+    [MaxLength(200)] public required string EmailInboxPath { get; set; }
 
-    public bool SendEmail { get; init; }
-    public bool SendSubject { get; init; }
+    public bool SendEmail { get; set; }
+
+    public bool SendSubject { get; set; }
+
+    public bool SendBody { get; set; }
 
     // Navigation properties
-    public Guid CustomerDetailsId { get; init; }
-    public CustomerDetails CustomerDetails { get; init; } = null!;
+    public Guid CustomerDetailsId { get; set; }
+
+    public CustomerDetails CustomerDetails { get; set; } = null!;
 }

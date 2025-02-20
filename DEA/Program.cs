@@ -1,11 +1,8 @@
-﻿using AppConfigReader;
-using DEA.Next.Extensions;
+﻿using DEA.Next.Extensions;
 using DEA.Next.HelperClasses.InternetLineChecker;
 using DEA.Next.Versioning;
-using ErrorFolderChecker;
 using FolderFunctions;
 using Microsoft.Extensions.DependencyInjection;
-using RunTimedFunctions;
 using VersionIncrementerClass;
 using WriteLog;
 
@@ -17,24 +14,12 @@ var app = builder.Build();
 
 // Increments the version number
 VersionIncrementer.IncrementVersion();
+
 // Displays the logo
 DisplayLogo.Logo();
 
 // Checks and creates the main folders that used by the app.
 FolderFunctionsClass.CheckFolders(null!);
-// Get the set amount of allowed error folders.
-var jsonData = AppConfigReaderClass.ReadAppDotConfig();
-var maxErrorFolders = jsonData.ProgramSettings.MaxErrorFolders;
-// Checks how many folders are in the error folder.
-var errorFolderItemCount = ErrorFolderCheckerClass.ErrorFolderChecker().Item1.Count();
-// If there are more than the set amount of allowed error folders then call the dea timed processes.
-if (errorFolderItemCount > maxErrorFolders)
-{
-    RunTimedFunctionsClass.CallDeaTimedProcesses("deamailer");
-    WriteLogClass.WriteToLog(2,
-        $"Error folder contains {errorFolderItemCount} folders. Check and empty the error folder ....",
-        1);
-}
 
 if (await InternetLineChecker.InternetLineCheckerAsync())
 {
