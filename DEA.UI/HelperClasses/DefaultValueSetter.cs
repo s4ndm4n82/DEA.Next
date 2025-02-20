@@ -1,7 +1,9 @@
 ﻿using DEA.UI.Forms;
+using System.Runtime.Versioning;
 
 namespace DEA.UI.HelperClasses
 {
+    [SupportedOSPlatform("windows")]
     internal class DefaultValueSetter
     {
         public static void SetDefaultValues(Form form)

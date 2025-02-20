@@ -1,9 +1,11 @@
 ﻿using DEA.Next.Data;
 using DEA.Next.Entities;
 using DEA.UI.HelperClasses;
+using System.Runtime.Versioning;
 
 namespace DEA.UI
 {
+    [SupportedOSPlatform("windows")]
     public partial class RemoveCustomers : Form
     {
         private readonly DataContext _conttext;
@@ -45,6 +47,15 @@ namespace DEA.UI
 
             // Register the click event for the reset button
             btnRmSearch.Click += BtnRmSearch_Click;
+
+            // Register the click event for the remove button
+            rmBtnRemove.Click += RmButtonRemove_Click;
+
+            // Register the click event for the reset button
+            rmBtnReset.Click += RmBtnReset_Click;
+
+            // Register the click event for the cancel button
+            rmBtnCancel.Click += RmBtnCancel_Click;
         }
 
         private void LoadCustomerData()
@@ -67,7 +78,7 @@ namespace DEA.UI
         }
 
         // Event handler for the search button click event
-        private void BtnRmSearch_Click(object sender, EventArgs e)
+        private void BtnRmSearch_Click(object? sender, EventArgs e)
         {
             try
             {
@@ -79,17 +90,49 @@ namespace DEA.UI
             }
         }
 
-        private void RmButtonRemove_Click(object sender, EventArgs e)
+        private void RmButtonRemove_Click(object? sender, EventArgs e)
         {
             try
             {
-                _customerRemovalHelper.RemoveSelectedCustomers(grdRemoveCustomer);
-                LoadCustomerData();
+                var result = MessageBox.Show("Are you sure you want remove the customer details?",
+                "Remove Customer Details",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2);
+
+                if (result == DialogResult.No)
+                    return;
+
+                var removeResult = _customerRemovalHelper.RemoveSelectedCustomers(grdRemoveCustomer);
+
+                if (removeResult)
+                    LoadCustomerData();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void RmBtnReset_Click(object? sender, EventArgs e)
+        {
+            // Clear the search text
+            rmSearchTxt.Text = string.Empty;
+            // Set the default search type
+            rmSearchId.Checked = true;
+            // Load the customer data
+            LoadCustomerData();
+        }
+
+        private void RmBtnCancel_Click(object? sender, EventArgs e)
+        {
+            var result = MessageBox.Show("Are you sure you want to close the application?",
+                "Exit The Application",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button1);
+            if (result == DialogResult.Yes)
+                Application.Exit();
         }
 
         // Method to search for customers
@@ -113,6 +156,7 @@ namespace DEA.UI
 
             grdRemoveCustomer.DataSource = filteredCustomers;
         }
+
         private void GridColumnSettings()
         {
             // Hide the ApiKey column
@@ -133,21 +177,7 @@ namespace DEA.UI
             grdRemoveCustomer.Columns["FileDeliveryMethod"].Visible = false;
 
             // Make the columns read only
-            grdRemoveCustomer.Columns["Id"].ReadOnly = true;
-            grdRemoveCustomer.Columns["CustomerName"].ReadOnly = true;
-            grdRemoveCustomer.Columns["UserName"].ReadOnly = true;
-            grdRemoveCustomer.Columns["Queue"].ReadOnly = true;
-            grdRemoveCustomer.Columns["ProjectId"].ReadOnly = true;
-            grdRemoveCustomer.Columns["TemplateKey"].ReadOnly = true;
-            grdRemoveCustomer.Columns["DocumentId"].ReadOnly = true;
-            grdRemoveCustomer.Columns["DocumentEncoding"].ReadOnly = true;
-            grdRemoveCustomer.Columns["MaxBatchSize"].ReadOnly = true;
-            grdRemoveCustomer.Columns["FieldOneName"].ReadOnly = true;
-            grdRemoveCustomer.Columns["FieldOneValue"].ReadOnly = true;
-            grdRemoveCustomer.Columns["FieldTwoName"].ReadOnly = true;
-            grdRemoveCustomer.Columns["FieldTwoValue"].ReadOnly = true;
-            grdRemoveCustomer.Columns["Domain"].ReadOnly = true;
-            grdRemoveCustomer.Columns["FileDeliveryMethod"].ReadOnly = true;
+            FormFunctionHelper.SetDataGridColumnsReadOnly(grdRemoveCustomer);
         }
 
         private void InitalizeToolTips()

@@ -20,4 +20,5 @@ partial class StartupForm
 
         base.Dispose(disposing);
     }
+    private TabPage AboutForm;
 }

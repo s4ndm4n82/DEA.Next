@@ -2,9 +2,11 @@
 using DEA.Next.Entities;
 using DEA.UI.Forms;
 using DEA.UI.HelperClasses;
+using System.Runtime.Versioning;
 
 namespace DEA.UI
 {
+    [SupportedOSPlatform("windows")]
     public partial class EditCustomersList : Form
     {
         private readonly DataContext _conttext;
@@ -112,7 +114,7 @@ namespace DEA.UI
         }
 
         // Event handler for the DataGridView CellDoubleClick event
-        private void GrdEditCustomer_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private void GrdEditCustomer_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
             {
@@ -127,7 +129,7 @@ namespace DEA.UI
         }
 
         // Event handler for the DataGridView CellValueChanged event
-        private void GrdEditCustomer_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void GrdEditCustomer_CellValueChanged(object? sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0 && grdEditCustomer.Columns[e.ColumnIndex].Name == "Status")
             {
@@ -162,7 +164,7 @@ namespace DEA.UI
         }
 
         // Event handler for the search button click event
-        private void BtnEditCustomerSearch_Click(object sender, EventArgs e)
+        private void BtnEditCustomerSearch_Click(object? sender, EventArgs e)
         {
             try
             {
@@ -175,21 +177,21 @@ namespace DEA.UI
         }
 
         // Event handler for the reset button click event
-        private void BtnEditCutomerReset_Click(object sender, EventArgs e)
+        private void BtnEditCutomerReset_Click(object? sender, EventArgs e)
         {
             cusEditSearchTxt.Text = string.Empty;
             searchCusId.Checked = true;
             LoadCustomerData();
         }
 
-        // Event handler for the cancel button click event
-        private void BtnEditCustomerCancel_Click(object sender, EventArgs e)
+        // Add the nullable reference type annotations to the event handler parameters
+        private void BtnEditCustomerCancel_Click(object? sender, EventArgs e)
         {
             var result = MessageBox.Show("Are you sure you want to close the application?",
                 "Exit The Application",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question,
-                MessageBoxDefaultButton.Button2);
+                MessageBoxDefaultButton.Button1);
 
             if (result == DialogResult.Yes)
                 Application.Exit();

@@ -1,10 +1,12 @@
 ﻿using DEA.Next.HelperClasses.OtherFunctions;
+using System.Runtime.Versioning;
 
 namespace DEA.UI.HelperClasses
 {
+    [SupportedOSPlatform("windows")]
     internal class FormFunctionHelper
     {
-        public void CheckBoxListHandler(object sender, ItemCheckEventArgs e)
+        public void CheckBoxListHandler(object? sender, ItemCheckEventArgs e)
         {
             if (sender is not CheckedListBox checkedListBox) return;
 
@@ -136,6 +138,14 @@ namespace DEA.UI.HelperClasses
             foreach (Control control in emlDetails.Controls)
             {
                 control.Enabled = isEmail;
+            }
+        }
+
+        public static void SetDataGridColumnsReadOnly(DataGridView dataGrid)
+        {
+            foreach (DataGridViewColumn column in dataGrid.Columns)
+            {
+                column.ReadOnly = true;
             }
         }
     }

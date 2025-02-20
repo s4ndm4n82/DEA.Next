@@ -1,8 +1,10 @@
 ﻿using DEA.Next.Entities;
 using DEA.UI.Forms;
+using System.Runtime.Versioning;
 
 namespace DEA.UI.HelperClasses
 {
+    [SupportedOSPlatform("windows")]
     class BindDataToForms
     {
         public static void BindEditCustomerFormData(EditCustomerForm form, CustomerDetails customerDetails)

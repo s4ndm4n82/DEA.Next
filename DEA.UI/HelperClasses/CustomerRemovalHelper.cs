@@ -1,33 +1,64 @@
 ﻿using DEA.Next.Data;
+using System.Runtime.Versioning;
 
 namespace DEA.UI.HelperClasses
 {
+    [SupportedOSPlatform("windows")]
     public class CustomerRemovalHelper(DataContext context)
     {
         private readonly DataContext _context = context;
 
-        public void RemoveSelectedCustomers(DataGridView grdRemoveCustomers)
+        public bool RemoveSelectedCustomers(DataGridView grdRemoveCustomers)
         {
-            var selectedRows = grdRemoveCustomers.SelectedRows;
-
-            if (selectedRows.Count == 0)
+            try
             {
-                MessageBox.Show("Please select a customer to remove.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
+                var selectedRows = grdRemoveCustomers.SelectedRows;
 
-            foreach (DataGridViewRow selectedRow in selectedRows)
-            {
-                var customerId = selectedRow.Cells["Id"].Value;
-                var customer = _context.CustomerDetails.Find(customerId);
-
-                if (customer != null)
+                if (selectedRows.Count == 0)
                 {
-                    _context.CustomerDetails.Remove(customer);
+                    MessageBox.Show("Please select a customer to remove.",
+                        "Information",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                    return false;
                 }
-            }
 
-            _context.SaveChanges();
+                foreach (DataGridViewRow selectedRow in selectedRows)
+                {
+                    var customerId = selectedRow.Cells["Id"].Value;
+                    var customer = _context.CustomerDetails.Find(customerId);
+
+                    if (customer != null)
+                    {
+                        _context.CustomerDetails.Remove(customer);
+                    }
+                }
+
+                var result = _context.SaveChanges();
+
+                if (result > 0)
+                {
+                    MessageBox.Show("Customer details removed successfully.",
+                        "Success",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                    return true;
+                }
+
+                MessageBox.Show("Failed to remove the customer details.",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Exxception error thrown while removing cutomer: {ex.Message}",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                throw;
+            }
         }
     }
 }

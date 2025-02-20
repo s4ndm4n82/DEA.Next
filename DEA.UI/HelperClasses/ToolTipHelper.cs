@@ -1,5 +1,8 @@
-﻿namespace DEA.UI.HelperClasses
+﻿using System.Runtime.Versioning;
+
+namespace DEA.UI.HelperClasses
 {
+    [SupportedOSPlatform("windows")]
     internal class ToolTipHelper
     {
         private readonly ToolTip _toolTip;

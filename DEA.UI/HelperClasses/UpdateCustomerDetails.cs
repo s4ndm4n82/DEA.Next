@@ -2,9 +2,11 @@
 using DEA.Next.Entities;
 using DEA.Next.HelperClasses.OtherFunctions;
 using DEA.UI.Forms;
+using System.Runtime.Versioning;
 
 namespace DEA.UI.HelperClasses
 {
+    [SupportedOSPlatform("windows")]
     internal class UpdateCustomerDetails(DataContext context)
     {
         private readonly DataContext _context = context;

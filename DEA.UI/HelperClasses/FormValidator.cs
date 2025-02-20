@@ -1,7 +1,9 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Runtime.Versioning;
+using System.Text.RegularExpressions;
 
 namespace DEA.UI.HelperClasses
 {
+    [SupportedOSPlatform("windows")]
     internal static class FormValidator
     {
         public static bool ValidateCustomerName(TextBox text, ErrorProvider errorProvider)

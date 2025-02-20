@@ -1,8 +1,10 @@
 ﻿using DEA.Next.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.Versioning;
 
 namespace DEA.UI.HelperClasses
 {
+    [SupportedOSPlatform("windows")]
     internal class CheckDbConnection(DataContext context)
     {
         private readonly DataContext _context = context;

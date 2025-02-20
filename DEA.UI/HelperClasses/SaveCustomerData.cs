@@ -1,9 +1,11 @@
 ﻿using DEA.Next.Data;
 using DEA.Next.Entities;
 using DEA.Next.HelperClasses.OtherFunctions;
+using System.Runtime.Versioning;
 
 namespace DEA.UI.HelperClasses
 {
+    [SupportedOSPlatform("windows")]
     internal class SaveCustomerData(DataContext context)
     {
         private readonly DataContext _context = context;

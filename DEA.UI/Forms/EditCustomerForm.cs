@@ -2,9 +2,11 @@
 using DEA.Next.Entities;
 using DEA.UI.HelperClasses;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.Versioning;
 
 namespace DEA.UI.Forms
 {
+    [SupportedOSPlatform("windows")]
     public partial class EditCustomerForm : Form
     {
         private readonly DataContext _conttext;
@@ -14,7 +16,7 @@ namespace DEA.UI.Forms
         private readonly FormFunctionHelper _formFunctionHelper;
         private readonly EditCustomersList _editCustomersList;
         private readonly Guid _customerId;
-        private CustomerDetails _customerDetails;
+        private CustomerDetails? _customerDetails;
 
         public EditCustomerForm(DataContext context, Guid customerId, EditCustomersList editCustomersList)
         {
@@ -29,11 +31,11 @@ namespace DEA.UI.Forms
             _formFunctionHelper = new FormFunctionHelper();
             _updateCustomerDetails = new UpdateCustomerDetails(context);
 
-            // Load the customer details
-            LoadCustomerData(customerId);
-
             // Initialize the controls
             InitializeControls();
+
+            // Load the customer details
+            LoadCustomerData(customerId);
 
             // Handle FTP move to subfolder option change
             ftpMoveToSubOnEdFrm.CheckedChanged += (sender, e) =>
@@ -91,7 +93,7 @@ namespace DEA.UI.Forms
             }
         }
 
-        private void CusDelMethodEdFrmCombo_SelectedIndexChanged(object sender, EventArgs e)
+        private void CusDelMethodEdFrmCombo_SelectedIndexChanged(object? sender, EventArgs e)
         {
             if (cusDelMethodEdFrmCombo.SelectedItem is string selectedMethod)
             {
@@ -102,7 +104,7 @@ namespace DEA.UI.Forms
             }
         }
 
-        private void BtnSaveEdFrm_CheckedChanged(object sender, EventArgs e)
+        private void BtnSaveEdFrm_CheckedChanged(object? sender, EventArgs e)
         {
             var result = _updateCustomerDetails.UpdateCustomerData(this, _customerDetails);
 
@@ -116,13 +118,13 @@ namespace DEA.UI.Forms
             }
         }
 
-        private void BtnResetEdFrm_Click(object sender, EventArgs e)
+        private void BtnResetEdFrm_Click(object? sender, EventArgs e)
         {
             // Reload the customer data
             LoadCustomerData(_customerId);
         }
 
-        private void BtnCancelEdFrm_Click(object sender, EventArgs e)
+        private void BtnCancelEdFrm_Click(object? sender, EventArgs e)
         {
             // Close the form
             this.Close();

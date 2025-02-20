@@ -1,8 +1,11 @@
 using DEA.Next.Data;
+using DEA.UI.Forms;
 using Microsoft.Extensions.DependencyInjection;
+using System.Runtime.Versioning;
 
 namespace DEA.UI;
 
+[SupportedOSPlatform("windows")]
 public partial class StartupForm : Form
 {
     private readonly IServiceProvider _services;
@@ -25,7 +28,7 @@ public partial class StartupForm : Form
     /// <summary>
     /// Loads the forms on startup if the database exists
     /// </summary>
-    private async void StartupForm_Load(object sender, EventArgs e)
+    private async void StartupForm_Load(object? sender, EventArgs e)
     {
         var context = _services.GetRequiredService<DataContext>();
         var databaseChecker = new HelperClasses.CheckDbConnection(context);
@@ -76,6 +79,16 @@ public partial class StartupForm : Form
         };
         RemoveCustomers?.Controls.Add(removeCustomersForm);
         removeCustomersForm.Show();
+
+        // Load the About form
+        var abtForm = new AboutForm()
+        {
+            TopLevel = false,
+            FormBorderStyle = FormBorderStyle.None,
+            Dock = DockStyle.Fill
+        };
+        AboutForm?.Controls.Add(abtForm);
+        abtForm.Show();
     }
 
 
@@ -89,6 +102,7 @@ public partial class StartupForm : Form
         AddClients = new TabPage();
         EditCustomers = new TabPage();
         RemoveCustomers = new TabPage();
+        AboutForm = new TabPage();
         mainTabControler.SuspendLayout();
         SuspendLayout();
         // 
@@ -100,6 +114,7 @@ public partial class StartupForm : Form
         mainTabControler.Controls.Add(AddClients);
         mainTabControler.Controls.Add(EditCustomers);
         mainTabControler.Controls.Add(RemoveCustomers);
+        mainTabControler.Controls.Add(AboutForm);
         mainTabControler.Location = new Point(12, 2);
         mainTabControler.Name = "mainTabControler";
         mainTabControler.SelectedIndex = 0;
@@ -122,7 +137,7 @@ public partial class StartupForm : Form
         EditCustomers.Location = new Point(4, 24);
         EditCustomers.Name = "EditCustomers";
         EditCustomers.Padding = new Padding(3);
-        EditCustomers.Size = new Size(1418, 785);
+        EditCustomers.Size = new Size(1428, 785);
         EditCustomers.TabIndex = 1;
         EditCustomers.Text = "Edit Customers";
         EditCustomers.UseVisualStyleBackColor = true;
@@ -133,10 +148,19 @@ public partial class StartupForm : Form
         RemoveCustomers.Location = new Point(4, 24);
         RemoveCustomers.Name = "RemoveCustomers";
         RemoveCustomers.Padding = new Padding(3);
-        RemoveCustomers.Size = new Size(1418, 785);
+        RemoveCustomers.Size = new Size(1428, 785);
         RemoveCustomers.TabIndex = 2;
         RemoveCustomers.Text = "Remove Customers";
         RemoveCustomers.UseVisualStyleBackColor = true;
+        // 
+        // AboutForm
+        // 
+        AboutForm.Location = new Point(4, 24);
+        AboutForm.Name = "AboutForm";
+        AboutForm.Size = new Size(1428, 785);
+        AboutForm.TabIndex = 3;
+        AboutForm.Text = "About";
+        AboutForm.UseVisualStyleBackColor = true;
         // 
         // StartupForm
         // 

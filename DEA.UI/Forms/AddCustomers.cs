@@ -1,9 +1,11 @@
 ﻿using DEA.Next.Data;
 using DEA.Next.HelperClasses.OtherFunctions;
 using DEA.UI.HelperClasses;
+using System.Runtime.Versioning;
 
 namespace DEA.UI
 {
+    [SupportedOSPlatform("windows")]
     public partial class AddCustomers : Form
     {
         private readonly DataContext _conttext;
@@ -61,7 +63,7 @@ namespace DEA.UI
             InitalizeToolTips();
         }
 
-        private void BtnSave_Click(object sender, EventArgs e)
+        private void BtnSave_Click(object? sender, EventArgs e)
         {
             if (sender is not Button) return;
 
@@ -75,7 +77,7 @@ namespace DEA.UI
             }
         }
 
-        private void BtnCancel_Click(object sender, EventArgs e)
+        private void BtnCancel_Click(object? sender, EventArgs e)
         {
             if (sender is not Button) return;
 
@@ -83,7 +85,7 @@ namespace DEA.UI
                 "Exit The Application",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question,
-                MessageBoxDefaultButton.Button2);
+                MessageBoxDefaultButton.Button1);
 
             if (msgResult == DialogResult.Yes)
                 Application.Exit();
@@ -101,7 +103,10 @@ namespace DEA.UI
             var deliveryMethod = cusDelMethodCombo.SelectedItem?.ToString();
 
             if (string.IsNullOrEmpty(deliveryMethod))
+            {
                 MessageBox.Show("Delivery method is required", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
 
             // Check if the required fields are filled
             isValid &= FormValidator.ValidateCustomerName(cusNameTxt, _errorProvider);
@@ -114,7 +119,7 @@ namespace DEA.UI
             isValid &= FormValidator.ValidateCustomerDeliveryMethod(cusDelMethodCombo, _errorProvider);
             isValid &= FormValidator.ValidateCustomerExtensions(cusDocExtList, _errorProvider);
 
-            if (deliveryMethod.ToLower() == MagicWords.Ftp)
+            if (deliveryMethod.Equals(MagicWords.Ftp, StringComparison.CurrentCultureIgnoreCase))
             {
                 isValid &= FormValidator.ValidateCustomerFtpType(ftpTypCombo, _errorProvider);
                 isValid &= FormValidator.ValidateCustomerFtpProfile(ftpProfileCombo, _errorProvider);
