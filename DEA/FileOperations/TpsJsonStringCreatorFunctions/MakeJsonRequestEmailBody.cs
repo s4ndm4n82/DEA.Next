@@ -22,6 +22,7 @@ public static class MakeJsonRequestEmailBody
 
             var emailFieldList = await MakeJsonRequestHelperClass.ReturnEmailBodyFieldList(customerId,
                 recipientEmail,
+                message.Subject,
                 bodyText);
 
             var emailFileList = MakeJsonRequestHelperClass.ReturnEmailBodyFileList([], message.Subject);
@@ -64,6 +65,7 @@ public static class MakeJsonRequestEmailBody
 
             var emailFieldList = await MakeJsonRequestHelperClass.ReturnEmailBodyFieldList(customerId,
                 recipientEmail,
+                message.Subject,
                 bodyText);
 
             var fileList = MakeJsonRequestHelperClass.ReturnEmailBodyFileList(attachments, message.Subject);

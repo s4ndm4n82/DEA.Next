@@ -43,6 +43,7 @@ internal class MakeJsonRequestHelperClass
 
     public static async Task<List<TpsJsonSendBodyTextClass.FieldList>> ReturnEmailBodyFieldList(Guid customerId,
         string recipientEmail,
+        string subject,
         string bodyText)
     {
         // Retrieve the customer details.
@@ -51,34 +52,37 @@ internal class MakeJsonRequestHelperClass
         var idFieldOneValue = customerDetails.FieldOneValue;
         var idFieldTwoName = customerDetails.FieldTwoName;
         var idFieldTwoValue = customerDetails.FieldTwoValue;
+        var sendEmail = customerDetails.EmailDetails is { SendEmail: true };
+        var sendSubject = customerDetails.EmailDetails is { SendSubject: true };
 
+        if (string.IsNullOrEmpty(idFieldOneValue) &&
+            !string.IsNullOrEmpty(idFieldOneName) &&
+            sendSubject)
+            idFieldOneValue = subject;
+        else if (string.IsNullOrEmpty(idFieldTwoValue) &&
+                 !string.IsNullOrEmpty(idFieldTwoName) &&
+                 sendEmail)
+            idFieldTwoValue = recipientEmail;
+        else
+            idFieldTwoValue = bodyText;
 
         List<TpsJsonSendBodyTextClass.FieldList> emailFieldList = [];
 
-        if (string.IsNullOrEmpty(idFieldOneValue) &&
-            string.IsNullOrEmpty(idFieldTwoValue) &&
+        if (string.IsNullOrEmpty(idFieldTwoValue) &&
             !string.IsNullOrEmpty(idFieldOneName) &&
             !string.IsNullOrEmpty(idFieldTwoName))
         {
             emailFieldList.Add(new TpsJsonSendBodyTextClass.FieldList
-                { Name = idFieldOneName, Value = recipientEmail });
+                { Name = idFieldOneName, Value = idFieldOneValue });
             emailFieldList.Add(new TpsJsonSendBodyTextClass.FieldList
                 { Name = idFieldTwoName, Value = bodyText });
         }
 
-        if (string.IsNullOrEmpty(idFieldOneValue) &&
-            string.IsNullOrEmpty(idFieldTwoValue) &&
-            !string.IsNullOrEmpty(idFieldOneName) &&
-            string.IsNullOrEmpty(idFieldTwoName))
+        if (string.IsNullOrEmpty(idFieldTwoValue) &&
+            string.IsNullOrEmpty(idFieldTwoName) &&
+            !string.IsNullOrEmpty(idFieldOneName))
             emailFieldList.Add(new TpsJsonSendBodyTextClass.FieldList
-                { Name = idFieldOneName, Value = bodyText });
-
-        if (!string.IsNullOrEmpty(idFieldOneValue) &&
-            string.IsNullOrEmpty(idFieldTwoValue) &&
-            !string.IsNullOrEmpty(idFieldOneName) &&
-            !string.IsNullOrEmpty(idFieldTwoName))
-            emailFieldList.Add(new TpsJsonSendBodyTextClass.FieldList
-                { Name = idFieldTwoName, Value = bodyText });
+                { Name = idFieldOneName, Value = idFieldOneValue });
 
         return emailFieldList;
     }
