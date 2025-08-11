@@ -375,3 +375,6 @@ ConversionScript/
 !DEA/Config/_appsettings.json.bkp
 !DEA/Config/_CustomerConfig.json.bkp
 !ConversionScript/JsonConvertScript.ps1
+
+# Claude Code configuration file
+CLAUDE.md
